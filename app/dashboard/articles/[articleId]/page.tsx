@@ -1,13 +1,22 @@
 "use client";
 import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
-import useDataContext from "@/app/context/DataContext";
+import { fetchCategories } from "@/app/Store/dataSlice";
+import { AppDispatch, RootState } from "@/app/Store/store";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ArticlePage() {
-  const { categories } = useDataContext();
   const params = useParams();
   const articleId = params.articleId as string;
+  const dispatch = useDispatch<AppDispatch>();
+  const { categories, loading, error } = useSelector(
+    (state: RootState) => state.data
+  );
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   const inputsArticleData = [
     {
@@ -45,7 +54,7 @@ export default function ArticlePage() {
       type: "",
       fildType: "select-type",
       label: { ar: "القسم الخاص بالمقال ", en: "" },
-      selectItems: categories.data,
+      selectItems: categories,
     },
     {
       name: "status",
@@ -59,6 +68,9 @@ export default function ArticlePage() {
       ],
     },
   ];
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <>

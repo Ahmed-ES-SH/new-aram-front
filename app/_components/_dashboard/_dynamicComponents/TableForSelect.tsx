@@ -1,10 +1,14 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { MdSignalCellularNodata } from "react-icons/md";
 import { motion } from "framer-motion";
-import { FaImage } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
-import { FaUser, FaEnvelope, FaPhone, FaCalendar } from "react-icons/fa";
 import Pagination from "../../PaginationComponent";
 import LoadingSpin from "../../LoadingSpin";
 import { instance } from "@/app/_helpers/axios";
@@ -12,11 +16,27 @@ import Img from "../../Img";
 import { IoSettingsSharp } from "react-icons/io5";
 import { UserType } from "@/app/types/_dashboard/GlobalTypes";
 
+export type headType = {
+  label: string;
+  key: string;
+  icon: ReactNode;
+};
+
 interface props {
-  setSelectedUsersProp: Dispatch<SetStateAction<number[]>>;
+  setSelectedUsersProp: Dispatch<SetStateAction<number[] | []>>;
+  mainEndPoint: string;
+  searchEndPoint: string;
+  idsEndPoint: string;
+  headers: headType[];
 }
 
-export default function UsersForSelect({ setSelectedUsersProp }: props) {
+export default function TableForSelect({
+  setSelectedUsersProp,
+  mainEndPoint,
+  searchEndPoint,
+  idsEndPoint,
+  headers,
+}: props) {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastpage] = useState(1);
@@ -33,19 +53,34 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
 
   // دالة لإدارة اختيار المستخدم
   const handleSelectUser = (userId: number) => {
+    let newSelectedUsers: number[];
+
     if (selectedUsers.includes(userId)) {
-      // إذا كان المستخدم محددًا بالفعل، قم بإزالته
-      setSelectedUsers(selectedUsers.filter((id: number) => id !== userId));
+      newSelectedUsers = selectedUsers.filter((id) => id !== userId);
     } else {
-      // إذا لم يكن محددًا، قم بإضافته
-      setSelectedUsers([...selectedUsers, userId]);
+      newSelectedUsers = [...selectedUsers, userId];
+    }
+
+    setSelectedUsers(newSelectedUsers);
+
+    // تحديث حالة التحديد الكلي تلقائيًا
+    setSelectAll(newSelectedUsers.length === allUsersIds.length);
+  };
+
+  const handleSelectAllUsers = () => {
+    if (selectAll) {
+      setSelectedUsers([]);
+      setSelectAll(false);
+    } else {
+      setSelectedUsers(allUsersIds);
+      setSelectAll(true);
     }
   };
 
   useEffect(() => {
     const getdata = async (page: number) => {
       try {
-        const response = await instance.get(`/users?page=${page}`);
+        const response = await instance.get(`/${mainEndPoint}?page=${page}`);
         if (response.status == 200) {
           const data = response.data.data;
           const pagination = response.data.pagination;
@@ -60,19 +95,19 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
       }
     };
     getdata(currentPage);
-  }, [currentPage]);
+  }, [currentPage, mainEndPoint]);
 
   useEffect(() => {
     const getusersids = async () => {
       try {
-        const response = await instance.get(`/users-ids`);
+        const response = await instance.get(`/${idsEndPoint}`);
         setAllUsersIds(response.data.data);
       } catch (error: unknown) {
         console.log(error);
       }
     };
     getusersids();
-  }, []);
+  }, [idsEndPoint]);
 
   const getFilteredDataByTitle = async (title: string, page: number) => {
     if (title.trim() === "") {
@@ -84,10 +119,9 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
     setSelectCurrentData("SearchData");
     try {
       setIsSearching(true);
-      const response = await instance.post(
-        `/search-for-user-by-name?page=${page}`,
-        { name: contentSearch }
-      );
+      const response = await instance.post(`/${searchEndPoint}?page=${page}`, {
+        query: contentSearch,
+      });
       if (response.status === 200) {
         const data = response.data.data;
         const pagination = response.data.pagination;
@@ -118,15 +152,6 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
     }
   }, [contentSearch]);
 
-  const handleSelectAllUsers = () => {
-    if (selectAll) {
-      setSelectedUsers([]);
-    } else {
-      setSelectedUsers(allUsersIds);
-    }
-    setSelectAll(!selectAll);
-  };
-
   const getPaginationData = () => {
     switch (selectCurrentData) {
       case "SearchData":
@@ -155,10 +180,8 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
   } = getPaginationData();
 
   useEffect(() => {
-    if (selectedUsers.length > 0) {
-      setSelectedUsersProp(selectedUsers);
-    }
-  }, [selectedUsers]);
+    setSelectedUsersProp(selectedUsers);
+  }, [selectedUsers, setSelectedUsersProp]);
 
   if (loading) return <LoadingSpin />;
 
@@ -166,7 +189,7 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
     <>
       <div style={{ direction: "rtl" }} className="w-full  p-6 max-md:p-2 ">
         <h1 className="text-2xl max-md:text-[17px] w-fit mx-auto pb-3 border-b border-main_orange">
-          حدد المستخدمين
+          حدد العناصر من الجدول
         </h1>
         <div
           style={{ direction: "rtl" }}
@@ -184,24 +207,23 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
                 }
                 name="titlesearch"
                 value={contentSearch}
-                placeholder={"إبحث عن المستخدم هنا  ..."}
+                placeholder={"إبحث عن العنصر هنا  ..."}
                 className="w-[90%] bg-transparent h-full pr-9 px-4 py-2 outline-none placeholder-shown:px-4 placeholder-shown:py-2 placeholder-shown:pr-9 placeholder-shown:text-[18px]"
               />
             </div>
-            {
-              <button
-                onClick={() =>
-                  getFilteredDataByTitle(contentSearch, searchCurrentPage)
-                }
-                className={`info-btn ${
-                  contentSearch.length > 0
-                    ? "opacity-100 block"
-                    : "opacity-0 cursor-auto hidden"
-                }`}
-              >
-                {"بحث"}
-              </button>
-            }
+
+            <button
+              onClick={() =>
+                getFilteredDataByTitle(contentSearch, searchCurrentPage)
+              }
+              className={`info-btn ${
+                contentSearch.length > 0
+                  ? "opacity-100 block"
+                  : "opacity-0 cursor-auto hidden"
+              }`}
+            >
+              {"بحث"}
+            </button>
           </div>
         </div>
         {isSearching ? (
@@ -229,47 +251,24 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
               <thead className="bg-gray-800 text-white">
                 <tr>
                   <th className="py-3 px-4 text-right">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
                         checked={selectAll}
                         onChange={handleSelectAllUsers}
-                        className="form-checkbox h-5 w-5 text-blue-600"
+                        className="form-checkbox outline-none h-5 w-5 text-blue-600"
                       />
                       <p className="whitespace-nowrap">تحديد الكل </p>
                     </div>
                   </th>
-                  <th className="py-3 px-4  text-right">
-                    <div className="flex items-center gap-3 whitespace-nowrap">
-                      <FaImage className="inline-block mr-2" />
-                      الصورة
-                    </div>
-                  </th>
-                  <th className="py-3 px-4  text-right">
-                    <div className="flex items-center gap-3 whitespace-nowrap">
-                      <FaUser className="inline-block mr-2" />
-                      الإسم
-                    </div>
-                  </th>
-                  <th className="py-3 px-4  text-right">
-                    <div className="flex items-center gap-3 whitespace-nowrap">
-                      <FaEnvelope className="inline-block mr-2" />
-                      البريد الإلكترونى
-                    </div>
-                  </th>
-                  <th className="py-3 px-4  text-right">
-                    <div className="flex items-center gap-3 whitespace-nowrap">
-                      <FaPhone className="inline-block mr-2" />
-                      رقم الهاتف
-                    </div>
-                  </th>
-
-                  <th className="py-3 px-4  text-right">
-                    <div className="flex items-center gap-3 whitespace-nowrap">
-                      <FaCalendar className="inline-block mr-2" />
-                      وقت إنشاء الحساب
-                    </div>
-                  </th>
+                  {headers.map((header, index) => (
+                    <th key={index} className="py-3 px-4 text-right">
+                      <div className="flex items-center gap-3 whitespace-nowrap">
+                        {header.icon}
+                        {header.label}
+                      </div>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="text-gray-700">
@@ -285,6 +284,7 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
                         : "hover:bg-gray-100"
                     }`}
                   >
+                    {/* عمود الاختيار */}
                     <td className="py-3 px-4">
                       <input
                         type="checkbox"
@@ -293,24 +293,30 @@ export default function UsersForSelect({ setSelectedUsersProp }: props) {
                         className="form-checkbox h-5 w-5 text-blue-600 rounded"
                       />
                     </td>
-                    <td className="py-3 px-4">
-                      <Img
-                        src={
-                          user.image
-                            ? user.image
-                            : user.gender == "male"
-                            ? "/defaults/default-male.png"
-                            : "/defaults/default-femele.png"
-                        }
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    </td>
-                    <td className="py-3 px-4">{user.name}</td>
-                    <td className="py-3 px-4">{user.email}</td>
-                    <td className="py-3 px-4">{user.phone || "غير موجود "}</td>
-                    <td className="py-3 px-4">
-                      {new Date(user.created_at).toLocaleDateString()}
-                    </td>
+
+                    {/* الأعمدة الديناميكية */}
+                    {headers.map((header, idx) => (
+                      <td key={idx} className="py-3 px-4 whitespace-nowrap">
+                        {header.key === "image" ? (
+                          <Img
+                            src={
+                              user.image
+                                ? user.image
+                                : user.gender === "male"
+                                ? "/defaults/default-male.png"
+                                : "/defaults/default-femele.png"
+                            }
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
+                        ) : header.key === "created_at" ? (
+                          new Date(user.created_at).toLocaleDateString()
+                        ) : header.key === "phone" ? (
+                          user.phone || "غير موجود"
+                        ) : (
+                          (user as any)[header.key]
+                        )}
+                      </td>
+                    ))}
                   </motion.tr>
                 ))}
               </tbody>

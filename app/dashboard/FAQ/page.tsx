@@ -67,6 +67,7 @@ export default function FAQ() {
     handleDeleteItem({
       endpoint: "/delete-faq",
       id: questionToDelete.id,
+      setSuccess: setSuccessMessage,
       setStateFunction: setQuestions,
       onShowSuccessAlert: () => setSuccessPopup(true),
       onClosePopup: closeDeletePopup,
@@ -255,13 +256,13 @@ export default function FAQ() {
         <AnimatePresence>
           {isEditing && (
             <motion.div
-              className="fixed w-full inset-0 bg-primary_dash backdrop-blur-lg  bg-opacity-50 flex justify-center items-center z-50"
+              className="fixed w-full  inset-0 bg-primary-boldgray backdrop-blur-lg  bg-opacity-50 flex justify-center items-center z-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
               <motion.div
-                className="bg-white  dark:text-secend_text p-6 rounded-lg shadow-lg w-[80%] mx-auto"
+                className="bg-white  border border-gray-300 p-6 rounded-lg shadow-lg w-[80%] mx-auto"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}

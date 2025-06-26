@@ -1,6 +1,4 @@
 import { instance } from "./axios";
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 interface DeleteProps {
   endpoint: string;
   id: number | null | undefined;
@@ -10,6 +8,7 @@ interface DeleteProps {
   onShowErrorAlert?: () => void;
   nestedKey?: string;
   setError: React.Dispatch<React.SetStateAction<any>>;
+  setSuccess: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const handleDeleteItem = async ({
@@ -18,6 +17,7 @@ export const handleDeleteItem = async ({
   setStateFunction,
   onShowSuccessAlert,
   onClosePopup,
+  setSuccess,
   onShowErrorAlert,
   setError,
   nestedKey, // المفتاح الخاص بالمصفوفة الفرعية (اختياري)
@@ -52,6 +52,7 @@ export const handleDeleteItem = async ({
             .filter(Boolean) // إزالة العناصر المحذوفة
       );
 
+      setSuccess("تمت حذف العنصر بنجاح.");
       if (onShowSuccessAlert) onShowSuccessAlert();
       if (onClosePopup) onClosePopup();
     }

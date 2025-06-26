@@ -1,6 +1,12 @@
 import React from "react";
 import Sidebar from "../_components/_dashboard/Sidebar";
 import Topbar from "../_components/_dashboard/Topbar";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Mada Plus - Dashboard",
+  description: "Mada Plus",
+};
 
 export default function DashboardLayout({
   children,

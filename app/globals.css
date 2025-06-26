@@ -2,15 +2,12 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #006ebf;
-  --secondery: #eaa71c;
-  --primary_dash: #38444f;
-  --secondery_dash: #1f2937;
-  --thired_dash: #0f172a;
-  --fourth_dash: #606d7a;
-  --second_text: #94a3b8;
+  --primary: #2fc1d8;
+  --primary-boldgray: #38444f;
+  --secondary-dash: #1f2937;
+  --thired-dash: #0f172a;
+  --fourth-dash: #606d7a;
+  --second-text: #94a3b8;
   --success: #28a745;
   --danger: #dc3545;
   --warning: #ffc107;
@@ -19,12 +16,11 @@
 
 @theme inline {
   --color-primary: var(--primary);
-  --color-secondery: var(--secondery);
-  --color-primary_dash: var(--primary_dash);
-  --color-secondery_dash: var(--secondery_dash);
-  --color-thired_dash: var(--thired_dash);
-  --color-fourth_dash: var(--fourth_dash);
-  --color-second_text: var(--second_text);
+  --color-primary-boldgray: var(--primary-boldgray);
+  --color-secondary-dash: var(--secondary-dash);
+  --color-thired-dash: var(--thired-dash);
+  --color-fourth-dash: var(--fourth-dash);
+  --color-second-text: var(--second-text);
   --color-success: var(--success);
   --color-danger: var(--danger);
   --color-warning: var(--warning);
@@ -35,10 +31,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
     --success: var(--success);
   }
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3498db;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--background);
 }
 
 button {
@@ -63,7 +69,7 @@ button {
   }
 
   .close-btn {
-    @apply w-10 h-10 cursor-pointer bg-white text-primary_dash hover:scale-110  shadow-md flex items-center absolute top-2 left-2 justify-center rounded-md hover:bg-red-300 hover:text-white duration-200;
+    @apply w-10 h-10 cursor-pointer bg-white text-primary-boldgray hover:scale-110  shadow-md flex items-center absolute top-2 left-2 justify-center rounded-md hover:bg-red-300 hover:text-white duration-200;
   }
 
   .submit-btn {
@@ -83,7 +89,7 @@ button {
   }
 
   .input-label {
-    @apply my-2 text-sm text-secondery_dash pb-2   border-b border-sky-300 w-fit ml-auto;
+    @apply my-2 text-sm text-secondary-dash pb-2   border-b border-sky-300 w-fit ml-auto;
   }
 
   .select-style {

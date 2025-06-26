@@ -1,23 +1,29 @@
-import { UseVariables } from "@/app/context/VariablesContext";
+"use client";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { FaBell } from "react-icons/fa";
 import { TbBellRingingFilled } from "react-icons/tb";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/app/Store/store";
+import {
+  setShowMessagesDrop,
+  setShowNotificationDrop,
+  setShowUserButton,
+} from "@/app/Store/variablesSlice";
 
 export default function NotificationsDropDown() {
-  const {
-    showNotificationDrop,
-    setShowMessagesDrop,
-    setShowNotificationDrop,
-    setShowUserButton,
-  } = UseVariables();
+  const dispatch = useDispatch();
+  const { showNotificationDrop } = useSelector(
+    (state: RootState) => state.variables
+  );
 
-  const newnotiffication = true;
   const toggleDropdown = () => {
-    setShowNotificationDrop((prev) => !prev);
-    setShowUserButton(false);
-    setShowMessagesDrop(false);
+    dispatch(setShowNotificationDrop(!showNotificationDrop));
+    dispatch(setShowUserButton(false));
+    dispatch(setShowMessagesDrop(false));
   };
+
+  const newnotiffication = false;
 
   return (
     <div className="relative">

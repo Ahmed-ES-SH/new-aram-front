@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { instance } from "./axios";
 
 interface AddItemProps {
@@ -7,6 +6,7 @@ interface AddItemProps {
   setStateFunction: React.Dispatch<React.SetStateAction<any[]>>;
   setSuccess: React.Dispatch<React.SetStateAction<any>>;
   setError: React.Dispatch<React.SetStateAction<any>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   onClosePopup: () => void;
   onShowErrorAlert: () => void;
   onShowSuccessAlert: () => void;
@@ -25,9 +25,11 @@ export const handleAddItem = async ({
   onShowSuccessAlert,
   parentId,
   nestedKey,
+  setLoading,
 }: AddItemProps): Promise<void> => {
   if (!newItem) return;
   try {
+    setLoading(true);
     const response = await instance.post(endpoint, newItem);
     if (response.status === 201 || response.status === 200) {
       setStateFunction((prevData) =>
@@ -59,5 +61,7 @@ export const handleAddItem = async ({
     } else {
       setError(error.message || "خطأ غير متوقع");
     }
+  } finally {
+    setLoading(false);
   }
 };

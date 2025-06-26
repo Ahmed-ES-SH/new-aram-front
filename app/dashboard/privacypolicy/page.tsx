@@ -90,7 +90,7 @@ export default function PrivacyPolicyUsers() {
       style={{ direction: "rtl" }}
       className="p-6 bg-fourth_dash h-[140vh] max-md:h-fit py-4 overflow-y-auto  text-white  rounded-lg shadow-md"
     >
-      <h2 className="text-2xl pb-3 border-b w-fit mx-auto border-sky-400 font-bold mb-4 text-center">
+      <h2 className="text-2xl pb-3 text-primary-boldgray border-b w-fit mx-auto border-sky-400 font-bold mb-4 text-center">
         سياسات الخصوصية
       </h2>
       <button
@@ -218,7 +218,7 @@ export default function PrivacyPolicyUsers() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="w-1/4 h-auto max-md:w-[95%] p-6 flex flex-col items-center justify-between rounded-lg shadow-lg bg-white dark:bg-main_dash dark:text-white"
           >
-            <p className="text-lg text-center font-semibold mb-6">
+            <p className="text-lg text-center text-primary-boldgray font-semibold mb-6">
               هل أنت متأكد؟ سيتم الحذف بشكل نهائي!
             </p>
             <div className="flex items-center justify-center gap-4 w-full">

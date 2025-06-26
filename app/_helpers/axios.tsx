@@ -9,7 +9,7 @@ export const main_api = "http://127.0.0.1:8000/api";
 const getToken = () => {
   const userId = cookie.get("user_id"); // احصل على معرف المستخدم من الكوكيز
   if (!userId) return null;
-  return cookie.get(`borsan_token-${userId}`); // جلب التوكن بناءً على معرف المستخدم
+  return cookie.get(`madaPlus_token-${userId}`); // جلب التوكن بناءً على معرف المستخدم
 };
 
 export const instance = axios.create({

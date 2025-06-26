@@ -2,9 +2,9 @@ import React from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface PaginationProps {
-  currentPage: number; // الصفحة الحالية
-  totalPages: number; // عدد الصفحات الإجمالي
-  onPageChange: (page: number) => void; // دالة لتغيير الصفحة
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 export default function Pagination({
@@ -18,11 +18,52 @@ export default function Pagination({
     }
   };
 
+  const getPageNumbers = (
+    currentPage: number,
+    totalPages: number
+  ): (number | string)[] => {
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+      return pages;
+    }
+
+    if (currentPage <= 4) {
+      pages.push(1, 2, 3, 4, 5, "...", totalPages - 1, totalPages);
+    } else if (currentPage >= totalPages - 3) {
+      pages.push(
+        1,
+        2,
+        "...",
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages
+      );
+    } else {
+      pages.push(
+        1,
+        2,
+        "...",
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        "...",
+        totalPages - 1,
+        totalPages
+      );
+    }
+
+    return pages;
+  };
+
   return (
     totalPages > 1 && (
       <ol
         style={{ direction: "ltr" }}
-        className="flex justify-center gap-1 text-xs font-medium pt-2 border-t  border-gray-300 dark:border-gray-700 my-6"
+        className="flex justify-center flex-wrap gap-1 text-xs font-medium pt-2 border-t border-gray-300 dark:border-gray-700 my-6"
       >
         {/* Previous Button */}
         <li>
@@ -36,24 +77,28 @@ export default function Pagination({
           </button>
         </li>
 
-        {/* Page Numbers */}
-        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-          (page) => (
-            <li key={page}>
+        {/* Dynamic Page Numbers */}
+        {getPageNumbers(currentPage, totalPages).map((page, index) => (
+          <li key={index}>
+            {page === "..." ? (
+              <span className="inline-block w-8 h-8 text-center leading-8 text-gray-500">
+                ...
+              </span>
+            ) : (
               <button
-                onClick={() => handlePageClick(page)}
+                onClick={() => handlePageClick(Number(page))}
                 className={`block w-8 h-8 rounded border text-center leading-8 font-medium transition
-              ${
-                page == currentPage
-                  ? "bg-primary_dash text-white border-secondery_dash"
-                  : "bg-white text-gray-900 border-gray-100 hover:bg-gray-200"
-              }`}
+                  ${
+                    page === currentPage
+                      ? "bg-primary-boldgray text-white border-secondary-dash"
+                      : "bg-white text-gray-900 border-gray-100 hover:bg-gray-200"
+                  }`}
               >
                 {page}
               </button>
-            </li>
-          )
-        )}
+            )}
+          </li>
+        ))}
 
         {/* Next Button */}
         <li>

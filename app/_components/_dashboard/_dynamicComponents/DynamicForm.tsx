@@ -48,7 +48,7 @@ export default function DynamicForm({
     );
 
     setForm(initialFormState);
-  }, []);
+  }, [inputs]);
 
   ///////////////////////////////////
   // End Fetch The Form Detailes
@@ -87,7 +87,6 @@ export default function DynamicForm({
 
       Object.entries(form).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
-          // إذا كانت القيمة مصفوفة، نحولها إلى JSON
           const formattedValue = Array.isArray(value)
             ? JSON.stringify(value)
             : value;
@@ -100,7 +99,6 @@ export default function DynamicForm({
       if (response.status === 201) {
         setSuccessPopup(true);
 
-        // ✅ إعادة تعيين الحقول بطريقة صحيحة
         setForm((prevForm) =>
           Object.keys(prevForm).reduce((acc, key) => {
             acc[key] = "";
@@ -115,7 +113,6 @@ export default function DynamicForm({
     } catch (error) {
       console.error(error);
 
-      // ✅ التحقق من الخطأ بطريقة أبسط باستخدام AxiosError
       if (error instanceof AxiosError && error.response?.data?.errors) {
         const formattedErrors: errorType = Object.entries(
           error.response.data.errors
@@ -134,6 +131,8 @@ export default function DynamicForm({
   const handleCloseAlart = () => {
     setSuccessPopup(false);
   };
+
+  console.log(errors);
   ///////////////////////////////////
   // End Functions Lines
   ///////////////////////////////////
@@ -244,12 +243,12 @@ export default function DynamicForm({
               <div key={index} className="h-96">
                 <div
                   onClick={() => openImageinput.current?.click()}
-                  className="w-72 h-60 overflow-hidden rounded-sm  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border-2  border-second_text flex items-center justify-center "
+                  className="w-72 h-60 overflow-hidden rounded-lg border border-gray-300 shadow-md hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto  flex items-center justify-center "
                 >
                   {form[input.name] instanceof File ? (
                     <Img
                       src={URL.createObjectURL(form[input.name] as Blob)}
-                      className="w-full h-full  object-cover"
+                      className="w-full h-full  rounded-lg object-cover"
                     />
                   ) : (
                     <FaImage className="size-24 " />

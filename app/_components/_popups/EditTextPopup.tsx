@@ -1,6 +1,7 @@
 import React from "react";
 import { GiTireIronCross } from "react-icons/gi";
 import { AnimatePresence, motion } from "framer-motion";
+import { VscLoading } from "react-icons/vsc";
 
 interface InputType {
   name: string;
@@ -14,6 +15,7 @@ interface EditTextPopupProps {
   inputs: InputType[];
   onChange: (name: string, value: string | number) => void;
   showPopup: boolean;
+  loadingState: boolean;
   operationType: string;
   onClose: () => void;
   onSave?: () => void;
@@ -24,6 +26,7 @@ export default function EditTextPopup({
   inputs,
   onChange,
   showPopup,
+  loadingState,
   operationType,
   onClose,
   onSave,
@@ -100,10 +103,22 @@ export default function EditTextPopup({
                 </>
               ))}
             <button
+              disabled={loadingState}
               onClick={operationType == "edit" ? onSave : onAdd}
-              className="mt-4 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 cursor-pointer"
+              className="mt-4 p-2 h-fit flex items-center justify-center bg-blue-500 text-white rounded-md hover:bg-blue-700 cursor-pointer"
             >
-              حفظ التعديلات
+              {loadingState ? (
+                <motion.div
+                  animate={{ rotate: "360deg" }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                >
+                  <VscLoading className="size-5 text-white" />
+                </motion.div>
+              ) : operationType == "edit" ? (
+                "حفظ التعديلات"
+              ) : (
+                "إضافة"
+              )}
             </button>
           </motion.div>
         </motion.div>

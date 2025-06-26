@@ -231,6 +231,7 @@ export default function MembersForSelected() {
           </div>
         </div>
         {isSearching ? (
+          // البحث جارٍ
           <motion.div
             className="flex flex-col items-center justify-center gap-4 min-h-[40vh]"
             initial={{ opacity: 0, y: 20 }}
@@ -245,7 +246,7 @@ export default function MembersForSelected() {
             </motion.div>
             <p className="text-lg text-gray-600">{"جاري البحث..."}</p>
           </motion.div>
-        ) : users && currentData.length > 0 ? (
+        ) : (
           <motion.div
             className="overflow-auto p-4"
             initial={{ opacity: 0, y: -10 }}
@@ -262,24 +263,22 @@ export default function MembersForSelected() {
                         onChange={handleSelectAllUsers}
                         className="form-checkbox h-5 w-5 text-blue-600"
                       />
-                      <p>تحديد الكل </p>
+                      <p>تحديد الكل</p>
                     </div>
                   </th>
-
-                  <th className="py-3 px-4  text-right">
+                  <th className="py-3 px-4 text-right">
                     <div className="flex items-center gap-3 whitespace-nowrap">
                       <FaEnvelope className="inline-block mr-2" />
                       البريد الإلكترونى
                     </div>
                   </th>
-
-                  <th className="py-3 px-4  text-right">
+                  <th className="py-3 px-4 text-right">
                     <div className="flex items-center gap-3 whitespace-nowrap">
                       <FaCalendar className="inline-block mr-2" />
                       وقت الإشتراك
                     </div>
                   </th>
-                  <th className="py-3 px-4  text-right">
+                  <th className="py-3 px-4 text-right">
                     <div className="flex items-center gap-3 whitespace-nowrap">
                       <FaCrosshairs className="inline-block mr-2" />
                       إزالة
@@ -288,51 +287,60 @@ export default function MembersForSelected() {
                 </tr>
               </thead>
               <tbody className="text-gray-700">
-                {currentData.map((user: any) => (
-                  <motion.tr
-                    key={user.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className={`border-b border-gray-200 ${
-                      selectedMembers.includes(user.id)
-                        ? "bg-blue-50"
-                        : "hover:bg-gray-100"
-                    }`}
-                  >
-                    <td className="py-3 px-4">
-                      <input
-                        type="checkbox"
-                        checked={selectedMembers.includes(user.id)}
-                        onChange={() => handleSelectUser(user.id)}
-                        className="form-checkbox h-5 w-5 text-blue-600 rounded"
-                      />
+                {users && currentData.length > 0 ? (
+                  currentData.map((user: any) => (
+                    <motion.tr
+                      key={user.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className={`border-b border-gray-200 ${
+                        selectedMembers.includes(user.id)
+                          ? "bg-blue-50"
+                          : "hover:bg-gray-100"
+                      }`}
+                    >
+                      <td className="py-3 px-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedMembers.includes(user.id)}
+                          onChange={() => handleSelectUser(user.id)}
+                          className="form-checkbox h-5 w-5 text-blue-600 rounded"
+                        />
+                      </td>
+                      <td className="py-3 px-4">{user.email}</td>
+                      <td className="py-3 px-4">
+                        {new Date(user.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="py-3 px-4">
+                        <FaTrash
+                          className="size-6 text-red-400 cursor-pointer"
+                          onClick={() => confirmDelete(user?.id)}
+                        />
+                      </td>
+                    </motion.tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4}>
+                      {users.length === 0 ? (
+                        <NoDataFounded />
+                      ) : (
+                        <div className="flex flex-col h-[60vh] items-center justify-center gap-4 py-8">
+                          <MdSignalCellularNodata className="text-gray-400 size-40" />
+                          <p className="text-gray-600 text-lg">
+                            لا يوجد مستخدمين تطابق عمليات البحث حاليًا
+                          </p>
+                        </div>
+                      )}
                     </td>
-                    <td className="py-3 px-4">{user.email}</td>
-                    <td className="py-3 px-4">
-                      {new Date(user.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="py-3 px-4">
-                      <FaTrash
-                        className="size-6 text-red-400 cursor-pointer"
-                        onClick={() => confirmDelete(user?.id)}
-                      />
-                    </td>
-                  </motion.tr>
-                ))}
+                  </tr>
+                )}
               </tbody>
             </table>
           </motion.div>
-        ) : users.length == 0 ? (
-          <NoDataFounded />
-        ) : (
-          <div className="min-h-[90vh] w-full flex items-center justify-center">
-            <div className="flex flex-col items-center justify-center gap-2">
-              <MdSignalCellularNodata className="text-gray-400 size-56" />
-              <p>لا يوجد مستخدمين تطابق لعمليات البحث فى الوقت الحالى </p>
-            </div>
-          </div>
         )}
+
         <Pagination
           currentPage={activePage}
           totalPages={activeLastPage}

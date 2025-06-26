@@ -1,6 +1,6 @@
 import { FaBloggerB, FaQuestion } from "react-icons/fa";
 import { FaLinesLeaning, FaUserGear, FaUsersViewfinder } from "react-icons/fa6";
-import { GrArticle, GrDomain } from "react-icons/gr";
+import { GrArticle, GrDomain, GrServices } from "react-icons/gr";
 import { IoMdPersonAdd } from "react-icons/io";
 import { IoAdd, IoLayersOutline, IoShareSocialSharp } from "react-icons/io5";
 import {
@@ -81,6 +81,11 @@ export const pages = [
         title: "مستخدم",
         icon: <FaUserGear className={iconStyle} />,
         to: "/dashboard/usernotification",
+      },
+      {
+        title: "مقدم خدمات",
+        icon: <GrServices className={iconStyle} />,
+        to: "/dashboard/serviceprovidernotification",
       },
     ],
   },

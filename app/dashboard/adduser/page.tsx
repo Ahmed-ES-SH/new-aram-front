@@ -5,15 +5,13 @@ import React from "react";
 export default function page() {
   return (
     <>
-      <div className="w-full">
-        <DynamicForm
-          submitValue="إنشاء"
-          inputs={addUserinputs}
-          api="/register"
-          direct="/dashboard/users"
-          successMessage="تم إنشاء مستخدم جديد بنجاح "
-        />
-      </div>
+      <DynamicForm
+        submitValue="إنشاء"
+        inputs={addUserinputs}
+        api="/register"
+        direct="/dashboard/users"
+        successMessage="تم إنشاء مستخدم جديد بنجاح "
+      />
     </>
   );
 }

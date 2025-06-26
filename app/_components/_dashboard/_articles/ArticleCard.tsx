@@ -21,7 +21,7 @@ export default function ArticleCard({ Article, direct }: props) {
         <div className="img flex-1/5 max-xl:h-1/2 h-full  max-xl:w-full">
           <Img
             className="w-full h-full object-cover"
-            src="/assorted-mixed-fruits.jpg"
+            src={Article.image ? Article.image : "/assorted-mixed-fruits.jpg"}
           />
         </div>
         <div className="content p-2 flex-1  max-xl:h-1/2 h-full  max-xl:w-full">

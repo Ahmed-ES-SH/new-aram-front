@@ -132,13 +132,11 @@ export default function Articles() {
         <NoDataFounded />
       )}
       {/* عرض Pagination بناءً على البحث أو الوضع الافتراضي */}
-      {
-        <Pagination
-          currentPage={activeCurrentPage}
-          totalPages={activeLastPage}
-          onPageChange={handlePageChange}
-        />
-      }
+      <Pagination
+        currentPage={activeCurrentPage}
+        totalPages={activeLastPage}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 }

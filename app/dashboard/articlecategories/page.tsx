@@ -27,6 +27,7 @@ export default function page() {
         keys={keys}
         api="/article-categories"
         deletedApi="/delete-article-category"
+        searchApi={"/article-categories/search"}
       />
     </>
   );

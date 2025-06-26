@@ -35,6 +35,7 @@ export default function ProblemsPage() {
         itemDirect={"/problems"}
         keys={keys}
         searchState={false}
+        searchApi={""}
       />
     </>
   );

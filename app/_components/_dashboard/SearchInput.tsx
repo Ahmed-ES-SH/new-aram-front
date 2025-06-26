@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 
 interface props {
   placeHolder?: string;
-  handleSearch: () => void;
+  handleSearch: (value) => void;
   setSearchContent: Dispatch<SetStateAction<string>>;
 }
 

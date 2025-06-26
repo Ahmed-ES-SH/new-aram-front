@@ -9,7 +9,6 @@ import { handleDeleteItem } from "@/app/_helpers/deleteHelper";
 import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 import { handleUpdateItem } from "@/app/_helpers/updateHelper";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 
@@ -44,6 +43,7 @@ export default function FooterLinks() {
   const [errorPopup, setErrorPopup] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [confirmPopup, setConfirmPopup] = useState(false);
+  const [loadingState, setLoadingState] = useState(false);
 
   const inputs = selectedLink
     ? [
@@ -106,6 +106,7 @@ export default function FooterLinks() {
       endpoint: "/add-link",
       newItem: selectedLink,
       nestedKey: "links",
+      setLoading: setLoadingState,
       parentId: selectedListId,
       setStateFunction: setListes,
       setSuccess: setSuccessMessage,
@@ -120,6 +121,7 @@ export default function FooterLinks() {
     handleDeleteItem({
       endpoint: "/delete-link",
       id: selectedLink?.id,
+      setSuccess: setSuccessMessage,
       setStateFunction: setListes,
       onClosePopup: () => togglePopup("confirm", false),
       onShowErrorAlert: () => togglePopup("alert-error", true),
@@ -135,6 +137,8 @@ export default function FooterLinks() {
       endpoint: "/update-link",
       id: selectedLink.id!,
       updatedData: selectedLink,
+      setLoading: setLoadingState,
+      nestedKey: "links",
       setStateFunction: setListes,
       setSuccess: setSuccessMessage,
       onShowErrorAlert: () => togglePopup("alert-error", true),
@@ -142,6 +146,7 @@ export default function FooterLinks() {
       onClosePopup: () => togglePopup("edit", false),
       onShowSuccessAlart: () => togglePopup("alert-success", true),
     });
+    // if (window !== undefined) window.location.reload();
   };
 
   const onDelete = (link: linkType) => {
@@ -164,23 +169,23 @@ export default function FooterLinks() {
 
   return (
     <>
-      <div className="space-y-6 w-[98%] mx-auto duration-200">
+      <div className="space-y-6  mt-4 mb-12 w-[98%] mx-auto duration-200">
         {listes &&
           listes.map((list: listType) => (
             <motion.div
               key={list.id}
-              className="p-4 rounded-lg shadow-md bg-primary_dash"
+              className="p-4 rounded-lg shadow-md bg-primary-boldgray"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
               <div className="flex items-center justify-between pb-2 border-b border-primary">
-                <h2 className="text-lg font-semibold mb-3 text-second_text">
+                <h2 className="text-lg font-semibold mb-3 text-second-text">
                   {list.title}
                 </h2>
                 <div
                   onClick={() => onAdd(list.id)}
-                  className=" bg-primary hover:bg-white hover:border-primary btn-hover"
+                  className="bg-primary hover:bg-white hover:border-primary btn-hover"
                 >
                   <FaPlus className="size-5" />
                 </div>
@@ -189,29 +194,27 @@ export default function FooterLinks() {
                 {list.links.map((link: linkType) => (
                   <motion.li
                     key={link.id}
-                    className="flex justify-between items-center p-2 rounded-lg shadow-sm bg-secondery_dash text-second_text"
+                    className="flex justify-between duration-300 items-center p-2 rounded-lg shadow-sm bg-secondery_dash text-second_text"
                     whileHover={{ scale: 1.02 }}
                   >
-                    <Link
-                      href={link.link_url || "/"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1"
+                    <div
+                      // href={link.link_url || "/"}
+                      className="flex-1 text-white"
                     >
                       {link.link_title_en} / {link.link_title_ar}
-                    </Link>
+                    </div>
                     <div className="flex gap-3">
                       <button
                         onClick={() => onEdit(link)}
-                        className="text-blue-500 hover:text-blue-700 cursor-pointer"
+                        className="text-blue-500 hover:text-blue-600 cursor-pointer"
                       >
-                        <FaEdit className="size-6" />
+                        <FaEdit className="size-5" />
                       </button>
                       <button
                         onClick={() => onDelete(link)}
                         className="text-red-500 hover:text-red-700 cursor-pointer"
                       >
-                        <FaTrash className="size-6" />
+                        <FaTrash className="size-5" />
                       </button>
                     </div>
                   </motion.li>
@@ -221,6 +224,7 @@ export default function FooterLinks() {
           ))}
       </div>
       <EditTextPopup
+        loadingState={loadingState}
         operationType={operationType}
         onSave={handleSaveChanges}
         onAdd={handleAddLink}

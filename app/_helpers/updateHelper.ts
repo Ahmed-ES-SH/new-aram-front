@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { instance } from "./axios";
 
 interface props {
@@ -12,7 +11,7 @@ interface props {
   onClosePopup?: () => void;
   onShowErrorAlert: () => void;
   onShowSuccessAlart: () => void;
-  subListKey?: string;
+  nestedKey?: string;
   setLoading?: React.Dispatch<React.SetStateAction<boolean>>; // ✅ إضافة setLoading
 }
 
@@ -27,7 +26,7 @@ export const handleUpdateItem = async ({
   setErrors,
   onShowErrorAlert,
   onShowSuccessAlart,
-  subListKey,
+  nestedKey,
   setLoading, // ✅ تمرير setLoading
 }: props): Promise<void> => {
   if (!id || !updatedData) return;
@@ -53,20 +52,29 @@ export const handleUpdateItem = async ({
 
     const response = await instance.post(`${endpoint}/${id}`, formData);
 
-    if (response.status === 200) {
-      if (setStateFunction && subListKey) {
-        setStateFunction((prevData) =>
-          prevData.map((item) => ({
-            ...item,
-            [subListKey]: item[subListKey]?.map((subListitem: any) =>
-              subListitem.id === id
-                ? { ...subListitem, ...updatedData }
-                : subListitem
-            ),
-          }))
-        );
-      }
-      if (setSuccess) setSuccess("تم تعديل بيانات الرابط بنجاح.");
+    if (response.status === 200 && setStateFunction && nestedKey) {
+      setStateFunction((prevData) =>
+        prevData.map((item) => {
+          // نبحث داخل مصفوفة العناصر الفرعية عن العنصر المطلوب تحديثه
+          if (Array.isArray(item[nestedKey])) {
+            const subList = item[nestedKey];
+            const hasTargetItem = subList.some((sub) => sub.id === id);
+
+            if (hasTargetItem) {
+              return {
+                ...item,
+                [nestedKey]: subList.map((subItem) =>
+                  subItem.id === id ? { ...subItem, ...updatedData } : subItem
+                ),
+              };
+            }
+          }
+
+          return item;
+        })
+      );
+
+      if (setSuccess) setSuccess("تم تعديل البيانات بنجاح.");
       if (onClosePopup) onClosePopup();
       onShowSuccessAlart();
     }

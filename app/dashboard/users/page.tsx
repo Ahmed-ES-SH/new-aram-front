@@ -29,15 +29,14 @@ export default function page() {
   ];
   return (
     <>
-      <div className="w-full">
-        <DynamicTable
-          itemDirect="users"
-          headers={headers}
-          keys={keys}
-          api="/users"
-          deletedApi="/delete-user"
-        />
-      </div>
+      <DynamicTable
+        itemDirect="users"
+        headers={headers}
+        keys={keys}
+        api="/users"
+        searchApi="/search-for-user-by-name"
+        deletedApi="/delete-user"
+      />
     </>
   );
 }

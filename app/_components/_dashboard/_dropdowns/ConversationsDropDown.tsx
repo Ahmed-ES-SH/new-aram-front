@@ -1,21 +1,27 @@
-import { UseVariables } from "@/app/context/VariablesContext";
+"use client";
+import type { RootState } from "@/app/Store/store";
+import {
+  setShowMessagesDrop,
+  setShowNotificationDrop,
+  setShowUserButton,
+} from "@/app/Store/variablesSlice";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { BiSolidMessageRounded } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ConversationsDropDown() {
-  const {
-    showMessagesDrop,
-    setShowMessagesDrop,
-    setShowNotificationDrop,
-    setShowUserButton,
-  } = UseVariables();
+  const dispatch = useDispatch();
+  const { showMessagesDrop } = useSelector(
+    (state: RootState) => state.variables
+  );
 
   const toggleDropdown = () => {
-    setShowMessagesDrop((prev) => !prev);
-    setShowNotificationDrop(false);
-    setShowUserButton(false);
+    dispatch(setShowMessagesDrop(!showMessagesDrop));
+    dispatch(setShowNotificationDrop(false));
+    dispatch(setShowUserButton(false));
   };
+
   return (
     <div className="relative">
       <div onClick={toggleDropdown} className=" relative w-fit">

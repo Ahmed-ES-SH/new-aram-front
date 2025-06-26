@@ -4,11 +4,15 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { FaChevronDown } from "react-icons/fa";
-import { UseVariables } from "@/app/context/VariablesContext";
 import { pages } from "@/app/constants/_dashboard/Sidebar";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/app/Store/store";
+import { setShowSidebar } from "@/app/Store/variablesSlice";
 
 export default function Sidebar() {
-  const { showSidebar, setShowSidebar } = UseVariables();
+  const dispatch = useDispatch();
+  const { showSidebar } = useSelector((state: RootState) => state.variables);
+
   const [expanded, setExpanded] = useState<Record<number, boolean>>({});
   // حركة Framer Motion للقوائم الفرعية
   const dropdownVariants = {
@@ -27,9 +31,6 @@ export default function Sidebar() {
   const toggleDropdown = (index: number) => {
     setExpanded((prev) => ({ ...prev, [index]: !prev[index] }));
   };
-  const toggle = () => {
-    setShowSidebar((prev) => !prev);
-  };
 
   return (
     <>
@@ -40,11 +41,11 @@ export default function Sidebar() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-[300px] bg-primary_dash xl:mt-16 pb-20 pt-2 h-screen  z-[99999999] fixed top-0 left-0 overflow-y-auto  shadow-md"
+            className="w-[300px] bg-primary-boldgray xl:mt-16 pb-20 pt-2 h-screen  z-[99999999] fixed top-0 left-0 overflow-y-auto  shadow-md"
           >
             <div className="w-full px-3">
               <HiBars3BottomRight
-                onClick={toggle}
+                onClick={() => dispatch(setShowSidebar(!showSidebar))}
                 className="text-white hover:scale-125 duration-200 block w-fit ml-auto size-7 cursor-pointer"
               />
             </div>

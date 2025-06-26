@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import useFetchItem from "@/app/_helpers/FetchItemData";
 import React, { useEffect, useRef, useState } from "react";
@@ -79,14 +78,12 @@ export default function DynamicElementPage({
       [name]: value,
     }));
 
-    // ✅ فقط القيم التي تغيرت يتم إضافتها إلى updatedData
     if (data && value !== data[name]) {
       setUpdatedData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
     } else {
-      // ✅ إذا عاد الحقل إلى قيمته الأصلية، نحذفه من updatedData
       setUpdatedData((prevData) => {
         const newData = { ...prevData };
         delete newData[name];
@@ -101,7 +98,6 @@ export default function DynamicElementPage({
       const file = files[0];
       setForm({ ...form, image: file });
 
-      // ✅ إذا تغيرت الصورة عن الأصلية، نضيفها إلى updatedData
       setUpdatedData((prevData) => ({
         ...prevData,
         image: file,
@@ -118,8 +114,6 @@ export default function DynamicElementPage({
       setForm(data);
     }
   }, [data]);
-
-  //
 
   if (loading || updateLoading) return <LoadingSpin />;
 
@@ -244,7 +238,11 @@ export default function DynamicElementPage({
                       />
                     ) : form["image"] ? (
                       <Img
-                        src={form["image"]}
+                        src={
+                          form["image"]
+                            ? form["image"]
+                            : "/defaults/noImage.png"
+                        }
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -284,7 +282,7 @@ export default function DynamicElementPage({
                       />
                     ) : form[input.name] ? (
                       <Img
-                        src={form[input.name] ? form[input.name] : "/public"}
+                        src={form[input.name]}
                         className="w-full h-full object-cover"
                       />
                     ) : (

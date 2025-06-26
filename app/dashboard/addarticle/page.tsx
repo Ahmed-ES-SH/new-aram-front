@@ -1,10 +1,8 @@
 "use client";
 import DynamicForm from "@/app/_components/_dashboard/_dynamicComponents/DynamicForm";
-import useDataContext from "@/app/context/DataContext";
 import React from "react";
 
 export default function Page() {
-  const { categories } = useDataContext();
   const inputsArticleData = [
     {
       name: "image",
@@ -47,7 +45,7 @@ export default function Page() {
       type: "",
       fildType: "select-type",
       label: { ar: "القسم الخاص بالمقال ", en: "" },
-      selectItems: categories.data,
+      selectItems: [],
     },
     {
       name: "status",

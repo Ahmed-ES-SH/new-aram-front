@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { instance } from "@/app/_helpers/axios";
 import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEdit, FaSort, FaTrash } from "react-icons/fa";
 import Img from "../../Img";
 import { formatDate } from "@/app/_helpers/dateHelper";
@@ -18,6 +17,7 @@ import SuccessAlart from "../../_popups/SuccessAlart";
 import ErrorAlart from "../../_popups/ErrorAlart";
 import SearchInput from "../SearchInput";
 import { useRouter } from "next/navigation";
+import NoDataFounded from "../NoDataFounded";
 
 interface props {
   api: string;
@@ -26,10 +26,12 @@ interface props {
   itemDirect: string;
   keys: cellType[];
   searchState?: boolean;
+  searchApi: string;
 }
 
 export default function DynamicTable({
   api,
+  searchApi,
   deletedApi,
   headers,
   keys,
@@ -38,10 +40,11 @@ export default function DynamicTable({
 }: props) {
   const { data, currentPage, setData, setCurrentPage, lastPage, loading } =
     useFetchData(api, true);
+  const router = useRouter();
   ///////////////////////////////////////////
   // Start  Stats Lines  ////////////////
   ///////////////////////////////////////////
-  const router = useRouter();
+
   const [confirmDeletePopup, setConfirmDeletePopup] = useState<boolean>(false);
   const [successPopup, setSuccessPopup] = useState<boolean>(false);
   const [errorPopup, setErrorPopup] = useState<boolean>(false);
@@ -49,6 +52,14 @@ export default function DynamicTable({
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [query, setQuery] = useState<string>("");
+  const [dataType, setDataType] = useState<"default" | "search">("default");
+  const [currentData, setCurrentData] = useState([]);
+  const [searchData, setSearchData] = useState([]);
+  const [loadingState, setLoadingState] = useState(loading);
+  const [defaultlastPage, setDefaultLastPage] = useState(lastPage);
+  const [defaultcurrentPage, setDefaultCurrentPage] = useState(currentPage);
+  const [searchCurrentPage, setSearchCurrentPage] = useState(1);
+  const [searchLastPage, setSearchLastPage] = useState(1);
 
   const onEdit = true;
   const onDelete = true;
@@ -61,9 +72,13 @@ export default function DynamicTable({
   // Start  Functions Lines  ////////////////
   ///////////////////////////////////////////
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage > 0 && newPage <= lastPage) {
-      setCurrentPage(newPage);
+  const handlePageChange = (page: number) => {
+    if (dataType === "default") {
+      setCurrentPage(page); // هذا من useFetchData
+      setDefaultCurrentPage(page);
+    } else {
+      setSearchCurrentPage(page);
+      fetchSearchData();
     }
   };
 
@@ -85,10 +100,8 @@ export default function DynamicTable({
       const response = await instance.delete(`${deletedApi}/${id}`);
 
       if (response.status === 200) {
-        // تحديث البيانات بعد الحذف
         setData((prev: any) => prev.filter((item: any) => item.id !== id));
 
-        // إظهار إشعار الحذف الناجح
         setSuccessPopup(true);
         setSuccessMessage("تم حذف العنصر المحدد بنجاح  .");
         setConfirmDeletePopup(false);
@@ -96,7 +109,6 @@ export default function DynamicTable({
     } catch (error) {
       console.error("Error deleting item:", error);
 
-      // عرض رسالة خطأ للمستخدم
       setErrorMessage("حدث خطأ أثناء الحذف. الرجاء المحاولة مرة أخرى.");
     }
   };
@@ -106,16 +118,63 @@ export default function DynamicTable({
     setSelectedItem(item);
   };
 
+  const fetchSearchData = async () => {
+    setLoadingState(true);
+    try {
+      setDataType("search");
+      const response = await instance.post(searchApi, { query: query });
+
+      if (response.status === 200) {
+        setSearchData(response.data.data);
+        setSearchLastPage(response.data.meta?.last_page || 1);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingState(false);
+    }
+  };
+  const fetchShowData = () => {
+    switch (dataType) {
+      case "default":
+        setCurrentData(data);
+        setLoadingState(loading);
+        setDefaultCurrentPage(currentPage);
+        setDefaultLastPage(lastPage);
+        break;
+
+      case "search":
+        setCurrentData(searchData);
+        setLoadingState(loading);
+    }
+  };
+  useEffect(() => {
+    setLoadingState(loading);
+  }, [loading]);
+
+  useEffect(() => {
+    if (query.length === 0) {
+      setDataType("default");
+      setSearchData([]);
+    }
+  }, [query]);
+
+  useEffect(() => {
+    fetchShowData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataType, data, searchData]);
+
   ///////////////////////////////////////////
   // End  Functions Lines  ////////////////
   ///////////////////////////////////////////
 
-  console.log(query);
-
   return (
-    <div className="w-full h-fit  hidden-scrollbar">
+    <div className="w-full min-h-screen mb-8 hidden-scrollbar">
       {searchState && (
-        <SearchInput handleSearch={() => {}} setSearchContent={setQuery} />
+        <SearchInput
+          handleSearch={fetchSearchData}
+          setSearchContent={setQuery}
+        />
       )}
       <motion.div
         className="overflow-x-auto rounded-lg w-[98%] mx-auto h-fit   shadow-lg"
@@ -123,9 +182,9 @@ export default function DynamicTable({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <table className="w-full border-collapse">
+        <table className="w-full border-gray-300 border border-collapse">
           {/* الرؤوس */}
-          <thead className="bg-primary_dash text-white">
+          <thead className="bg-primary-boldgray text-white">
             <tr>
               {headers.map((header, index) => (
                 <th
@@ -142,14 +201,17 @@ export default function DynamicTable({
 
           {/* محتوى الجدول */}
           <tbody>
-            {loading ? (
+            {loadingState ? (
               <tr>
-                <td colSpan={12}>
+                <td
+                  colSpan={headers.length + (onEdit || onDelete ? 1 : 0)}
+                  className="text-center py-6"
+                >
                   <LoadingSpin />
                 </td>
               </tr>
-            ) : data.length > 0 ? (
-              data.map((item: ItemDataType, index) => (
+            ) : currentData.length > 0 ? (
+              currentData.map((item: ItemDataType, index) => (
                 <motion.tr
                   key={index}
                   className="border-b transition-all hover:bg-secondery_dash"
@@ -157,11 +219,8 @@ export default function DynamicTable({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
+                  {/* هنا ترسم كل خلايا الصف بناءً على نوعها */}
                   {keys.map((cell: cellType, i) => {
-                    //////////////////
-                    // text Cell
-                    //////////////////
-
                     if (cell.cellType === "text") {
                       return (
                         <td
@@ -172,11 +231,6 @@ export default function DynamicTable({
                         </td>
                       );
                     }
-
-                    //////////////////
-                    // Image Cell
-                    //////////////////
-
                     if (cell.cellType === "image") {
                       return (
                         <td key={i} className="px-6 py-4">
@@ -185,19 +239,14 @@ export default function DynamicTable({
                               item[cell.key]
                                 ? item[cell.key]
                                 : item["gender"] == "male"
-                                ? "/defaults/default-male.png"
-                                : "/defaults/default-femele.png"
+                                ? "/defaults/male-noimage.jpg"
+                                : "/defaults/female-noimage.jpg"
                             }
                             className="w-12 h-12 rounded-full object-cover"
                           />
                         </td>
                       );
                     }
-
-                    //////////////////
-                    // Date Cell
-                    //////////////////
-
                     if (cell.cellType === "date") {
                       return (
                         <td
@@ -208,24 +257,20 @@ export default function DynamicTable({
                         </td>
                       );
                     }
-
-                    //////////////////
-                    // Status Cell
-                    //////////////////
                     if (cell.cellType === "status") {
                       return (
                         <td
                           key={i}
-                          className={`px-6  py-4   text-white text-center  text-md`}
+                          className="px-6 py-4 text-white text-center text-md"
                         >
                           <span
-                            className={`px-2 py-1 w-[150px] block text-center ${
-                              item[cell.key] == cell.conditions?.green
+                            className={`px-2 py-1 w-[150px] block text-center rounded-lg ${
+                              item[cell.key] === cell.conditions?.green
                                 ? "bg-green-300"
-                                : item[cell.key] == cell.conditions?.red
+                                : item[cell.key] === cell.conditions?.red
                                 ? "bg-red-300"
                                 : "bg-yellow-200 text-black"
-                            } rounded-lg`}
+                            }`}
                           >
                             {item[cell.key]}
                           </span>
@@ -233,7 +278,7 @@ export default function DynamicTable({
                       );
                     }
 
-                    return null; // في حال لم يكن cellType متطابق مع أي نوع، يتم إرجاع null لتجنب الأخطاء
+                    return null;
                   })}
 
                   {(onEdit || onDelete) && (
@@ -265,10 +310,10 @@ export default function DynamicTable({
             ) : (
               <tr>
                 <td
-                  colSpan={headers.length + 1}
-                  className="text-center py-6 text-gray-400"
+                  colSpan={headers.length + (onEdit || onDelete ? 1 : 0)}
+                  className="py-6 text-gray-400 text-center"
                 >
-                  لا توجد بيانات متاحة
+                  <NoDataFounded />
                 </td>
               </tr>
             )}
@@ -276,8 +321,10 @@ export default function DynamicTable({
         </table>
       </motion.div>
       <Pagination
-        currentPage={currentPage}
-        totalPages={lastPage}
+        currentPage={
+          dataType === "default" ? defaultcurrentPage : searchCurrentPage
+        }
+        totalPages={dataType === "default" ? defaultlastPage : searchLastPage}
         onPageChange={handlePageChange}
       />
       <ConfirmDeletePopup

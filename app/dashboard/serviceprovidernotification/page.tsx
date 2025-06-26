@@ -128,7 +128,7 @@ export default function UserNotification() {
           >
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-main_orange">
               <h2 className="text-xl max-md:text-sm">
-                عدد المستخدمون المحددون :
+                عدد مقدمى الخدمات المحددون :
                 {selectedUsers.length > 0 && selectedUsers.length}
               </h2>
               <button

@@ -89,7 +89,7 @@ export default function CompanyDetails() {
   // Fetch data from the server
   const fetchData = async () => {
     try {
-      const response = await instance.get("/detailes");
+      const response = await instance.get("/details");
       const data = response.data.data;
 
       const updatedSections = sections.map((section) => ({
@@ -123,6 +123,7 @@ export default function CompanyDetails() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Handle input changes
@@ -139,8 +140,6 @@ export default function CompanyDetails() {
       )
     );
   };
-
-  console.log(sections);
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -171,7 +170,7 @@ export default function CompanyDetails() {
           }
         });
       }
-      const response = await instance.post(`/update-detailes`, formData);
+      const response = await instance.post(`/update-details`, formData);
       if (response.status === 200) {
         setIsPopupVisible(true);
       }
@@ -208,7 +207,7 @@ export default function CompanyDetails() {
       }
       const videoId = videoIdMatch[1];
       const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1&loop=1&playlist=${videoId}&fs=0`;
-      const response = await instance.post(`/update-detailes`, {
+      const response = await instance.post(`/update-details`, {
         link_video: embedUrl,
         main_video: "",
       });
@@ -235,7 +234,7 @@ export default function CompanyDetails() {
       const formData = new FormData();
       formData.append("main_video", video);
       formData.append("link_video", "");
-      const response = await instance.post(`/update-detailes`, formData);
+      const response = await instance.post(`/update-details`, formData);
       if (response.status === 200) {
         const data = response.data.data;
         setVideo(data.main_video);
@@ -261,18 +260,18 @@ export default function CompanyDetails() {
   return (
     <>
       <div style={{ direction: "rtl" }} className="w-full  pb-6">
-        <h1 className="text-xl w-fit mx-auto font-semibold text-center pb-4 border-b-2 border-sky-400 dark:text-white">
+        <h1 className="text-xl w-fit mx-auto font-semibold text-center pb-4 border-b-2 border-sky-400 ">
           المحتوى الخاص بصفحة عن الشركة
         </h1>
         <form onSubmit={handleSubmit} className="w-[90%] mx-auto">
           {sections.map((section) => (
             <div
               key={section.id}
-              className="w-full pb-4 border-b-2 border-sky-500 my-2 flex items-center justify-between max-md:flex-col gap-4"
+              className="w-full pb-4 border-b-2 border-sky-500 my-2 flex items-center justify-between max-lg:flex-col gap-4"
             >
-              <div className="w-1/2 max-md:w-full max-md:px-2">
+              <div className="w-1/2 max-lg:w-full max-lg:px-2 space-y-4">
                 <div className="flex flex-col items-start gap-1">
-                  <label className="text-[18px] py-2 dark:text-white">
+                  <label className="text-[18px] py-2  pb-2 border-b border-b-primary w-fit mb-1">
                     {section.title}
                   </label>
                   <input
@@ -280,17 +279,17 @@ export default function CompanyDetails() {
                     value={section.titleEn}
                     name="titleEn"
                     onChange={(e) => handleTextChange(e, section.id)}
-                    className="w-full  px-4 outline-none  py-2 border rounded-md"
+                    className="w-full  px-4 outline-none  py-2 border border-gray-200 focus:border-primary duration-300 rounded-md"
                   />
                   <textarea
-                    name="textEn"
+                    name="contentEn"
                     value={section.contentEn}
                     onChange={(e) => handleTextChange(e, section.id)}
-                    className="w-full h-32 px-4 outline-none mt-2  py-2 border rounded-md"
+                    className="w-full h-32 px-4 outline-none  border-gray-200 focus:border-primary duration-300 mt-2  py-2 border rounded-md"
                   />
                 </div>
                 <div className="flex flex-col items-start gap-1">
-                  <label className="text-[18px] py-2 dark:text-white">
+                  <label className="text-[18px] py-2  pb-2 border-b border-b-primary w-fit mb-1">
                     {section.title} (عربى)
                   </label>
                   <input
@@ -298,13 +297,13 @@ export default function CompanyDetails() {
                     value={section.titleAr}
                     name="titleAr"
                     onChange={(e) => handleTextChange(e, section.id)}
-                    className="w-full  px-4 outline-none  py-2 border rounded-md"
+                    className="w-full  px-4 outline-none  py-2 border border-gray-200 focus:border-primary duration-300 rounded-md"
                   />
                   <textarea
-                    name="textAr"
+                    name="contentAr"
                     value={section.contentAr}
                     onChange={(e) => handleTextChange(e, section.id)}
-                    className="w-full h-32 px-4 outline-none  py-2 border rounded-md mt-2"
+                    className="w-full h-32 px-4 outline-none  border-gray-200 focus:border-primary duration-300  py-2 border rounded-md mt-2"
                   />
                 </div>
               </div>
@@ -319,7 +318,7 @@ export default function CompanyDetails() {
                         ? section.image
                         : URL.createObjectURL(section.image)
                     }
-                    className="w-48 h-48 object-cover"
+                    className="w-96 object-cover"
                   />
                 ) : (
                   <FaPlusCircle className="text-sky-400 text-4xl" />
@@ -336,9 +335,7 @@ export default function CompanyDetails() {
           ))}
           {/* قسم الفيديو الرئيسي */}
           <div className="w-full my-4">
-            <h2 className="text-lg font-semibold dark:text-white pb-2 ">
-              الفيديو الرئيسي
-            </h2>
+            <h2 className="text-lg font-semibold  pb-2 ">الفيديو الرئيسي</h2>
             <div className="flex flex-col gap-2 w-full">
               <input
                 type="file"
@@ -351,7 +348,7 @@ export default function CompanyDetails() {
           </div>
           <div
             onClick={() => settypevideopopup(true)}
-            className="w-full h-[10vh] flex hover:bg-black/70 hover:text-white items-center border group cursor-pointer rounded-md shadow-md hover:shadow-main_orange duration-150  my-2 justify-center "
+            className="w-full h-[10vh] flex hover:bg-black/70 hover:text-white items-center border border-gray-300 group cursor-pointer rounded-md shadow-md hover:shadow-main_orange duration-150  my-2 justify-center "
           >
             <div className="flex flex-col items-center gap-2 group-hover:scale-110 duration-150   ">
               <FaVideo />
@@ -403,7 +400,7 @@ export default function CompanyDetails() {
             className="fixed inset-0 z-[999999999999999999] flex items-center justify-center bg-black/50 backdrop-blur-lg bg-opacity-50"
           >
             <div className="bg-white dark:bg-secend_dash rounded-lg shadow-lg w-[90%] max-w-md p-6">
-              <h2 className="text-xl font-semibold text-center mb-4 dark:text-white">
+              <h2 className="text-xl font-semibold text-center mb-4 ">
                 إختر نوع البيانات
               </h2>
               <div className="grid grid-cols-2 gap-4">
@@ -447,7 +444,7 @@ export default function CompanyDetails() {
           className="fixed w-full min-h-screen inset-0 z-[999999999] flex items-center justify-center bg-black/50  backdrop-blur-lg"
         >
           <div className="bg-white relative overflow-hidden dark:bg-main_dash rounded-lg shadow-lg w-1/2 max-md:w-[90%] max-lg:w-3/4  p-6">
-            <h2 className="text-xl font-semibold text-center mb-4 dark:text-white">
+            <h2 className="text-xl font-semibold text-center mb-4 ">
               أضف الرابط
             </h2>
             <form className="w-full flex flex-col items-center justify-center">
@@ -461,7 +458,7 @@ export default function CompanyDetails() {
               />
               <div
                 onClick={handleUpdateLinkVideo}
-                className="w-1/2 cursor-pointer mt-6 max-md:w-[95%] p-2 text-white rounded-md text-center bg-primary"
+                className="w-1/2 cursor-pointer mt-6 max-lg:w-[95%] p-2 text-white rounded-md text-center bg-primary"
               >
                 حفظ
               </div>
@@ -489,7 +486,7 @@ export default function CompanyDetails() {
           className="fixed w-full min-h-screen inset-0 z-[999999999] flex items-center justify-center bg-black bg-opacity-50"
         >
           <div className="bg-white relative overflow-hidden dark:bg-main_dash rounded-lg shadow-lgw-[90%] w-3/4  p-6">
-            <h2 className="text-xl pb-2 border-b border-main_orange w-fit mx-auto font-semibold text-center mb-4 dark:text-white">
+            <h2 className="text-xl pb-2 border-b border-main_orange w-fit mx-auto font-semibold text-center mb-4 ">
               حدد ملف الفيديو
             </h2>
             <div className="w-full min-h-[70vh] relative flex items-center justify-center rounded-md">
@@ -513,7 +510,7 @@ export default function CompanyDetails() {
             <div className="flex items-center mt-6 gap-2 w-fit mx-auto">
               <div
                 onClick={handleUpdateMainVideo}
-                className="w-[250px] cursor-pointer  max-md:w-[95%] p-2 text-white rounded-md text-center bg-primary"
+                className="w-[250px] cursor-pointer  max-lg:w-[95%] p-2 text-white rounded-md text-center bg-primary"
               >
                 حفظ
               </div>
@@ -533,7 +530,7 @@ export default function CompanyDetails() {
             )}
             <button
               onClick={handlecloseFilePopup}
-              className="px-2 absolute top-2 left-4 w-fit bg-main_blue text-white py-2 rounded-lg hover:bg-orange-600 transition"
+              className="px-2 absolute top-2 left-4 w-fit bg-primary duration-200 text-white py-2 rounded-lg hover:bg-orange-600 hover:scale-105 transition"
             >
               <FaTimes />
             </button>

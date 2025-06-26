@@ -144,7 +144,7 @@ export const UpdateUserinputs = [
     fildType: "select-type",
     label: { ar: "نوع الحساب", en: "" },
     placeholder: "",
-    selectItems: [{ name: "admin" }, { name: "user" }, { name: "student" }],
+    selectItems: [{ name: "admin" }, { name: "client" }],
   },
 ];
 

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Borsan Academy",
-  description: "Borsan Academy",
+  title: "Mada Plus",
+  description: "Mada Plus",
 };
 
 export default function RootLayout({
