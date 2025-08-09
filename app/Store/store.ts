@@ -3,11 +3,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import variablesReducer from "./variablesSlice";
 import dataReducer from "./dataSlice";
+import userReducer from "./userSlice";
 
 export const store = configureStore({
   reducer: {
     variables: variablesReducer,
     data: dataReducer,
+    user: userReducer,
   },
 });
 

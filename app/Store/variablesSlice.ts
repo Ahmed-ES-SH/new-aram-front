@@ -3,7 +3,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface VariablesState {
-  language: string;
+  locale: "en" | "ar";
   showSidebar: boolean;
   showUserButton: boolean;
   showMessagesDrop: boolean;
@@ -11,7 +11,7 @@ interface VariablesState {
 }
 
 const initialState: VariablesState = {
-  language: "en",
+  locale: "en",
   showSidebar: true,
   showUserButton: false,
   showMessagesDrop: false,
@@ -22,8 +22,8 @@ const variablesSlice = createSlice({
   name: "variables",
   initialState,
   reducers: {
-    setLanguage: (state, action: PayloadAction<string>) => {
-      state.language = action.payload;
+    setLocale: (state, action: PayloadAction<"en" | "ar">) => {
+      state.locale = action.payload;
     },
     setShowSidebar: (state, action: PayloadAction<boolean>) => {
       state.showSidebar = action.payload;
@@ -41,7 +41,7 @@ const variablesSlice = createSlice({
 });
 
 export const {
-  setLanguage,
+  setLocale,
   setShowSidebar,
   setShowUserButton,
   setShowMessagesDrop,

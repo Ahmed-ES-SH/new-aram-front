@@ -1,9 +1,5 @@
-export const handlePageChange = (
-  newPage: number,
-  lastPage: number,
-  setCurrentPage: (page: number) => void
-) => {
-  if (newPage > 0 && newPage <= lastPage) {
-    setCurrentPage(newPage);
-  }
+import * as FaIcons from "react-icons/fa";
+
+export const getIconComponent = (iconName: string) => {
+  return FaIcons[iconName as keyof typeof FaIcons] || FaIcons.FaQuestionCircle;
 };
