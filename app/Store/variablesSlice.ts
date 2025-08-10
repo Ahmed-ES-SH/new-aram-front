@@ -1,9 +1,24 @@
 // redux/variablesSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { currencies } from "../constants/_website/navbar";
+
+interface currencyType {
+  code: string;
+  name: {
+    en: string;
+    ar: string;
+  };
+  flag: string;
+  symbol: string;
+}
 
 interface VariablesState {
   locale: "en" | "ar";
+  width: number;
+  activeCurrency: currencyType;
+  isMenuOpen: boolean;
+  isCartOpen: boolean;
   showSidebar: boolean;
   showUserButton: boolean;
   showMessagesDrop: boolean;
@@ -12,6 +27,10 @@ interface VariablesState {
 
 const initialState: VariablesState = {
   locale: "en",
+  width: 0,
+  activeCurrency: currencies[0],
+  isMenuOpen: false,
+  isCartOpen: false,
   showSidebar: true,
   showUserButton: false,
   showMessagesDrop: false,
@@ -25,8 +44,20 @@ const variablesSlice = createSlice({
     setLocale: (state, action: PayloadAction<"en" | "ar">) => {
       state.locale = action.payload;
     },
+    setWidth: (state, action: PayloadAction<number>) => {
+      state.width = action.payload;
+    },
+    setActiveCurrency: (state, action: PayloadAction<currencyType>) => {
+      state.activeCurrency = action.payload;
+    },
     setShowSidebar: (state, action: PayloadAction<boolean>) => {
       state.showSidebar = action.payload;
+    },
+    setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
+      state.isMenuOpen = action.payload;
+    },
+    setIsCartOpen: (state, action: PayloadAction<boolean>) => {
+      state.isCartOpen = action.payload;
     },
     setShowUserButton: (state, action: PayloadAction<boolean>) => {
       state.showUserButton = action.payload;
@@ -44,6 +75,10 @@ export const {
   setLocale,
   setShowSidebar,
   setShowUserButton,
+  setIsCartOpen,
+  setIsMenuOpen,
+  setActiveCurrency,
+  setWidth,
   setShowMessagesDrop,
   setShowNotificationDrop,
 } = variablesSlice.actions;

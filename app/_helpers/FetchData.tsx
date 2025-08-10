@@ -1,6 +1,30 @@
-export default async function FetchData(api: string, paginationState: boolean) {
+import { cookies } from "next/headers";
+
+export default async function FetchData<T = any>(
+  api: string,
+  paginationState: boolean
+): Promise<{ data: T; pagination?: any } | T | { error: string }> {
   try {
-    const response = await fetch(api);
+    const cookieStore = cookies();
+
+    const token = await (await cookieStore).get("aram_token");
+
+    const headers: HeadersInit = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token.value}`;
+    }
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}${api}`,
+      {
+        method: "GET",
+        headers,
+        cache: "no-store", // important: disable caching for dynamic data
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -8,7 +32,6 @@ export default async function FetchData(api: string, paginationState: boolean) {
 
     const result = await response.json();
 
-    // إذا كان `paginationState` = true، نعيد البيانات مع معلومات الصفحات
     if (paginationState) {
       return {
         data: result.data || [],
@@ -16,12 +39,9 @@ export default async function FetchData(api: string, paginationState: boolean) {
       };
     }
 
-    // إرجاع البيانات مباشرة بدون معلومات التصفح
     return result.data || [];
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Error fetching data:", error);
-
-    // يمكن إرجاع خطأ بشكل مناسب بدلاً من undefined
     return { error: "Something went wrong while fetching data." };
   }
 }

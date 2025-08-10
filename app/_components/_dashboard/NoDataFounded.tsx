@@ -1,5 +1,5 @@
 import React from "react";
-import Img from "../Img";
+import Img from "../_website/_global/Img";
 
 export default function NoDataFounded() {
   return (

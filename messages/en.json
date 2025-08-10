@@ -1,1 +1,90 @@
-{}
+{
+  "metaLayoutContent": {
+    "title": "Aram Gulf",
+    "description": "Aram Gulf Co. Ltd. provides a comprehensive platform for cosmetic procedures and offers medical cards for use in healthcare and cosmetic centers affiliated with the platform. We deliver innovative solutions and integrated services to meet your beauty and health needs."
+  },
+
+  "authButtons": {
+    "login": "Login",
+    "register": "Register"
+  },
+
+  "hero": {
+    "static": {
+      "heading": "Book Anything, Anywhere, Anytime",
+      "subheading": "The ultimate booking platform that connects you with fitness centers, restaurants, events, and more. Experience seamless reservations with just a few clicks.",
+      "primaryButton": "Get Started",
+      "secondaryButton": "Learn More"
+    },
+    "slider": {
+      "fitness": {
+        "heading": "Book Your Perfect Workout",
+        "subheading": "Reserve gym sessions, fitness classes, and personal training slots at top-rated facilities near you.",
+        "primaryButton": "Find Gyms",
+        "secondaryButton": "View Classes"
+      },
+      "restaurant": {
+        "heading": "Reserve Your Table",
+        "subheading": "Discover and book tables at the finest restaurants, cafes, and dining experiences in your city.",
+        "primaryButton": "Book Table",
+        "secondaryButton": "Browse Menus"
+      },
+      "events": {
+        "heading": "Join Amazing Events",
+        "subheading": "Book tickets for workshops, conferences, concerts, and exclusive events happening around you.",
+        "primaryButton": "Find Events",
+        "secondaryButton": "Create Event"
+      }
+    },
+
+    "video": {
+      "heading": "Experience Seamless Booking",
+      "subheading": "Join thousands of satisfied customers who trust our platform for all their booking needs. From fitness to dining, events to experiences.",
+      "primaryButton": "Start Booking Now",
+      "secondaryButton": "Watch Demo",
+      "stats": [
+        {
+          "number": "50K+",
+          "label": "Happy Customers"
+        },
+        {
+          "number": "1M+",
+          "label": "Bookings Made"
+        },
+        {
+          "number": "500+",
+          "label": "Partner Venues"
+        }
+      ]
+    }
+  },
+
+  "cart": {
+    "title": "Your Cart",
+    "empty_title": "Your cart is empty",
+    "empty_message": "Looks like you haven't added anything to your cart yet.",
+    "start_shopping": "Start Shopping",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "discount": "Discount",
+    "total": "Total",
+    "no_discounts": "0 Discounts Applied",
+    "checkout": "Checkout"
+  },
+
+  "login": {
+    "title": "Welcome Back",
+    "subtitle": "Sign in to your account",
+    "phoneOrEmail": "Phone Number or Email",
+    "phoneOrEmailPlaceholder": "Enter your phone number or email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot Password?",
+    "signIn": "Sign In",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithFacebook": "Continue with Facebook",
+    "orContinueWith": "Or continue with",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  }
+}

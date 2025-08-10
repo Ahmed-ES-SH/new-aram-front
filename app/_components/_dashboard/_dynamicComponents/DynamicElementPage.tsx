@@ -2,13 +2,15 @@
 import useFetchItem from "@/app/_helpers/FetchItemData";
 import React, { useEffect, useRef, useState } from "react";
 import LoadingSpin from "../../LoadingSpin";
-import { handleUpdateItem } from "@/app/_helpers/updateHelper";
 import SuccessAlart from "../../_popups/SuccessAlart";
 import ErrorAlart from "../../_popups/ErrorAlart";
-import Img from "../../Img";
 import { FaImage } from "react-icons/fa";
 import { errorType, InputField } from "@/app/types/_dashboard/GlobalTypes";
 import { useRouter } from "next/navigation";
+import { instance } from "@/app/_helpers/axios";
+import { getIconComponent } from "@/app/_helpers/helpers";
+import Img from "../../_website/_global/Img";
+import IconPicker from "../../_website/_global/IconPicker";
 
 interface props {
   api: string;
@@ -42,6 +44,8 @@ export default function DynamicElementPage({
   const [successPopup, setSuccessPopup] = useState(false);
   const [errorPopup, setErrorPopup] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
+  const [showIconPicker, setShowIconPicker] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState("");
   const [errors, setErrors] = useState<errorType>({});
 
   // Start Functions Lines
@@ -49,21 +53,58 @@ export default function DynamicElementPage({
   // The Function For Update The Item Data .
 
   const handleSaveChanges = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    if (!form) return;
     e.preventDefault();
-    handleUpdateItem({
-      endpoint: updateEndPoint,
-      id: id,
-      setLoading: setUpdateLoading,
-      updatedData: updatedData,
-      onShowErrorAlert: () => setErrorPopup(true),
-      setError: setErrorMessage,
-      setSuccess: setSuccessMessage,
-      setErrors: setErrors,
-      onShowSuccessAlart: () => setSuccessPopup(true),
-    });
-    setUpdatedData({});
-    if (direct) router.push(direct);
+    if (!form) return;
+
+    try {
+      setUpdateLoading(true);
+
+      const formData = new FormData();
+
+      // تعبئة formData من updatedData
+      for (const key in updatedData) {
+        const value = updatedData[key];
+
+        // إذا كانت القيمة عبارة عن ملف
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else {
+          formData.append(key, value ?? ""); // null/undefined safe
+        }
+      }
+
+      const response = await instance.post(
+        `${updateEndPoint}/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 204) {
+        setSuccessMessage("Updated successfully");
+        setSuccessPopup(true);
+        setUpdatedData({});
+        if (direct) router.push(direct);
+      } else {
+        setErrorMessage("Update failed");
+        setErrorPopup(true);
+      }
+    } catch (error: any) {
+      console.log(error);
+      setErrorPopup(true);
+      setErrorMessage(
+        error?.response?.data?.message || "An unexpected error occurred"
+      );
+
+      if (error?.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      }
+    } finally {
+      setUpdateLoading(false);
+    }
   };
 
   const handleChange = (
@@ -105,6 +146,13 @@ export default function DynamicElementPage({
     }
   };
 
+  const handleChangeIcon = (iconName: string) => {
+    setSelectedIcon(iconName);
+    setUpdatedData({ ...updatedData, icon_name: iconName });
+    setForm({ ...updatedData, icon_name: iconName });
+    setShowIconPicker(false);
+  };
+
   //  End Functions Lines
 
   // Add The Data To The Form Object .
@@ -119,7 +167,7 @@ export default function DynamicElementPage({
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-full mt-10">
         <form
           onSubmit={handleSaveChanges}
           style={{ direction: "rtl" }}
@@ -147,7 +195,7 @@ export default function DynamicElementPage({
                   />
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name]["ar"]}
+                      {errors[input.name][0]["ar"]}
                     </p>
                   )}
                 </div>
@@ -173,7 +221,7 @@ export default function DynamicElementPage({
                   />
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name]["ar"]}
+                      {errors[input.name][0]["ar"]}
                     </p>
                   )}
                 </div>
@@ -212,10 +260,36 @@ export default function DynamicElementPage({
                     />
                     {errors[input.name] && (
                       <p className="text-red-500 text-sm mt-1">
-                        {errors[input.name]["ar"]}
+                        {errors[input.name][0]["ar"]}
                       </p>
                     )}
                   </div>
+                </div>
+              );
+            }
+
+            //////////////////////
+            //Color  Fild
+            //////////////////////
+
+            if (input.fildType === "color-fild") {
+              return (
+                <div className="flex flex-col gap-3" key={index}>
+                  <label htmlFor={input.name} className="input-label">
+                    {input.label["ar"]}
+                  </label>
+                  <input
+                    name={input.name}
+                    type="color"
+                    value={(form[input.name] as string) || "#000000"}
+                    onChange={handleChange}
+                    className="w-16 h-10 p-0 border-0 cursor-pointer"
+                  />
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name]["ar"]}
+                    </p>
+                  )}
                 </div>
               );
             }
@@ -226,10 +300,16 @@ export default function DynamicElementPage({
 
             if (input.fildType == "normal-image") {
               return (
-                <div key={index} className="h-96">
+                <div
+                  key={index}
+                  className="flex flex-col gap-2 items-start w-fit ml-auto"
+                >
+                  <label htmlFor={input.name} className="input-label">
+                    {input.label["ar"]}
+                  </label>
                   <div
                     onClick={() => openImageinput.current?.click()}
-                    className="w-72 h-60 p-4 overflow-hidden rounded-sm  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
+                    className="w-72 h-60 p-4 overflow-hidden rounded-lg shadow  border-gray-300  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
                   >
                     {form?.image instanceof File ? (
                       <Img
@@ -257,7 +337,7 @@ export default function DynamicElementPage({
                   </div>
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name]["ar"]}
+                      {errors[input.name][0]["ar"]}
                     </p>
                   )}
                 </div>
@@ -297,7 +377,33 @@ export default function DynamicElementPage({
                   </div>
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name]["ar"]}
+                      {errors[input.name][0]["ar"]}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
+            //////////////////////
+            //select Icon
+            //////////////////////
+
+            if (input.fildType == "icon-fild") {
+              const Icon = getIconComponent(form[input.name]);
+              return (
+                <div className="flex flex-col gap-3 w-fit ml-auto" key={index}>
+                  <label htmlFor={input.name} className="input-label">
+                    {input.label["ar"]}
+                  </label>
+                  <div
+                    onClick={() => setShowIconPicker(true)}
+                    className="shadow w-72 h-60 flex items-center justify-center rounded-lg border border-gray-300 p-2 text-primary hover:bg-primary hover:text-white duration-300"
+                  >
+                    <Icon className="size-32 cursor-pointer select-effect" />
+                  </div>
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name][0]["ar"]}
                     </p>
                   )}
                 </div>
@@ -339,7 +445,7 @@ export default function DynamicElementPage({
                   </select>
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name]["ar"]}
+                      {errors[input.name][0]["ar"]}
                     </p>
                   )}
                 </div>
@@ -360,6 +466,13 @@ export default function DynamicElementPage({
         showAlart={errorPopup}
         onClose={() => setErrorPopup(false)}
         Message={errorMessage}
+      />
+
+      <IconPicker
+        show={showIconPicker}
+        onClose={() => setShowIconPicker(false)}
+        selectedIcon={selectedIcon}
+        onChange={handleChangeIcon}
       />
     </>
   );

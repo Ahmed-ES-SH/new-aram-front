@@ -1,15 +1,16 @@
 "use client";
-
 import { instance } from "@/app/_helpers/axios";
 import React, { useEffect, useRef, useState } from "react";
 import { LuUserPen } from "react-icons/lu";
-import Img from "../../Img";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import SuccessAlart from "../../_popups/SuccessAlart";
 import LoadingSpin from "../../LoadingSpin";
 import { FaImage } from "react-icons/fa";
 import { errorType, InputField } from "@/app/types/_dashboard/GlobalTypes";
+import { getIconComponent } from "@/app/_helpers/helpers";
+import Img from "../../_website/_global/Img";
+import IconPicker from "../../_website/_global/IconPicker";
 
 interface Props {
   inputs: InputField[];
@@ -17,6 +18,8 @@ interface Props {
   direct: string;
   submitValue: string;
   successMessage: string;
+  title: string;
+  subtitle?: string;
 }
 
 export default function DynamicForm({
@@ -25,6 +28,8 @@ export default function DynamicForm({
   direct,
   submitValue,
   successMessage,
+  title,
+  subtitle,
 }: Props) {
   const router = useRouter();
   const openImageinput = useRef<HTMLInputElement | null>(null);
@@ -33,6 +38,8 @@ export default function DynamicForm({
   const [errors, setErrors] = useState<errorType>({});
   const [successPopup, setSuccessPopup] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showIconPicker, setShowIconPicker] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState("");
 
   ///////////////////////////////////
   // start Fetch The Form Detailes
@@ -132,7 +139,12 @@ export default function DynamicForm({
     setSuccessPopup(false);
   };
 
-  console.log(errors);
+  const handleChangeIcon = (iconName: string) => {
+    setSelectedIcon(iconName);
+    setForm({ ...form, icon_name: iconName });
+    setShowIconPicker(false);
+  };
+
   ///////////////////////////////////
   // End Functions Lines
   ///////////////////////////////////
@@ -144,8 +156,19 @@ export default function DynamicForm({
       <form
         onSubmit={handleSubmit}
         style={{ direction: "rtl" }}
-        className="w-[98%] h-fit overflow-y-auto mx-auto max-md:w-[96%] mt-2 flex flex-col gap-3"
+        className="w-[90%] border border-gray-300 shadow-lg rounded-xl px-4 py-12 mb-4 mt-12 h-fit overflow-y-auto mx-auto max-md:w-[96%]  flex flex-col gap-3"
       >
+        <div className="text-center mb-6">
+          <h1 className="text-3xl sm:text-4xl font-bold text-primary tracking-tight drop-shadow-md">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="mt-2 text-sm sm:text-base text-gray-600 italic">
+              {subtitle}
+            </p>
+          )}
+          <div className="mt-3 w-24 h-1 mx-auto bg-gradient-to-r from-primary via-blue-500 to-primary rounded-full animate-pulse" />
+        </div>
         {inputs.map((input, index) => {
           //////////////////////
           //Normal input
@@ -164,6 +187,32 @@ export default function DynamicForm({
                   value={(form[input.name] as string) || ""}
                   onChange={handleChange}
                   className="input-style"
+                />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name]["ar"]}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          //Color  Fild
+          //////////////////////
+
+          if (input.fildType === "color-fild") {
+            return (
+              <div className="flex flex-col gap-3 " key={index}>
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
+                <input
+                  name={input.name}
+                  type="color"
+                  value={(form[input.name] as string) || "#000000"}
+                  onChange={handleChange}
+                  className="w-32 h-32  select-effect p-0 border-0 cursor-pointer"
                 />
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
@@ -240,10 +289,13 @@ export default function DynamicForm({
 
           if (input.fildType == "normal-image") {
             return (
-              <div key={index} className="h-96">
+              <div key={index} className="my-4 flex flex-col gap-4">
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
                 <div
                   onClick={() => openImageinput.current?.click()}
-                  className="w-72 h-60 overflow-hidden rounded-lg border border-gray-300 shadow-md hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto  flex items-center justify-center "
+                  className="w-72 min-h-60 overflow-hidden rounded-lg border border-gray-300 shadow-md hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto  flex items-center justify-center "
                 >
                   {form[input.name] instanceof File ? (
                     <Img
@@ -263,6 +315,32 @@ export default function DynamicForm({
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors[input.name]["ar"]}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          //select Icon
+          //////////////////////
+
+          if (input.fildType == "icon-fild") {
+            const Icon = getIconComponent(form[input.name]);
+            return (
+              <div className="flex flex-col gap-3 " key={index}>
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
+                <div
+                  onClick={() => setShowIconPicker(true)}
+                  className="shadow  w-72 flex items-center justify-center h-52 rounded-xl mx-auto border border-gray-300 cursor-pointer duration-300 hover:bg-primary hover:text-white text-primary hover:border-primary"
+                >
+                  <Icon className="size-32  cursor-pointer select-effect" />
+                </div>
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name][0]["ar"]}
                   </p>
                 )}
               </div>
@@ -306,6 +384,44 @@ export default function DynamicForm({
             );
           }
 
+          //    if (input.fildType == "select-category") {
+          //   return (
+          //     <div key={index} className="w-full flex flex-col gap-2">
+          //       <label htmlFor={input.name} className="input-label">
+          //         {input.label["ar"]}
+          //       </label>
+          //       <select
+          //         onChange={handleChange}
+          //         name={input.name}
+          //         className="select-style"
+          //         value={
+          //           form[input.name]
+          //             ? (form[input.name] as string)
+          //             : form[input.name]?.title_en || ""
+          //         }
+          //       >
+          //         <option value="" disabled>
+          //           {"حدد أحد الإختيارات التالية : -"}
+          //         </option>
+          //         {input.selectItems &&
+          //           input.selectItems.map((item) => (
+          //             <option
+          //               key={item.name ? item.name : item.id}
+          //               value={item.id}
+          //             >
+          //               {item.name ? item.name : item?.title_en}
+          //             </option>
+          //           ))}
+          //       </select>
+          //       {errors[input.name] && (
+          //         <p className="text-red-500 text-sm mt-1">
+          //           {errors[input.name]["ar"]}
+          //         </p>
+          //       )}
+          //     </div>
+          //   );
+          // }
+
           //////////////////////
           //Select Eelement
           //////////////////////
@@ -335,7 +451,7 @@ export default function DynamicForm({
                         key={item.name ? item.name : item.id}
                         value={item.name ? item.name : item.id}
                       >
-                        {item.name ? item.name : item?.title_en}
+                        {item.name ? item.name : item?.title_ar}
                       </option>
                     ))}
                 </select>
@@ -356,6 +472,13 @@ export default function DynamicForm({
         showAlart={successPopup}
         onClose={handleCloseAlart}
         Message={successMessage}
+      />
+
+      <IconPicker
+        show={showIconPicker}
+        onClose={() => setShowIconPicker(false)}
+        selectedIcon={selectedIcon}
+        onChange={handleChangeIcon}
       />
     </>
   );

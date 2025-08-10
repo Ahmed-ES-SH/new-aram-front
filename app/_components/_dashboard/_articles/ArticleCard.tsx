@@ -1,12 +1,12 @@
 import { ArticleType } from "@/app/types/_dashboard/GlobalTypes";
 import React from "react";
-import Img from "../../Img";
 import { CiCalendarDate } from "react-icons/ci";
 import { MdOutlineTitle } from "react-icons/md";
 import { FaComments } from "react-icons/fa";
 import { VscReactions } from "react-icons/vsc";
 import { formatDate } from "@/app/_helpers/dateHelper";
-import Link from "next/link";
+import Img from "../../_website/_global/Img";
+import LocaleLink from "../../_website/_global/LocaleLink";
 
 interface props {
   Article: ArticleType;
@@ -16,7 +16,7 @@ interface props {
 export default function ArticleCard({ Article, direct }: props) {
   const date = formatDate(Article.created_at);
   return (
-    <Link className="block w-full" href={`${direct}/${Article.id}`}>
+    <LocaleLink className="block w-full" href={`${direct}/${Article.id}`}>
       <div className=" group w-[97%] max-xl:w-full h-[300px] max-md:h-[500px] max-lg:h-[480px] max-xl:h-[450px] overflow-hidden rounded-md hover:scale-110 hover:bg-primary hover:text-white duration-200 cursor-pointer shadow-lg bg-white border border-gray-300 flex gap-2 items-start max-xl:flex-col">
         <div className="img flex-1/5 max-xl:h-1/2 h-full  max-xl:w-full">
           <Img
@@ -81,6 +81,6 @@ export default function ArticleCard({ Article, direct }: props) {
           </div>
         </div>
       </div>
-    </Link>
+    </LocaleLink>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Img from "../Img";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import UserDropDown from "./_dropdowns/UserDropDown";
 import ConversationsDropDown from "./_dropdowns/ConversationsDropDown";
@@ -8,6 +7,8 @@ import NotificationsDropDown from "./_dropdowns/NotificationsDropDown";
 import { useDispatch, useSelector } from "react-redux";
 import { setShowSidebar } from "@/app/Store/variablesSlice";
 import type { RootState } from "@/app/Store/store";
+import Img from "../_website/_global/Img";
+import LocaleLink from "../_website/_global/LocaleLink";
 
 export default function Topbar() {
   const dispatch = useDispatch();
@@ -25,12 +26,9 @@ export default function Topbar() {
               }`}
             />
 
-            <div className="flex items-center justify-center w-16 h-16 max-md:w-10 max-md:h-10  rounded-full">
-              <Img
-                className="w-full h-full  rounded-full max-md:w-10 max-md:h-10"
-                src="/logo.png"
-              />
-            </div>
+            <LocaleLink href="/" className="flex items-center justify-center">
+              <Img className="w-[65px]" src="/logo.png" />
+            </LocaleLink>
           </div>
           <div className="flex items-center gap-5 cursor-pointer">
             <UserDropDown />

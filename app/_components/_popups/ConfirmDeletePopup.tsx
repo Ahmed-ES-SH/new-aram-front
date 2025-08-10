@@ -2,14 +2,15 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { FaTimes, FaTrash } from "react-icons/fa";
-import { GiTireIronCross } from "react-icons/gi";
 import { MdErrorOutline } from "react-icons/md";
+import { VscLoading } from "react-icons/vsc";
 
 interface props {
   title: string | undefined;
-  id: number | null | undefined;
+  id: number;
   showConfirm: boolean;
-  onDelete: (id: number | undefined) => void;
+  onDelete: (id: number) => void;
+  loading?: boolean;
   onClose: () => void;
 }
 
@@ -18,6 +19,7 @@ export default function ConfirmDeletePopup({
   id,
   showConfirm,
   onDelete,
+  loading,
   onClose,
 }: props) {
   return (
@@ -38,9 +40,6 @@ export default function ConfirmDeletePopup({
               exit={{ y: -500 }}
               className="w-1/3 max-xl:w-1/2 max-lg:w-3/4 max-md:w-[95%]  h-fit bg-[#fff] relative pt-4  rounded-md shadow-lg flex items-center flex-col gap-6 "
             >
-              <div onClick={onClose} className="close-btn">
-                <GiTireIronCross className="size-6" />
-              </div>
               <div className="w-24 h-24 rounded-full bg-red-500/10 flex items-center justify-center">
                 <div className="w-20 h-20 rounded-full bg-red-500/10 flex items-center justify-center">
                   <MdErrorOutline className="text-red-400 size-10" />
@@ -64,12 +63,15 @@ export default function ConfirmDeletePopup({
                   <FaTimes />
                   <p>إلغاء</p>
                 </button>
-                <button
-                  onClick={() => onDelete(id || 0)}
-                  className="danger-btn"
-                >
-                  <FaTrash />
-                  <p>حذف</p>
+                <button onClick={() => onDelete(id)} className="danger-btn">
+                  {loading ? (
+                    <VscLoading className="text-white animate-spin" />
+                  ) : (
+                    <>
+                      <FaTrash />
+                      <p>حذف</p>
+                    </>
+                  )}
                 </button>
               </div>
             </motion.div>

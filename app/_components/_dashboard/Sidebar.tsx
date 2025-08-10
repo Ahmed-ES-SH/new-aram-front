@@ -1,6 +1,5 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import React, { useState } from "react";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { FaChevronDown } from "react-icons/fa";
@@ -8,6 +7,7 @@ import { pages } from "@/app/constants/_dashboard/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/app/Store/store";
 import { setShowSidebar } from "@/app/Store/variablesSlice";
+import LocaleLink from "../_website/_global/LocaleLink";
 
 export default function Sidebar() {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ export default function Sidebar() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-[300px] bg-primary-boldgray xl:mt-16 pb-20 pt-2 h-screen  z-[99999999] fixed top-0 left-0 overflow-y-auto  shadow-md"
+            className="w-[300px] bg-primary-boldgray xl:mt-16 pb-20 pt-2 h-screen  z-[99] fixed top-0 left-0 overflow-y-auto  shadow-md"
           >
             <div className="w-full px-3">
               <HiBars3BottomRight
@@ -55,19 +55,24 @@ export default function Sidebar() {
                 <li key={index} className="relative">
                   <div
                     onClick={() => toggleDropdown(index)}
-                    className="flex items-center gap-4 px-4  hover:bg-primary text-white py-3 duration-150 cursor-pointer"
+                    className="flex items-center gap-4 px-4  hover:bg-gray-500 text-white py-3 duration-150 cursor-pointer"
                   >
                     {/* ايقونة الصفحة */}
                     {page.icon}
                     {/* اسم الصفحة */}
-                    {
-                      <Link
+                    {page.to ? (
+                      <LocaleLink
                         href={page.to}
-                        className="text-sm whitespace-nowrap flex-1  duration-150"
+                        className="text-sm whitespace-nowrap flex-1 duration-150"
                       >
                         {page.title}
-                      </Link>
-                    }
+                      </LocaleLink>
+                    ) : (
+                      <span className="text-sm whitespace-nowrap flex-1 duration-150 cursor-default">
+                        {page.title}
+                      </span>
+                    )}
+
                     {/* أيقونة dropdown */}
                     {page.minilinks && page.minilinks.length > 0 && (
                       <FaChevronDown
@@ -85,14 +90,14 @@ export default function Sidebar() {
                     className="ml-8 overflow-hidden"
                   >
                     {page.minilinks?.map((link, subIndex) => (
-                      <Link href={link.to} key={subIndex}>
-                        <div className="flex items-center gap-4 px-4 py-2 hover:bg-primary  duration-200 text-white cursor-pointer">
+                      <LocaleLink href={link.to} key={subIndex}>
+                        <div className="flex items-center gap-4 px-4 py-2 hover:bg-gray-500  duration-200 text-white cursor-pointer">
                           {link.icon}
                           <span className="text-sm whitespace-nowrap">
                             {link.title}
                           </span>
                         </div>
-                      </Link>
+                      </LocaleLink>
                     ))}
                   </motion.ul>
                 </li>

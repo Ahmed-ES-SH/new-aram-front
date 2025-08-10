@@ -12,9 +12,9 @@ import { LuSearch } from "react-icons/lu";
 import Pagination from "../../PaginationComponent";
 import LoadingSpin from "../../LoadingSpin";
 import { instance } from "@/app/_helpers/axios";
-import Img from "../../Img";
 import { IoSettingsSharp } from "react-icons/io5";
 import { UserType } from "@/app/types/_dashboard/GlobalTypes";
+import Img from "../../_website/_global/Img";
 
 export type headType = {
   label: string;

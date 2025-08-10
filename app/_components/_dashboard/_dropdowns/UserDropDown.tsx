@@ -1,7 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import Img from "../../Img";
 import { FaAngleDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/app/Store/store";
@@ -10,6 +9,7 @@ import {
   setShowNotificationDrop,
   setShowUserButton,
 } from "@/app/Store/variablesSlice";
+import Img from "../../_website/_global/Img";
 
 export default function UserDropDown() {
   const dispatch = useDispatch();

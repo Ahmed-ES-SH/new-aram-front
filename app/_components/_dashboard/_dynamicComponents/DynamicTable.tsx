@@ -1,15 +1,12 @@
 "use client";
+import * as FaIcons from "react-icons/fa";
 import { instance } from "@/app/_helpers/axios";
 import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaSort, FaTrash } from "react-icons/fa";
-import Img from "../../Img";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { formatDate } from "@/app/_helpers/dateHelper";
-import {
-  cellType,
-  ItemDataType,
-} from "@/app/types/_dashboard/DynamicTableTypes";
+import { cellType } from "@/app/types/_dashboard/DynamicTableTypes";
 import LoadingSpin from "../../LoadingSpin";
 import Pagination from "../../PaginationComponent";
 import ConfirmDeletePopup from "../../_popups/ConfirmDeletePopup";
@@ -18,8 +15,10 @@ import ErrorAlart from "../../_popups/ErrorAlart";
 import SearchInput from "../SearchInput";
 import { useRouter } from "next/navigation";
 import NoDataFounded from "../NoDataFounded";
+import { useAppSelector } from "@/app/Store/hooks";
+import Img from "../../_website/_global/Img";
 
-interface props {
+interface Props {
   api: string;
   deletedApi: string;
   headers: string[];
@@ -29,7 +28,12 @@ interface props {
   searchApi: string;
 }
 
-export default function DynamicTable({
+export default function DynamicTable<
+  T extends {
+    role?: string;
+    id: number;
+  }
+>({
   api,
   searchApi,
   deletedApi,
@@ -37,10 +41,12 @@ export default function DynamicTable({
   keys,
   itemDirect,
   searchState = true,
-}: props) {
+}: Props) {
   const { data, currentPage, setData, setCurrentPage, lastPage, loading } =
-    useFetchData(api, true);
+    useFetchData<T>(api, true);
+  const { user } = useAppSelector((state) => state.user);
   const router = useRouter();
+
   ///////////////////////////////////////////
   // Start  Stats Lines  ////////////////
   ///////////////////////////////////////////
@@ -48,21 +54,22 @@ export default function DynamicTable({
   const [confirmDeletePopup, setConfirmDeletePopup] = useState<boolean>(false);
   const [successPopup, setSuccessPopup] = useState<boolean>(false);
   const [errorPopup, setErrorPopup] = useState<boolean>(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [query, setQuery] = useState<string>("");
   const [dataType, setDataType] = useState<"default" | "search">("default");
-  const [currentData, setCurrentData] = useState([]);
+  const [currentData, setCurrentData] = useState<T[]>([]);
   const [searchData, setSearchData] = useState([]);
   const [loadingState, setLoadingState] = useState(loading);
   const [defaultlastPage, setDefaultLastPage] = useState(lastPage);
   const [defaultcurrentPage, setDefaultCurrentPage] = useState(currentPage);
   const [searchCurrentPage, setSearchCurrentPage] = useState(1);
   const [searchLastPage, setSearchLastPage] = useState(1);
-
-  const onEdit = true;
-  const onDelete = true;
+  const [onDelete] = useState(true);
+  const [onEdit] = useState(true);
 
   ///////////////////////////////////////////
   // End  Stats Lines  ////////////////
@@ -97,6 +104,7 @@ export default function DynamicTable({
 
   const handleDelete = async (id: number) => {
     try {
+      setDeleteLoading(true);
       const response = await instance.delete(`${deletedApi}/${id}`);
 
       if (response.status === 200) {
@@ -110,10 +118,12 @@ export default function DynamicTable({
       console.error("Error deleting item:", error);
 
       setErrorMessage("حدث خطأ أثناء الحذف. الرجاء المحاولة مرة أخرى.");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
-  const handleConfirmDelete = (item: ItemDataType) => {
+  const handleConfirmDelete = (item: T) => {
     setConfirmDeletePopup(true);
     setSelectedItem(item);
   };
@@ -127,6 +137,7 @@ export default function DynamicTable({
       if (response.status === 200) {
         setSearchData(response.data.data);
         setSearchLastPage(response.data.meta?.last_page || 1);
+        setHasSearched(true); // ✅ تم البحث فعلاً
       }
     } catch (error) {
       console.error(error);
@@ -134,10 +145,11 @@ export default function DynamicTable({
       setLoadingState(false);
     }
   };
+
   const fetchShowData = () => {
     switch (dataType) {
       case "default":
-        setCurrentData(data);
+        setCurrentData(data as any);
         setLoadingState(loading);
         setDefaultCurrentPage(currentPage);
         setDefaultLastPage(lastPage);
@@ -148,6 +160,13 @@ export default function DynamicTable({
         setLoadingState(loading);
     }
   };
+
+  const getIconComponent = (iconName: string) => {
+    return (
+      FaIcons[iconName as keyof typeof FaIcons] || FaIcons.FaQuestionCircle
+    );
+  };
+
   useEffect(() => {
     setLoadingState(loading);
   }, [loading]);
@@ -169,7 +188,7 @@ export default function DynamicTable({
   ///////////////////////////////////////////
 
   return (
-    <div className="w-full min-h-screen mb-8 hidden-scrollbar">
+    <div dir="rtl" className="w-full min-h-screen mb-8 pt-8 hidden-scrollbar">
       {searchState && (
         <SearchInput
           handleSearch={fetchSearchData}
@@ -177,7 +196,7 @@ export default function DynamicTable({
         />
       )}
       <motion.div
-        className="overflow-x-auto rounded-lg w-[98%] mx-auto h-fit   shadow-lg"
+        className="overflow-x-auto rounded-lg w-[98%] mx-auto h-fit  shadow-lg"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -189,10 +208,10 @@ export default function DynamicTable({
               {headers.map((header, index) => (
                 <th
                   key={index}
-                  className="px-6 whitespace-nowrap py-3 text-left text-sm font-semibold tracking-wider"
+                  className="px-6 whitespace-nowrap py-3 text-right text-sm font-semibold tracking-wider"
                 >
                   {header}
-                  <FaSort className="inline-block ml-2 cursor-pointer text-second_text" />
+                  {/* <FaSort className="inline-block ml-2 cursor-pointer text-second_text" /> */}
                 </th>
               ))}
               {(onEdit || onDelete) && <th className="px-6 py-3">الإجراءات</th>}
@@ -211,7 +230,7 @@ export default function DynamicTable({
                 </td>
               </tr>
             ) : currentData.length > 0 ? (
-              currentData.map((item: ItemDataType, index) => (
+              currentData.map((item: T, index) => (
                 <motion.tr
                   key={index}
                   className="border-b transition-all hover:bg-secondery_dash"
@@ -225,12 +244,13 @@ export default function DynamicTable({
                       return (
                         <td
                           key={i}
-                          className="px-6 py-4 text-second_text text-md"
+                          className="px-6 py-4 text-second_text text-md whitespace-nowrap"
                         >
-                          {item[cell.key]}
+                          {item[cell.key] ?? 0}
                         </td>
                       );
                     }
+
                     if (cell.cellType === "image") {
                       return (
                         <td key={i} className="px-6 py-4">
@@ -247,16 +267,48 @@ export default function DynamicTable({
                         </td>
                       );
                     }
+
+                    if (cell.cellType === "icon") {
+                      const IconComponent = getIconComponent(item[cell.key]);
+                      return (
+                        <td key={i} className={`px-6 py-4 text-primary`}>
+                          <IconComponent className={`size-6 `} />
+                        </td>
+                      );
+                    }
+
+                    if (cell.cellType === "color") {
+                      return (
+                        <td key={i} className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            {/* مربع اللون */}
+                            <div
+                              className="w-6 h-6 rounded border"
+                              style={{
+                                backgroundColor: item[cell.key] || "#ccc",
+                              }}
+                            ></div>
+
+                            {/* الكود النصي للون */}
+                            <span className="text-sm text-gray-700">
+                              {item[cell.key] || "N/A"}
+                            </span>
+                          </div>
+                        </td>
+                      );
+                    }
+
                     if (cell.cellType === "date") {
                       return (
                         <td
                           key={i}
-                          className="px-6 py-4 text-second_text text-md"
+                          className="px-6 py-4 text-second_text whitespace-nowrap text-md"
                         >
                           {formatDate(item[cell.key])}
                         </td>
                       );
                     }
+
                     if (cell.cellType === "status") {
                       return (
                         <td
@@ -278,36 +330,67 @@ export default function DynamicTable({
                       );
                     }
 
+                    if (cell.cellType === "parent") {
+                      const parent = item[cell.key]; // هنا 'parent'
+
+                      if (parent) {
+                        return (
+                          <div key={i} className="flex items-center gap-2">
+                            {parent.image && (
+                              <Img
+                                src={parent.image}
+                                alt={parent.title_en}
+                                className="w-8 h-8 object-cover rounded"
+                              />
+                            )}
+                            <span className="text-sm">{parent.title_en}</span>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <span key={i} className="text-gray-400 text-sm">
+                            No parent
+                          </span>
+                        );
+                      }
+                    }
+
                     return null;
                   })}
 
                   {(onEdit || onDelete) && (
-                    <td className="px-6 py-4 flex space-x-4">
-                      <div className="w-fit mx-auto flex items-center gap-4">
+                    <td className="flex items-center justify-center h-[8vh] gap-x-4">
+                      <div className="w-fit mx-auto flex items-center  gap-4">
                         {onEdit && (
                           <button
                             onClick={() =>
-                              handleRoute(`/dashboard/${itemDirect}/${item.id}`)
+                              handleRoute(
+                                `/en/dashboard/${itemDirect}/${item.id}`
+                              )
                             }
                             className="text-blue-500 hover:text-blue-700 cursor-pointer"
                           >
                             <FaEdit size={20} />
                           </button>
                         )}
-                        {onDelete && (
-                          <button
-                            onClick={() => handleConfirmDelete(item)}
-                            className="text-red-500 cursor-pointer hover:text-red-700"
-                          >
-                            <FaTrash size={20} />
-                          </button>
-                        )}
+                        {!(
+                          (api === "/users" || api === "/providers") &&
+                          item.id === user?.id
+                        ) &&
+                          item?.role != "admin" && (
+                            <button
+                              onClick={() => handleConfirmDelete(item)}
+                              className="text-red-500 cursor-pointer hover:text-red-700"
+                            >
+                              <FaTrash size={20} />
+                            </button>
+                          )}
                       </div>
                     </td>
                   )}
                 </motion.tr>
               ))
-            ) : (
+            ) : hasSearched ? (
               <tr>
                 <td
                   colSpan={headers.length + (onEdit || onDelete ? 1 : 0)}
@@ -316,7 +399,7 @@ export default function DynamicTable({
                   <NoDataFounded />
                 </td>
               </tr>
-            )}
+            ) : null}
           </tbody>
         </table>
       </motion.div>
@@ -336,6 +419,7 @@ export default function DynamicTable({
         id={selectedItem?.id ?? 0}
         showConfirm={confirmDeletePopup}
         onDelete={() => handleDelete(selectedItem.id)}
+        loading={deleteLoading}
         onClose={handleClose}
       />
       <SuccessAlart

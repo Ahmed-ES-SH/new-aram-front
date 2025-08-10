@@ -2,7 +2,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --primary: #2fc1d8;
+  --primary: #feb803;
+  --primary-red: #ff0d69;
+  --primary-blue: #0080df;
   --primary-boldgray: #38444f;
   --secondary-dash: #1f2937;
   --thired-dash: #0f172a;
@@ -16,6 +18,8 @@
 
 @theme inline {
   --color-primary: var(--primary);
+  --color-primary-red: var(--primary-red);
+  --color-primary-blue: var(--primary-blue);
   --color-primary-boldgray: var(--primary-boldgray);
   --color-secondary-dash: var(--secondary-dash);
   --color-thired-dash: var(--thired-dash);

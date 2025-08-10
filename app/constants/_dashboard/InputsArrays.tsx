@@ -56,7 +56,7 @@ export const addUserinputs = [
     name: "gender",
     type: "",
     fildType: "select-type",
-    label: { ar: "نوع الحساب", en: "" },
+    label: { ar: "جنس المستخدم", en: "" },
     placeholder: "",
     selectItems: [{ name: "male" }, { name: "female" }],
   },
@@ -75,7 +75,7 @@ export const Categoryinputs = [
     name: "image",
     type: "file",
     fildType: "normal-image",
-    label: { ar: "صورة المستخدم", en: "" },
+    label: { ar: "صورة القسم", en: "" },
   },
   {
     name: "title_ar",
@@ -190,5 +190,42 @@ export const socialContactInfoInputs = [
     icon: <FaSnapchat className="text-yellow-500 text-xl" />,
     placeholder: "Snapchat Account URL",
     type: "text",
+  },
+];
+
+export const addCategoryinputs = [
+  {
+    name: "image",
+    type: "file",
+    fildType: "normal-image",
+    label: { ar: "صورة القسم", en: "" },
+  },
+  {
+    name: "icon_name",
+    type: "non-input",
+    fildType: "icon-fild",
+    label: { ar: "حدد  أيقونة القسم", en: "" },
+  },
+  {
+    name: "title_en",
+    type: "text",
+    fildType: "short-text",
+    label: { ar: "العنوان (EN)", en: "" },
+    placeholder: "أدخل عنوان القسم الجديد بالانجلزية",
+  },
+  {
+    name: "title_ar",
+    type: "text",
+    fildType: "short-text",
+    label: { ar: "العنوان (AR)", en: "" },
+    placeholder: "أدخل عنوان القسم الجديد بالعربية",
+  },
+
+  {
+    name: "bg_color",
+    type: "color",
+    fildType: "color-fild",
+    label: { ar: "حدد لون خلفية القسم", en: "" },
+    placeholder: "",
   },
 ];

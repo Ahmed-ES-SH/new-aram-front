@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import Img from "../../Img";
 import { motion } from "framer-motion";
 import { VscLoading } from "react-icons/vsc";
+import Img from "./Img";
 
 export default function LoadingPage() {
   return (

@@ -1,9 +1,17 @@
+import { BiCategoryAlt } from "react-icons/bi";
 import { FaBloggerB, FaQuestion } from "react-icons/fa";
 import { FaLinesLeaning, FaUserGear, FaUsersViewfinder } from "react-icons/fa6";
-import { GrArticle, GrDomain, GrServices } from "react-icons/gr";
-import { IoMdPersonAdd } from "react-icons/io";
-import { IoAdd, IoLayersOutline, IoShareSocialSharp } from "react-icons/io5";
+import { GrArticle, GrDomain, GrOrganization } from "react-icons/gr";
+import { IoMdAddCircle, IoMdPersonAdd } from "react-icons/io";
 import {
+  IoAdd,
+  IoAddSharp,
+  IoLayers,
+  IoLayersOutline,
+  IoShareSocialSharp,
+} from "react-icons/io5";
+import {
+  MdCategory,
   MdNotificationsActive,
   MdOutlineAddToPhotos,
   MdOutlineDashboard,
@@ -21,7 +29,7 @@ export const pages = [
   {
     title: "الرئيسية",
     icon: <GrDomain className={iconStyle} />,
-    to: "#",
+    to: "",
     minilinks: [
       {
         title: "تحديد قسم الواجهة",
@@ -58,7 +66,7 @@ export const pages = [
   {
     title: "المستخدمون",
     icon: <PiUsersThreeFill className={iconStyle} />,
-    to: "#",
+    to: "",
     minilinks: [
       {
         title: "جميع المستخدمون",
@@ -73,9 +81,36 @@ export const pages = [
     ],
   },
   {
+    title: "الأقسام",
+    icon: <IoLayers className={iconStyle} />,
+    to: "",
+    minilinks: [
+      {
+        title: "جميع الأقسام الرئيسية",
+        icon: <BiCategoryAlt className={iconStyle} />,
+        to: "/dashboard/categories",
+      },
+      {
+        title: "أضف قسم رئيسى جديد",
+        icon: <IoAddSharp className={iconStyle} />,
+        to: "/dashboard/addcategory",
+      },
+      {
+        title: "جميع الأقسام الفرعية",
+        icon: <MdCategory className={iconStyle} />,
+        to: "/dashboard/subcategories",
+      },
+      {
+        title: "أضف قسم فرعى جديد",
+        icon: <IoMdAddCircle className={iconStyle} />,
+        to: "/dashboard/addsubcategory",
+      },
+    ],
+  },
+  {
     title: "الإشعارات",
     icon: <MdNotificationsActive className={iconStyle} />,
-    to: "#",
+    to: "",
     minilinks: [
       {
         title: "مستخدم",
@@ -83,16 +118,16 @@ export const pages = [
         to: "/dashboard/usernotification",
       },
       {
-        title: "مقدم خدمات",
-        icon: <GrServices className={iconStyle} />,
-        to: "/dashboard/serviceprovidernotification",
+        title: "مركز",
+        icon: <GrOrganization className={iconStyle} />,
+        to: "/dashboard/organizationnotification",
       },
     ],
   },
   {
     title: "المدونة",
     icon: <FaBloggerB className={iconStyle} />,
-    to: "#",
+    to: "",
     minilinks: [
       {
         title: "المقالات",
@@ -119,7 +154,7 @@ export const pages = [
   {
     title: "صفحات الأحكام والخصوصية",
     icon: <RiGitRepositoryPrivateLine className={iconStyle} />,
-    to: "#",
+    to: "",
     minilinks: [
       {
         title: "سياسية الخصوصية",

@@ -1,7 +1,7 @@
 "use client";
 import { useAppDispatch } from "@/app/Store/hooks";
 import { store } from "@/app/Store/store";
-import { setLocale } from "@/app/Store/variablesSlice";
+import { setLocale, setWidth } from "@/app/Store/variablesSlice";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
@@ -20,6 +20,23 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       dispatch(setLocale(locale as "en" | "ar"));
     }
   }, [dispatch, locale, params]);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      dispatch(setWidth(window.innerWidth));
+    };
+
+    // التعيين عند أول تحميل
+    updateWidth();
+
+    // التحديث عند تغيير حجم الشاشة
+    window.addEventListener("resize", updateWidth);
+
+    // تنظيف الـ listener عند إزالة الـ component
+    return () => {
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, [dispatch]);
 
   return (
     <>
