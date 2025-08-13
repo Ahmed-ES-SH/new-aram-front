@@ -85,7 +85,7 @@ export default function TermsConditionsUsers() {
   return (
     <div
       style={{ direction: "rtl" }}
-      className="p-6 bg-gray-50 h-[140vh] max-md:h-fit py-4 overflow-y-auto dark:bg-fourth_dash  text-white rounded-lg shadow-md"
+      className="p-6 bg-gray-50 min-h-[140vh] max-md:h-fit py-4 overflow-y-auto dark:bg-fourth_dash  text-white rounded-lg shadow-md"
     >
       <h2 className="text-2xl pb-3 text-primary-boldgray border-b w-fit mx-auto border-sky-400 font-bold mb-4 text-center">
         الشروط والأحكام للمستخدمين

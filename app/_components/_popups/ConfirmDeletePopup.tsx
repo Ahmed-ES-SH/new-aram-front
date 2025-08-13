@@ -59,11 +59,14 @@ export default function ConfirmDeletePopup({
                 </p>
               </div>
               <div className="btns w-full py-4 bg-gray-100 rounded-b-md flex items-center justify-center gap-6">
-                <button onClick={onClose} className="cancle-btn">
+                <button onClick={onClose} className="cancle-btn py-2">
                   <FaTimes />
                   <p>إلغاء</p>
                 </button>
-                <button onClick={() => onDelete(id)} className="danger-btn">
+                <button
+                  onClick={() => onDelete(id)}
+                  className="danger-btn py-2"
+                >
                   {loading ? (
                     <VscLoading className="text-white animate-spin" />
                   ) : (

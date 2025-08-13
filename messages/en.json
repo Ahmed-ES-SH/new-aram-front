@@ -86,5 +86,38 @@
     "orContinueWith": "Or continue with",
     "showPassword": "Show password",
     "hidePassword": "Hide password"
+  },
+
+  "CardComponent": {
+    "price_before_discount": "Price Before Discount",
+    "price": "Price",
+    "duration": "Duration",
+    "keywords_count": "Keywords",
+    "services_count": "Services",
+    "benefits_count": "Benefits",
+    "promotional_purchases": "Promotional Purchases",
+    "keywords": "Keywords"
+  },
+  "CardsPage": {
+    "categories": "Categories",
+    "all_categories": "All Categories",
+    "no_cards": "No cards available"
+  },
+
+  "cards": {
+    "categories": "Categories",
+    "price": "Price",
+    "originalPrice": "Original Price",
+    "duration": "Duration",
+    "keywords": "Keywords",
+    "services": "Services",
+    "benefits": "Benefits",
+    "promotionalPurchases": "Promotional Purchases",
+    "noCardsAvailable": "No cards available",
+    "loading": "Loading...",
+    "allCategories": "All Categories",
+    "premium": "PREMIUM",
+    "cardHolder": "Card Holder",
+    "validThru": "Valid Thru"
   }
 }

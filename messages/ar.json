@@ -85,5 +85,38 @@
     "orContinueWith": "أو تابع مع",
     "showPassword": "إظهار كلمة المرور",
     "hidePassword": "إخفاء كلمة المرور"
+  },
+
+  "CardComponent": {
+    "price_before_discount": "السعر قبل الخصم",
+    "price": "السعر",
+    "duration": "المدة",
+    "keywords_count": "الكلمات المفتاحية",
+    "services_count": "الخدمات",
+    "benefits_count": "الفوائد",
+    "promotional_purchases": "عدد المشتريات الترويجية",
+    "keywords": "الكلمات المفتاحية"
+  },
+  "CardsPage": {
+    "categories": "الفئات",
+    "all_categories": "جميع الفئات",
+    "no_cards": "لا توجد بطاقات متاحة"
+  },
+
+  "cards": {
+    "categories": "الفئات",
+    "price": "السعر",
+    "originalPrice": "السعر الأصلي",
+    "duration": "المدة",
+    "keywords": "الكلمات المفتاحية",
+    "services": "الخدمات",
+    "benefits": "الفوائد",
+    "promotionalPurchases": "المشتريات الترويجية",
+    "noCardsAvailable": "لا توجد بطاقات متاحة",
+    "loading": "جاري التحميل...",
+    "allCategories": "جميع الفئات",
+    "premium": "مميز",
+    "cardHolder": "حامل البطاقة",
+    "validThru": "صالحة حتى"
   }
 }

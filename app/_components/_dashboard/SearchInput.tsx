@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 
 interface props {
   placeHolder?: string;
-  handleSearch: (value) => void;
+  handleSearch: () => void;
   setSearchContent: Dispatch<SetStateAction<string>>;
 }
 
@@ -18,6 +18,7 @@ export default function SearchInput({
     setContent(e.target.value);
     setSearchContent(e.target.value);
   };
+
   return (
     <>
       <div className="w-[80%] max-md:w-[95%] mx-auto my-4  flex items-center gap-2">

@@ -3,24 +3,22 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
-import { instance } from "@/app/_helpers/axios";
 import LoadingSpin from "@/app/_components/LoadingSpin";
+import { instance } from "@/app/_helpers/axios";
 
-interface PrivacyPolicy {
+interface Term {
   id: number;
   content_ar: string;
   content_en: string;
 }
 
-export default function PrivacyPolicyUsers() {
-  const [policies, setPolicies] = useState<PrivacyPolicy[]>([]);
+export default function OrgTermsConditionsPage() {
+  const [policies, setPolicies] = useState<Term[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [deletedId, setdeletedId] = useState<number>(0);
   const [showconfirm, setshowconfirm] = useState(false);
   const [loading, setloading] = useState(true);
-  const [editingPolicy, setEditingPolicy] = useState<PrivacyPolicy | null>(
-    null
-  );
+  const [editingPolicy, setEditingPolicy] = useState<Term | null>(null);
   const [newPolicy, setNewPolicy] = useState<{
     content_ar: string;
     content_en: string;
@@ -32,7 +30,7 @@ export default function PrivacyPolicyUsers() {
   // Fetch policies
   const fetchPolicies = async () => {
     try {
-      const response = await instance.get("/users-points");
+      const response = await instance.get("/organiztions-terms");
       setPolicies(response.data.data);
     } catch (error) {
       console.error("Error fetching policies:", error);
@@ -51,12 +49,12 @@ export default function PrivacyPolicyUsers() {
       if (editingPolicy) {
         // Edit existing policy
         await instance.post(
-          `/update-user-point/${editingPolicy.id}`,
+          `/update-oranization-term/${editingPolicy.id}`,
           newPolicy
         );
       } else {
         // Add new policy
-        await instance.post("/add-user-point", newPolicy);
+        await instance.post("/add-oranization-term", newPolicy);
       }
       fetchPolicies();
       setShowModal(false);
@@ -70,7 +68,7 @@ export default function PrivacyPolicyUsers() {
   // Delete policy
   const handleDelete = async (id: number) => {
     try {
-      await instance.delete(`/user-point/${id}`);
+      await instance.delete(`/oranization-term/${id}`);
       fetchPolicies();
       setshowconfirm(false);
     } catch (error) {
@@ -88,10 +86,10 @@ export default function PrivacyPolicyUsers() {
   return (
     <div
       style={{ direction: "rtl" }}
-      className="p-6 bg-fourth_dash min-h-[140vh] max-md:h-fit py-4 overflow-y-auto  text-white  rounded-lg shadow-md"
+      className="p-6 bg-gray-50 min-h-[140vh] max-md:h-fit py-4 overflow-y-auto dark:bg-fourth_dash  text-white rounded-lg shadow-md"
     >
       <h2 className="text-2xl pb-3 text-primary-boldgray border-b w-fit mx-auto border-sky-400 font-bold mb-4 text-center">
-        سياسات الخصوصية
+        الشروط والأحكام للمستخدمين
       </h2>
       <button
         onClick={() => {
@@ -116,7 +114,7 @@ export default function PrivacyPolicyUsers() {
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="flex justify-between items-center bg-primary_dash p-4 rounded shadow"
+            className="flex justify-between items-center bg-white dark:bg-primary_dash p-4 rounded shadow"
           >
             <div>
               <p className="text-sm text-right block mb-4 font-medium text-gray-700 dark:text-gray-300">
@@ -158,13 +156,13 @@ export default function PrivacyPolicyUsers() {
           transition={{ duration: 0.3 }}
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
         >
-          <div className="bg-white text-black  p-6 rounded-lg shadow-lg w-1/2 max-md:w-[95%]">
+          <div className="bg-white text-black p-6 rounded-lg shadow-lg w-1/2 max-md:w-[95%]">
             <h3 className="text-xl font-bold mb-4">
               {editingPolicy ? "تعديل قاعدة " : "أضف قاعدة جديدة"}
             </h3>
-            <div className="">
+            <div className="space-y-4">
               <div className="flex flex-col gap-3">
-                <label htmlFor="content_ar" className="input-label ">
+                <label htmlFor="content_ar" className="input-label">
                   النص بالعربية
                 </label>
                 <textarea
@@ -178,7 +176,7 @@ export default function PrivacyPolicyUsers() {
                 />
               </div>
               <div className="flex flex-col gap-3">
-                <label htmlFor="content_en" className="input-label ">
+                <label htmlFor="content_en" className="input-label">
                   النص بالانجليزية
                 </label>
                 <textarea

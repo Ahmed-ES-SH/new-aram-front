@@ -1,7 +1,19 @@
 import { BiCategoryAlt } from "react-icons/bi";
 import { FaBloggerB, FaQuestion } from "react-icons/fa";
-import { FaLinesLeaning, FaUserGear, FaUsersViewfinder } from "react-icons/fa6";
-import { GrArticle, GrDomain, GrOrganization } from "react-icons/gr";
+import { LiaUserMdSolid } from "react-icons/lia";
+import {
+  FaLinesLeaning,
+  FaUserGear,
+  FaUsersGear,
+  FaUsersViewfinder,
+} from "react-icons/fa6";
+import { GiMeepleGroup } from "react-icons/gi";
+import {
+  GrArticle,
+  GrDomain,
+  GrOrganization,
+  GrServices,
+} from "react-icons/gr";
 import { IoMdAddCircle, IoMdPersonAdd } from "react-icons/io";
 import {
   IoAdd,
@@ -9,19 +21,22 @@ import {
   IoLayers,
   IoLayersOutline,
   IoShareSocialSharp,
+  IoStatsChartSharp,
 } from "react-icons/io5";
+import { ImMakeGroup, ImStatsDots } from "react-icons/im";
 import {
   MdCategory,
   MdNotificationsActive,
   MdOutlineAddToPhotos,
   MdOutlineDashboard,
-  MdOutlinePrivacyTip,
+  MdOutlineDesignServices,
   MdOutlineSyncProblem,
 } from "react-icons/md";
-import { PiUsersThreeFill } from "react-icons/pi";
+import { PiCards, PiCardsThreeLight, PiUsersThreeFill } from "react-icons/pi";
 import { RiGitRepositoryPrivateLine, RiNewsLine } from "react-icons/ri";
 import { SiHeroku } from "react-icons/si";
 import { TbListDetails } from "react-icons/tb";
+import { CiCreditCard1 } from "react-icons/ci";
 
 const iconStyle = "text-white  size-6";
 
@@ -78,6 +93,16 @@ export const pages = [
         icon: <IoMdPersonAdd className={iconStyle} />,
         to: "/dashboard/adduser",
       },
+      {
+        title: "جميع المروجون",
+        icon: <LiaUserMdSolid className={iconStyle} />,
+        to: "/dashboard/users",
+      },
+      {
+        title: "تقارير المروجون",
+        icon: <ImStatsDots className={iconStyle} />,
+        to: "/dashboard/users",
+      },
     ],
   },
   {
@@ -107,6 +132,73 @@ export const pages = [
       },
     ],
   },
+  {
+    title: "المراكز",
+    icon: <PiCards className={iconStyle} />,
+    to: "",
+    minilinks: [
+      {
+        title: "جميع المراكز",
+        icon: <PiCardsThreeLight className={iconStyle} />,
+        to: "/dashboard/categories",
+      },
+      {
+        title: "أضف مركز جديد",
+        icon: <IoAddSharp className={iconStyle} />,
+        to: "/dashboard/addcategory",
+      },
+      {
+        title: "تقارير المراكز",
+        icon: <IoStatsChartSharp className={iconStyle} />,
+        to: "/dashboard/addcategory",
+      },
+    ],
+  },
+  {
+    title: "الخدمات",
+    icon: <MdOutlineDesignServices className={iconStyle} />,
+    to: "",
+    minilinks: [
+      {
+        title: "جميع الخدمات",
+        icon: <GrServices className={iconStyle} />,
+        to: "/dashboard/categories",
+      },
+      {
+        title: "أضف خدمة جديدة",
+        icon: <IoAddSharp className={iconStyle} />,
+        to: "/dashboard/addcategory",
+      },
+    ],
+  },
+  {
+    title: "البطاقات",
+    icon: <PiCards className={iconStyle} />,
+    to: "",
+    minilinks: [
+      {
+        title: "أقسام البطاقات",
+        icon: <PiCardsThreeLight className={iconStyle} />,
+        to: "/dashboard/cardcategories",
+      },
+      {
+        title: "أضف قسم جديد",
+        icon: <IoAddSharp className={iconStyle} />,
+        to: "/dashboard/addcardcategory",
+      },
+      {
+        title: "جميع البطاقات",
+        icon: <CiCreditCard1 className={iconStyle} />,
+        to: "/dashboard/cards",
+      },
+      {
+        title: "أضف  بطاقة جديدة",
+        icon: <IoMdAddCircle className={iconStyle} />,
+        to: "/dashboard/addcard",
+      },
+    ],
+  },
+
   {
     title: "الإشعارات",
     icon: <MdNotificationsActive className={iconStyle} />,
@@ -157,19 +249,29 @@ export const pages = [
     to: "",
     minilinks: [
       {
-        title: "سياسية الخصوصية",
+        title: "سياسية الخصوصية (مستخدم)",
         icon: <FaUsersViewfinder className={iconStyle} />,
         to: "/dashboard/privacypolicy",
       },
       {
-        title: "الشروط والأحكام",
-        icon: <MdOutlinePrivacyTip className={iconStyle} />,
+        title: "الشروط والأحكام (مستخدم)",
+        icon: <FaUsersGear className={iconStyle} />,
         to: "/dashboard/termsconditions",
+      },
+      {
+        title: "سياسية الخصوصية (مركز)",
+        icon: <GiMeepleGroup className={iconStyle} />,
+        to: "/dashboard/orgprivacypolicy",
+      },
+      {
+        title: "الشروط والأحكام (مركز)",
+        icon: <ImMakeGroup className={iconStyle} />,
+        to: "/dashboard/orgtermsconditions",
       },
     ],
   },
   {
-    title: "التقارير",
+    title: "لوحة التحكم",
     icon: <MdOutlineDashboard className={iconStyle} />,
     to: "/dashboard",
   },

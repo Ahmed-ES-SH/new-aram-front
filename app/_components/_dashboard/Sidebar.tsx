@@ -68,7 +68,7 @@ export default function Sidebar() {
                         {page.title}
                       </LocaleLink>
                     ) : (
-                      <span className="text-sm whitespace-nowrap flex-1 duration-150 cursor-default">
+                      <span className="text-sm cursor-pointer whitespace-nowrap flex-1 duration-150">
                         {page.title}
                       </span>
                     )}

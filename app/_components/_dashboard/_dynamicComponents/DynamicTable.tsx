@@ -14,9 +14,9 @@ import SuccessAlart from "../../_popups/SuccessAlart";
 import ErrorAlart from "../../_popups/ErrorAlart";
 import SearchInput from "../SearchInput";
 import { useRouter } from "next/navigation";
-import NoDataFounded from "../NoDataFounded";
 import { useAppSelector } from "@/app/Store/hooks";
 import Img from "../../_website/_global/Img";
+import { toast } from "sonner";
 
 interface Props {
   api: string;
@@ -54,7 +54,6 @@ export default function DynamicTable<
   const [confirmDeletePopup, setConfirmDeletePopup] = useState<boolean>(false);
   const [successPopup, setSuccessPopup] = useState<boolean>(false);
   const [errorPopup, setErrorPopup] = useState<boolean>(false);
-  const [hasSearched, setHasSearched] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
@@ -114,9 +113,11 @@ export default function DynamicTable<
         setSuccessMessage("تم حذف العنصر المحدد بنجاح  .");
         setConfirmDeletePopup(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting item:", error);
-
+      if (error?.response?.data?.message) {
+        toast.error(error?.response?.data?.message);
+      }
       setErrorMessage("حدث خطأ أثناء الحذف. الرجاء المحاولة مرة أخرى.");
     } finally {
       setDeleteLoading(false);
@@ -137,7 +138,6 @@ export default function DynamicTable<
       if (response.status === 200) {
         setSearchData(response.data.data);
         setSearchLastPage(response.data.meta?.last_page || 1);
-        setHasSearched(true); // ✅ تم البحث فعلاً
       }
     } catch (error) {
       console.error(error);
@@ -229,7 +229,16 @@ export default function DynamicTable<
                   <LoadingSpin />
                 </td>
               </tr>
-            ) : currentData.length > 0 ? (
+            ) : !currentData || currentData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={headers.length + (onEdit || onDelete ? 1 : 0)}
+                  className="text-center py-6 text-gray-500"
+                >
+                  لا توجد بيانات
+                </td>
+              </tr>
+            ) : (
               currentData.map((item: T, index) => (
                 <motion.tr
                   key={index}
@@ -238,7 +247,6 @@ export default function DynamicTable<
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  {/* هنا ترسم كل خلايا الصف بناءً على نوعها */}
                   {keys.map((cell: cellType, i) => {
                     if (cell.cellType === "text") {
                       return (
@@ -271,8 +279,8 @@ export default function DynamicTable<
                     if (cell.cellType === "icon") {
                       const IconComponent = getIconComponent(item[cell.key]);
                       return (
-                        <td key={i} className={`px-6 py-4 text-primary`}>
-                          <IconComponent className={`size-6 `} />
+                        <td key={i} className="px-6 py-4 text-primary">
+                          <IconComponent className="size-6" />
                         </td>
                       );
                     }
@@ -281,15 +289,12 @@ export default function DynamicTable<
                       return (
                         <td key={i} className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            {/* مربع اللون */}
                             <div
                               className="w-6 h-6 rounded border"
                               style={{
                                 backgroundColor: item[cell.key] || "#ccc",
                               }}
                             ></div>
-
-                            {/* الكود النصي للون */}
                             <span className="text-sm text-gray-700">
                               {item[cell.key] || "N/A"}
                             </span>
@@ -331,8 +336,7 @@ export default function DynamicTable<
                     }
 
                     if (cell.cellType === "parent") {
-                      const parent = item[cell.key]; // هنا 'parent'
-
+                      const parent = item[cell.key];
                       if (parent) {
                         return (
                           <div key={i} className="flex items-center gap-2">
@@ -346,13 +350,12 @@ export default function DynamicTable<
                             <span className="text-sm">{parent.title_en}</span>
                           </div>
                         );
-                      } else {
-                        return (
-                          <span key={i} className="text-gray-400 text-sm">
-                            No parent
-                          </span>
-                        );
                       }
+                      return (
+                        <span key={i} className="text-gray-400 text-sm">
+                          No parent
+                        </span>
+                      );
                     }
 
                     return null;
@@ -360,7 +363,7 @@ export default function DynamicTable<
 
                   {(onEdit || onDelete) && (
                     <td className="flex items-center justify-center h-[8vh] gap-x-4">
-                      <div className="w-fit mx-auto flex items-center  gap-4">
+                      <div className="w-fit mx-auto flex items-center gap-4">
                         {onEdit && (
                           <button
                             onClick={() =>
@@ -390,16 +393,7 @@ export default function DynamicTable<
                   )}
                 </motion.tr>
               ))
-            ) : hasSearched ? (
-              <tr>
-                <td
-                  colSpan={headers.length + (onEdit || onDelete ? 1 : 0)}
-                  className="py-6 text-gray-400 text-center"
-                >
-                  <NoDataFounded />
-                </td>
-              </tr>
-            ) : null}
+            )}
           </tbody>
         </table>
       </motion.div>
@@ -410,6 +404,7 @@ export default function DynamicTable<
         totalPages={dataType === "default" ? defaultlastPage : searchLastPage}
         onPageChange={handlePageChange}
       />
+
       <ConfirmDeletePopup
         title={
           selectedItem && selectedItem.name

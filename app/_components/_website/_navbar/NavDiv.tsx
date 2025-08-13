@@ -8,7 +8,7 @@ export default function NavDiv({ children }: { children: React.ReactNode }) {
   const locale = useLocale();
   const pathname = usePathname();
 
-  if (pathname.startsWith("/en/dashboard")) {
+  if (pathname.includes("/dashboard")) {
     return null;
   }
 
