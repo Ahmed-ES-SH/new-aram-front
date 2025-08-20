@@ -6,6 +6,8 @@ import { Card } from "./types";
 import { LuCreditCard, LuGift, LuTag } from "react-icons/lu";
 import { directionMap } from "@/app/constants/_website/global";
 import Img from "../../_website/_global/Img";
+import LocaleLink from "../../_website/_global/LocaleLink";
+import { formatTitle } from "@/app/_helpers/helpers";
 
 interface CardComponentProps {
   card: Card;
@@ -33,7 +35,7 @@ export default function CardComponent({ card }: CardComponentProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full group cursor-pointer overflow-hidden border border-gray-300 rounded-lg shadow max-w-sm mx-auto"
+      className="w-full h-full group cursor-pointer overflow-hidden border border-gray-300 rounded-lg shadow max-w-sm mx-auto"
     >
       {/* Credit Card */}
       <div
@@ -104,9 +106,14 @@ export default function CardComponent({ card }: CardComponentProps) {
       <div className="mt-6 space-y-4 p-2">
         {/* title */}
 
-        <h3 className="font-semibold group-hover:underline group-hover:text-blue-600 duration-100">
+        <LocaleLink
+          href={`/dashboard/cards/${card.id}?card_title=${formatTitle(
+            card.title
+          )}`}
+          className="font-semibold group-hover:underline group-hover:text-blue-600 duration-100"
+        >
           {card.title}
-        </h3>
+        </LocaleLink>
 
         {/* Description */}
         <p className="text-gray-600 text-sm leading-relaxed">
@@ -142,7 +149,7 @@ export default function CardComponent({ card }: CardComponentProps) {
               {card.keywords.map((keyword) => (
                 <span
                   key={keyword.id}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full border"
+                  className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full border border-gray-300"
                 >
                   {keyword.title}
                 </span>

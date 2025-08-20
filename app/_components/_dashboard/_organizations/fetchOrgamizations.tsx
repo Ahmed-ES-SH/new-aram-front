@@ -1,0 +1,80 @@
+import { cookies } from "next/headers";
+import { Organization } from "./types/organization";
+
+interface Pagination {
+  current_page: number;
+  last_page: number;
+}
+
+interface ServicesResponse {
+  data: Organization[];
+  pagination: Pagination;
+}
+
+const getTokenFromCookies = async (): Promise<string | null> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(`aram_token`)?.value;
+  return token ? `Bearer ${token}` : null;
+};
+
+export default async function FetchOrganizations({
+  query,
+  category_id,
+  page,
+  status,
+  active,
+  number_of_reservations,
+}: {
+  query?: string;
+  category_id?: number[];
+  status?: string;
+  active?: string;
+  page?: number;
+  number_of_reservations?: number;
+}): Promise<ServicesResponse> {
+  try {
+    const searchParams = new URLSearchParams();
+    const token = await getTokenFromCookies();
+
+    if (query) searchParams.append("query", query);
+    if (category_id?.length) {
+      searchParams.append("category_id", category_id.join(","));
+    }
+    if (status !== undefined) {
+      searchParams.append("status", String(status));
+    }
+    if (active !== undefined) {
+      searchParams.append("active", String(active));
+    }
+    if (page) {
+      searchParams.append("page", String(page));
+    }
+    if (number_of_reservations) {
+      searchParams.append(
+        "number_of_reservations",
+        String(number_of_reservations)
+      );
+    }
+
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_API_BASE_URL
+      }/dashboard/organizations?${searchParams.toString()}`,
+      {
+        headers: {
+          Authorization: token || "",
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("Error in FetchServices:", error);
+    throw error; // إعادة الإلقاء ليتم التعامل معها في المكون أو الـ useQuery
+  }
+}

@@ -3,13 +3,7 @@ import NotFoundItem from "@/app/_components/_dashboard/NotFoundItem";
 import { UpdateUserinputs } from "@/app/constants/_dashboard/InputsArrays";
 import React from "react";
 
-interface ParamsType {
-  params: {
-    userId: number;
-  };
-}
-
-export default function UserPage({ params }: ParamsType) {
+export default function UserPage({ params }: any) {
   const userId = params.userId;
 
   if (!userId) return <NotFoundItem />;

@@ -1,16 +1,18 @@
 "use client";
 import useFetchItem from "@/app/_helpers/FetchItemData";
 import React, { useEffect, useRef, useState } from "react";
-import LoadingSpin from "../../LoadingSpin";
 import SuccessAlart from "../../_popups/SuccessAlart";
-import ErrorAlart from "../../_popups/ErrorAlart";
-import { FaImage } from "react-icons/fa";
+import { FaImage, FaPlus, FaTrash } from "react-icons/fa";
 import { errorType, InputField } from "@/app/types/_dashboard/GlobalTypes";
 import { useRouter } from "next/navigation";
 import { instance } from "@/app/_helpers/axios";
 import { getIconComponent } from "@/app/_helpers/helpers";
-import Img from "../../_website/_global/Img";
 import IconPicker from "../../_website/_global/IconPicker";
+import { Keyword } from "../_cards/types";
+import KeywordSelector from "../../_website/_global/KeywordSelector";
+import LoadingSpin from "../../LoadingSpin";
+import { toast } from "sonner";
+import Img from "../../_website/_global/Img";
 
 interface props {
   api: string;
@@ -32,21 +34,22 @@ export default function DynamicElementPage({
 
   // Get The Data For The Item .
 
-  const { data, loading } = useFetchItem(api, id, false);
+  const { data, loading } = useFetchItem<any>(api, id, false);
 
   // States Lines For This Component.
   const [form, setForm] = useState<any>({});
   const [updatedData, setUpdatedData] = useState<Record<string, string | File>>(
     {}
   );
-  const [errorMessage, setErrorMessage] = useState("");
+
   const [successMessage, setSuccessMessage] = useState("");
   const [successPopup, setSuccessPopup] = useState(false);
-  const [errorPopup, setErrorPopup] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState("");
   const [errors, setErrors] = useState<errorType>({});
+
+  console.log(form?.image);
 
   // Start Functions Lines
 
@@ -61,16 +64,26 @@ export default function DynamicElementPage({
 
       const formData = new FormData();
 
-      // تعبئة formData من updatedData
+      // Fill formData from updatedData
       for (const key in updatedData) {
-        const value = updatedData[key];
+        let value: any = updatedData[key];
 
-        // إذا كانت القيمة عبارة عن ملف
+        // If the value is a file → append مباشرة
         if (value instanceof File) {
           formData.append(key, value);
-        } else {
-          formData.append(key, value ?? ""); // null/undefined safe
+          continue; // skip باقي الشروط
         }
+
+        // Convert arrays/objects (except File) to JSON string
+        if (
+          Array.isArray(value) ||
+          (typeof value === "object" && value !== null)
+        ) {
+          value = JSON.stringify(value);
+        }
+
+        // Append final value
+        formData.append(key, value ?? "");
       }
 
       const response = await instance.post(
@@ -89,13 +102,11 @@ export default function DynamicElementPage({
         setUpdatedData({});
         if (direct) router.push(direct);
       } else {
-        setErrorMessage("Update failed");
-        setErrorPopup(true);
+        toast.error("فشل التحديث");
       }
     } catch (error: any) {
       console.log(error);
-      setErrorPopup(true);
-      setErrorMessage(
+      toast.error(
         error?.response?.data?.message || "An unexpected error occurred"
       );
 
@@ -133,6 +144,27 @@ export default function DynamicElementPage({
     }
   };
 
+  // handle keywords change
+  const handleKeywordsChange = (newKeywords: Keyword[]) => {
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      keywords: newKeywords,
+    }));
+
+    if (data && JSON.stringify(newKeywords) !== JSON.stringify(data.keywords)) {
+      setUpdatedData((prevData: any) => ({
+        ...prevData,
+        keywords: newKeywords,
+      }));
+    } else {
+      setUpdatedData((prevData: any) => {
+        const newData = { ...prevData };
+        delete newData.keywords;
+        return newData;
+      });
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
@@ -151,6 +183,101 @@ export default function DynamicElementPage({
     setUpdatedData({ ...updatedData, icon_name: iconName });
     setForm({ ...updatedData, icon_name: iconName });
     setShowIconPicker(false);
+  };
+
+  // Change item inside array
+  const handleArrayChange = (
+    fieldName: string,
+    index: number,
+    key: string,
+    value: any,
+    form: any,
+    setForm: any
+  ) => {
+    const updatedArray = [...(form[fieldName] || [])];
+    updatedArray[index] = {
+      ...updatedArray[index],
+      [key]: value,
+    };
+
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      [fieldName]: updatedArray,
+    }));
+
+    if (
+      data &&
+      JSON.stringify(updatedArray) !== JSON.stringify(data[fieldName])
+    ) {
+      setUpdatedData((prevData: any) => ({
+        ...prevData,
+        [fieldName]: updatedArray,
+      }));
+    } else {
+      setUpdatedData((prevData: any) => {
+        const newData = { ...prevData };
+        delete newData[fieldName];
+        return newData;
+      });
+    }
+  };
+
+  // Add new item to array
+  const handleArrayAdd = (
+    fieldName: string,
+    displayKey: string,
+    form: any,
+    setForm: any
+  ) => {
+    const updatedArray = [...(form[fieldName] || []), { [displayKey]: "" }];
+
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      [fieldName]: updatedArray,
+    }));
+
+    if (
+      data &&
+      JSON.stringify(updatedArray) !== JSON.stringify(data[fieldName])
+    ) {
+      setUpdatedData((prevData: any) => ({
+        ...prevData,
+        [fieldName]: updatedArray,
+      }));
+    }
+  };
+
+  // Remove item from array
+  const handleArrayRemove = (
+    fieldName: string,
+    index: number,
+    form: any,
+    setForm: any
+  ) => {
+    const updatedArray = (form[fieldName] || []).filter(
+      (_: any, idx: number) => idx !== index
+    );
+
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      [fieldName]: updatedArray,
+    }));
+
+    if (
+      data &&
+      JSON.stringify(updatedArray) !== JSON.stringify(data[fieldName])
+    ) {
+      setUpdatedData((prevData: any) => ({
+        ...prevData,
+        [fieldName]: updatedArray,
+      }));
+    } else {
+      setUpdatedData((prevData: any) => {
+        const newData = { ...prevData };
+        delete newData[fieldName];
+        return newData;
+      });
+    }
   };
 
   //  End Functions Lines
@@ -191,6 +318,32 @@ export default function DynamicElementPage({
                     value={(form[input.name] as string) || ""}
                     onChange={handleChange}
                     className="input-style"
+                    readOnly={input.readOnly}
+                  />
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name][0]["ar"]}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
+            //////////////////////
+            // Number input (independent case)
+            //////////////////////
+
+            if (input.fildType === "number-input") {
+              return (
+                <div key={index} className="h-fit w-full flex flex-col gap-3">
+                  <label className="input-label">{input.label.ar}</label>
+                  <input
+                    name={input.name || ""}
+                    type="number"
+                    value={form[input.name] || ""}
+                    onChange={handleChange}
+                    placeholder={input.placeholder || ""}
+                    className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300  p-2 outline-none"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (
@@ -254,6 +407,7 @@ export default function DynamicElementPage({
                     )}
                     <input
                       type="file"
+                      name="image"
                       hidden
                       onChange={handleFileChange}
                       ref={openImageinput}
@@ -411,6 +565,20 @@ export default function DynamicElementPage({
             }
 
             //////////////////////
+            //select keywords
+            //////////////////////
+
+            if (input.fildType === "keywords") {
+              return (
+                <KeywordSelector
+                  key={index}
+                  selectedKeywords={form.keywords || []}
+                  setSelectedKeywords={handleKeywordsChange}
+                />
+              );
+            }
+
+            //////////////////////
             //Select Eelement
             //////////////////////
 
@@ -452,20 +620,103 @@ export default function DynamicElementPage({
               );
             }
 
+            //////////////////////
+            // Generic Dynamic Array input
+            //////////////////////
+
+            if (input.fildType === "array") {
+              return (
+                <div
+                  key={index}
+                  className="h-fit w-full border border-gray-300 shadow p-2 rounded-lg flex flex-col gap-3"
+                >
+                  <label className="input-label">{input.label.ar}</label>
+
+                  <div className="flex flex-col gap-2">
+                    {Array.isArray(form[input.name]) &&
+                    form[input.name].length > 0 ? (
+                      form[input.name].map((item: any, idx: number) => (
+                        <div
+                          key={item.id || idx}
+                          className="flex items-center shadow gap-2 p-2 rounded-md"
+                        >
+                          {/* Dynamic input field based on displayKey */}
+                          <input
+                            type="text"
+                            value={
+                              input.displayKey
+                                ? item[input.displayKey] || ""
+                                : ""
+                            }
+                            onChange={(e) =>
+                              handleArrayChange(
+                                input.name,
+                                idx,
+                                input.displayKey!,
+                                e.target.value,
+                                form,
+                                setForm
+                              )
+                            }
+                            className="flex-1 border border-gray-300 focus:border-sky-300 duration-300 rounded p-2 outline-none"
+                            placeholder={input.placeholder || ""}
+                          />
+
+                          {/* Remove button */}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleArrayRemove(input.name, idx, form, setForm)
+                            }
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500 text-sm mt-2">
+                        ⚠️ القائمة لا تحتوي على بيانات
+                      </p>
+                    )}
+
+                    {/* Add new item button */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleArrayAdd(
+                          input.name,
+                          input.displayKey!,
+                          form,
+                          setForm
+                        )
+                      }
+                      className="flex items-center gap-2 w-fit hover:scale-105 duration-300 hover:underline mt-3 p-2 rounded-2xl bg-primary text-white"
+                    >
+                      <FaPlus /> إضافة عنصر جديد
+                    </button>
+                  </div>
+
+                  {/* Error message */}
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name][0]["ar"]}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
             return null;
           })}
           <input type="submit" value={"حفظ"} className="submit-btn" />
         </form>
       </div>
+
       <SuccessAlart
         showAlart={successPopup}
         onClose={() => setSuccessPopup(false)}
         Message={successMessage}
-      />
-      <ErrorAlart
-        showAlart={errorPopup}
-        onClose={() => setErrorPopup(false)}
-        Message={errorMessage}
       />
 
       <IconPicker

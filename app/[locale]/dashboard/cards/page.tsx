@@ -16,11 +16,9 @@ export default async function page() {
   return (
     <>
       {cards && cards.length > 0 && (
-        <div className="grid grid-cols-4 gap-x-2 gap-y-4 w-[90%] mx-auto">
+        <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 max-md:grid-cols-1 grid-cols-2 gap-x-2 gap-y-4 w-[98%] xl:w-[90%] mx-auto">
           {cards.map((card) => (
-            <div key={card.id}>
-              <CardComponent card={card} />
-            </div>
+            <CardComponent key={card.id} card={card} />
           ))}
         </div>
       )}

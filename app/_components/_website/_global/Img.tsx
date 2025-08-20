@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface props {
   src: string;
@@ -30,8 +30,27 @@ export default function Img({
 }: props) {
   const [imageSrc, setImageSrc] = useState(src);
 
+  useEffect(() => {
+    setImageSrc(src);
+
+    // cleanup only when component unmounts
+    return () => {
+      if (src.startsWith("blob:")) {
+        URL.revokeObjectURL(src);
+      }
+    };
+  }, [src]);
+
   const handleImageError = () => {
     if (errorSrc) setImageSrc(errorSrc);
+  };
+
+  const handleImageLoad = () => {
+    // free memory only after load is done
+    if (src.startsWith("blob:")) {
+      URL.revokeObjectURL(src);
+    }
+    if (onLoad) onLoad();
   };
 
   return (
@@ -43,7 +62,7 @@ export default function Img({
         width={width}
         height={height}
         loading={loading}
-        onLoad={onLoad}
+        onLoad={handleImageLoad}
         onError={onError ? onError : handleImageError}
         ref={ref}
       />

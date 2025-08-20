@@ -52,7 +52,7 @@ export default async function RootLayout({
         <ReduxProvider>
           <NextIntlClientProvider>
             <ClientLayout>
-              <Toaster position="top-right" richColors closeButton />
+              <Toaster position="top-center" richColors closeButton />
               <Navbar />
               <CartSide />
               {children}

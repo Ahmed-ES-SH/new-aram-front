@@ -20,10 +20,12 @@ export interface InputField {
   name: string;
   type: string;
   fildType: string;
+  displayKey?: string;
   label: { ar: string; en: string };
   placeholder?: string;
   selectItems?: { [key: string]: string }[];
 }
+
 export interface errorType {
   [key: string]: { ar: string; en: string };
 }

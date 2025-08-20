@@ -11,6 +11,13 @@ import { SocialButton } from "./SocialButton";
 import { PasswordInput } from "./PasswordInput";
 import { TextInput } from "./TextInput";
 import { directionMap } from "@/app/constants/_website/global";
+import { instance } from "@/app/_helpers/axios";
+import Cookie from "cookie-universal";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/app/Store/hooks";
+import { setUser } from "@/app/Store/userSlice";
+import { toast } from "sonner";
+import { useLoginSchema } from "@/app/validation/useLoginSchema";
 
 interface LoginFormData {
   phoneOrEmail: string;
@@ -23,8 +30,15 @@ interface LoginFormErrors {
 }
 
 export function LoginForm() {
+  const cookie = Cookie();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const locale = useLocale();
   const t = useTranslations("login");
+  const loginError = useTranslations("loginValidation");
+
+  const schema = useLoginSchema();
 
   const [formData, setFormData] = useState<LoginFormData>({
     phoneOrEmail: "",
@@ -33,36 +47,46 @@ export function LoginForm() {
   const [errors, setErrors] = useState<LoginFormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const validateForm = (): boolean => {
-    const newErrors: LoginFormErrors = {};
-
-    if (!formData.phoneOrEmail.trim()) {
-      newErrors.phoneOrEmail = "Phone number or email is required";
-    }
-
-    if (!formData.password.trim()) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    const result = schema.safeParse(formData);
 
+    if (!result.success) {
+      const fieldErrors: LoginFormErrors = {};
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as keyof LoginFormErrors;
+        fieldErrors[field] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
     setIsLoading(true);
-
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Login attempt:", formData);
-    } catch (error) {
+      const data = {
+        login: formData.phoneOrEmail,
+        password: formData.password,
+      };
+      const response = await instance.post(`/login`, data);
+      if (response.status == 200) {
+        const token = response.data.token;
+        cookie.set("aram_token", token);
+        const user = response.data.user;
+        dispatch(setUser(user));
+        setTimeout(() => {
+          router.push(`/${locale}`);
+        }, 300);
+      }
+    } catch (error: any) {
       console.error("Login error:", error);
+      if (error.status == 401) {
+        toast.error(loginError("invalid_credentials"));
+      }
+      if (error.status == 404) {
+        toast.error(loginError("user_not_found"));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -106,10 +130,8 @@ export function LoginForm() {
         transition={{ delay: 0.2 }}
         className="text-center mb-8"
       >
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          {t("title")}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400">{t("subtitle")}</p>
+        <h1 className="text-3xl font-bold text-gray-900  mb-2">{t("title")}</h1>
+        <p className="text-gray-600 ">{t("subtitle")}</p>
       </motion.div>
 
       {/* Social Login Buttons */}
@@ -192,8 +214,8 @@ export function LoginForm() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="
-                text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 
-                dark:hover:text-blue-300 transition-colors duration-200
+                text-sm text-blue-600 hover:text-blue-500 
+                 transition-colors duration-200
                 focus:outline-none focus:underline
               "
             >
@@ -213,13 +235,13 @@ export function LoginForm() {
             transition-all duration-200 ease-in-out
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
             disabled:cursor-not-allowed
-            dark:focus:ring-offset-gray-900
+            
           "
         >
           {isLoading ? (
             <div className="flex items-center justify-center gap-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              <span>Loading...</span>
+              <span>{t("loading")}</span>
             </div>
           ) : (
             t("signIn")

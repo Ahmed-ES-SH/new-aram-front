@@ -84,7 +84,17 @@
     "continueWithFacebook": "المتابعة مع فيسبوك",
     "orContinueWith": "أو تابع مع",
     "showPassword": "إظهار كلمة المرور",
-    "hidePassword": "إخفاء كلمة المرور"
+    "hidePassword": "إخفاء كلمة المرور",
+    "loading": "تسجيل ..."
+  },
+
+  "loginValidation": {
+    "phoneOrEmail_required": "رقم الهاتف أو البريد مطلوب",
+    "phoneOrEmail_invalid": "صيغة رقم الهاتف أو البريد غير صحيحة",
+    "password_required": "كلمة المرور مطلوبة",
+    "password_min": "كلمة المرور يجب أن تكون على الأقل {min} أحرف",
+    "invalid_credentials": "بيانات التسجيل غير صحيحة، الرجاء المحاولة مرة أخرى",
+    "user_not_found": "البريد أو رقم الهاتف غير مسجل ضمن حسابات المنصة"
   },
 
   "CardComponent": {

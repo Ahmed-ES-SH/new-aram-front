@@ -6,11 +6,15 @@ import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import SuccessAlart from "../../_popups/SuccessAlart";
 import LoadingSpin from "../../LoadingSpin";
-import { FaImage } from "react-icons/fa";
+import { FaImage, FaPlus, FaTrash } from "react-icons/fa";
 import { errorType, InputField } from "@/app/types/_dashboard/GlobalTypes";
 import { getIconComponent } from "@/app/_helpers/helpers";
 import Img from "../../_website/_global/Img";
 import IconPicker from "../../_website/_global/IconPicker";
+import { toast } from "sonner";
+import KeywordSelector, {
+  Keyword,
+} from "../../_website/_global/KeywordSelector";
 
 interface Props {
   inputs: InputField[];
@@ -100,7 +104,7 @@ export default function DynamicForm({
           formData.append(key, formattedValue as string | Blob);
         }
       });
-      formData.append("author_id", "4");
+      formData.append("user_id", "4");
       const response = await instance.post(api, formData);
 
       if (response.status === 201) {
@@ -117,7 +121,7 @@ export default function DynamicForm({
           router.push(direct);
         }, 3000);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
 
       if (error instanceof AxiosError && error.response?.data?.errors) {
@@ -129,6 +133,10 @@ export default function DynamicForm({
         }, {} as errorType);
 
         setErrors(formattedErrors);
+      }
+
+      if (error?.response?.data?.message) {
+        toast.error(error?.response?.data?.message);
       }
     } finally {
       setLoading(false);
@@ -143,6 +151,67 @@ export default function DynamicForm({
     setSelectedIcon(iconName);
     setForm({ ...form, icon_name: iconName });
     setShowIconPicker(false);
+  };
+
+  // handle keywords change (only for add mode)
+  const handleKeywordsChange = (newKeywords: Keyword[]) => {
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      keywords: newKeywords,
+    }));
+  };
+
+  // Change item inside array
+  const handleArrayChange = (
+    fieldName: string,
+    index: number,
+    key: string,
+    value: any,
+    form: any,
+    setForm: any
+  ) => {
+    const updatedArray = [...(form[fieldName] || [])];
+    updatedArray[index] = {
+      ...updatedArray[index],
+      [key]: value,
+    };
+
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      [fieldName]: updatedArray,
+    }));
+  };
+
+  // Add new item to array
+  const handleArrayAdd = (
+    fieldName: string,
+    displayKey: string,
+    form: any,
+    setForm: any
+  ) => {
+    const updatedArray = [...(form[fieldName] || []), { [displayKey]: "" }];
+
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      [fieldName]: updatedArray,
+    }));
+  };
+
+  // Remove item from array
+  const handleArrayRemove = (
+    fieldName: string,
+    index: number,
+    form: any,
+    setForm: any
+  ) => {
+    const updatedArray = (form[fieldName] || []).filter(
+      (_: any, idx: number) => idx !== index
+    );
+
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      [fieldName]: updatedArray,
+    }));
   };
 
   ///////////////////////////////////
@@ -191,6 +260,32 @@ export default function DynamicForm({
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors[input.name]["ar"]}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          // Number input (independent case)
+          //////////////////////
+
+          if (input.fildType === "number-input") {
+            return (
+              <div key={index} className="h-fit w-full flex flex-col gap-3">
+                <label className="input-label">{input.label.ar}</label>
+                <input
+                  name={input.name || ""}
+                  type="number"
+                  value={form[input.name] || ""}
+                  onChange={handleChange}
+                  placeholder={input.placeholder || ""}
+                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300  p-2 outline-none"
+                  readOnly={input.readOnly}
+                />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name][0]["ar"]}
                   </p>
                 )}
               </div>
@@ -295,10 +390,10 @@ export default function DynamicForm({
                 </label>
                 <div
                   onClick={() => openImageinput.current?.click()}
-                  className="w-72 min-h-60 overflow-hidden rounded-lg border border-gray-300 shadow-md hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto  flex items-center justify-center "
+                  className="lg:w-96 w-[90%] hover:shadow-sky-400 hover:shadow-2xl h-60 overflow-hidden rounded-lg border border-gray-300 shadow-md hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto  flex items-center justify-center "
                 >
                   {form[input.name] instanceof File ? (
-                    <Img
+                    <img
                       src={URL.createObjectURL(form[input.name] as Blob)}
                       className="w-full h-full  rounded-lg object-cover"
                     />
@@ -384,49 +479,12 @@ export default function DynamicForm({
             );
           }
 
-          //    if (input.fildType == "select-category") {
-          //   return (
-          //     <div key={index} className="w-full flex flex-col gap-2">
-          //       <label htmlFor={input.name} className="input-label">
-          //         {input.label["ar"]}
-          //       </label>
-          //       <select
-          //         onChange={handleChange}
-          //         name={input.name}
-          //         className="select-style"
-          //         value={
-          //           form[input.name]
-          //             ? (form[input.name] as string)
-          //             : form[input.name]?.title_en || ""
-          //         }
-          //       >
-          //         <option value="" disabled>
-          //           {"حدد أحد الإختيارات التالية : -"}
-          //         </option>
-          //         {input.selectItems &&
-          //           input.selectItems.map((item) => (
-          //             <option
-          //               key={item.name ? item.name : item.id}
-          //               value={item.id}
-          //             >
-          //               {item.name ? item.name : item?.title_en}
-          //             </option>
-          //           ))}
-          //       </select>
-          //       {errors[input.name] && (
-          //         <p className="text-red-500 text-sm mt-1">
-          //           {errors[input.name]["ar"]}
-          //         </p>
-          //       )}
-          //     </div>
-          //   );
-          // }
-
           //////////////////////
           //Select Eelement
           //////////////////////
 
           if (input.fildType == "select-type") {
+            console.log(form[input.name]);
             return (
               <div key={index} className="w-full flex flex-col gap-2">
                 <label htmlFor={input.name} className="input-label">
@@ -437,9 +495,10 @@ export default function DynamicForm({
                   name={input.name}
                   className="select-style"
                   value={
-                    form[input.name]
-                      ? (form[input.name] as string)
-                      : form[input.name]?.title_en || ""
+                    form[input.name]?.value ??
+                    form[input.name] ??
+                    form[input.name]?.title_en ??
+                    ""
                   }
                 >
                   <option value="" disabled>
@@ -448,8 +507,8 @@ export default function DynamicForm({
                   {input.selectItems &&
                     input.selectItems.map((item) => (
                       <option
-                        key={item.name ? item.name : item.id}
-                        value={item.name ? item.name : item.id}
+                        key={item.value ?? item.name ?? item.id}
+                        value={item.value ?? item.name ?? item.id}
                       >
                         {item.name ? item.name : item?.title_ar}
                       </option>
@@ -464,10 +523,110 @@ export default function DynamicForm({
             );
           }
 
+          //////////////////////
+          //select keywords
+          //////////////////////
+
+          if (input.fildType === "keywords") {
+            return (
+              <KeywordSelector
+                key={index}
+                selectedKeywords={form.keywords || []}
+                setSelectedKeywords={handleKeywordsChange}
+              />
+            );
+          }
+
+          //////////////////////
+          // Generic Dynamic Array input
+          //////////////////////
+
+          if (input.fildType === "array") {
+            return (
+              <div
+                key={index}
+                className="h-fit w-full border border-gray-300 shadow p-2 rounded-lg flex flex-col gap-3"
+              >
+                <label className="input-label">{input.label.ar}</label>
+
+                <div className="flex flex-col gap-2">
+                  {Array.isArray(form[input.name]) &&
+                  form[input.name].length > 0 ? (
+                    form[input.name].map((item: any, idx: number) => (
+                      <div
+                        key={item.id || idx}
+                        className="flex items-center shadow gap-2 p-2 rounded-md"
+                      >
+                        {/* Dynamic input field based on displayKey */}
+                        <input
+                          type="text"
+                          value={
+                            input.displayKey ? item[input.displayKey] || "" : ""
+                          }
+                          onChange={(e) =>
+                            handleArrayChange(
+                              input.name,
+                              idx,
+                              input.displayKey!,
+                              e.target.value,
+                              form,
+                              setForm
+                            )
+                          }
+                          className="flex-1 border border-gray-300 focus:border-sky-300 duration-300 rounded p-2 outline-none"
+                          placeholder={input.placeholder || ""}
+                        />
+
+                        {/* Remove button */}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleArrayRemove(input.name, idx, form, setForm)
+                          }
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-sm mt-2">
+                      ⚠️ القائمة لا تحتوي على بيانات
+                    </p>
+                  )}
+
+                  {/* Add new item button */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleArrayAdd(
+                        input.name,
+                        input.displayKey!,
+                        form,
+                        setForm
+                      )
+                    }
+                    className="flex items-center gap-2 w-fit hover:scale-105 duration-300 hover:underline mt-3 p-2 rounded-2xl bg-primary text-white"
+                  >
+                    <FaPlus /> إضافة عنصر جديد
+                  </button>
+                </div>
+
+                {/* Error message */}
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name][0]["ar"]}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
           return null;
         })}
         <input type="submit" value={submitValue} className="submit-btn" />
       </form>
+
       <SuccessAlart
         showAlart={successPopup}
         onClose={handleCloseAlart}

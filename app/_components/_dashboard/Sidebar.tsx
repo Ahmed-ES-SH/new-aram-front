@@ -41,7 +41,7 @@ export default function Sidebar() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-[300px] bg-primary-boldgray xl:mt-16 pb-20 pt-2 h-screen  z-[99] fixed top-0 left-0 overflow-y-auto  shadow-md"
+            className="w-[300px] bg-primary-boldgray mt-16 pb-20 pt-2 h-screen  z-[99] fixed top-0 left-0 overflow-y-auto  shadow-md"
           >
             <div className="w-full px-3">
               <HiBars3BottomRight

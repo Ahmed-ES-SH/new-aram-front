@@ -1,6 +1,9 @@
 "use client";
+import { fetchActiveCardCategories } from "@/app/Store/cardCategorySlice";
+import { fetchActiveCategories } from "@/app/Store/categoriesSlice";
 import { useAppDispatch } from "@/app/Store/hooks";
 import { store } from "@/app/Store/store";
+import { fetchCurrentUser } from "@/app/Store/userSlice";
 import { setLocale, setWidth } from "@/app/Store/variablesSlice";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
@@ -36,6 +39,12 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     return () => {
       window.removeEventListener("resize", updateWidth);
     };
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchActiveCategories());
+    dispatch(fetchCurrentUser());
+    dispatch(fetchActiveCardCategories());
   }, [dispatch]);
 
   return (

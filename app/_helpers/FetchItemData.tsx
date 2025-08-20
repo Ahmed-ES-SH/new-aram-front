@@ -2,12 +2,12 @@
 import { useEffect, useState } from "react";
 import { instance } from "./axios";
 
-export default function useFetchItem(
+export default function useFetchItem<T>(
   api: string,
   id: number | string,
   paginationState: boolean
 ) {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState({});
   const [currentPage, setCurrentPage] = useState<number>(1);

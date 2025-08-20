@@ -7,6 +7,14 @@ interface props {
   location: any;
 }
 
+// interface locationType {
+//   address: string;
+//   coordinates: {
+//     lat: number;
+//     lang: number;
+//   };
+// }
+
 // القاهرة كمثال
 
 // إصلاح الأيقونة الافتراضية في Leaflet (مهم لـ Next.js)

@@ -85,7 +85,17 @@
     "continueWithFacebook": "Continue with Facebook",
     "orContinueWith": "Or continue with",
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "loading": "Loading..."
+  },
+
+  "loginValidation": {
+    "phoneOrEmail_required": "Phone number or email is required",
+    "phoneOrEmail_invalid": "Invalid phone number or email format",
+    "password_required": "Password is required",
+    "password_min": "Password must be at least {min} characters",
+    "invalid_credentials": "Invalid login credentials. Please try again.",
+    "user_not_found": "The provided email or phone is not registered."
   },
 
   "CardComponent": {

@@ -68,7 +68,7 @@ export default function HeroVideo() {
           playsInline
           poster="/placeholder.svg?height=1080&width=1920"
         >
-          <source src="/video/BigBuckBunny.mp4" type="video/mp4" />
+          <source src="/videos/BigBuckBunny.mp4" type="video/mp4" />
           {/* Fallback for browsers that don't support video */}
           <div className="w-full h-full bg-gradient-to-br from-yellow-500 to-purple-600" />
         </video>

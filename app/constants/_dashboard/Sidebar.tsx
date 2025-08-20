@@ -140,17 +140,17 @@ export const pages = [
       {
         title: "جميع المراكز",
         icon: <PiCardsThreeLight className={iconStyle} />,
-        to: "/dashboard/categories",
+        to: "/dashboard/organizations",
       },
       {
         title: "أضف مركز جديد",
         icon: <IoAddSharp className={iconStyle} />,
-        to: "/dashboard/addcategory",
+        to: "/dashboard/addorganization",
       },
       {
         title: "تقارير المراكز",
         icon: <IoStatsChartSharp className={iconStyle} />,
-        to: "/dashboard/addcategory",
+        to: "/dashboard/organizationsummary",
       },
     ],
   },
