@@ -1,3 +1,4 @@
+"use client";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -29,10 +30,10 @@ export default function SearchBox() {
   return (
     <input
       type="text"
-      placeholder="ابحث عن المنظمات..."
+      placeholder="ابحث عن العناصر المستهدفة هنا ..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
-      className="w-full outline-none pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      className="w-full outline-none pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-[12px]"
     />
   );
 }

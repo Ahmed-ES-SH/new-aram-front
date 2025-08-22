@@ -9,12 +9,16 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
-import { useAppSelector } from "@/app/Store/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import SearchBox from "./ui/SearchBox";
+import RenderStars from "../../_website/_global/RenderStars";
+import { setSidebardashOrgs } from "@/app/Store/variablesSlice";
 
 export function FilterSidebar() {
   const { categories } = useAppSelector((state) => state.categories);
+  const { sidebardashOrgs } = useAppSelector((state) => state.variables);
+  const dispatch = useAppDispatch();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -27,9 +31,9 @@ export function FilterSidebar() {
     active: true,
   });
 
-  const [isOpen, setisOpen] = useState(true);
-
-  const onToggle = () => {};
+  const onToggle = () => {
+    dispatch(setSidebardashOrgs(!sidebardashOrgs));
+  };
 
   // Read filters from searchParams
   const filters = {
@@ -85,8 +89,8 @@ export function FilterSidebar() {
     <motion.div
       variants={sidebarVariants}
       initial="closed"
-      animate={isOpen ? "open" : "closed"}
-      className="fixed lg:sticky top-0 left-0 h-fit w-96 bg-white shadow-lg lg:shadow-none z-50 overflow-y-auto"
+      animate={sidebardashOrgs ? "open" : "closed"}
+      className="fixed lg:sticky top-0 left-0 h-screen lg:h-fit w-96 bg-white shadow-lg lg:shadow-none z-50 overflow-y-auto max-lg:z-[99999]"
     >
       <div className="p-6">
         {/* Header */}
@@ -172,22 +176,16 @@ export function FilterSidebar() {
             <div className="space-y-2">
               {statusOptions.map((option) => {
                 const isChecked = filters.status.includes(option.value);
-                const newStatus = isChecked
-                  ? filters.status.filter((s) => s !== option.value)
-                  : [...filters.status, option.value];
-
                 return (
                   <label
                     key={option.value}
                     className="flex items-center gap-2 cursor-pointer"
                   >
                     <input
-                      type="checkbox"
+                      type="radio"
                       checked={isChecked}
-                      onChange={() =>
-                        updateParam("status", newStatus.join(","))
-                      }
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      onChange={() => updateParam("status", option.value)}
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">
                       {option.label}
@@ -222,7 +220,7 @@ export function FilterSidebar() {
                     onChange={() => updateParam("rating", String(star))}
                     className="text-blue-600 focus:ring-blue-500"
                   />
-                  <span className="text-sm text-gray-700">{star} نجوم +</span>
+                  <RenderStars rating={star} />
                 </label>
               ))}
             </div>

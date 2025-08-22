@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -19,6 +19,11 @@ interface Props {
   onClose: () => void;
   locale: "en" | "ar";
 }
+
+const DEFAULT_LOCATION = {
+  address: "سلطنة عمان",
+  coordinates: { lat: 21.4735, lng: 55.9754 },
+};
 
 // إصلاح الأيقونة الافتراضية في Leaflet
 delete (L.Icon.Default as any).prototype._getIconUrl;
@@ -41,8 +46,8 @@ function LocationMarker({ setLocation }: { setLocation: (loc: any) => void }) {
       const { lat, lng } = e.latlng;
       setPosition({ lat, lng });
 
-      e.originalEvent.preventDefault(); // ⛔️ يمنع إرسال النموذج
-      e.originalEvent.stopPropagation(); // ⛔️ يمنع انتشار الحدث
+      e.originalEvent.preventDefault();
+      e.originalEvent.stopPropagation();
 
       try {
         const res = await fetch(
@@ -80,6 +85,51 @@ export default function MapSelector({
   onClose,
   locale,
 }: Props) {
+  const [location, setLocalLocation] = useState<any>(
+    initialLocation || DEFAULT_LOCATION
+  );
+
+  // تحديد الموقع التلقائي إذا لم يكن initialLocation موجود
+  useEffect(() => {
+    if (!initialLocation) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const { latitude, longitude } = pos.coords;
+            try {
+              const res = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+              );
+              const data = await res.json();
+              const addressText = data.display_name || DEFAULT_LOCATION.address;
+
+              const newLoc = {
+                address: addressText,
+                coordinates: { lat: latitude, lng: longitude },
+              };
+
+              setLocalLocation(newLoc);
+              setLocation(newLoc);
+            } catch (err) {
+              console.error("Reverse geocoding failed", err);
+              setLocalLocation(DEFAULT_LOCATION);
+              setLocation(DEFAULT_LOCATION);
+            }
+          },
+          () => {
+            // رفض أو خطأ في تحديد الموقع → سلطنة عمان
+            setLocalLocation(DEFAULT_LOCATION);
+            setLocation(DEFAULT_LOCATION);
+          }
+        );
+      } else {
+        // المتصفح لا يدعم Geolocation
+        setLocalLocation(DEFAULT_LOCATION);
+        setLocation(DEFAULT_LOCATION);
+      }
+    }
+  }, [initialLocation, setLocation]);
+
   return (
     <AnimatePresence>
       {showMap && (
@@ -92,10 +142,7 @@ export default function MapSelector({
         >
           <div className="bg-white w-4xl p-2 rounded-md shadow-lg border border-gray-300">
             <MapContainer
-              center={[
-                initialLocation.coordinates.lat,
-                initialLocation.coordinates.lng,
-              ]}
+              center={[location.coordinates.lat, location.coordinates.lng]}
               zoom={13}
               className="h-[500px] w-full rounded-2xl shadow-md outline-none"
             >
@@ -105,12 +152,9 @@ export default function MapSelector({
               />
 
               <Marker
-                position={[
-                  initialLocation.coordinates.lat,
-                  initialLocation.coordinates.lng,
-                ]}
+                position={[location.coordinates.lat, location.coordinates.lng]}
               >
-                <Popup>{initialLocation.address || "موقعك الحالي"}</Popup>
+                <Popup>{location.address || "موقعك الحالي"}</Popup>
               </Marker>
 
               <LocationMarker setLocation={setLocation} />

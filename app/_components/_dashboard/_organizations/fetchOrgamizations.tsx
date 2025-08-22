@@ -22,6 +22,7 @@ export default async function FetchOrganizations({
   category_id,
   page,
   status,
+  rating,
   active,
   number_of_reservations,
 }: {
@@ -30,6 +31,7 @@ export default async function FetchOrganizations({
   status?: string;
   active?: string;
   page?: number;
+  rating?: number;
   number_of_reservations?: number;
 }): Promise<ServicesResponse> {
   try {
@@ -48,6 +50,9 @@ export default async function FetchOrganizations({
     }
     if (page) {
       searchParams.append("page", String(page));
+    }
+    if (rating) {
+      searchParams.append("rating", String(rating));
     }
     if (number_of_reservations) {
       searchParams.append(

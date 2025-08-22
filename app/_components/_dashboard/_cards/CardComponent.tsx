@@ -35,7 +35,7 @@ export default function CardComponent({ card }: CardComponentProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full h-full group cursor-pointer overflow-hidden border border-gray-300 rounded-lg shadow max-w-sm mx-auto"
+      className="w-full h-full group cursor-pointer overflow-hidden border border-gray-300 rounded-lg shadow  mx-auto"
     >
       {/* Credit Card */}
       <div
@@ -146,7 +146,7 @@ export default function CardComponent({ card }: CardComponentProps) {
               {t("keywords")}:
             </h4>
             <div className="flex flex-wrap gap-2">
-              {card.keywords.map((keyword) => (
+              {card.keywords.slice(0, 5).map((keyword) => (
                 <span
                   key={keyword.id}
                   className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full border border-gray-300"
@@ -154,6 +154,12 @@ export default function CardComponent({ card }: CardComponentProps) {
                   {keyword.title}
                 </span>
               ))}
+
+              {card.keywords.length > 5 && (
+                <span className="px-3 py-1 bg-gray-200 text-gray-600 text-xs rounded-full border border-gray-300">
+                  +{card.keywords.length - 5}
+                </span>
+              )}
             </div>
           </div>
         )}

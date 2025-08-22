@@ -6,11 +6,31 @@ import LoadingSpin from "@/app/_components/LoadingSpin";
 import SuccessAlart from "@/app/_components/_popups/SuccessAlart";
 import { socialContactInfoInputs } from "@/app/constants/_dashboard/InputsArrays";
 import useFetchData from "@/app/_helpers/FetchDataWithAxios";
+import { VscLoading } from "react-icons/vsc";
+import { toast } from "sonner";
+
+interface dataType {
+  id: number;
+  facebook_account: string | null;
+  instgram_account: string | null;
+  snapchat_account: string | null;
+  tiktok_account: string | null;
+  x_account: string | null; // Twitter (X)
+  youtube_account: string | null;
+  gmail_account: string | null;
+  whatsapp_number: string | null;
+  created_at: string; // ISO date string
+  updated_at: string; // ISO date string
+}
 
 export default function EditSocialContactInfo() {
-  const { loading, data } = useFetchData("/social-contact-info", false);
+  const { loading, data } = useFetchData<dataType>(
+    "/social-contact-info",
+    false
+  );
 
   const [accounts, setAccounts] = useState({});
+  const [updateloading, setUpdateloading] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,6 +40,18 @@ export default function EditSocialContactInfo() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // ✅ تحقق إذا تم تعديل القيم فعلاً
+    const hasChanged = Object.keys(accounts).some(
+      (key) => (accounts as any)[key] !== (data as any)[key]
+    );
+
+    if (!hasChanged) {
+      toast.error("يجب تعديل حقل واحد على الأقل قبل الحفظ.");
+      return;
+    }
+
+    setUpdateloading(true);
     try {
       const response = await instance.post(
         "/update-social-contact-info",
@@ -29,7 +61,24 @@ export default function EditSocialContactInfo() {
         setShowSuccessPopup(true);
       }
     } catch (error: any) {
-      console.error("Error updating social media info:", error);
+      console.log(error);
+      if (error?.response?.data?.message) {
+        toast.error(error?.response?.data?.message);
+      }
+      const errors = error?.response?.data?.errors;
+
+      // ✅ أول مفتاح
+      const firstKey = Object.keys(errors)[0];
+
+      // ✅ أول قيمة (هتكون Array غالبًا)
+      const firstValue = errors[firstKey];
+
+      // ✅ أول رسالة عربية
+      const firstMessageAr = firstValue[0]["ar"];
+
+      toast.error(firstMessageAr);
+    } finally {
+      setUpdateloading(false);
     }
   };
 
@@ -77,11 +126,15 @@ export default function EditSocialContactInfo() {
           <div className="text-center mt-6">
             <motion.button
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300"
+              className="px-6 py-2 bg-blue-600 text-white font-bold w-fit mx-auto flex items-center justify-center rounded-lg hover:bg-blue-700 transition duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              حفظ التغييرات
+              {updateloading ? (
+                <VscLoading className="animate-spin" />
+              ) : (
+                "حفظ التغييرات"
+              )}
             </motion.button>
           </div>
         </form>

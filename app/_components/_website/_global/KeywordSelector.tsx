@@ -23,7 +23,7 @@ export default function KeywordSelector({
     en: "Maximum keywords are 5 words.",
   };
   const label = {
-    ar: "حدد كلمات مفتاحية للبطاقة بحد أقصى 5 كلمات",
+    ar: "حدد كلمات مفتاحية  بحد أقصى 5 كلمات",
     en: "Specify a maximum of 5 keywords for the service.",
   };
 

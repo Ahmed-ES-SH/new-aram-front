@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import SuccessAlart from "../../_popups/SuccessAlart";
 import LoadingSpin from "../../LoadingSpin";
-import { FaImage, FaPlus, FaTrash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaImage, FaPlus, FaTrash } from "react-icons/fa";
 import { errorType, InputField } from "@/app/types/_dashboard/GlobalTypes";
 import { getIconComponent } from "@/app/_helpers/helpers";
 import Img from "../../_website/_global/Img";
@@ -15,6 +15,9 @@ import { toast } from "sonner";
 import KeywordSelector, {
   Keyword,
 } from "../../_website/_global/KeywordSelector";
+import MapSelector from "../../_maps/MapSelector";
+import { Location } from "./DynamicElementPage";
+import SubCategoryMultiSelect from "../_organizations/SubCategoryMultiSelect";
 
 interface Props {
   inputs: InputField[];
@@ -37,13 +40,17 @@ export default function DynamicForm({
 }: Props) {
   const router = useRouter();
   const openImageinput = useRef<HTMLInputElement | null>(null);
+  const openLogoinput = useRef<HTMLInputElement | null>(null);
 
   const [form, setForm] = useState<any>({});
-  const [errors, setErrors] = useState<errorType>({});
+  const [errors, setErrors] = useState<any>({});
   const [successPopup, setSuccessPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState("");
+  const [showMap, setShowMap] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [location, setLocation] = useState<Location | null>(null);
 
   ///////////////////////////////////
   // start Fetch The Form Detailes
@@ -74,17 +81,37 @@ export default function DynamicForm({
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+
+    let newValue = value;
+
+    // Special case: phone or number inputs => allow only digits
+    if (
+      name.toLowerCase().includes("phone") ||
+      type === "tel" ||
+      type === "number"
+    ) {
+      // allow digits, +, -, (), and spaces
+      newValue = value.replace(/[^0-9+\-()\s]/g, "");
+    }
+
     setForm((prevForm) => ({
       ...prevForm,
-      [name]: value,
+      [name]: newValue,
     }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+    const { name, files } = e.target;
+
     if (files && files.length > 0) {
-      setForm({ ...form, image: files[0] });
+      const file = files[0];
+
+      // Update main form state
+      setForm((prevForm) => ({
+        ...prevForm,
+        [name]: file,
+      }));
     }
   };
 
@@ -104,6 +131,7 @@ export default function DynamicForm({
           formData.append(key, formattedValue as string | Blob);
         }
       });
+      if (location) formData.append("location", JSON.stringify(location));
       formData.append("user_id", "4");
       const response = await instance.post(api, formData);
 
@@ -142,6 +170,8 @@ export default function DynamicForm({
       setLoading(false);
     }
   };
+
+  console.log(form);
 
   const handleCloseAlart = () => {
     setSuccessPopup(false);
@@ -245,7 +275,10 @@ export default function DynamicForm({
 
           if (input.fildType == "short-text") {
             return (
-              <div className="flex flex-col gap-3 " key={index}>
+              <div
+                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                key={index}
+              >
                 <label htmlFor={input.name} className="input-label">
                   {input.label["ar"]}
                 </label>
@@ -259,7 +292,10 @@ export default function DynamicForm({
                 />
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name]["ar"]}
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
                   </p>
                 )}
               </div>
@@ -267,20 +303,69 @@ export default function DynamicForm({
           }
 
           //////////////////////
-          // Number input (independent case)
+          //password input
           //////////////////////
 
-          if (input.fildType === "number-input") {
+          if (input.fildType == "fild-password") {
             return (
-              <div key={index} className="h-fit w-full flex flex-col gap-3">
+              <div
+                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300 relative"
+                key={index}
+              >
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
+
+                <div className="relative w-full">
+                  <input
+                    name={input.name}
+                    placeholder={input.placeholder}
+                    type={showPassword ? "text" : "password"}
+                    value={(form[input.name] as string) || ""}
+                    onChange={handleChange}
+                    className="input-style pr-10" // padding-right عشان مكان الأيقونة
+                  />
+
+                  {/* Eye Icon */}
+                  <span
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
+
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          ////////////////////////
+          // Phone input
+          ////////////////////////
+
+          if (input.fildType === "phone-input") {
+            return (
+              <div
+                key={index}
+                className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+              >
                 <label className="input-label">{input.label.ar}</label>
                 <input
                   name={input.name || ""}
-                  type="number"
+                  type="tel"
+                  inputMode="numeric" // يظهر لوحة أرقام على الموبايل
                   value={form[input.name] || ""}
                   onChange={handleChange}
-                  placeholder={input.placeholder || ""}
-                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300  p-2 outline-none"
+                  placeholder={input.placeholder || "أدخل رقم الهاتف"}
+                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
                   readOnly={input.readOnly}
                 />
                 {errors[input.name] && (
@@ -293,12 +378,139 @@ export default function DynamicForm({
           }
 
           //////////////////////
+          // Number input (independent case)
+          //////////////////////
+
+          if (input.fildType === "number-input") {
+            return (
+              <div
+                key={index}
+                className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+              >
+                <label className="input-label">{input.label.ar}</label>
+                <input
+                  name={input.name || ""}
+                  type="number"
+                  value={form[input.name] || ""}
+                  onChange={handleChange}
+                  placeholder={input.placeholder || ""}
+                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300  p-2 outline-none"
+                  readOnly={input.readOnly}
+                />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          // Time input
+          //////////////////////
+          if (input.fildType === "time-input") {
+            return (
+              <div
+                key={index}
+                className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+              >
+                <label className="input-label">{input.label.ar}</label>
+                <input
+                  name={input.name || ""}
+                  type="time"
+                  value={form[input.name] || ""}
+                  onChange={handleChange}
+                  placeholder={input.placeholder || ""}
+                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                  readOnly={input.readOnly}
+                />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          //Select Eelement
+          //////////////////////
+
+          if (input.fildType == "location") {
+            return (
+              <div
+                className="flex flex-col gap-3 w-full relative px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                key={index}
+              >
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
+                <div className="relative">
+                  <input
+                    name={input.name}
+                    placeholder={input.placeholder}
+                    type={input.type}
+                    value={(location && (location.address as string)) || ""}
+                    onChange={handleChange}
+                    className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100"
+                    readOnly={input.readOnly}
+                  />
+                  <span
+                    onClick={() => setShowMap(true)}
+                    className="underline text-red-400 mt-2 w-fit mr-auto block cursor-pointer hover:text-red-600 duration-150"
+                  >
+                    حدد العنوان على الخريطة
+                  </span>
+                </div>
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          //Select Eelement
+          //////////////////////
+
+          if (input.fildType == "sub-category") {
+            return (
+              <div
+                className="w-full border border-gray-300 shadow-lg rounded-lg px-2 py-4"
+                key={index}
+              >
+                <SubCategoryMultiSelect
+                  setUpdatedData={setForm}
+                  currentSubCategories={[]}
+                  mode="add"
+                />
+              </div>
+            );
+          }
+
+          //////////////////////
           //Color  Fild
           //////////////////////
 
           if (input.fildType === "color-fild") {
             return (
-              <div className="flex flex-col gap-3 " key={index}>
+              <div
+                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                key={index}
+              >
                 <label htmlFor={input.name} className="input-label">
                   {input.label["ar"]}
                 </label>
@@ -311,7 +523,10 @@ export default function DynamicForm({
                 />
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name]["ar"]}
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
                   </p>
                 )}
               </div>
@@ -323,7 +538,10 @@ export default function DynamicForm({
           //////////////////////
           if (input.fildType == "long-text") {
             return (
-              <div className="flex flex-col gap-3 " key={index}>
+              <div
+                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                key={index}
+              >
                 <label htmlFor={input.name} className="input-label">
                   {input.label["ar"]}
                 </label>
@@ -336,7 +554,10 @@ export default function DynamicForm({
                 />
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name]["ar"]}
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
                   </p>
                 )}
               </div>
@@ -355,7 +576,7 @@ export default function DynamicForm({
                   className="w-60 h-60 rounded-full  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border-2  border-second_text flex items-center justify-center "
                 >
                   {form[input.name] instanceof File ? (
-                    <Img
+                    <img
                       src={URL.createObjectURL(form[input.name] as Blob)}
                       className="w-60 h-60  rounded-full"
                     />
@@ -364,13 +585,17 @@ export default function DynamicForm({
                   )}
                   <input
                     type="file"
+                    name="image"
                     hidden
                     onChange={handleFileChange}
                     ref={openImageinput}
                   />
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name]["ar"]}
+                      {errors[input.name] ??
+                        errors[input.name]["ar"] ??
+                        errors[input.name][0]["ar"] ??
+                        "خطأ فى هذا الحقل"}
                     </p>
                   )}
                 </div>
@@ -402,6 +627,7 @@ export default function DynamicForm({
                   )}
                   <input
                     type="file"
+                    name="image"
                     hidden
                     onChange={handleFileChange}
                     ref={openImageinput}
@@ -409,7 +635,10 @@ export default function DynamicForm({
                 </div>
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name]["ar"]}
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
                   </p>
                 )}
               </div>
@@ -435,7 +664,62 @@ export default function DynamicForm({
                 </div>
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name][0]["ar"]}
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          //normal logo  input
+          //////////////////////
+
+          if (input.fildType == "logo-image") {
+            return (
+              <div
+                key={index}
+                className="flex flex-col gap-2 items-start w-fit ml-auto"
+              >
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
+                <div
+                  onClick={() => openLogoinput.current?.click()}
+                  className="w-72 h-60 p-4 overflow-hidden rounded-lg shadow  border-gray-300  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
+                >
+                  {form?.logo instanceof File ? (
+                    <img
+                      src={URL.createObjectURL(form?.logo)}
+                      className="w-full h-full  object-cover"
+                    />
+                  ) : form["logo"] ? (
+                    <Img
+                      src={
+                        form["logo"] ? form["logo"] : "/defaults/noImage.png"
+                      }
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <FaImage className="size-24 " />
+                  )}
+                  <input
+                    type="file"
+                    name="logo"
+                    hidden
+                    onChange={handleFileChange}
+                    ref={openLogoinput}
+                  />
+                </div>
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
                   </p>
                 )}
               </div>
@@ -450,21 +734,17 @@ export default function DynamicForm({
                   onClick={() => openImageinput.current?.click()}
                   className="w-full h-96  shadow-md border-dashed overflow-hidden rounded-sm  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
                 >
-                  {form?.image instanceof File ? (
+                  {form.image && form.image instanceof File ? (
                     <Img
-                      src={URL.createObjectURL(form?.image)}
+                      src={URL.createObjectURL(form.image) || "/public"}
                       className="w-full h-full  object-cover"
-                    />
-                  ) : form[input.name] ? (
-                    <Img
-                      src={form[input.name] ? form[input.name] : "/public"}
-                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <FaImage className="size-24 " />
                   )}
                   <input
                     type="file"
+                    name="image"
                     hidden
                     onChange={handleFileChange}
                     ref={openImageinput}
@@ -472,7 +752,10 @@ export default function DynamicForm({
                 </div>
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name]["ar"]}
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
                   </p>
                 )}
               </div>
@@ -484,9 +767,11 @@ export default function DynamicForm({
           //////////////////////
 
           if (input.fildType == "select-type") {
-            console.log(form[input.name]);
             return (
-              <div key={index} className="w-full flex flex-col gap-2">
+              <div
+                key={index}
+                className="w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+              >
                 <label htmlFor={input.name} className="input-label">
                   {input.label["ar"]}
                 </label>
@@ -495,8 +780,8 @@ export default function DynamicForm({
                   name={input.name}
                   className="select-style"
                   value={
-                    form[input.name]?.value ??
                     form[input.name] ??
+                    (form[input.name] as string) ??
                     form[input.name]?.title_en ??
                     ""
                   }
@@ -516,7 +801,10 @@ export default function DynamicForm({
                 </select>
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name]["ar"]}
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
                   </p>
                 )}
               </div>
@@ -526,14 +814,17 @@ export default function DynamicForm({
           //////////////////////
           //select keywords
           //////////////////////
-
           if (input.fildType === "keywords") {
             return (
-              <KeywordSelector
+              <div
                 key={index}
-                selectedKeywords={form.keywords || []}
-                setSelectedKeywords={handleKeywordsChange}
-              />
+                className="h-fit w-full flex flex-col gap-3 mt-4 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+              >
+                <KeywordSelector
+                  selectedKeywords={form.keywords || []}
+                  setSelectedKeywords={handleKeywordsChange}
+                />
+              </div>
             );
           }
 
@@ -545,7 +836,7 @@ export default function DynamicForm({
             return (
               <div
                 key={index}
-                className="h-fit w-full border border-gray-300 shadow p-2 rounded-lg flex flex-col gap-3"
+                className="h-fit w-full border border-gray-300 shadow px-2 py-4 rounded-lg flex flex-col gap-3"
               >
                 <label className="input-label">{input.label.ar}</label>
 
@@ -638,6 +929,14 @@ export default function DynamicForm({
         onClose={() => setShowIconPicker(false)}
         selectedIcon={selectedIcon}
         onChange={handleChangeIcon}
+      />
+
+      <MapSelector
+        locale="ar"
+        setLocation={setLocation}
+        initialLocation={location}
+        showMap={showMap}
+        onClose={() => setShowMap(false)}
       />
     </>
   );

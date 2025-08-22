@@ -13,6 +13,10 @@ import KeywordSelector from "../../_website/_global/KeywordSelector";
 import LoadingSpin from "../../LoadingSpin";
 import { toast } from "sonner";
 import Img from "../../_website/_global/Img";
+import SubCategoryMultiSelect from "../_organizations/SubCategoryMultiSelect";
+import Image from "next/image";
+import MapSelector from "../../_maps/MapSelector";
+import ServiceImages from "../_services/ServiceImages";
 
 interface props {
   api: string;
@@ -20,6 +24,14 @@ interface props {
   id: number | string;
   inputsData: InputField[];
   direct: string;
+}
+
+export interface Location {
+  address: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
 }
 
 export default function DynamicElementPage({
@@ -31,6 +43,7 @@ export default function DynamicElementPage({
 }: props) {
   const router = useRouter();
   const openImageinput = useRef<HTMLInputElement | null>(null);
+  const openLogoinput = useRef<HTMLInputElement | null>(null);
 
   // Get The Data For The Item .
 
@@ -47,9 +60,15 @@ export default function DynamicElementPage({
   const [updateLoading, setUpdateLoading] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState("");
+  const [showMap, setShowMap] = useState(false);
+  const [location, setLocation] = useState<Location>({
+    address: "",
+    coordinates: {
+      lat: 0,
+      lng: 0,
+    },
+  });
   const [errors, setErrors] = useState<errorType>({});
-
-  console.log(form?.image);
 
   // Start Functions Lines
 
@@ -86,6 +105,7 @@ export default function DynamicElementPage({
         formData.append(key, value ?? "");
       }
 
+      if (location) formData.append("location", JSON.stringify(location));
       const response = await instance.post(
         `${updateEndPoint}/${id}`,
         formData,
@@ -123,18 +143,24 @@ export default function DynamicElementPage({
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
 
-    setForm((prevForm: any) => ({
-      ...prevForm,
-      [name]: value,
-    }));
+    let newValue = value;
 
-    if (data && value !== data[name]) {
-      setUpdatedData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+    // Special case: phone or number inputs => allow only digits
+    if (
+      name.toLowerCase().includes("phone") ||
+      type === "tel" ||
+      type === "number"
+    ) {
+      // allow digits, +, -, (), and spaces
+      newValue = value.replace(/[^0-9+\-()\s]/g, "");
+    }
+
+    setForm((prevForm: any) => ({ ...prevForm, [name]: newValue }));
+
+    if (data && newValue !== data[name]) {
+      setUpdatedData((prevData) => ({ ...prevData, [name]: newValue }));
     } else {
       setUpdatedData((prevData) => {
         const newData = { ...prevData };
@@ -166,14 +192,21 @@ export default function DynamicElementPage({
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+    const { name, files } = e.target;
+
     if (files && files.length > 0) {
       const file = files[0];
-      setForm({ ...form, image: file });
 
+      // Update main form state
+      setForm((prevForm) => ({
+        ...prevForm,
+        [name]: file,
+      }));
+
+      // Update updatedData state
       setUpdatedData((prevData) => ({
         ...prevData,
-        image: file,
+        [name]: file,
       }));
     }
   };
@@ -288,6 +321,21 @@ export default function DynamicElementPage({
     if (data) {
       setForm(data);
     }
+
+    if (data && data?.location) {
+      const location =
+        typeof data?.location == "string"
+          ? JSON.parse(data?.location)
+          : data?.location;
+
+      setLocation({
+        address: location?.address,
+        coordinates: {
+          lat: location?.coordinates?.lat, // تقريبًا وسط عمان
+          lng: location?.coordinates?.lng,
+        },
+      });
+    }
   }, [data]);
 
   if (loading || updateLoading) return <LoadingSpin />;
@@ -307,7 +355,10 @@ export default function DynamicElementPage({
 
             if (input.fildType == "short-text") {
               return (
-                <div className="flex flex-col gap-3 " key={index}>
+                <div
+                  className="flex flex-col gap-3 border border-gray-300 rounded-lg shadow-lg py-4 px-2"
+                  key={index}
+                >
                   <label htmlFor={input.name} className="input-label">
                     {input.label["ar"]}
                   </label>
@@ -317,7 +368,7 @@ export default function DynamicElementPage({
                     type={input.type}
                     value={(form[input.name] as string) || ""}
                     onChange={handleChange}
-                    className="input-style"
+                    className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (
@@ -335,7 +386,10 @@ export default function DynamicElementPage({
 
             if (input.fildType === "number-input") {
               return (
-                <div key={index} className="h-fit w-full flex flex-col gap-3">
+                <div
+                  key={index}
+                  className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                >
                   <label className="input-label">{input.label.ar}</label>
                   <input
                     name={input.name || ""}
@@ -355,12 +409,101 @@ export default function DynamicElementPage({
               );
             }
 
+            ////////////////////////
+            // Phone input
+            ////////////////////////
+
+            if (input.fildType === "phone-input") {
+              return (
+                <div
+                  key={index}
+                  className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                >
+                  <label className="input-label">{input.label.ar}</label>
+                  <input
+                    name={input.name || ""}
+                    type="tel"
+                    inputMode="numeric" // يظهر لوحة أرقام على الموبايل
+                    value={form[input.name] || ""}
+                    onChange={handleChange}
+                    placeholder={input.placeholder || "أدخل رقم الهاتف"}
+                    className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                    readOnly={input.readOnly}
+                  />
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name][0]["ar"]}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
+            //////////////////////
+            // Time input
+            //////////////////////
+            if (input.fildType === "time-input") {
+              return (
+                <div
+                  key={index}
+                  className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                >
+                  <label className="input-label">{input.label.ar}</label>
+                  <input
+                    name={input.name || ""}
+                    type="time"
+                    value={form[input.name] || ""}
+                    onChange={handleChange}
+                    placeholder={input.placeholder || ""}
+                    className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                    readOnly={input.readOnly}
+                  />
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name][0]["ar"]}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
+            //////////////////////
+            // Date input
+            //////////////////////
+            if (input.fildType === "date-input") {
+              return (
+                <div
+                  key={index}
+                  className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                >
+                  <label className="input-label">{input.label.ar}</label>
+                  <input
+                    name={input.name || ""}
+                    type="date"
+                    value={form[input.name] || ""}
+                    onChange={handleChange}
+                    placeholder={input.placeholder || ""}
+                    className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                    readOnly={input.readOnly}
+                  />
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name][0]["ar"]}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
             //////////////////////
             //text area Element
             //////////////////////
             if (input.fildType == "long-text") {
               return (
-                <div className="flex flex-col gap-3 " key={index}>
+                <div
+                  className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                  key={index}
+                >
                   <label htmlFor={input.name} className="input-label">
                     {input.label["ar"]}
                   </label>
@@ -484,6 +627,7 @@ export default function DynamicElementPage({
                     )}
                     <input
                       type="file"
+                      name="image"
                       hidden
                       onChange={handleFileChange}
                       ref={openImageinput}
@@ -498,6 +642,55 @@ export default function DynamicElementPage({
               );
             }
             //////////////////////
+            //normal logo  input
+            //////////////////////
+
+            if (input.fildType == "logo-image") {
+              return (
+                <div
+                  key={index}
+                  className="flex flex-col gap-2 items-start w-fit ml-auto"
+                >
+                  <label htmlFor={input.name} className="input-label">
+                    {input.label["ar"]}
+                  </label>
+                  <div
+                    onClick={() => openLogoinput.current?.click()}
+                    className="w-72 h-60 p-4 overflow-hidden rounded-lg shadow  border-gray-300  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
+                  >
+                    {form?.logo instanceof File ? (
+                      <Img
+                        src={URL.createObjectURL(form?.logo)}
+                        className="w-full h-full  object-cover"
+                      />
+                    ) : form["logo"] ? (
+                      <Img
+                        src={
+                          form["logo"] ? form["logo"] : "/defaults/noImage.png"
+                        }
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <FaImage className="size-24 " />
+                    )}
+                    <input
+                      type="file"
+                      name="logo"
+                      hidden
+                      onChange={handleFileChange}
+                      ref={openLogoinput}
+                    />
+                  </div>
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name][0]["ar"]}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
+            //////////////////////
             //normal Image input
             //////////////////////
 
@@ -510,7 +703,10 @@ export default function DynamicElementPage({
                     className="w-full h-96  shadow-md border-dashed overflow-hidden rounded-sm  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
                   >
                     {form?.image instanceof File ? (
-                      <Img
+                      <Image
+                        width={1024}
+                        height={1280}
+                        alt="local-image"
                         src={URL.createObjectURL(form?.image)}
                         className="w-full h-full  object-cover"
                       />
@@ -524,6 +720,7 @@ export default function DynamicElementPage({
                     )}
                     <input
                       type="file"
+                      name="image"
                       hidden
                       onChange={handleFileChange}
                       ref={openImageinput}
@@ -570,11 +767,94 @@ export default function DynamicElementPage({
 
             if (input.fildType === "keywords") {
               return (
-                <KeywordSelector
+                <div
                   key={index}
-                  selectedKeywords={form.keywords || []}
-                  setSelectedKeywords={handleKeywordsChange}
-                />
+                  className="w-full px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                >
+                  <KeywordSelector
+                    selectedKeywords={form.keywords || []}
+                    setSelectedKeywords={handleKeywordsChange}
+                  />
+                </div>
+              );
+            }
+
+            //////////////////////
+            //images section
+            //////////////////////
+
+            if (input.fildType == "images-section") {
+              return (
+                <div
+                  className="w-full border border-gray-300 shadow-lg rounded-lg px-2 py-4"
+                  key={index}
+                >
+                  <ServiceImages
+                    images={form?.images ? form?.images : null}
+                    errors={errors}
+                  />
+                </div>
+              );
+            }
+            //////////////////////
+            //Select Eelement
+            //////////////////////
+
+            if (input.fildType == "sub-category") {
+              return (
+                <div
+                  className="w-full border border-gray-300 shadow-lg rounded-lg px-2 py-4"
+                  key={index}
+                >
+                  <SubCategoryMultiSelect
+                    setUpdatedData={setUpdatedData}
+                    currentSubCategories={
+                      form.sub_categories ? form.sub_categories : []
+                    }
+                    mode="update"
+                  />
+                </div>
+              );
+            }
+
+            //////////////////////
+            //Select Eelement
+            //////////////////////
+
+            if (input.fildType == "location") {
+              return (
+                <div
+                  className="flex flex-col gap-3 w-full relative px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                  key={index}
+                >
+                  <label htmlFor={input.name} className="input-label">
+                    {input.label["ar"]}
+                  </label>
+                  <div className="relative">
+                    <input
+                      name={input.name}
+                      placeholder={input.placeholder}
+                      type={input.type}
+                      value={(location.address as string) || ""}
+                      onChange={handleChange}
+                      className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100"
+                      readOnly={input.readOnly}
+                    />
+                    <span
+                      onClick={() => setShowMap(true)}
+                      className="underline text-red-400 mt-2 w-fit mr-auto block cursor-pointer hover:text-red-600 duration-150"
+                    >
+                      إستعراض العنوان على الخريطة
+                    </span>
+                  </div>
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name][0]["ar"] ??
+                        errors[input.name][0] ??
+                        ""}
+                    </p>
+                  )}
+                </div>
               );
             }
 
@@ -584,7 +864,10 @@ export default function DynamicElementPage({
 
             if (input.fildType == "select-type") {
               return (
-                <div key={index} className="w-full flex flex-col gap-2">
+                <div
+                  key={index}
+                  className="w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                >
                   <label htmlFor={input.name} className="input-label">
                     {input.label["ar"]}
                   </label>
@@ -593,9 +876,10 @@ export default function DynamicElementPage({
                     name={input.name}
                     className="select-style"
                     value={
-                      form[input.name]
-                        ? (form[input.name] as string)
-                        : form[input.name]?.title_en || ""
+                      form[input.name] ??
+                      (form[input.name] as string) ??
+                      form[input.name]?.title_en ??
+                      ""
                     }
                   >
                     <option value="" disabled>
@@ -604,8 +888,8 @@ export default function DynamicElementPage({
                     {input.selectItems &&
                       input.selectItems.map((item) => (
                         <option
-                          key={item.name ? item.name : item.id}
-                          value={item.name ? item.name : item.id}
+                          key={item.value ?? item.name ?? item.id}
+                          value={item.value ?? item.name ?? item.id}
                         >
                           {item.name ? item.name : item?.title_en}
                         </option>
@@ -628,7 +912,7 @@ export default function DynamicElementPage({
               return (
                 <div
                   key={index}
-                  className="h-fit w-full border border-gray-300 shadow p-2 rounded-lg flex flex-col gap-3"
+                  className="h-fit w-full flex flex-col gap-3 mt-4 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
                 >
                   <label className="input-label">{input.label.ar}</label>
 
@@ -724,6 +1008,14 @@ export default function DynamicElementPage({
         onClose={() => setShowIconPicker(false)}
         selectedIcon={selectedIcon}
         onChange={handleChangeIcon}
+      />
+
+      <MapSelector
+        locale="ar"
+        setLocation={setLocation}
+        initialLocation={location}
+        showMap={showMap}
+        onClose={() => setShowMap(false)}
       />
     </>
   );

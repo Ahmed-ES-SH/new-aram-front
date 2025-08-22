@@ -26,6 +26,7 @@ import {
 import { ImMakeGroup, ImStatsDots } from "react-icons/im";
 import {
   MdCategory,
+  MdCurrencyExchange,
   MdNotificationsActive,
   MdOutlineAddToPhotos,
   MdOutlineDashboard,
@@ -162,12 +163,12 @@ export const pages = [
       {
         title: "جميع الخدمات",
         icon: <GrServices className={iconStyle} />,
-        to: "/dashboard/categories",
+        to: "/dashboard/services",
       },
       {
         title: "أضف خدمة جديدة",
         icon: <IoAddSharp className={iconStyle} />,
-        to: "/dashboard/addcategory",
+        to: "/dashboard/addservice",
       },
     ],
   },
@@ -279,6 +280,11 @@ export const pages = [
     title: "حسابات التواصل الإجتماعى",
     icon: <IoShareSocialSharp className={iconStyle} />,
     to: "/dashboard/socialcontactinfo",
+  },
+  {
+    title: "عملات المنصة",
+    icon: <MdCurrencyExchange className={iconStyle} />,
+    to: "/dashboard/currencymanager",
   },
   {
     title: "تفاصيل الشركة",

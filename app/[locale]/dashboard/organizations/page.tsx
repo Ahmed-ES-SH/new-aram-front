@@ -9,7 +9,7 @@ export default async function OrganizationsDashPage({ searchParams }: any) {
     ? searchParams.category_id.split(",").map(Number)
     : undefined;
 
-  const { page, query, status, active, number_of_reservations } =
+  const { page, query, status, rating, active, number_of_reservations } =
     await searchParams;
 
   const { data, pagination } = await FetchOrganizations({
@@ -17,6 +17,7 @@ export default async function OrganizationsDashPage({ searchParams }: any) {
     query,
     category_id,
     status,
+    rating,
     active,
     number_of_reservations,
   });

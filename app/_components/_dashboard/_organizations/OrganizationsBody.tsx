@@ -3,19 +3,34 @@ import React, { useEffect, useState } from "react";
 import OrganizationDashCard from "./OrganizationDashCard";
 import { Organization } from "./types/organization";
 import { FaBars } from "react-icons/fa";
+import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
+import { setSidebardashOrgs } from "@/app/Store/variablesSlice";
 
 interface props {
   data: Organization[];
 }
 
 export default function OrganizationsBody({ data }: props) {
+  const { sidebardashOrgs, width } = useAppSelector((state) => state.variables);
+  const dispatch = useAppDispatch();
+
   const [organizations, setOrganizations] = useState<Organization[]>([]);
+
+  const onToggle = () => {
+    dispatch(setSidebardashOrgs(!sidebardashOrgs));
+  };
 
   useEffect(() => {
     if (data) {
       setOrganizations(data);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (width >= 1024) {
+      dispatch(setSidebardashOrgs(true));
+    }
+  }, [dispatch, width]);
 
   return (
     <>
@@ -30,7 +45,7 @@ export default function OrganizationsBody({ data }: props) {
             </p>
           </div>
           <button
-            // onClick={() => setSidebarOpen(true)}
+            onClick={() => onToggle()}
             className="lg:hidden flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50"
           >
             <FaBars className="text-gray-600" />

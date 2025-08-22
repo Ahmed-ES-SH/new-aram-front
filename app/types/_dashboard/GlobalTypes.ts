@@ -15,6 +15,12 @@ export interface UserType {
   created_at: string;
 }
 
+interface item {
+  name: string;
+  type: string;
+  label: { ar: string; en: string };
+}
+
 export interface InputField {
   readOnly?: boolean;
   name: string;
@@ -23,6 +29,7 @@ export interface InputField {
   displayKey?: string;
   label: { ar: string; en: string };
   placeholder?: string;
+  items?: item[];
   selectItems?: { [key: string]: string }[];
 }
 

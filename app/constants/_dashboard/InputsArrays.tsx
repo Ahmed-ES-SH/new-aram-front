@@ -1,3 +1,4 @@
+import { IoLogoTiktok } from "react-icons/io5";
 import countries from "../_website/countries";
 import {
   FaWhatsapp,
@@ -189,6 +190,12 @@ export const socialContactInfoInputs = [
     name: "snapchat_account",
     icon: <FaSnapchat className="text-yellow-500 text-xl" />,
     placeholder: "Snapchat Account URL",
+    type: "text",
+  },
+  {
+    name: "tiktok_account",
+    icon: <IoLogoTiktok className="text-black text-xl" />,
+    placeholder: "Tiktok Account URL",
     type: "text",
   },
 ];
