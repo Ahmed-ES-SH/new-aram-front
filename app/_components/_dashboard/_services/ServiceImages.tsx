@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useRef } from "react";
 import { Service } from "./types";
 import Img from "../../_website/_global/Img";
 import { IoMdClose } from "react-icons/io";
@@ -7,21 +7,81 @@ import { IoMdClose } from "react-icons/io";
 interface props {
   images: Service["images"];
   errors: any;
+  form: Service;
+  setForm: Dispatch<SetStateAction<Service>>;
 }
 
-export default function ServiceImages({ errors, images }: props) {
+export default function ServiceImages({
+  errors,
+  images,
+  form,
+  setForm,
+}: props) {
   const imagesInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleDeleteImage = (item: any) => {};
+  const handleDeleteImage = (item: any) => {
+    setForm((prevForm) => {
+      const updatedImages = prevForm.images.filter((img: any) => {
+        // New file → remove by tempId
+        if (item.tempId) {
+          return img.tempId !== item.tempId;
+        }
+
+        // Old image → remove by id
+        if (item.id) {
+          return img.id !== item.id;
+        }
+
+        return true;
+      });
+
+      let updatedDeletedImages = prevForm.deletedImages || [];
+
+      // If it's an old image (has id + path), add its id to deletedImages
+      if (item.id && item.path) {
+        updatedDeletedImages = [...updatedDeletedImages, item.id];
+      }
+
+      return {
+        ...prevForm,
+        images: updatedImages,
+        deletedImages: updatedDeletedImages,
+      };
+    });
+  };
+
+  const handleFilesChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files && files.length > 0) {
+      const newFiles = Array.from(files).map((file) => ({
+        file,
+        tempId: crypto.randomUUID(), // generate temporary id for React key
+        preview: URL.createObjectURL(file),
+      }));
+      setForm({
+        ...form,
+        images: [...form.images, ...newFiles],
+      });
+    }
+  };
 
   return (
     <>
+      <input
+        ref={imagesInputRef}
+        name="images"
+        onChange={handleFilesChange}
+        type="file"
+        multiple
+        hidden
+      />
       {images && images.length > 0 ? (
         <div className="flex flex-col gap-1">
-          <label className="my-2 pb-1 border-b w-fit border-b-primary">
+          <label className="my-2 pb-1 border-b w-fit border-sky-400">
             معرض الخدمة
           </label>
-          <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4 w-full">
+
+          <div className="grid grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1 gap-4 w-full">
             {images.map((item: any, index: number) => {
               return (
                 <div
@@ -29,7 +89,7 @@ export default function ServiceImages({ errors, images }: props) {
                   className="w-full rounded-md shadow-sm h-[30vh] relative"
                 >
                   <Img
-                    src={item.file ? URL.createObjectURL(item.file) : item.path}
+                    src={item.file ? item.preview : item.path}
                     errorSrc="/defaults/noServiceImage.jpg"
                     className="w-full h-full object-cover rounded-md"
                   />
@@ -44,7 +104,7 @@ export default function ServiceImages({ errors, images }: props) {
             })}
             <div
               onClick={() => imagesInputRef.current?.click()}
-              className="w-full rounded-md shadow-sm h-[30vh] bg-gray-100 cursor-pointer hover:bg-light-primary duration-300 flex items-center justify-center relative"
+              className="w-full rounded-md shadow-sm h-[30vh] bg-gray-100 cursor-pointer hover:bg-sky-200 duration-300 flex items-center justify-center relative"
             >
               <Img
                 src={"/defaults/upload.png"}
@@ -61,7 +121,7 @@ export default function ServiceImages({ errors, images }: props) {
         <div className="flex flex-col gap-1">
           <div
             onClick={() => imagesInputRef.current?.click()}
-            className="w-full rounded-md shadow-sm h-[30vh] bg-gray-100 cursor-pointer hover:bg-light-primary duration-300 flex items-center justify-center relative"
+            className="w-full rounded-md shadow-sm h-[30vh] bg-gray-100 cursor-pointer hover:bg-sky-100 duration-300 flex items-center justify-center relative"
           >
             <Img
               src={"/defaults/upload.png"}

@@ -19,6 +19,20 @@ export type image = {
   path: string;
 };
 
+export type TempImage = {
+  file: File;
+  tempId: string;
+  preview: string;
+};
+
+type ImageLike = image | File | TempImage;
+
+export type miniOrg = {
+  id: number;
+  title: string;
+  logo: string;
+};
+
 export type Creater = {
   id: number;
   name: string;
@@ -43,9 +57,11 @@ export type Service = {
   category_id: number;
   created_at: string;
   updated_at: string;
+  organizations: miniOrg[];
   category: Category;
   creater: Creater;
-  images: image[];
+  images: ImageLike[];
+  deletedImages?: any;
   keywords: Keyword[];
 };
 

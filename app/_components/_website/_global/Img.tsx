@@ -32,13 +32,7 @@ export default function Img({
 
   useEffect(() => {
     setImageSrc(src);
-
-    // cleanup only when component unmounts
-    return () => {
-      if (src.startsWith("blob:")) {
-        URL.revokeObjectURL(src);
-      }
-    };
+    // لا تعمل revoke هنا؛ اللي أنشأ الـ URL هو المسؤول عن إلغاءه
   }, [src]);
 
   const handleImageError = () => {
@@ -46,26 +40,20 @@ export default function Img({
   };
 
   const handleImageLoad = () => {
-    // free memory only after load is done
-    if (src.startsWith("blob:")) {
-      URL.revokeObjectURL(src);
-    }
     if (onLoad) onLoad();
   };
 
   return (
-    <>
-      <img
-        src={imageSrc}
-        alt={alt}
-        className={className}
-        width={width}
-        height={height}
-        loading={loading}
-        onLoad={handleImageLoad}
-        onError={onError ? onError : handleImageError}
-        ref={ref}
-      />
-    </>
+    <img
+      src={imageSrc}
+      alt={alt}
+      className={className}
+      width={width}
+      height={height}
+      loading={loading}
+      onLoad={handleImageLoad}
+      onError={onError ? onError : handleImageError}
+      ref={ref}
+    />
   );
 }

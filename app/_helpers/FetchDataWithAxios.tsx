@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { instance } from "./axios";
 
 // Generic hook to fetch data from an API with optional pagination
-export default function useFetchData<T>(api: string, paginationState: boolean) {
+export default function useFetchData<T>(
+  api: string,
+  paginationState: boolean,
+  disableScroll: boolean = false // ✅ added prop to control scroll
+) {
   const [data, setData] = useState<T | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -14,14 +18,19 @@ export default function useFetchData<T>(api: string, paginationState: boolean) {
     async function fetchData(page: number) {
       try {
         setLoading(true);
-        window.scrollTo(0, 0); // Scroll to top when fetching new page
+
+        // ✅ Only scroll to top if disableScroll = false
+        if (!disableScroll) {
+          window.scrollTo(0, 0);
+        }
+
         const response = await instance.get(
           paginationState ? `${api}?page=${page}` : `${api}`
         );
 
-        // If request is successful, update data and pagination state
         if (response.status === 200) {
           setData(response.data.data);
+
           if (paginationState && response.data.pagination) {
             const pagination = response.data.pagination;
             setCurrentPage(pagination.current_page);
@@ -29,18 +38,16 @@ export default function useFetchData<T>(api: string, paginationState: boolean) {
           }
         }
       } catch (err) {
-        // Catch and store any request error
         if (err) {
           setError(err);
         }
       } finally {
-        setLoading(false); // Stop loading regardless of success or error
+        setLoading(false);
       }
     }
 
-    // Trigger data fetching when dependencies change
     fetchData(currentPage);
-  }, [api, paginationState, currentPage]);
+  }, [api, paginationState, currentPage, disableScroll]);
 
   return {
     data,

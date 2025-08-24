@@ -74,7 +74,7 @@ export default function KeywordSelector({
     <div className="space-y-4">
       {/* Search Input */}
       <div className="flex flex-col gap-1">
-        <label className="my-2 pb-1 border-b w-fit border-b-primary">
+        <label className="my-2 pb-1 border-b w-fit border-b-sky-300">
           {label[locale]}
         </label>
         <input

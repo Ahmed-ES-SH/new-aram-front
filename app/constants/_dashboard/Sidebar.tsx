@@ -1,4 +1,8 @@
-import { BiCategoryAlt } from "react-icons/bi";
+import {
+  BiCategoryAlt,
+  BiMessageSquareAdd,
+  BiSolidCoupon,
+} from "react-icons/bi";
 import { FaBloggerB, FaQuestion } from "react-icons/fa";
 import { LiaUserMdSolid } from "react-icons/lia";
 import {
@@ -27,6 +31,8 @@ import { ImMakeGroup, ImStatsDots } from "react-icons/im";
 import {
   MdCategory,
   MdCurrencyExchange,
+  MdDiscount,
+  MdLibraryAdd,
   MdNotificationsActive,
   MdOutlineAddToPhotos,
   MdOutlineDashboard,
@@ -34,9 +40,13 @@ import {
   MdOutlineSyncProblem,
 } from "react-icons/md";
 import { PiCards, PiCardsThreeLight, PiUsersThreeFill } from "react-icons/pi";
-import { RiGitRepositoryPrivateLine, RiNewsLine } from "react-icons/ri";
+import {
+  RiCoupon2Fill,
+  RiGitRepositoryPrivateLine,
+  RiNewsLine,
+} from "react-icons/ri";
 import { SiHeroku } from "react-icons/si";
-import { TbListDetails } from "react-icons/tb";
+import { TbDiscount, TbListDetails } from "react-icons/tb";
 import { CiCreditCard1 } from "react-icons/ci";
 
 const iconStyle = "text-white  size-6";
@@ -199,7 +209,40 @@ export const pages = [
       },
     ],
   },
-
+  {
+    title: "العروض",
+    icon: <MdDiscount className={iconStyle} />,
+    to: "",
+    minilinks: [
+      {
+        title: "جميع العروض",
+        icon: <TbDiscount className={iconStyle} />,
+        to: "/dashboard/offers",
+      },
+      {
+        title: "أضف عرض جديد",
+        icon: <MdLibraryAdd className={iconStyle} />,
+        to: "/dashboard/addoffer",
+      },
+    ],
+  },
+  {
+    title: "الكوبونات",
+    icon: <RiCoupon2Fill className={iconStyle} />,
+    to: "",
+    minilinks: [
+      {
+        title: "جميع الكوبونات",
+        icon: <BiSolidCoupon className={iconStyle} />,
+        to: "/dashboard/coupons",
+      },
+      {
+        title: "أضف كوبون جديد",
+        icon: <BiMessageSquareAdd className={iconStyle} />,
+        to: "/dashboard/addcoupon",
+      },
+    ],
+  },
   {
     title: "الإشعارات",
     icon: <MdNotificationsActive className={iconStyle} />,

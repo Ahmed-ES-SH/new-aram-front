@@ -18,6 +18,8 @@ import KeywordSelector, {
 import MapSelector from "../../_maps/MapSelector";
 import { Location } from "./DynamicElementPage";
 import SubCategoryMultiSelect from "../_organizations/SubCategoryMultiSelect";
+import OrganizationsSelector from "../_services/OrganizationsSelector";
+import ServiceImages from "../_services/ServiceImages";
 
 interface Props {
   inputs: InputField[];
@@ -124,14 +126,70 @@ export default function DynamicForm({
       const formData = new FormData();
 
       Object.entries(form).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) {
-          const formattedValue = Array.isArray(value)
-            ? JSON.stringify(value)
-            : value;
-          formData.append(key, formattedValue as string | Blob);
+        // allow 0 (number) explicitly
+        if (value === 0 || value === "0") {
+          formData.append(key, value as string | Blob);
+          return;
         }
+
+        // skip null or undefined
+        if (value === null || value === undefined) return;
+
+        // skip empty string
+        if (typeof value === "string" && value.trim() === "") return;
+
+        // skip empty array
+        if (Array.isArray(value) && value.length === 0) return;
+
+        // skip empty object
+        if (
+          typeof value === "object" &&
+          !Array.isArray(value) &&
+          Object.keys(value).length === 0
+        ) {
+          return;
+        }
+
+        const formattedValue = Array.isArray(value)
+          ? JSON.stringify(value)
+          : value;
+
+        formData.append(key, formattedValue as string | Blob);
       });
-      if (location) formData.append("location", JSON.stringify(location));
+
+      // Check if inputsData has a field with fildType = "location"
+      const hasLocationField = inputs?.some(
+        (input: InputField) => input.fildType === "location"
+      );
+
+      // Append location only if the field exists
+      if (hasLocationField && location) {
+        formData.append("location", JSON.stringify(location));
+      }
+
+      if (form.image && form.image instanceof File) {
+        formData.append("image", form.image);
+      }
+
+      if (form.images && form.images.length > 0) {
+        form.images.forEach((image: any) => {
+          if (image.file) {
+            formData.append("images[]", image.file);
+          }
+        });
+      }
+
+      if (form.benefits && form.benefits.length > 0) {
+        formData.append("benefits", JSON.stringify(form.benefits));
+      }
+
+      if (form.organizations && form.organizations.length > 0) {
+        formData.append(
+          "organizations_supporters",
+          JSON.stringify(form.organizations)
+        );
+      }
+
       formData.append("user_id", "4");
       const response = await instance.post(api, formData);
 
@@ -170,8 +228,6 @@ export default function DynamicForm({
       setLoading(false);
     }
   };
-
-  console.log(form);
 
   const handleCloseAlart = () => {
     setSuccessPopup(false);
@@ -303,6 +359,37 @@ export default function DynamicForm({
           }
 
           //////////////////////
+          //text area Element
+          //////////////////////
+          if (input.fildType == "long-text") {
+            return (
+              <div
+                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                key={index}
+              >
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
+                <textarea
+                  name={input.name}
+                  placeholder={input.placeholder}
+                  value={(form[input.name] as string) || ""}
+                  onChange={handleChange}
+                  className="input-style min-h-40"
+                />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
           //password input
           //////////////////////
 
@@ -343,6 +430,47 @@ export default function DynamicForm({
                       "خطأ فى هذا الحقل"}
                   </p>
                 )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          //select organizations
+          //////////////////////
+
+          if (input.fildType === "select-organizations") {
+            return (
+              <div
+                key={index}
+                className="w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+              >
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
+                <OrganizationsSelector form={form} setForm={setForm} />
+              </div>
+            );
+          }
+
+          //////////////////////
+          //images section
+          //////////////////////
+
+          if (input.fildType == "images-section") {
+            return (
+              <div
+                className="w-full flex flex-col gap-3 border border-gray-300 shadow-lg rounded-lg px-2 py-4"
+                key={index}
+              >
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
+                <ServiceImages
+                  form={form}
+                  setForm={setForm}
+                  images={form?.images ? form?.images : null}
+                  errors={errors}
+                />
               </div>
             );
           }
@@ -534,37 +662,6 @@ export default function DynamicForm({
           }
 
           //////////////////////
-          //text area Element
-          //////////////////////
-          if (input.fildType == "long-text") {
-            return (
-              <div
-                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                key={index}
-              >
-                <label htmlFor={input.name} className="input-label">
-                  {input.label["ar"]}
-                </label>
-                <textarea
-                  name={input.name}
-                  placeholder={input.placeholder}
-                  value={(form[input.name] as string) || ""}
-                  onChange={handleChange}
-                  className="input-style h-24"
-                />
-                {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
-                  </p>
-                )}
-              </div>
-            );
-          }
-
-          //////////////////////
           //user Image input
           //////////////////////
 
@@ -576,7 +673,7 @@ export default function DynamicForm({
                   className="w-60 h-60 rounded-full  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border-2  border-second_text flex items-center justify-center "
                 >
                   {form[input.name] instanceof File ? (
-                    <img
+                    <Img
                       src={URL.createObjectURL(form[input.name] as Blob)}
                       className="w-60 h-60  rounded-full"
                     />
@@ -618,7 +715,7 @@ export default function DynamicForm({
                   className="lg:w-96 w-[90%] hover:shadow-sky-400 hover:shadow-2xl h-60 overflow-hidden rounded-lg border border-gray-300 shadow-md hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto  flex items-center justify-center "
                 >
                   {form[input.name] instanceof File ? (
-                    <img
+                    <Img
                       src={URL.createObjectURL(form[input.name] as Blob)}
                       className="w-full h-full  rounded-lg object-cover"
                     />
@@ -692,7 +789,7 @@ export default function DynamicForm({
                   className="w-72 h-60 p-4 overflow-hidden rounded-lg shadow  border-gray-300  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
                 >
                   {form?.logo instanceof File ? (
-                    <img
+                    <Img
                       src={URL.createObjectURL(form?.logo)}
                       className="w-full h-full  object-cover"
                     />

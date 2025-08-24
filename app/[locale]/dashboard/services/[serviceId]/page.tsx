@@ -82,7 +82,7 @@ export default function ServicePage({ params }: any) {
       type: "number",
       fildType: "number-input",
       label: {
-        ar: "نسبة الخصم الخاصة بالخدمة (ستظهر فى حالة تم اختيار نوع الفائدة خصم رقم محددة)",
+        ar: "قيمة الخصم الخاص بالخدمة (ستظهر فى حالة تم اختيار نوع الفائدة خصم رقم محددة)",
         en: "",
       },
       placeholder: "أدخل قيمة الخصم الخاص بالخدمة",
@@ -113,6 +113,16 @@ export default function ServicePage({ params }: any) {
       fildType: "keywords", // النوع العام
       displayKey: "title", // المفتاح المستخدم للعرض
       label: { ar: "الكلمات المفتاحية", en: "" },
+      placeholder: "",
+    },
+    {
+      name: "", // المفتاح الأساسي
+      type: "",
+      fildType: "select-organizations", // النوع العام
+      label: {
+        ar: "حدد المراكز الداعمة للخدمة (يمكنك عدم تحديد اى مراكز ايضا)",
+        en: "",
+      },
       placeholder: "",
     },
     {

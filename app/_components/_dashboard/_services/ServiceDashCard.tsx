@@ -103,28 +103,30 @@ export default function ServiceDashCard({ service, setServices }: props) {
               href={`/dashboard/services/${
                 service.id
               }?serviceTitle=${formatTitle(service.title)}`}
-              className="p-2 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors tooltip"
+              className="p-2 bg-white rounded-lg shadow-sm hover:bg-sky-400 text-gray-600 hover:text-white hover:-translate-y-1 duration-200   tooltip"
+              data-tip="تعديل"
             >
-              <FiEdit2 className="w-4 h-4 text-gray-600" />
+              <FiEdit2 className="w-4 h-4 " />
             </LocaleLink>
             <button
               onClick={() => setConfirmDelete(true)}
-              className="p-2 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors tooltip"
+              className="p-2 bg-white rounded-lg shadow-sm hover:bg-red-400 text-red-500 hover:text-white hover:-translate-y-1 duration-200 tooltip"
+              data-tip="حذف"
               title="حذف"
             >
-              <FiTrash2 className="w-4 h-4 text-red-500" />
+              <FiTrash2 className="w-4 h-4 " />
             </button>
             {service.status != "approved" && (
               <button
                 disabled={updateStatusLoading}
                 onClick={() => onToggleStatus()}
-                className="p-2 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors tooltip flex items-center justify-center"
-                title={"تفعيل"}
+                className="p-2 bg-white rounded-lg shadow-sm hover:bg-green-400 text-gray-400 hover:text-white hover:-translate-y-1 duration-200 tooltip flex items-center justify-center"
+                data-tip="تفعيل"
               >
                 {updateStatusLoading ? (
                   <VscLoading className="animate-spin text-red-600" />
                 ) : (
-                  <FiToggleLeft className="w-4 h-4 text-gray-400" />
+                  <FiToggleLeft className="w-4 h-4 " />
                 )}
               </button>
             )}

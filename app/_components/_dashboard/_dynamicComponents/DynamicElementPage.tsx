@@ -17,6 +17,7 @@ import SubCategoryMultiSelect from "../_organizations/SubCategoryMultiSelect";
 import Image from "next/image";
 import MapSelector from "../../_maps/MapSelector";
 import ServiceImages from "../_services/ServiceImages";
+import OrganizationsSelector from "../_services/OrganizationsSelector";
 
 interface props {
   api: string;
@@ -61,13 +62,7 @@ export default function DynamicElementPage({
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState("");
   const [showMap, setShowMap] = useState(false);
-  const [location, setLocation] = useState<Location>({
-    address: "",
-    coordinates: {
-      lat: 0,
-      lng: 0,
-    },
-  });
+  const [location, setLocation] = useState<Location | null>(null);
   const [errors, setErrors] = useState<errorType>({});
 
   // Start Functions Lines
@@ -80,6 +75,17 @@ export default function DynamicElementPage({
 
     try {
       setUpdateLoading(true);
+
+      // Compare current form with original API data
+      const isEqual = JSON.stringify(form) === JSON.stringify(data);
+
+      if (isEqual) {
+        toast.error(
+          "لم يتم تحديث أى بيانات تخص هذا العنصر تأكد من إضافة بيانات جديدة وحاول مره اخرى"
+        );
+        setUpdateLoading(false);
+        return;
+      }
 
       const formData = new FormData();
 
@@ -105,7 +111,53 @@ export default function DynamicElementPage({
         formData.append(key, value ?? "");
       }
 
-      if (location) formData.append("location", JSON.stringify(location));
+      if (form.images && form.images.length > 0) {
+        form.images.forEach((image: any) => {
+          if (image.file) {
+            // New uploaded file
+            formData.append("images[]", image.file);
+          }
+        });
+      }
+
+      if (form.deletedImages && form.deletedImages.length > 0) {
+        formData.append("deleted_images", JSON.stringify(form.deletedImages));
+      }
+
+      // Helper function to compare two arrays of objects by selected keys
+      const areEqual = (a: any[], b: any[]) => {
+        if (!Array.isArray(a) || !Array.isArray(b)) return false;
+
+        // Normalize the objects (مثلا نقارن فقط بالـ id)
+        const normalize = (arr: any[]) =>
+          arr.map((item) => ({ id: item.id })).sort((x, y) => x.id - y.id);
+
+        return JSON.stringify(normalize(a)) === JSON.stringify(normalize(b));
+      };
+
+      // ...
+
+      if (form.organizations && form.organizations.length > 0) {
+        const isSame = areEqual(form.organizations, data?.organizations ?? []);
+
+        if (!isSame) {
+          formData.append(
+            "organizations_supporters",
+            JSON.stringify(form.organizations)
+          );
+        }
+      }
+
+      // Check if inputsData has a field with fildType = "location"
+      const hasLocationField = inputsData?.some(
+        (input: InputField) => input.fildType === "location"
+      );
+
+      // Append location only if the field exists
+      if (hasLocationField && location) {
+        formData.append("location", JSON.stringify(location));
+      }
+
       const response = await instance.post(
         `${updateEndPoint}/${id}`,
         formData,
@@ -480,7 +532,11 @@ export default function DynamicElementPage({
                   <input
                     name={input.name || ""}
                     type="date"
-                    value={form[input.name] || ""}
+                    value={
+                      form[input.name]
+                        ? form[input.name].split(" ")[0] // خذ الجزء الأول قبل الـ space
+                        : ""
+                    }
                     onChange={handleChange}
                     placeholder={input.placeholder || ""}
                     className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
@@ -762,6 +818,24 @@ export default function DynamicElementPage({
             }
 
             //////////////////////
+            //select organizations
+            //////////////////////
+
+            if (input.fildType === "select-organizations") {
+              return (
+                <div
+                  key={index}
+                  className="w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+                >
+                  <label htmlFor={input.name} className="input-label">
+                    {input.label["ar"]}
+                  </label>
+                  <OrganizationsSelector form={form} setForm={setForm} />
+                </div>
+              );
+            }
+
+            //////////////////////
             //select keywords
             //////////////////////
 
@@ -790,6 +864,8 @@ export default function DynamicElementPage({
                   key={index}
                 >
                   <ServiceImages
+                    form={form}
+                    setForm={setForm}
                     images={form?.images ? form?.images : null}
                     errors={errors}
                   />
@@ -835,7 +911,7 @@ export default function DynamicElementPage({
                       name={input.name}
                       placeholder={input.placeholder}
                       type={input.type}
-                      value={(location.address as string) || ""}
+                      value={(location && (location.address as string)) || ""}
                       onChange={handleChange}
                       className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100"
                       readOnly={input.readOnly}

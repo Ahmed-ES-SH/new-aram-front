@@ -105,7 +105,7 @@ export default function SidebarFilters({
 
             {/* Category Filter */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm  text-gray-700 mb-2 font-bold">
                 التصنيف
               </label>
               <select
@@ -124,7 +124,7 @@ export default function SidebarFilters({
 
             {/* Status Filter */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm  text-gray-700 mb-2 font-bold">
                 الحالة
               </label>
               <select
@@ -142,7 +142,7 @@ export default function SidebarFilters({
 
             {/* Rating Filter */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm  text-gray-700 mb-2 font-bold">
                 التقييم
               </label>
               <div className="space-y-2">
@@ -170,7 +170,7 @@ export default function SidebarFilters({
 
             {/* Exclusive Filter */}
             {/* <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm  text-gray-700 mb-2 font-bold">
                 حصري
               </label>
               <select
@@ -188,7 +188,7 @@ export default function SidebarFilters({
 
             {/* Benefit Type Filter */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm  text-gray-700 mb-2 font-bold">
                 نوع الخصم
               </label>
               <select
@@ -200,31 +200,40 @@ export default function SidebarFilters({
               >
                 <option value="">جميع الأنواع</option>
                 <option value="percentage">نسبة مئوية</option>
-                <option value="fixed">مبلغ ثابت</option>
-                <option value="none">بدون خصم</option>
+                <option value="price">مبلغ ثابت</option>
+                <option value="benefits">مميزات خاصة</option>
               </select>
             </div>
 
             {/* Date Filter */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                تاريخ الإضافة
-              </label>
-              <div className="space-y-2">
-                <input
-                  type="date"
-                  value={filters.dateFrom}
-                  onChange={(e) =>
-                    handleFilterChange("dateFrom", e.target.value)
-                  }
-                  className="w-full p-2 border outline-none border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <input
-                  type="date"
-                  value={filters.dateTo}
-                  onChange={(e) => handleFilterChange("dateTo", e.target.value)}
-                  className="w-full p-2 border outline-none border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+              <div className="space-y-4">
+                <div className="flex flex-col gap-1 items-start">
+                  <label className="block text-sm  text-gray-700 mb-2 font-bold">
+                    تاريخ بداية عمل الخدمة
+                  </label>
+                  <input
+                    type="date"
+                    value={filters.dateFrom}
+                    onChange={(e) =>
+                      handleFilterChange("dateFrom", e.target.value)
+                    }
+                    className="w-full p-2 border outline-none border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="flex flex-col gap-1 items-start">
+                  <label className="block text-sm  text-gray-700 mb-2 font-bold">
+                    تاريخ نهاية عمل الخدمة
+                  </label>
+                  <input
+                    type="date"
+                    value={filters.dateTo}
+                    onChange={(e) =>
+                      handleFilterChange("dateTo", e.target.value)
+                    }
+                    className="w-full p-2 border outline-none border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
               </div>
             </div>
           </div>
