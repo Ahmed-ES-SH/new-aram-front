@@ -4,6 +4,11 @@
     "description": "Aram Gulf Co. Ltd. provides a comprehensive platform for cosmetic procedures and offers medical cards for use in healthcare and cosmetic centers affiliated with the platform. We deliver innovative solutions and integrated services to meet your beauty and health needs."
   },
 
+  "metaLoginPage": {
+    "title": "Aram Gulf - Login",
+    "description": "User login page to access their accounts on the website"
+  },
+
   "authButtons": {
     "login": "Login",
     "register": "Register"
@@ -89,6 +94,16 @@
     "loading": "Loading..."
   },
 
+  "forgetPassword": {
+    "titleStep1": "Forgot Password?",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email",
+    "sendButton": "Send",
+    "titleStep2": "Enter Verification Code",
+    "otpDescription": "A 5-digit code has been sent to your email",
+    "verifyButton": "Verify"
+  },
+
   "loginValidation": {
     "phoneOrEmail_required": "Phone number or email is required",
     "phoneOrEmail_invalid": "Invalid phone number or email format",
@@ -129,5 +144,76 @@
     "premium": "PREMIUM",
     "cardHolder": "Card Holder",
     "validThru": "Valid Thru"
+  },
+
+  "about": {
+    "title": "About Our Platform",
+    "subtitle": "Connecting businesses and customers seamlessly",
+    "description": "We provide a comprehensive platform that brings together service providers, organizations, and customers in one unified ecosystem. Our mission is to simplify business operations and enhance customer experiences.",
+    "features": [
+      "Verified service providers",
+      "Secure payment processing",
+      "24/7 customer support"
+    ]
+  },
+  "homeCards": {
+    "title": "Aram Premium Cards",
+    "subtitle": "Discover our most popular cards"
+  },
+  "organizations": {
+    "title": "Trusted Organizations",
+    "subtitle": "Partner with verified businesses",
+    "reservations": "reservations",
+    "rating": "Rating",
+    "contact": "Contact",
+    "book": "Book"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Distinctive services for Aram card holders",
+    "orders": "orders",
+    "exclusive": "Exclusive",
+    "discount": "Discount",
+    "view": "view"
+  },
+  "stats": {
+    "title": "Platform Statistics",
+    "subtitle": "Growing together with our community",
+    "totalUsers": "Total Users",
+    "totalOrganizations": "Organizations",
+    "servicesSold": "Services Sold",
+    "monthlyRevenue": "Monthly Revenue"
+  },
+  "blog": {
+    "title": "Latest Articles",
+    "subtitle": "Stay updated with industry insights",
+    "views": "views",
+    "readMore": "Read More",
+    "by": "by"
+  },
+
+  "contact": {
+    "title": "Contact Us",
+    "description": "If you have any issues or inquiries, feel free to reach out to us at any time. We're here to help!",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "email_placeholder": "Email address",
+      "phone": "Phone",
+      "phone_placeholder": "Phone Number",
+      "message": "Message",
+      "submit": "Send Message"
+    },
+
+    "contactErrors": {
+      "name_required": "Name is required",
+      "email_required": "Email is required",
+      "email_invalid": "Invalid email address",
+      "phone_required": "Phone number is required",
+      "message_required": "Message cannot be empty",
+      "form_invalid": "Please fix the errors before submitting",
+      "server_error": "Something went wrong, please try again later"
+    },
+    "success_message": "Your message has been sent successfully. We will contact you as soon as possible."
   }
 }

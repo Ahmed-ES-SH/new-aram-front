@@ -13,11 +13,11 @@ import { TextInput } from "./TextInput";
 import { directionMap } from "@/app/constants/_website/global";
 import { instance } from "@/app/_helpers/axios";
 import Cookie from "cookie-universal";
-import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/app/Store/hooks";
 import { setUser } from "@/app/Store/userSlice";
 import { toast } from "sonner";
 import { useLoginSchema } from "@/app/validation/useLoginSchema";
+import LocaleLink from "../../_global/LocaleLink";
 
 interface LoginFormData {
   phoneOrEmail: string;
@@ -31,7 +31,6 @@ interface LoginFormErrors {
 
 export function LoginForm() {
   const cookie = Cookie();
-  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const locale = useLocale();
@@ -73,10 +72,12 @@ export function LoginForm() {
       if (response.status == 200) {
         const token = response.data.token;
         cookie.set("aram_token", token);
-        const user = response.data.user;
+        const user = response.data.account;
         dispatch(setUser(user));
         setTimeout(() => {
-          router.push(`/${locale}`);
+          if (typeof window !== undefined) {
+            window.location.replace(`/${locale}`);
+          }
         }, 300);
       }
     } catch (error: any) {
@@ -208,7 +209,7 @@ export function LoginForm() {
             autoComplete="current-password"
           />
 
-          <div className="flex justify-end">
+          <LocaleLink href={"/forgetpassword"} className="flex justify-end">
             <motion.button
               type="button"
               whileHover={{ scale: 1.05 }}
@@ -221,7 +222,7 @@ export function LoginForm() {
             >
               {t("forgotPassword")}
             </motion.button>
-          </div>
+          </LocaleLink>
         </div>
 
         <motion.button

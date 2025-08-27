@@ -24,7 +24,7 @@ export default function UserButton() {
   const { user, loading } = useAppSelector((state) => state.user);
 
   const id = user && user.id;
-  const role = user && user.role;
+  const role = user && user.account_type == "user" ? user.role : "organization";
   const prevUserRef = useRef(user && user.id);
   const cookie = Cookie();
 
@@ -38,7 +38,7 @@ export default function UserButton() {
       if (response.status == 200) {
         cookie.remove("aram_token");
         if (typeof window !== undefined) {
-          window.location.replace("/login");
+          window.location.replace(`/${locale}/login`);
         }
       }
     } catch (error) {
@@ -76,17 +76,21 @@ export default function UserButton() {
     setIsOpen(false);
   };
 
-  const links = getLinks(user);
-  const orgLinks = getOrganizationLinks(user);
+  const links = user && user?.account_type == "user" && getLinks(user);
+  const orgLinks =
+    user && user?.account_type != "user" && getOrganizationLinks(user);
 
-  const currentLinks = user?.account_type == "user" ? links : orgLinks;
+  const currentLinks = user?.account_type == "user" ? links : orgLinks || [];
+  const displayName = user.name ?? user.title ?? "";
+
+  if (!user) return null;
 
   return (
     <>
       {user && (
         <div
           dir={directionMap[locale]}
-          className="relative inline-block text-left w-fit max-lg:hidden"
+          className="relative inline-block text-left w-fit"
         >
           {/* زر المستخدم */}
           <div className="flex items-center gap-3">
@@ -97,13 +101,13 @@ export default function UserButton() {
               <Img
                 src={user.image}
                 errorSrc="/defaults/male-noimage.jpg"
-                className="w-8 h-8 max-md:w-full max-md:h-full rounded-full object-cover bg-white"
+                className="rounded-full w-8 h-8 object-cover"
               />
               <div className="flex relative items-center gap-4">
-                <span className=" max-md:hidden sm:inline-block text-sm whitespace-nowrap font-medium text-white ">
-                  {user?.name.length > 12
-                    ? user?.name.slice(0, 12) + "..."
-                    : user?.name}
+                <span className="max-md:hidden sm:inline-block text-sm whitespace-nowrap font-medium text-white">
+                  {displayName.length > 12
+                    ? displayName.slice(0, 12) + "..."
+                    : displayName}
                 </span>
                 <FaCaretDown className="  size-3 text-white" />
               </div>
@@ -138,7 +142,7 @@ export default function UserButton() {
             {isOpen && (
               <motion.div
                 dir={directionMap[locale]}
-                className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white  shadow-lg border border-gray-300 focus:outline-none z-50"
+                className="absolute ltr:right-0 rtl:left-0 mt-2 w-48 origin-top-left rounded-md bg-white  shadow-lg border border-gray-300 focus:outline-none z-50"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -149,7 +153,7 @@ export default function UserButton() {
                     <div
                       key={index}
                       onClick={() => handleGo(link.href)}
-                      className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-gray-700  hover:bg-gray-100  duration-200"
+                      className="flex cursor-pointer whitespace-nowrap items-center gap-2 px-4 py-2 text-sm text-gray-700  hover:bg-gray-100  duration-200"
                       role="menuitem"
                     >
                       {link.icon}
@@ -162,14 +166,14 @@ export default function UserButton() {
                       handleGo(
                         `/${locale}/couponesaccount?account_type=${
                           user?.account_type
-                        }&account_name=${formatTitle(user?.name)}`
+                        }&account_name=${formatTitle(displayName)}`
                       )
                     }
                     className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-gray-700  hover:bg-gray-100  duration-200"
                     role="menuitem"
                   >
                     <BiSolidOffer className="w-5 h-5" />
-                    {locale === "en" ? "Account Coupones" : "كوبونات المستخدم"}
+                    {locale === "en" ? "Account Coupones" : "كوبونات الحساب"}
                   </div>
 
                   {role == "Admin" && (
@@ -178,7 +182,7 @@ export default function UserButton() {
                         handleGo(
                           `/dashboard?account_type=${
                             user?.account_type
-                          }&account_name=${formatTitle(user?.name)}`
+                          }&account_name=${formatTitle(displayName)}`
                         )
                       }
                       className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-gray-700  hover:bg-gray-100  duration-200"

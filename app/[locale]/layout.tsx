@@ -9,6 +9,7 @@ import ClientLayout from "../_components/_website/ClientLayout";
 import ReduxProvider from "../_components/_website/_global/ReduxProvider";
 import ".././globals.css";
 import CartSide from "../_components/_website/_global/_cart/CartSide";
+import Footer from "../_components/_website/_global/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,6 +57,7 @@ export default async function RootLayout({
               <Navbar />
               <CartSide />
               {children}
+              <Footer />
             </ClientLayout>
           </NextIntlClientProvider>
         </ReduxProvider>

@@ -40,7 +40,7 @@ export default function page({ params }: ParamsType) {
       readOnly: true,
     },
     {
-      name: "content",
+      name: "message",
       type: "",
       fildType: "long-text",
       label: { ar: "محتوى الشكوى", en: "" },

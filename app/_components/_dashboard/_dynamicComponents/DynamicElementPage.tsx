@@ -2,11 +2,11 @@
 import useFetchItem from "@/app/_helpers/FetchItemData";
 import React, { useEffect, useRef, useState } from "react";
 import SuccessAlart from "../../_popups/SuccessAlart";
-import { FaImage, FaPlus, FaTrash } from "react-icons/fa";
-import { errorType, InputField } from "@/app/types/_dashboard/GlobalTypes";
+import { FaImage, FaPlus, FaStar, FaTrash } from "react-icons/fa";
+import { InputField } from "@/app/types/_dashboard/GlobalTypes";
 import { useRouter } from "next/navigation";
 import { instance } from "@/app/_helpers/axios";
-import { getIconComponent } from "@/app/_helpers/helpers";
+import { formatTitle, getIconComponent } from "@/app/_helpers/helpers";
 import IconPicker from "../../_website/_global/IconPicker";
 import { Keyword } from "../_cards/types";
 import KeywordSelector from "../../_website/_global/KeywordSelector";
@@ -18,6 +18,8 @@ import Image from "next/image";
 import MapSelector from "../../_maps/MapSelector";
 import ServiceImages from "../_services/ServiceImages";
 import OrganizationsSelector from "../_services/OrganizationsSelector";
+import CouponDisplaySection from "../_coupons/CouponDisplaySection";
+import LocaleLink from "../../_website/_global/LocaleLink";
 
 interface props {
   api: string;
@@ -63,7 +65,7 @@ export default function DynamicElementPage({
   const [selectedIcon, setSelectedIcon] = useState("");
   const [showMap, setShowMap] = useState(false);
   const [location, setLocation] = useState<Location | null>(null);
-  const [errors, setErrors] = useState<errorType>({});
+  const [errors, setErrors] = useState<any>({});
 
   // Start Functions Lines
 
@@ -365,6 +367,11 @@ export default function DynamicElementPage({
     }
   };
 
+  // Helper to get nested value by key like "user.name"
+  const getNestedValue = (obj: any, path: string) => {
+    return path.split(".").reduce((acc, key) => acc && acc[key], obj);
+  };
+
   //  End Functions Lines
 
   // Add The Data To The Form Object .
@@ -394,7 +401,7 @@ export default function DynamicElementPage({
 
   return (
     <>
-      <div className="w-full mt-10">
+      <div className="w-full relative mt-10">
         <form
           onSubmit={handleSaveChanges}
           style={{ direction: "rtl" }}
@@ -406,6 +413,7 @@ export default function DynamicElementPage({
             //////////////////////
 
             if (input.fildType == "short-text") {
+              const value = getNestedValue(form, input.name);
               return (
                 <div
                   className="flex flex-col gap-3 border border-gray-300 rounded-lg shadow-lg py-4 px-2"
@@ -418,14 +426,18 @@ export default function DynamicElementPage({
                     name={input.name}
                     placeholder={input.placeholder}
                     type={input.type}
-                    value={(form[input.name] as string) || ""}
+                    value={(value as string) || ""}
                     onChange={handleChange}
                     className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -446,7 +458,7 @@ export default function DynamicElementPage({
                   <input
                     name={input.name || ""}
                     type="number"
-                    value={form[input.name] || ""}
+                    value={form[input.name] || 0}
                     onChange={handleChange}
                     placeholder={input.placeholder || ""}
                     className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300  p-2 outline-none"
@@ -454,7 +466,11 @@ export default function DynamicElementPage({
                   />
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -484,7 +500,11 @@ export default function DynamicElementPage({
                   />
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -512,7 +532,11 @@ export default function DynamicElementPage({
                   />
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -544,7 +568,11 @@ export default function DynamicElementPage({
                   />
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -573,7 +601,68 @@ export default function DynamicElementPage({
                   />
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
+            //////////////////////
+            // Coupon Code Input
+            //////////////////////
+
+            if (input.fildType === "coupon-code") {
+              const generateCode = () => {
+                const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                let code = "";
+                for (let i = 0; i < 8; i++) {
+                  code += chars.charAt(
+                    Math.floor(Math.random() * chars.length)
+                  );
+                }
+                handleChange({
+                  target: { name: input.name, value: code },
+                } as React.ChangeEvent<HTMLInputElement>);
+              };
+
+              return (
+                <div
+                  className="flex flex-col gap-3 border border-gray-300 rounded-lg shadow-lg py-4 px-2"
+                  key={index}
+                >
+                  <label htmlFor={input.name} className="input-label">
+                    {input.label["ar"]}
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      name={input.name}
+                      placeholder={input.placeholder}
+                      type="text"
+                      value={(form[input.name] as string) || ""}
+                      onChange={handleChange}
+                      className="input-style flex-1 read-only:bg-gray-100 read-only:focus:outline-gray-100"
+                      readOnly={input.readOnly}
+                    />
+                    <button
+                      type="button"
+                      onClick={generateCode}
+                      className="px-3 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+                    >
+                      توليد
+                    </button>
+                  </div>
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -613,7 +702,10 @@ export default function DynamicElementPage({
                     />
                     {errors[input.name] && (
                       <p className="text-red-500 text-sm mt-1">
-                        {errors[input.name][0]["ar"]}
+                        {errors[input.name] ??
+                          errors[input.name]["ar"] ??
+                          errors[input.name][0]["ar"] ??
+                          "خطأ فى هذا الحقل"}
                       </p>
                     )}
                   </div>
@@ -691,7 +783,11 @@ export default function DynamicElementPage({
                   </div>
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -739,7 +835,11 @@ export default function DynamicElementPage({
                   </div>
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -784,7 +884,11 @@ export default function DynamicElementPage({
                   </div>
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -810,7 +914,11 @@ export default function DynamicElementPage({
                   </div>
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -954,7 +1062,7 @@ export default function DynamicElementPage({
                     value={
                       form[input.name] ??
                       (form[input.name] as string) ??
-                      form[input.name]?.title_en ??
+                      form[input.name]?.title_ar ??
                       ""
                     }
                   >
@@ -967,13 +1075,17 @@ export default function DynamicElementPage({
                           key={item.value ?? item.name ?? item.id}
                           value={item.value ?? item.name ?? item.id}
                         >
-                          {item.name ? item.name : item?.title_en}
+                          {item.name ? item.name : item?.title_ar}
                         </option>
                       ))}
                   </select>
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
@@ -1060,10 +1172,78 @@ export default function DynamicElementPage({
                   {/* Error message */}
                   {errors[input.name] && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name][0]["ar"]}
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
                     </p>
                   )}
                 </div>
+              );
+            }
+
+            //////////////////////
+            //special-coupon-section
+            //////////////////////
+
+            if (input.fildType == "special-section") {
+              return <CouponDisplaySection key={index} form={form} />;
+            }
+
+            //////////////////////
+            //organization show
+            //////////////////////
+
+            if (input.fildType == "org-show") {
+              return (
+                form["organization"] && (
+                  <div
+                    key={index}
+                    className="h-fit w-3xl group flex flex-col gap-3 mt-4 px-2 py-4"
+                  >
+                    <label className="input-label text-center">
+                      {input.label.ar}
+                    </label>
+                    <div
+                      key={index}
+                      className="max-w-md w-full bg-white/30  border border-white/20 shadow-xl overflow-hidden"
+                    >
+                      {/* Image */}
+                      <div className="h-40 w-full overflow-hidden">
+                        <Img
+                          src={form[input.name]?.image}
+                          errorSrc="/defaults/noImage.png"
+                          alt={form[input.name]?.title}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-4 flex flex-col gap-2">
+                        <LocaleLink
+                          href={`/dashboard/organizations/${
+                            form[input.name]?.id
+                          }?title=${formatTitle(form[input.name]?.title)}`}
+                          className="text-lg group-hover:underline group-hover:text-sky-400 duration-150 font-bold text-gray-900"
+                        >
+                          {form[input.name]?.title}
+                        </LocaleLink>
+                        <p className="text-sm text-gray-700 line-clamp-2">
+                          {form[input.name]?.description}
+                        </p>
+
+                        {/* Rating */}
+                        <div className="flex items-center gap-1 text-yellow-500 mt-2">
+                          <FaStar className="text-sm" />
+                          <span className="text-sm font-medium text-gray-800">
+                            {form[input.name]?.rating}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
               );
             }
 

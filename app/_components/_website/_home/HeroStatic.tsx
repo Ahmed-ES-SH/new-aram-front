@@ -87,7 +87,7 @@ export default function HeroStatic() {
               className="relative z-10"
             >
               <Image
-                src="/placeholder.svg?height=500&width=500"
+                src="/placeholder.png?height=500&width=500"
                 alt="Booking Platform Illustration"
                 width={500}
                 height={500}

@@ -4,8 +4,13 @@ export const getIconComponent = (iconName: string) => {
   return FaIcons[iconName as keyof typeof FaIcons] || FaIcons.FaQuestionCircle;
 };
 
-export const formatTitle = (title: string) =>
-  title.toLowerCase().replace(/\s+/g, "-");
+export const formatTitle = (title?: string) => {
+  if (!title || title.trim() === "") {
+    return "no-title"; // fallback slug if no title is provided
+  }
+
+  return title.toLowerCase().replace(/\s+/g, "-");
+};
 
 export const getSharedMetadata = (title: string, description: string) => ({
   keywords: [

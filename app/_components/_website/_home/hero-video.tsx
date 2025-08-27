@@ -66,7 +66,7 @@ export default function HeroVideo() {
           muted={isMuted}
           loop
           playsInline
-          poster="/placeholder.svg?height=1080&width=1920"
+          poster="/placeholder.png?height=1080&width=1920"
         >
           <source src="/videos/BigBuckBunny.mp4" type="video/mp4" />
           {/* Fallback for browsers that don't support video */}

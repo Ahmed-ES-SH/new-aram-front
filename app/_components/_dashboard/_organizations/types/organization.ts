@@ -19,6 +19,7 @@ export interface Organization {
   title: string;
   description: string;
   email: string;
+  confirmation_status: boolean;
   location: LocationType;
   phone_number: string;
   confirmation_price: string;

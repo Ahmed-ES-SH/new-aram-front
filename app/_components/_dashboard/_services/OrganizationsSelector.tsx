@@ -1,25 +1,33 @@
 "use client";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { miniOrg, Service } from "./types";
+import { miniOrg } from "./types";
 import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 import Img from "../../_website/_global/Img";
 import { LuCheck } from "react-icons/lu";
 import { CiNoWaitingSign, CiSettings } from "react-icons/ci";
 import { motion } from "framer-motion";
+import Pagination from "../../PaginationComponent";
 
 interface Props {
-  form: Service;
-  setForm: Dispatch<SetStateAction<Service>>;
+  form: any;
+  setForm: Dispatch<SetStateAction<any>>;
 }
 
 export default function OrganizationsSelector({ form, setForm }: Props) {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [organizations, setOrganizations] = useState<miniOrg[]>([]);
+  const [allPublicIds, setAllPublicIds] = useState<{ id: number }[]>([]);
+
+  const { data: orgsIds } = useFetchData<{ id: number }[]>(
+    `/get-public-organizations-ids`,
+    false
+  );
 
   // Debounce effect (انتظار 5 ثواني بعد آخر كتابة)
   useEffect(() => {
     const handler = setTimeout(() => {
+      setOrganizations([]);
       setDebouncedQuery(query);
     }, 500);
 
@@ -29,11 +37,13 @@ export default function OrganizationsSelector({ form, setForm }: Props) {
   }, [query]);
 
   // Fetch data with query
-  const { data, loading } = useFetchData<miniOrg[]>(
-    `/dashboard/organizations-with-selected-data${
+  const { data, loading, currentPage, lastPage, setCurrentPage } = useFetchData<
+    miniOrg[]
+  >(
+    `/public-organizations-with-selected-data${
       debouncedQuery ? `?query=${debouncedQuery}` : ""
     }`,
-    false,
+    true,
     true // هنا False معناها مفيش تأثير على URL
   );
 
@@ -42,6 +52,12 @@ export default function OrganizationsSelector({ form, setForm }: Props) {
       setOrganizations(data);
     }
   }, [data]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= lastPage) {
+      setCurrentPage(newPage);
+    }
+  };
 
   const toggleOrganization = (org: miniOrg) => {
     setForm((prev) => {
@@ -56,16 +72,61 @@ export default function OrganizationsSelector({ form, setForm }: Props) {
     });
   };
 
+  const toggleSelectAll = () => {
+    if (!allPublicIds || allPublicIds.length === 0) return;
+
+    setForm((prev: any) => {
+      const currentSelectedIds =
+        prev.organizations?.map((o: { id: number }) => o.id) || [];
+
+      const allIds = allPublicIds.map((o) => o.id);
+
+      const isAllSelected = allIds.every((id) =>
+        currentSelectedIds.includes(id)
+      );
+
+      return {
+        ...prev,
+        organizations: isAllSelected ? [] : allPublicIds,
+        // لو متحدد الكل → إفرغ القائمة
+        // لو مش متحدد → حدد الكل
+      };
+    });
+  };
+
+  useEffect(() => {
+    if (orgsIds) {
+      setAllPublicIds(orgsIds);
+    }
+  }, [orgsIds]);
+
   return (
     <div className="w-full space-y-4">
-      {/* Search Input */}
-      <input
-        type="text"
-        placeholder="ابحث عن المراكز هنا..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="w-full border-gray-300 outline-none p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+      <div className="flex items-center justify-between w-full gap-2">
+        {/* Search Input */}
+        <input
+          type="text"
+          placeholder="ابحث عن المراكز هنا..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="flex-1/2 w-full border-gray-300 outline-none p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
+        {/* Select All Button */}
+        {!loading && organizations.length > 0 && (
+          <button
+            type="button"
+            onClick={toggleSelectAll}
+            className="px-4 py-2 w-fit bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+          >
+            {organizations.every((org) =>
+              form.organizations?.some((o) => o.id === org.id)
+            )
+              ? "إلغاء تحديد الكل"
+              : "تحديد الكل"}
+          </button>
+        )}
+      </div>
 
       {/* حالة التحميل */}
       {loading && (
@@ -99,47 +160,54 @@ export default function OrganizationsSelector({ form, setForm }: Props) {
 
       {/* عرض المراكز */}
       {!loading && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {organizations.map((org) => {
-            const isSelected =
-              form &&
-              form.organizations &&
-              form.organizations?.some((o) => o.id === org.id);
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {organizations.map((org) => {
+              const isSelected =
+                form &&
+                form.organizations &&
+                form.organizations?.some((o) => o.id === org.id);
 
-            return (
-              <div
-                key={org.id}
-                onClick={() => toggleOrganization(org)}
-                className={`cursor-pointer border rounded-lg p-4 flex flex-col items-center justify-center transition relative
+              return (
+                <div
+                  key={org.id}
+                  onClick={() => toggleOrganization(org)}
+                  className={`cursor-pointer border rounded-lg p-4 flex flex-col items-center justify-center transition relative
                 ${
                   isSelected
                     ? "border-green-500 bg-green-50 shadow-md"
                     : "border-gray-200 hover:border-blue-300"
                 }
               `}
-              >
-                {isSelected && (
-                  <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
-                    <LuCheck size={14} />
-                  </div>
-                )}
-
-                <Img
-                  src={org.logo}
-                  alt={org.title}
-                  className="w-16 h-16 object-contain mb-2 rounded-full"
-                />
-                <p
-                  className={`text-sm font-medium text-center ${
-                    isSelected ? "text-green-600" : "text-gray-700"
-                  }`}
                 >
-                  {org.title}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+                  {isSelected && (
+                    <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
+                      <LuCheck size={14} />
+                    </div>
+                  )}
+
+                  <Img
+                    src={org.logo}
+                    alt={org.title}
+                    className="w-16 h-16 object-contain mb-2 rounded-full"
+                  />
+                  <p
+                    className={`text-sm font-medium text-center ${
+                      isSelected ? "text-green-600" : "text-gray-700"
+                    }`}
+                  >
+                    {org.title}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={lastPage}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
     </div>
   );

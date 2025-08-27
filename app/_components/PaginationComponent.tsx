@@ -68,6 +68,7 @@ export default function Pagination({
         {/* Previous Button */}
         <li>
           <button
+            type="button"
             onClick={() => handlePageClick(currentPage - 1)}
             className="inline-flex w-8 h-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 disabled:opacity-50"
             disabled={currentPage === 1}
@@ -86,6 +87,7 @@ export default function Pagination({
               </span>
             ) : (
               <button
+                type="button"
                 onClick={() => handlePageClick(Number(page))}
                 className={`block w-8 h-8 rounded border text-center leading-8 font-medium transition
                   ${
@@ -103,6 +105,7 @@ export default function Pagination({
         {/* Next Button */}
         <li>
           <button
+            type="button"
             onClick={() => handlePageClick(currentPage + 1)}
             className="inline-flex w-8 h-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 disabled:opacity-50"
             disabled={currentPage === totalPages}

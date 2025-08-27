@@ -92,7 +92,7 @@ export default function ServiceDashCard({ service, setServices }: props) {
         {/* Image */}
         <div className="relative aspect-video">
           <Img
-            src={service.image || "/placeholder.svg"}
+            src={service.image || "/placeholder.png"}
             alt={service.title}
             className="w-full h-full object-cover"
           />
@@ -179,7 +179,7 @@ export default function ServiceDashCard({ service, setServices }: props) {
           {/* Creator */}
           <div className="flex items-center gap-2 mb-3">
             <Img
-              src={service.creater.image || "/placeholder.svg"}
+              src={service.creater.image || "/placeholder.png"}
               alt={service.creater.name}
               className="w-6 h-6 rounded-full"
             />

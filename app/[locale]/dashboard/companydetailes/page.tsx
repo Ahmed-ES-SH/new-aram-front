@@ -334,7 +334,7 @@ export default function CompanyDetails() {
             </div>
           ))}
           {/* قسم الفيديو الرئيسي */}
-          <div className="w-full my-4">
+          {/* <div className="w-full my-4">
             <h2 className="text-lg font-semibold  pb-2 ">الفيديو الرئيسي</h2>
             <div className="flex flex-col gap-2 w-full">
               <input
@@ -345,8 +345,8 @@ export default function CompanyDetails() {
                 placeholder="Username"
               />
             </div>
-          </div>
-          <div
+          </div> */}
+          {/* <div
             onClick={() => settypevideopopup(true)}
             className="w-full h-[10vh] flex hover:bg-black/70 hover:text-white items-center border border-gray-300 group cursor-pointer rounded-md shadow-md hover:shadow-main_orange duration-150  my-2 justify-center "
           >
@@ -354,8 +354,8 @@ export default function CompanyDetails() {
               <FaVideo />
               <p>تغيير الفيديو الرئيسي</p>
             </div>
-          </div>
-          <div className="w-full min-h-screen rounded-md shadow-md relative overflow-hidden">
+          </div> */}
+          {/* <div className="w-full min-h-screen rounded-md shadow-md relative overflow-hidden">
             {linkVideo && (
               <iframe
                 src={linkVideo}
@@ -375,7 +375,7 @@ export default function CompanyDetails() {
                 playsInline
               ></video>
             )}
-          </div>
+          </div> */}
           <button
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 w-full rounded mt-4"

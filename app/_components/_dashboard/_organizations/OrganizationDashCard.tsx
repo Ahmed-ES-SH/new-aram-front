@@ -81,7 +81,7 @@ export default function OrganizationDashCard({
         <Img
           src={
             organization.image ||
-            "/placeholder.svg?height=200&width=400&query=organization banner"
+            "/placeholder.png?height=200&width=400&query=organization banner"
           }
           alt={organization.title}
           className="w-full h-full object-cover"
@@ -90,7 +90,7 @@ export default function OrganizationDashCard({
           <Img
             src={
               organization.logo ||
-              "/placeholder.svg?height=60&width=60&query=organization logo"
+              "/placeholder.png?height=60&width=60&query=organization logo"
             }
             alt={`${organization.title} logo`}
             className="w-12 h-12 rounded-full border-2 border-white shadow-md"

@@ -21,6 +21,8 @@ interface VariablesState {
   servicesFilterSidebar: boolean;
   sidebardashOrgs: boolean;
   isCartOpen: boolean;
+  couponsFilterSidebar: boolean;
+  offerFilterSidebar: boolean;
   showSidebar: boolean;
   showUserButton: boolean;
   showMessagesDrop: boolean;
@@ -35,6 +37,8 @@ const initialState: VariablesState = {
   servicesFilterSidebar: true,
   isCartOpen: false,
   sidebardashOrgs: true,
+  offerFilterSidebar: true,
+  couponsFilterSidebar: true,
   showSidebar: true,
   showUserButton: false,
   showMessagesDrop: false,
@@ -59,6 +63,12 @@ const variablesSlice = createSlice({
     },
     setServicesFilterSidebar: (state, action: PayloadAction<boolean>) => {
       state.servicesFilterSidebar = action.payload;
+    },
+    setCouponsFilterSidebar: (state, action: PayloadAction<boolean>) => {
+      state.couponsFilterSidebar = action.payload;
+    },
+    setOffersFilterSidebar: (state, action: PayloadAction<boolean>) => {
+      state.offerFilterSidebar = action.payload;
     },
     setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
       state.isMenuOpen = action.payload;
@@ -90,6 +100,8 @@ export const {
   setActiveCurrency,
   setSidebardashOrgs,
   setServicesFilterSidebar,
+  setOffersFilterSidebar,
+  setCouponsFilterSidebar,
   setWidth,
   setShowMessagesDrop,
   setShowNotificationDrop,

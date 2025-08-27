@@ -20,6 +20,8 @@ import { Location } from "./DynamicElementPage";
 import SubCategoryMultiSelect from "../_organizations/SubCategoryMultiSelect";
 import OrganizationsSelector from "../_services/OrganizationsSelector";
 import ServiceImages from "../_services/ServiceImages";
+import SpecialCouponSection from "../_coupons/SpecialCouponSection";
+import SelectOrg from "../_offers/SelectOrg";
 
 interface Props {
   inputs: InputField[];
@@ -300,6 +302,8 @@ export default function DynamicForm({
     }));
   };
 
+  console.log(form);
+
   ///////////////////////////////////
   // End Functions Lines
   ///////////////////////////////////
@@ -311,7 +315,7 @@ export default function DynamicForm({
       <form
         onSubmit={handleSubmit}
         style={{ direction: "rtl" }}
-        className="w-[90%] border border-gray-300 shadow-lg rounded-xl px-4 py-12 mb-4 mt-12 h-fit overflow-y-auto mx-auto max-md:w-[96%]  flex flex-col gap-3"
+        className="w-[90%] border border-gray-300 shadow-lg rounded-xl px-4 pt-4 pb-2 mb-4 mt-12 h-fit overflow-y-auto mx-auto max-md:w-[96%]  flex flex-col gap-3"
       >
         <div className="text-center mb-6">
           <h1 className="text-3xl sm:text-4xl font-bold text-primary tracking-tight drop-shadow-md">
@@ -448,6 +452,14 @@ export default function DynamicForm({
                   {input.label["ar"]}
                 </label>
                 <OrganizationsSelector form={form} setForm={setForm} />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
               </div>
             );
           }
@@ -471,6 +483,14 @@ export default function DynamicForm({
                   images={form?.images ? form?.images : null}
                   errors={errors}
                 />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
               </div>
             );
           }
@@ -498,7 +518,10 @@ export default function DynamicForm({
                 />
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name][0]["ar"]}
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
                   </p>
                 )}
               </div>
@@ -525,6 +548,95 @@ export default function DynamicForm({
                   className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300  p-2 outline-none"
                   readOnly={input.readOnly}
                 />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          // Date input
+          //////////////////////
+          if (input.fildType === "date-input") {
+            return (
+              <div
+                key={index}
+                className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
+              >
+                <label className="input-label">{input.label.ar}</label>
+                <input
+                  name={input.name || ""}
+                  type="date"
+                  value={
+                    form[input.name]
+                      ? form[input.name].split(" ")[0] // خذ الجزء الأول قبل الـ space
+                      : ""
+                  }
+                  onChange={handleChange}
+                  placeholder={input.placeholder || ""}
+                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                  readOnly={input.readOnly}
+                />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          // Coupon Code Input
+          //////////////////////
+
+          if (input.fildType === "coupon-code") {
+            const generateCode = () => {
+              const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+              let code = "";
+              for (let i = 0; i < 8; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+              }
+              handleChange({
+                target: { name: input.name, value: code },
+              } as React.ChangeEvent<HTMLInputElement>);
+            };
+
+            return (
+              <div
+                className="flex flex-col gap-3 border border-gray-300 rounded-lg shadow-lg py-4 px-2"
+                key={index}
+              >
+                <label htmlFor={input.name} className="input-label">
+                  {input.label["ar"]}
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    name={input.name}
+                    placeholder={input.placeholder}
+                    type="text"
+                    value={(form[input.name] as string) || ""}
+                    onChange={handleChange}
+                    className="input-style flex-1 read-only:bg-gray-100 read-only:focus:outline-gray-100"
+                    readOnly={input.readOnly}
+                  />
+                  <button
+                    type="button"
+                    onClick={generateCode}
+                    className="px-3 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+                  >
+                    توليد
+                  </button>
+                </div>
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors[input.name] ??
@@ -625,6 +737,14 @@ export default function DynamicForm({
                   currentSubCategories={[]}
                   mode="add"
                 />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
               </div>
             );
           }
@@ -921,6 +1041,14 @@ export default function DynamicForm({
                   selectedKeywords={form.keywords || []}
                   setSelectedKeywords={handleKeywordsChange}
                 />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
               </div>
             );
           }
@@ -1003,7 +1131,51 @@ export default function DynamicForm({
                 {/* Error message */}
                 {errors[input.name] && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name][0]["ar"]}
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          if (input.fildType == "select-org") {
+            return (
+              <div
+                key={index}
+                className="h-fit w-full border border-gray-300 shadow px-2 py-4 rounded-lg flex flex-col gap-3"
+              >
+                <label className="input-label">{input.label.ar}</label>
+                <SelectOrg form={form} setForm={setForm} key={index} />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          //////////////////////
+          // spicail-coupons-section
+          //////////////////////
+
+          if (input.fildType == "special-section") {
+            return (
+              <div key={index}>
+                <div className="w-full"></div>
+                <SpecialCouponSection form={form} setForm={setForm} />
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
                   </p>
                 )}
               </div>

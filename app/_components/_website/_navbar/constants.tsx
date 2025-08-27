@@ -1,10 +1,6 @@
 import { CiBoxList } from "react-icons/ci";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
-import {
-  MdLocalOffer,
-  MdOutlineAddToPhotos,
-  MdOutlineDesignServices,
-} from "react-icons/md";
+import { MdLocalOffer } from "react-icons/md";
 import { LuBadgeDollarSign } from "react-icons/lu";
 import { FaCcMastercard, FaRegCalendarAlt } from "react-icons/fa";
 import { HiOutlineUserCircle } from "react-icons/hi";
@@ -58,32 +54,18 @@ export function getOrganizationLinks(user: any) {
   return [
     ...getLinks(user),
     {
-      href: `/myaffiliateservices?organizzation_name=${formatTitle(
-        user?.name
-      )}&organization_Id=${user?.id}`,
-      icon: <MdOutlineDesignServices className="size-5" />,
-      label: { en: "organization Services", ar: "خدمات المنظمة" },
-    },
-    {
-      href: `/addaffiliateservice?organizzation_name=${formatTitle(
-        user?.name
-      )}`,
-      icon: <MdOutlineAddToPhotos className="size-5" />,
-      label: { en: "Add new service", ar: "أضف خدمة جديدة" },
-    },
-    {
       href: `/centeroffers?organizzation_name=${formatTitle(
-        user?.name
+        user?.title
       )}&organization_Id=${user?.id}`,
       icon: <MdLocalOffer className="size-5" />,
-      label: { en: "organization offers", ar: "عروض المنظمة" },
+      label: { en: "organization offers", ar: "عروض المركز" },
     },
     {
       href: `/centerschedule?organizzation_name=${formatTitle(
-        user?.name
+        user?.title
       )}&organization_Id=${user?.id}`,
       icon: <FaRegCalendarAlt className="size-5" />,
-      label: { en: "organization Schedule", ar: "مواعيد المنظمة" },
+      label: { en: "organization Schedule", ar: "مواعيد المركز" },
     },
   ];
 }

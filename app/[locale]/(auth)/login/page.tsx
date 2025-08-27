@@ -1,7 +1,19 @@
 import { LoginForm } from "@/app/_components/_website/_auth/_login/LoginForm";
+import { getSharedMetadata } from "@/app/_helpers/helpers";
+import { getTranslations } from "next-intl/server";
 import React from "react";
 
-export default function page() {
+export async function generateMetadata() {
+  const t = await getTranslations("metaLoginPage");
+  const sharedMetadata = await getSharedMetadata(t("title"), t("description"));
+  return {
+    title: t("title"),
+    describtion: t("description"),
+    ...sharedMetadata,
+  };
+}
+
+export default function LoginPage() {
   return (
     <>
       <main className="min-h-screen bg-gray-50 mt-12 flex items-center justify-center p-4">

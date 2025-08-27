@@ -48,6 +48,7 @@ import {
 import { SiHeroku } from "react-icons/si";
 import { TbDiscount, TbListDetails } from "react-icons/tb";
 import { CiCreditCard1 } from "react-icons/ci";
+import { LuSend } from "react-icons/lu";
 
 const iconStyle = "text-white  size-6";
 
@@ -107,7 +108,7 @@ export const pages = [
       {
         title: "جميع المروجون",
         icon: <LiaUserMdSolid className={iconStyle} />,
-        to: "/dashboard/users",
+        to: "/dashboard/promoters",
       },
       {
         title: "تقارير المروجون",
@@ -240,6 +241,11 @@ export const pages = [
         title: "أضف كوبون جديد",
         icon: <BiMessageSquareAdd className={iconStyle} />,
         to: "/dashboard/addcoupon",
+      },
+      {
+        title: "إرسال كوبون",
+        icon: <LuSend className={iconStyle} />,
+        to: "/dashboard/sendcoupon",
       },
     ],
   },

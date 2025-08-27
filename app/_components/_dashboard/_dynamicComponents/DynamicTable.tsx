@@ -167,6 +167,11 @@ export default function DynamicTable<
     );
   };
 
+  // Helper to get nested value by key like "user.name"
+  const getNestedValue = (obj: any, path: string) => {
+    return path.split(".").reduce((acc, key) => acc && acc[key], obj);
+  };
+
   useEffect(() => {
     setLoadingState(loading);
   }, [loading]);
@@ -249,23 +254,25 @@ export default function DynamicTable<
                 >
                   {keys.map((cell: cellType, i) => {
                     if (cell.cellType === "text") {
+                      const value = getNestedValue(item, cell.key);
                       return (
                         <td
                           key={i}
                           className="px-6 py-4 text-second_text text-md whitespace-nowrap"
                         >
-                          {item[cell.key] ?? 0}
+                          {value ?? ""}
                         </td>
                       );
                     }
 
                     if (cell.cellType === "image") {
+                      const value = getNestedValue(item, cell.key);
                       return (
                         <td key={i} className="px-6 py-4">
                           <Img
                             src={
-                              item[cell.key]
-                                ? item[cell.key]
+                              value
+                                ? value
                                 : item["gender"] == "male"
                                 ? "/defaults/male-noimage.jpg"
                                 : "/defaults/female-noimage.jpg"
@@ -380,7 +387,8 @@ export default function DynamicTable<
                           (api === "/users" || api === "/providers") &&
                           item.id === user?.id
                         ) &&
-                          item?.role != "admin" && (
+                          item?.role != "admin" &&
+                          item?.role != "super_admin" && (
                             <button
                               onClick={() => handleConfirmDelete(item)}
                               className="text-red-500 cursor-pointer hover:text-red-700"
@@ -407,9 +415,10 @@ export default function DynamicTable<
 
       <ConfirmDeletePopup
         title={
-          selectedItem && selectedItem.name
-            ? selectedItem.name
-            : selectedItem?.title_en || ""
+          selectedItem?.name ??
+          selectedItem?.user?.name ??
+          selectedItem?.title_en ??
+          ""
         }
         id={selectedItem?.id ?? 0}
         showConfirm={confirmDeletePopup}

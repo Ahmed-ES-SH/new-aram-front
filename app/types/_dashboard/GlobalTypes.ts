@@ -3,6 +3,8 @@ export interface category {
   title_en: string;
   title_ar: string;
   image: string;
+  bg_color: string;
+  icon_name: string;
 }
 
 export interface UserType {

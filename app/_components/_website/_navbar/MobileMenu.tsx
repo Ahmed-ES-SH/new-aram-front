@@ -54,7 +54,7 @@ export default function MobileMenu() {
               <div className="flex items-center justify-between py-2">
                 <div
                   onClick={hadnleCartToggle}
-                  className="flex flex-col items-center p-2 hover:bg-primary hover:text-white justify-center  cursor-pointer  duration-200 relative  text-primary shadow border border-gray-300 rounded-lg"
+                  className="flex flex-col items-center p-2 hover:bg-primary hover:text-white justify-center  cursor-pointer  duration-200 relative  text-primary rounded-lg"
                 >
                   <FaCartShopping className="size-6" />
                   <div className="top-0 -right-2 absolute animate-ping w-1 h-1 rounded-full bg-main_blue"></div>

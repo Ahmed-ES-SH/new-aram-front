@@ -56,6 +56,10 @@ button {
 }
 
 @layer components {
+  .c-container {
+    @apply xl:w-[90%] lg:w-[95%] w-[98%] mx-auto px-4 py-2;
+  }
+
   .btn-hover {
     @apply hover:bg-white cursor-pointer hover:text-black hover:scale-110 duration-200 border border-transparent p-2 flex items-center justify-center rounded-sm text-white;
   }

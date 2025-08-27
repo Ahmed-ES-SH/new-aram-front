@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ItemDataType {
   id: number;
   cell: { key: string; cellType: string };

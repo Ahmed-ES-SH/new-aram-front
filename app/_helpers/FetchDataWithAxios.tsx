@@ -25,7 +25,11 @@ export default function useFetchData<T>(
         }
 
         const response = await instance.get(
-          paginationState ? `${api}?page=${page}` : `${api}`
+          paginationState
+            ? api.includes("page=") // ✅ check if page already exists
+              ? api
+              : `${api}${api.includes("?") ? "&" : "?"}page=${page}`
+            : api
         );
 
         if (response.status === 200) {
