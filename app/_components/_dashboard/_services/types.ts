@@ -55,6 +55,8 @@ export type Service = {
   exclusive_end_date: string | null;
   user_id: number;
   category_id: number;
+  active: boolean | number;
+  order: number;
   created_at: string;
   updated_at: string;
   organizations: miniOrg[];

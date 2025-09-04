@@ -11,8 +11,10 @@ export default async function OrganizationsDashPage({ searchParams }: any) {
 
   const { page, query, status, rating, active, number_of_reservations } =
     await searchParams;
+  const api = "/dashboard/organizations";
 
   const { data, pagination } = await FetchOrganizations({
+    api,
     page,
     query,
     category_id,

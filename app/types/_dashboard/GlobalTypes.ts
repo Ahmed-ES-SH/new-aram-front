@@ -1,3 +1,12 @@
+export interface subCategory {
+  id: number;
+  title_en: string;
+  title_ar: string;
+  image: string;
+  bg_color: string;
+  icon_name: string;
+}
+
 export interface category {
   id: number;
   title_en: string;
@@ -5,6 +14,7 @@ export interface category {
   image: string;
   bg_color: string;
   icon_name: string;
+  subcategories?: subCategory[];
 }
 
 export interface UserType {

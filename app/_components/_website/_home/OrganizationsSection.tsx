@@ -5,20 +5,19 @@ import { motion } from "framer-motion";
 import { Organization } from "../../_dashboard/_organizations/types/organization";
 import { directionMap } from "@/app/constants/_website/global";
 import OrganizationCard from "../_organizations/OrganizationCard";
+import { useLocale, useTranslations } from "next-intl";
+import LocaleLink from "../_global/LocaleLink";
 
 interface OrganizationsSectionProps {
-  title: string;
-  subtitle: string;
   organizations: Organization[];
-  locale?: string;
 }
 
 export default function OrganizationsSection({
-  title,
-  subtitle,
   organizations,
-  locale = "en",
 }: OrganizationsSectionProps) {
+  const locale = useLocale();
+  const t = useTranslations("organizations");
+
   return (
     <section
       dir={directionMap[locale]}
@@ -33,10 +32,10 @@ export default function OrganizationsSection({
           className={`text-center mb-12 rtl:text-right ltr:text-left`}
         >
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 text-balance">
-            {title}
+            {t("title")}
           </h2>
           <p className="text-xl text-gray-600 ltr:ml-6 rtl:mr-6 text-pretty">
-            {subtitle}
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -45,11 +44,17 @@ export default function OrganizationsSection({
             <OrganizationCard
               organization={org}
               index={index}
-              key={`${org.id}+org`}
+              key={`${org.id}+org--${index}`}
             />
           ))}
         </div>
       </div>
+      <LocaleLink
+        href="/organizations"
+        className="px-6 py-3 w-fit mx-auto mt-4 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-400 text-white font-semibold text-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-200"
+      >
+        {t("allOrganizations")}
+      </LocaleLink>
     </section>
   );
 }

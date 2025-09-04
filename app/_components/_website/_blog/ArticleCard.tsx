@@ -98,13 +98,13 @@ export default function ArticleCard({ article, index }: props) {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            {/* <div className="flex items-center gap-2 text-sm text-gray-500">
               <span>{article.comments_count} comments</span>
               <span>•</span>
               <span>
                 {article.interactions[0]?.totalReactions || 0} reactions
               </span>
-            </div>
+            </div> */}
           </div>
 
           <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 group">

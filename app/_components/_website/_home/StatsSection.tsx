@@ -11,20 +11,16 @@ import {
 import { BsFillBuildingFill } from "react-icons/bs";
 import { StatItem } from "@/app/constants/_website/mockData";
 import { directionMap } from "@/app/constants/_website/global";
+import { useLocale, useTranslations } from "next-intl";
 
 interface StatsSectionProps {
-  title: string;
-  subtitle: string;
   stats: StatItem[];
-  locale?: string;
 }
 
-export default function StatsSection({
-  title,
-  subtitle,
-  stats,
-  locale = "en",
-}: StatsSectionProps) {
+export default function StatsSection({ stats }: StatsSectionProps) {
+  const locale = useLocale();
+  const t = useTranslations("stats");
+
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case "users":
@@ -56,10 +52,10 @@ export default function StatsSection({
           }`}
         >
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 text-balance">
-            {title}
+            {t("title")}
           </h2>
           <p className="text-xl text-gray-600 ltr:ml-6 rtl:mr-6 text-pretty">
-            {subtitle}
+            {t("subtitle")}
           </p>
         </motion.div>
 

@@ -7,6 +7,9 @@ import {
   FaEye,
   FaEdit,
   FaTrash,
+  FaPen,
+  FaCheck,
+  FaTimes,
 } from "react-icons/fa";
 
 import Img from "../../_website/_global/Img";
@@ -18,8 +21,10 @@ import LocaleLink from "../../_website/_global/LocaleLink";
 import { formatTitle } from "@/app/_helpers/helpers";
 import { instance } from "@/app/_helpers/axios";
 import { toast } from "sonner";
-import { Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import ConfirmDeletePopup from "../../_popups/ConfirmDeletePopup";
+import { LiaToggleOffSolid, LiaToggleOnSolid } from "react-icons/lia";
+import { VscLoading } from "react-icons/vsc";
 
 interface OrganizationCardProps {
   organization: Organization;
@@ -34,6 +39,10 @@ export default function OrganizationDashCard({
 }: OrganizationCardProps) {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [editOrder, setEditOrder] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [updateOrder, setUpdateOrder] = useState(false);
+  const [order, setOrder] = useState<string | number>(organization?.order ?? 1);
 
   const handleDelete = async () => {
     try {
@@ -54,6 +63,55 @@ export default function OrganizationDashCard({
       toast.error("حدث خطأ أثناء حذف المنظمة");
     } finally {
       setDeleteLoading(false);
+    }
+  };
+
+  const toggleActive = async () => {
+    try {
+      setUpdateLoading(true);
+      const newState = !organization.active;
+      const response = await instance.post(
+        `/update-organization/${organization.id}`,
+        { active: newState ? "1" : "0" }
+      );
+      setOrganizations((prev) =>
+        prev.map((org) =>
+          org.id === organization.id
+            ? { ...org, active: newState ? 1 : 0 }
+            : org
+        )
+      );
+      if (response.status == 200) {
+        toast.success("تم تحديث حالة المركز بنجاح .");
+      }
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        "حدث خطا أثناء محاولة تحديث حالة المركز";
+      toast.error(message);
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
+
+  const updateOrgOrder = async () => {
+    try {
+      setUpdateOrder(true);
+      const response = await instance.post(
+        `/update-organization/${organization.id}`,
+        { order: order.toString() }
+      );
+      if (response.status == 200) {
+        toast.success("تم تحديث ترتيب المركز  بنجاح .");
+        setEditOrder(false);
+      }
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        "حدث خطا أثناء محاولة تحديث حالة المركز";
+      toast.error(message);
+    } finally {
+      setUpdateOrder(false);
     }
   };
 
@@ -139,6 +197,68 @@ export default function OrganizationDashCard({
           <span className="text-sm text-gray-500">
             {organization.number_of_reservations} reservations
           </span>
+        </div>
+
+        {/* order control */}
+        <div className="flex items-center justify-between gap-2 pt-4 pb-2 border-t border-gray-100">
+          {/* Input with confirm & cancel */}
+          {updateOrder ? (
+            <VscLoading className="text-sky-400 animate-spin" />
+          ) : (
+            <div className="flex items-center gap-2">
+              <div className="flex rounded-md shadow-sm border border-gray-300 overflow-hidden">
+                <input
+                  disabled={!editOrder}
+                  type="number"
+                  name="order"
+                  value={order}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setOrder(e.target.value)
+                  }
+                  className="px-2 py-1 w-20 disabled:bg-gray-100 outline-none border-0 focus:ring-0"
+                />
+                <button
+                  type="button"
+                  disabled={!editOrder}
+                  className="px-2 bg-sky-500 text-white disabled:bg-gray-300"
+                  onClick={() => updateOrgOrder()}
+                >
+                  <FaCheck />
+                </button>
+                {editOrder && (
+                  <button
+                    type="button"
+                    className="px-2 bg-red-500 text-white"
+                    onClick={() => setEditOrder(false)}
+                  >
+                    <FaTimes />
+                  </button>
+                )}
+              </div>
+
+              {!editOrder && (
+                <FaPen
+                  onClick={() => setEditOrder(true)}
+                  className="text-sky-500 cursor-pointer"
+                />
+              )}
+            </div>
+          )}
+
+          {/* Toggle */}
+          {updateLoading ? (
+            <VscLoading className="text-sky-400 animate-spin" />
+          ) : organization.active ? (
+            <LiaToggleOnSolid
+              className="text-green-500 size-8 cursor-pointer"
+              onClick={() => toggleActive()}
+            />
+          ) : (
+            <LiaToggleOffSolid
+              className="text-gray-400 size-8 cursor-pointer"
+              onClick={() => toggleActive()}
+            />
+          )}
         </div>
 
         {/* Action buttons */}

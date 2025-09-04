@@ -7,7 +7,6 @@ import { InputField } from "@/app/types/_dashboard/GlobalTypes";
 import { useRouter } from "next/navigation";
 import { instance } from "@/app/_helpers/axios";
 import { formatTitle, getIconComponent } from "@/app/_helpers/helpers";
-import IconPicker from "../../_website/_global/IconPicker";
 import { Keyword } from "../_cards/types";
 import KeywordSelector from "../../_website/_global/KeywordSelector";
 import LoadingSpin from "../../LoadingSpin";
@@ -20,6 +19,7 @@ import ServiceImages from "../_services/ServiceImages";
 import OrganizationsSelector from "../_services/OrganizationsSelector";
 import CouponDisplaySection from "../_coupons/CouponDisplaySection";
 import LocaleLink from "../../_website/_global/LocaleLink";
+import IconPicker from "../IconPicker";
 
 interface props {
   api: string;
@@ -34,6 +34,7 @@ export interface Location {
   coordinates: {
     lat: number;
     lng: number;
+    lang?: number;
   };
 }
 

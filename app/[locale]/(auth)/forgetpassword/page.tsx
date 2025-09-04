@@ -95,11 +95,6 @@ export default function ForgetPassword() {
     }
   };
 
-  const otpString =
-    locale === "ar"
-      ? otp.slice().reverse().join("") // إذا واجهت أن الترتيب في الـ RTL عكسي، استخدم هذا السطر
-      : otp.join("");
-
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -162,6 +157,11 @@ export default function ForgetPassword() {
       setLoading(false);
     }
   };
+
+  const otpString =
+    locale === "ar"
+      ? otp.slice().reverse().join("") // إذا واجهت أن الترتيب في الـ RTL عكسي، استخدم هذا السطر
+      : otp.join("");
 
   return (
     <div

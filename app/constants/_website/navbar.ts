@@ -30,10 +30,10 @@ export const navbarlinks = [
 
   {
     label: {
-      ar: "الكوبونات والعروض",
-      en: "Coupons&offers",
+      ar: "العروض",
+      en: "offers",
     },
-    to: "/couponsoffers",
+    to: "/offers",
   },
   {
     label: {

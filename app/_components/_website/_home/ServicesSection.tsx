@@ -1,24 +1,18 @@
 "use client";
-
 import type React from "react";
 import { motion } from "framer-motion";
 import { Service } from "../../_dashboard/_services/types";
 import { directionMap } from "@/app/constants/_website/global";
 import ServiceCard from "../_services/ServiceCard";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ServicesSectionProps {
-  title: string;
-  subtitle: string;
   services: Service[];
-  locale?: string;
 }
 
-export default function ServicesSection({
-  title,
-  subtitle,
-  services,
-  locale = "en",
-}: ServicesSectionProps) {
+export default function ServicesSection({ services }: ServicesSectionProps) {
+  const locale = useLocale();
+  const t = useTranslations("services");
   return (
     <section
       dir={directionMap[locale]}
@@ -33,10 +27,10 @@ export default function ServicesSection({
           className={`text-center mb-12 rtl:text-right ltr:text-left`}
         >
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 text-balance">
-            {title}
+            {t("title")}
           </h2>
           <p className="text-xl text-gray-600 ltr:ml-6 rtl:mr-6 text-pretty">
-            {subtitle}
+            {t("subtitle")}
           </p>
         </motion.div>
 

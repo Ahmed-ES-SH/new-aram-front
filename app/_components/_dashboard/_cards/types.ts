@@ -1,3 +1,5 @@
+import { category } from "@/app/types/_dashboard/GlobalTypes";
+
 export interface Keyword {
   id: number;
   title: string;
@@ -16,13 +18,10 @@ export interface Card {
   category_id: number;
   created_at: string;
   updated_at: string;
+  order: number;
   keywords_count: number;
   services_count: number;
   benefits_count: number;
   keywords: Keyword[];
-}
-
-export interface Category {
-  id: number;
-  name: string;
+  category: category;
 }

@@ -5,9 +5,11 @@ import { useLocale } from "next-intl";
 import { instance } from "@/app/_helpers/axios";
 import Img from "./Img";
 import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
   const locale = useLocale();
+  const pathName = usePathname();
 
   const [menus, setMenus] = useState([]);
   const [email, setEmail] = useState("");
@@ -89,7 +91,7 @@ export default function Footer() {
     { imgsrc: "/tik-tok.png", link: form.tiktok_account },
   ];
 
-  console.log(menus);
+  if (pathName.includes("/dashboard")) return;
 
   return (
     <footer className="bg-gray-100">

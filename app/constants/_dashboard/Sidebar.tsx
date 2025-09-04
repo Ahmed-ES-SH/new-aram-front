@@ -49,6 +49,7 @@ import { SiHeroku } from "react-icons/si";
 import { TbDiscount, TbListDetails } from "react-icons/tb";
 import { CiCreditCard1 } from "react-icons/ci";
 import { LuSend } from "react-icons/lu";
+import { BsInfoSquareFill } from "react-icons/bs";
 
 const iconStyle = "text-white  size-6";
 
@@ -59,34 +60,14 @@ export const pages = [
     to: "",
     minilinks: [
       {
-        title: "تحديد قسم الواجهة",
+        title: "قسم الواجهة",
         icon: <SiHeroku className={iconStyle} />,
-        to: "/dashboard/activesection",
+        to: "/dashboard/herosection",
       },
       {
-        title: "قسم الفيديو",
-        icon: <SiHeroku className={iconStyle} />,
-        to: "/dashboard/videodash",
-      },
-      {
-        title: "الجزء التعريفى",
-        icon: <SiHeroku className={iconStyle} />,
+        title: "قسم عن المنصة",
+        icon: <BsInfoSquareFill className={iconStyle} />,
         to: "/dashboard/aboutsection",
-      },
-      {
-        title: "البطاقات المختارة",
-        icon: <SiHeroku className={iconStyle} />,
-        to: "/dashboard/selectedcards",
-      },
-      {
-        title: "المقالات المختارة",
-        icon: <SiHeroku className={iconStyle} />,
-        to: "/dashboard/selectedarticals",
-      },
-      {
-        title: "المنظمات المختارة",
-        icon: <SiHeroku className={iconStyle} />,
-        to: "/dashboard/selectedorganizations",
       },
     ],
   },

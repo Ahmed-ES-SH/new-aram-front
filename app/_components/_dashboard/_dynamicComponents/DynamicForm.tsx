@@ -10,7 +10,6 @@ import { FaEye, FaEyeSlash, FaImage, FaPlus, FaTrash } from "react-icons/fa";
 import { errorType, InputField } from "@/app/types/_dashboard/GlobalTypes";
 import { getIconComponent } from "@/app/_helpers/helpers";
 import Img from "../../_website/_global/Img";
-import IconPicker from "../../_website/_global/IconPicker";
 import { toast } from "sonner";
 import KeywordSelector, {
   Keyword,
@@ -22,6 +21,7 @@ import OrganizationsSelector from "../_services/OrganizationsSelector";
 import ServiceImages from "../_services/ServiceImages";
 import SpecialCouponSection from "../_coupons/SpecialCouponSection";
 import SelectOrg from "../_offers/SelectOrg";
+import IconPicker from "../IconPicker";
 
 interface Props {
   inputs: InputField[];

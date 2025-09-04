@@ -49,8 +49,8 @@ export default function CardPage({ params }: any) {
       name: "duration",
       type: "number",
       fildType: "number-input",
-      label: { ar: "مدة سريان البطاقة", en: "" },
-      placeholder: "أدخل مدة سريان البطاقة",
+      label: { ar: "مدة سريان البطاقة ( بالشهور )", en: "" },
+      placeholder: "أدخل مدة سريان البطاقة ( بالشهور )",
     },
     {
       name: "category_id",

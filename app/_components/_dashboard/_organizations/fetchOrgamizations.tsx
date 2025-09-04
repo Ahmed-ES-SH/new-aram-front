@@ -18,16 +18,20 @@ const getTokenFromCookies = async (): Promise<string | null> => {
 };
 
 export default async function FetchOrganizations({
+  api,
   query,
   category_id,
+  subCategories,
   page,
   status,
   rating,
   active,
   number_of_reservations,
 }: {
+  api: string;
   query?: string;
   category_id?: number[];
+  subCategories?: number[];
   status?: string;
   active?: string;
   page?: number;
@@ -46,10 +50,13 @@ export default async function FetchOrganizations({
       searchParams.append("status", String(status));
     }
     if (active !== undefined) {
-      searchParams.append("active", String(active));
+      searchParams.append("active", active === "true" ? "1" : "0");
     }
     if (page) {
       searchParams.append("page", String(page));
+    }
+    if (subCategories) {
+      searchParams.append("category_id", subCategories.join(","));
     }
     if (rating) {
       searchParams.append("rating", String(rating));
@@ -64,7 +71,7 @@ export default async function FetchOrganizations({
     const res = await fetch(
       `${
         process.env.NEXT_PUBLIC_API_BASE_URL
-      }/dashboard/organizations?${searchParams.toString()}`,
+      }${api}?${searchParams.toString()}`,
       {
         headers: {
           Authorization: token || "",

@@ -5,20 +5,16 @@ import { motion } from "framer-motion";
 import { ArticleType } from "@/app/types/_dashboard/GlobalTypes";
 import ArticleCard from "../_blog/ArticleCard";
 import { directionMap } from "@/app/constants/_website/global";
+import { useLocale, useTranslations } from "next-intl";
 
 interface BlogSectionProps {
-  title: string;
-  subtitle: string;
   articles: ArticleType[];
-  locale?: string;
 }
 
-export default function BlogSection({
-  title,
-  subtitle,
-  articles,
-  locale = "en",
-}: BlogSectionProps) {
+export default function BlogSection({ articles }: BlogSectionProps) {
+  const locale = useLocale();
+  const t = useTranslations("blog");
+
   return (
     <section
       dir={directionMap[locale]}
@@ -33,10 +29,10 @@ export default function BlogSection({
           className={`text-center mb-12 rtl:text-right ltr:text-left`}
         >
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 text-balance">
-            {title}
+            {t("title")}
           </h2>
           <p className="text-xl text-gray-600 ltr:ml-6 rtl:mr-6 text-pretty">
-            {subtitle}
+            {t("subtitle")}
           </p>
         </motion.div>
 

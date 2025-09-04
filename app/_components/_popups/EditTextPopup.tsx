@@ -41,7 +41,7 @@ export default function EditTextPopup({
             key={index}
             className="input-style"
             name={input.name}
-            value={input.value}
+            value={input.value ?? ""}
             onChange={(e) => onChange(input.name, e.target.value)}
             placeholder={input.placeholder || ""}
           />
@@ -52,7 +52,7 @@ export default function EditTextPopup({
             key={index}
             className="input-style  h-24"
             name={input.name}
-            value={input.value}
+            value={input.value ?? ""}
             onChange={(e) => onChange(input.name, e.target.value)}
             placeholder={input.placeholder || ""}
           />
@@ -64,7 +64,7 @@ export default function EditTextPopup({
             type="number"
             className="input-style"
             name={input.name}
-            value={input.value}
+            value={input.value ?? ""}
             onChange={(e) => onChange(input.name, Number(e.target.value))}
             placeholder={input.placeholder || ""}
           />

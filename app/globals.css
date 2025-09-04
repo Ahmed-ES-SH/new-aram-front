@@ -55,6 +55,11 @@ button {
   cursor: pointer;
 }
 
+input,
+textarea {
+  outline: none;
+}
+
 @layer components {
   .c-container {
     @apply xl:w-[90%] lg:w-[95%] w-[98%] mx-auto px-4 py-2;
@@ -106,6 +111,10 @@ button {
 
   .popup-main-bg {
     @apply w-full h-screen flex items-center justify-center bg-black/50 fixed top-0 left-0 z-[999999] backdrop-blur-lg;
+  }
+
+  .select-effect {
+    @apply shadow-md shadow-white hover:shadow-primary hover:scale-110 p-2 border-2 border-transparent hover:border-primary cursor-pointer duration-300;
   }
 }
 

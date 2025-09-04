@@ -9,6 +9,7 @@ type CreditCardProps = {
   expiry: string; // "MM/YY"
   brand?: string; // "VISA" | "MasterCard"
   type?: string; // "Platinum" | "Gold" | "Black"
+  image: string;
 };
 
 export default function CreditCard({
@@ -17,16 +18,18 @@ export default function CreditCard({
   cardNumber,
   cardHolder,
   expiry,
+  image,
   brand = "VISA",
   type = "Platinum",
 }: CreditCardProps) {
   return (
     <div
-      className={`relative w-[380px] min-h-[240px] rounded-xl text-white shadow-2xl flex flex-col justify-between p-6 overflow-hidden`}
+      className={`relative w-full min-h-[240px] rounded-xl text-white shadow-2xl flex flex-col justify-between p-6 overflow-hidden`}
       dir="rtl"
     >
       <Img
-        src="/cards/card_1.jpg"
+        src={image}
+        errorSrc="/cards/card_1.jpg"
         className="w-full h-full absolute top-0 left-0"
       />
       {/* overlay light effect */}

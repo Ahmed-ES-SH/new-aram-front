@@ -24,10 +24,9 @@ export default function OrganizationCard({ organization, index }: props) {
       <motion.div
         key={organization.id}
         initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.1 }}
-        viewport={{ once: true }}
-        className="bg-white rounded-xl group shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-3 duration-300"
+        className="bg-white h-full rounded-xl group shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-3 duration-300"
       >
         <div className="relative">
           <Img
@@ -38,7 +37,8 @@ export default function OrganizationCard({ organization, index }: props) {
 
           <div className="absolute bottom-4 left-4">
             <Img
-              src={organization.logo || "/placeholder.png"}
+              src={organization.logo ?? "/logo.png"}
+              errorSrc="/logo.png"
               alt={`${organization.title} logo`}
               className="w-12 h-12 rounded-full bg-white p-1 shadow-md"
             />
@@ -91,11 +91,6 @@ export default function OrganizationCard({ organization, index }: props) {
                 ? organization.category.title_ar
                 : organization.category.title_en}
             </div>
-            {organization.confirmation_status && (
-              <span className="text-sm font-bold text-gray-900">
-                {organization.confirmation_price}
-              </span>
-            )}
           </div>
 
           <div className="flex flex-wrap gap-1 mb-4">

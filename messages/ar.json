@@ -157,7 +157,8 @@
   },
   "homeCards": {
     "title": "بطاقات آرام المميزة",
-    "subtitle": "اكتشف بطاقات آرام الأكثر شعبية"
+    "subtitle": "اكتشف بطاقات آرام الأكثر شعبية",
+    "allCards": "جميع البطاقات"
   },
   "organizations": {
     "title": "المنظمات الموثوقة",
@@ -165,7 +166,8 @@
     "reservations": "حجوزات",
     "rating": "التقييم",
     "contact": "تواصل",
-    "book": "حجز"
+    "book": "حجز",
+    "allOrganizations": "جميع المراكز"
   },
   "services": {
     "title": "خدماتنا",
@@ -214,5 +216,20 @@
     "form_invalid": "يرجى تصحيح الأخطاء قبل الإرسال",
     "server_error": "حدث خطأ ما، حاول مرة أخرى لاحقًا"
   },
-  "success_message": "تم إرسال الإخطار الخاص بك إلى قسم الشكاوى لدى المنصة، سنتواصل معك في أقرب وقت."
+  "success_message": "تم إرسال الإخطار الخاص بك إلى قسم الشكاوى لدى المنصة، سنتواصل معك في أقرب وقت.",
+
+  "organizationPage": {
+    "organizations": "المؤسسات",
+    "categories": "الفئات",
+    "rating": "التقييم",
+    "locations": "المواقع",
+    "title": "المراكز الشريكة",
+    "action": "إضافة جديد",
+    "filters": "الفلاتر",
+    "search_organizations": "البحث في المؤسسات...",
+    "all_ratings": "جميع التقييمات",
+    "all_locations": "جميع المواقع",
+    "clear_filters": "مسح جميع الفلاتر",
+    "searchPlaceHoloder": "ابحث عن المراكز هنا "
+  }
 }

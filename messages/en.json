@@ -158,7 +158,8 @@
   },
   "homeCards": {
     "title": "Aram Premium Cards",
-    "subtitle": "Discover our most popular cards"
+    "subtitle": "Discover our most popular cards",
+    "allCards": "All Cards"
   },
   "organizations": {
     "title": "Trusted Organizations",
@@ -166,7 +167,8 @@
     "reservations": "reservations",
     "rating": "Rating",
     "contact": "Contact",
-    "book": "Book"
+    "book": "Book",
+    "allOrganizations": "All Organizations"
   },
   "services": {
     "title": "Our Services",
@@ -215,5 +217,20 @@
       "server_error": "Something went wrong, please try again later"
     },
     "success_message": "Your message has been sent successfully. We will contact you as soon as possible."
+  },
+
+  "organizationPage": {
+    "organizations": "Organizations",
+    "categories": "Categories",
+    "title": "Organizations",
+    "action": "Add New",
+    "rating": "Rating",
+    "locations": "Locations",
+    "filters": "Filters",
+    "search_organizations": "Search organizations...",
+    "all_ratings": "All Ratings",
+    "all_locations": "All Locations",
+    "clear_filters": "Clear All Filters",
+    "searchPlaceHoloder": "Find centers here"
   }
 }

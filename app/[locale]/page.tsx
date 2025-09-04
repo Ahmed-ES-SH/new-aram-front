@@ -1,73 +1,44 @@
-"use client";
 import React from "react";
-import HeroVideo from "../_components/_website/_home/hero-video";
 import AboutSection from "../_components/_website/_home/AboutSection";
 import CardsSection from "../_components/_website/_home/CardsSection";
 import OrganizationsSection from "../_components/_website/_home/OrganizationsSection";
 import ServicesSection from "../_components/_website/_home/ServicesSection";
 import StatsSection from "../_components/_website/_home/StatsSection";
 import BlogSection from "../_components/_website/_home/BlogSection";
-import { useLocale, useTranslations } from "next-intl";
-import {
-  mockArticles,
-  mockCards,
-  mockOrganizations,
-  mockServices,
-  mockStats,
-} from "../constants/_website/mockData";
 import ContactForm from "../_components/_website/_home/ConatctForm";
+import HeroSection from "../_components/_website/_home/HeroSection";
+import FetchData from "../_helpers/FetchData";
+import { mockStats } from "../constants/_website/mockData";
 
-export default function Home() {
-  const locale = useLocale();
-  const t = useTranslations();
+export default async function Home() {
+  const aboutData = await FetchData(`/get-section/2`, false);
+  const cardsData = await FetchData(`/public-cards?limit=8`, false);
+  const organizationsData = await FetchData(
+    `/active-organizations?limit=8`,
+    false
+  );
+
+  const servicesData = await FetchData(`/active-services`, false);
+
+  const articlesData = await FetchData(`/top-ten-articles`, false);
 
   return (
     <>
-      <HeroVideo />
+      {/* Hero section */}
+      <HeroSection />
 
       {/* About section */}
-      <AboutSection
-        title={t("about.title")}
-        subtitle={t("about.subtitle")}
-        description={t("about.description")}
-        features={t.raw("about.features")}
-        locale={locale}
-      />
+      <AboutSection data={aboutData} />
 
-      <CardsSection
-        title={t("homeCards.title")}
-        subtitle={t("homeCards.subtitle")}
-        cards={mockCards} // لو عندك قائمة كروت في ملف json
-        locale={locale}
-      />
+      <CardsSection cards={cardsData} />
 
-      <OrganizationsSection
-        title={t("organizations.title")}
-        subtitle={t("organizations.subtitle")}
-        organizations={mockOrganizations} // لو جايه من json بدل mock
-        locale={locale}
-      />
+      <OrganizationsSection organizations={organizationsData} />
 
-      <ServicesSection
-        title={t("services.title")}
-        subtitle={t("services.subtitle")}
-        services={mockServices} // مصفوفة خدمات
-        locale={locale}
-      />
+      <ServicesSection services={servicesData} />
 
-      <StatsSection
-        title={t("stats.title")}
-        subtitle={t("stats.subtitle")}
-        stats={mockStats} // مصفوفة إحصائيات
-        locale={locale}
-      />
+      <StatsSection stats={mockStats} />
 
-      <BlogSection
-        title={t("blog.title")}
-        subtitle={t("blog.subtitle")}
-        articles={mockArticles} // مقالات من json
-        locale={locale}
-      />
+      <BlogSection articles={articlesData} />
 
       <ContactForm />
     </>

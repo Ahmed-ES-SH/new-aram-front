@@ -1,56 +1,33 @@
 "use client";
-
 import { directionMap } from "@/app/constants/_website/global";
 import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
-import { useState, useRef, useEffect } from "react";
-import {
-  LuArrowLeft,
-  LuArrowRight,
-  LuPlay,
-  LuVolume2,
-  LuVolumeX,
-} from "react-icons/lu";
+import { LuArrowLeft, LuArrowRight, LuPlay } from "react-icons/lu";
 
-export default function HeroVideo() {
+interface props {
+  data: any;
+}
+
+export default function HeroVideo({ data }: props) {
   const locale = useLocale();
   const t = useTranslations("hero.video");
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(true);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Autoplay failed, which is expected in many browsers
-        setIsPlaying(false);
-      });
-    }
-  }, []);
+  const {
+    column_1: title,
+    column_2: description,
+    column_3: stats,
+    video,
+  } = data;
 
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
-  };
+  const isYoutubeURL = video && video.includes("www.youtube.com");
+  const videoId =
+    (video &&
+      video.match(
+        /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+      )) ||
+    "Not Find The VideoId";
 
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const stats = [
-    { number: "50K+", label: { en: "Happy Customers", ar: "عملاء سعداء" } },
-    { number: "1M+", label: { en: "Bookings Made", ar: "عدد الحجوزات" } },
-    { number: "500+", label: { en: "Partner Venues", ar: "أماكن شريكة" } },
-  ];
+  console.log(videoId);
 
   return (
     <section
@@ -59,57 +36,42 @@ export default function HeroVideo() {
     >
       {/* Video Background */}
       <div className="absolute inset-0 w-full h-full">
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          autoPlay
-          muted={isMuted}
-          loop
-          playsInline
-          poster="/placeholder.png?height=1080&width=1920"
-        >
-          <source src="/videos/BigBuckBunny.mp4" type="video/mp4" />
-          {/* Fallback for browsers that don't support video */}
-          <div className="w-full h-full bg-gradient-to-br from-yellow-500 to-purple-600" />
-        </video>
+        {isYoutubeURL ? (
+          // YouTube Video
+          <iframe
+            width="100%"
+            height="240"
+            src={`https://www.youtube.com/embed/${videoId[1]}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="rounded-md h-full"
+          ></iframe>
+        ) : (
+          // Normal Video
+          <video
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/placeholder.png?height=1080&width=1920"
+          >
+            <source
+              src={video || "/videos/BigBuckBunny.mp4"}
+              type="video/mp4"
+            />
+            {/* Fallback for browsers that don't support video */}
+            <div className="w-full h-full bg-gradient-to-br from-yellow-500 to-purple-600" />
+          </video>
+        )}
 
         {/* Dark Overlay for Text Readability */}
         <div className="absolute inset-0 bg-black/50" />
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
-      </div>
-
-      {/* Video Controls */}
-      <div className="absolute top-6 ltr:right-6 rtl:left-6 z-20 flex gap-2">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={toggleMute}
-          className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full transition-all duration-300"
-        >
-          {isMuted ? (
-            <LuVolumeX className="h-5 w-5 text-white" />
-          ) : (
-            <LuVolume2 className="h-5 w-5 text-white" />
-          )}
-        </motion.button>
-
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={togglePlay}
-          className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full transition-all duration-300"
-        >
-          {isPlaying ? (
-            <div className="w-5 h-5 flex items-center justify-center">
-              <div className="w-1 h-4 bg-white mr-1" />
-              <div className="w-1 h-4 bg-white" />
-            </div>
-          ) : (
-            <LuPlay className="h-5 w-5 text-white ml-0.5" />
-          )}
-        </motion.button>
       </div>
 
       {/* Content Overlay */}
@@ -129,7 +91,7 @@ export default function HeroVideo() {
               transition={{ duration: 1, delay: 0.2 }}
               className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight"
             >
-              {t("heading")}
+              {title[locale]}
             </motion.h1>
 
             {/* Subheading */}
@@ -139,7 +101,7 @@ export default function HeroVideo() {
               transition={{ duration: 1, delay: 0.4 }}
               className="text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed max-w-3xl"
             >
-              {t("subheading")}
+              {description[locale]}
             </motion.p>
 
             {/* Buttons */}
@@ -181,22 +143,23 @@ export default function HeroVideo() {
             className="mt-16 lg:mt-24"
           >
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label[locale]}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 1 + index * 0.1 }}
-                  className="text-center ltr:lg:text-left rtl:lg:text-right"
-                >
-                  <div className="text-3xl lg:text-4xl font-bold text-white mb-2">
-                    {stat.number}
-                  </div>
-                  <div className="text-gray-300 text-sm lg:text-base font-medium">
-                    {stat.label[locale]}
-                  </div>
-                </motion.div>
-              ))}
+              {stats &&
+                stats.map((stat, index) => (
+                  <motion.div
+                    key={stat[locale]}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, delay: 1 + index * 0.1 }}
+                    className="text-center ltr:lg:text-left rtl:lg:text-right"
+                  >
+                    <div className="text-3xl lg:text-4xl font-bold text-white mb-2">
+                      {stat.number}
+                    </div>
+                    <div className="text-gray-300 text-sm lg:text-base font-medium">
+                      {stat[locale] ?? ""}
+                    </div>
+                  </motion.div>
+                ))}
             </div>
           </motion.div>
         </div>

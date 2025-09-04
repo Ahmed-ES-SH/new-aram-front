@@ -26,8 +26,8 @@ export default function ServerPagination({
 
   const renderPages = () => {
     const pages: React.ReactNode[] = [];
-
     const maxPagesToShow = 5;
+
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
     let endPage = startPage + maxPagesToShow - 1;
 
@@ -36,18 +36,64 @@ export default function ServerPagination({
       startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
 
+    if (startPage > 1) {
+      pages.push(
+        <button
+          key={1}
+          onClick={() => goToPage(1)}
+          className={`px-4 py-2 rounded-lg border transition ${
+            currentPage === 1
+              ? "bg-blue-600 text-white border-blue-600"
+              : "bg-white text-gray-700 hover:bg-blue-50 border-gray-300"
+          }`}
+        >
+          1
+        </button>
+      );
+      if (startPage > 2) {
+        pages.push(
+          <span key="dots-start" className="px-2 text-gray-500">
+            ...
+          </span>
+        );
+      }
+    }
+
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <button
           key={i}
           onClick={() => goToPage(i)}
-          className={`px-3 py-1 border border-gray-300 rounded ${
+          className={`px-4 py-2 rounded-lg border transition ${
             i === currentPage
-              ? "bg-primary text-white"
-              : "bg-white text-gray-700 hover:bg-mid-primary hover:text-white duration-200"
+              ? "bg-blue-600 text-white border-blue-600"
+              : "bg-white text-gray-700 hover:bg-blue-50 border-gray-300"
           }`}
         >
           {i}
+        </button>
+      );
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pages.push(
+          <span key="dots-end" className="px-2 text-gray-500">
+            ...
+          </span>
+        );
+      }
+      pages.push(
+        <button
+          key={totalPages}
+          onClick={() => goToPage(totalPages)}
+          className={`px-4 py-2 rounded-lg border transition ${
+            currentPage === totalPages
+              ? "bg-blue-600 text-white border-blue-600"
+              : "bg-white text-gray-700 hover:bg-blue-50 border-gray-300"
+          }`}
+        >
+          {totalPages}
         </button>
       );
     }
@@ -58,24 +104,26 @@ export default function ServerPagination({
   return (
     <div
       dir={directionMap[locale]}
-      className="flex items-center justify-center gap-2 mt-6"
+      className="flex items-center justify-center gap-2 mt-8"
     >
+      {/* Prev button */}
       <button
         onClick={() => goToPage(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-3 py-1 border border-gray-300 rounded bg-white text-gray-700 hover:bg-blue-50 disabled:opacity-50"
+        className="h-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
       >
-        <HiArrowLeft />
+        <HiArrowRight />
       </button>
 
       {renderPages()}
 
+      {/* Next button */}
       <button
         onClick={() => goToPage(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-3 py-1 border border-gray-300 rounded bg-white text-gray-700 hover:bg-blue-50 disabled:opacity-50"
+        className="h-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
       >
-        <HiArrowRight />
+        <HiArrowLeft />
       </button>
     </div>
   );

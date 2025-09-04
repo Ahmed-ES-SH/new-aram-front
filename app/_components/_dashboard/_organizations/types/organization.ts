@@ -25,7 +25,9 @@ export interface Organization {
   confirmation_price: string;
   status: "published" | "under_review" | "not_published";
   active: number;
-  rating: string;
+  order: number;
+  rating: string | number;
+  category_id: number;
   number_of_reservations: number;
   category: {
     id: number;
