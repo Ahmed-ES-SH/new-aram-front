@@ -27,7 +27,7 @@ export default function HeroSlider({ slides }: props) {
   const swiperRef = useRef<SwiperType>(null);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center  bg-gradient-to-br from-slate-50 to-blue-50">
+    <section className="relative min-h-[90vh] mt-20 flex items-center justify-center  bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-12 lg:py-20">
         <Swiper
           dir="ltr"
@@ -52,7 +52,7 @@ export default function HeroSlider({ slides }: props) {
             <SwiperSlide key={`${slide.id}+as${index}`}>
               <div
                 dir={directionMap[locale]}
-                className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[80vh]"
+                className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[60vh]"
               >
                 {/* Left Content */}
                 <motion.div

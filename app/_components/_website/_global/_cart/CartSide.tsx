@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaPercentage } from "react-icons/fa";
 import { BsCartX } from "react-icons/bs";
@@ -12,6 +12,8 @@ import CartItem from "./CartItem";
 import LocaleLink from "../LocaleLink";
 
 export default function CartSide() {
+  const sideRef = useRef<HTMLDivElement>(null);
+
   const pathname = usePathname();
   const t = useTranslations("cart");
 
@@ -47,13 +49,33 @@ export default function CartSide() {
 
   const Currency = 1;
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sideRef.current && !sideRef.current.contains(event.target as Node)) {
+        handlToggle();
+      }
+    };
+
+    if (isCartOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCartOpen]);
+
   if (pathname.startsWith("/en/dashboard")) {
     return null;
   }
 
   return (
     <>
-      <section>
+      <section ref={sideRef}>
         <AnimatePresence>
           {isCartOpen && (
             <motion.div

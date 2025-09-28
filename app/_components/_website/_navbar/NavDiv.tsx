@@ -13,7 +13,7 @@ export default function NavDiv({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div dir={directionMap[locale]} className="z-[99999] relative">
+    <div dir={directionMap[locale]} className="z-[99] relative">
       {children}
     </div>
   );

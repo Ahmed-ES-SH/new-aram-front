@@ -1,22 +1,28 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import type { LocationType } from "@/types/organization"
-import { useTranslations } from "next-intl"
-import { FaMapMarkerAlt } from "react-icons/fa"
+import { LocationType } from "@/app/_components/_dashboard/_organizations/types/organization";
+import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 interface LocationFilterProps {
-  locations: LocationType[]
-  selectedLocation: LocationType | null
-  onLocationChange: (location: LocationType | null) => void
+  locations: LocationType[];
+  selectedLocation: LocationType | null;
+  onLocationChange: (location: LocationType | null) => void;
 }
 
-export default function LocationFilter({ locations, selectedLocation, onLocationChange }: LocationFilterProps) {
-  const t = useTranslations()
+export default function LocationFilter({
+  locations,
+  selectedLocation,
+  onLocationChange,
+}: LocationFilterProps) {
+  const t = useTranslations();
 
   return (
     <div className="space-y-2">
-      <h3 className="font-semibold text-gray-900 dark:text-white mb-3">{t("locations")}</h3>
+      <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+        {t("locations")}
+      </h3>
 
       <div className="space-y-2">
         <motion.button
@@ -49,5 +55,5 @@ export default function LocationFilter({ locations, selectedLocation, onLocation
         ))}
       </div>
     </div>
-  )
+  );
 }

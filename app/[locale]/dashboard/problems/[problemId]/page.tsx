@@ -1,13 +1,7 @@
 import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
 import React from "react";
 
-interface ParamsType {
-  params: {
-    problemId: number;
-  };
-}
-
-export default function page({ params }: ParamsType) {
+export default function page({ params }: any) {
   const problemId = params.problemId;
 
   const problemInputs = [

@@ -3,8 +3,8 @@ import type React from "react";
 import { motion } from "framer-motion";
 import { Service } from "../../_dashboard/_services/types";
 import { directionMap } from "@/app/constants/_website/global";
-import ServiceCard from "../_services/ServiceCard";
 import { useLocale, useTranslations } from "next-intl";
+import ServiceCard from "../_services/ServiceCard";
 
 interface ServicesSectionProps {
   services: Service[];
@@ -35,10 +35,9 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
-          {services.map((service, index) => (
+          {services.map((service) => (
             <ServiceCard
               service={service}
-              index={index}
               key={`${service.id}+${service.title}`}
             />
           ))}

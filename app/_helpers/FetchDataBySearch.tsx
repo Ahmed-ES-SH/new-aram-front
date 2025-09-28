@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useEffect, useState } from "react";
 import { instance } from "./axios";
@@ -43,6 +42,7 @@ export default function useSearchData(api: string) {
     if (searchTrigger > 0) {
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTrigger]);
 
   // دالة البحث عند الضغط على زر البحث

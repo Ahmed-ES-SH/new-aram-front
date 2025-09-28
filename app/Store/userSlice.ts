@@ -5,6 +5,7 @@ import { instance } from "../_helpers/axios";
 interface UserState {
   user: any | null;
   unreadMessagesCount: number;
+  unreadNotificationsCount: number;
   loading: boolean;
   error: string | null;
   unreadConversations: any | null;
@@ -15,6 +16,7 @@ const initialState: UserState = {
   loading: true,
   error: null,
   unreadMessagesCount: 0,
+  unreadNotificationsCount: 0,
   unreadConversations: null,
 };
 
@@ -26,7 +28,8 @@ export const fetchCurrentUser = createAsyncThunk(
       const res = await instance.get("/current-user");
       return {
         user: res.data.data,
-        unreadMessagesCount: res.data.unread_count,
+        unreadMessagesCount: res.data.unread_count ?? 0,
+        unreadNotificationsCount: res.data.unread_notifications_count ?? 0,
       };
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
@@ -53,6 +56,14 @@ const userSlice = createSlice({
 
     setUnreadCount: (state, action) => {
       state.unreadMessagesCount = action.payload;
+    },
+
+    setUnreadNotificationsCount: (state, action) => {
+      if (typeof action.payload === "number") {
+        state.unreadNotificationsCount = action.payload; // set direct
+      } else if (action.payload === "increment") {
+        state.unreadNotificationsCount += 1; // safe increment
+      }
     },
 
     setunreadConversations: (state, action) => {
@@ -89,6 +100,7 @@ export const {
   clearUser,
   reduceUnreadCount,
   setUnreadCount,
+  setUnreadNotificationsCount,
   setunreadConversations,
 } = userSlice.actions;
 export default userSlice.reducer;

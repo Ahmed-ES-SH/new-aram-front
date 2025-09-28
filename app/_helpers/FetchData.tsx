@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { decryptToken } from "./helpers";
 
 export default async function FetchData<T = any>(
   api: string,
@@ -7,14 +8,15 @@ export default async function FetchData<T = any>(
   try {
     const cookieStore = cookies();
 
-    const token = await (await cookieStore).get("aram_token");
+    const tokenvalue = await (await cookieStore).get("aram_token");
+    const token = tokenvalue ? decryptToken(tokenvalue.value) : undefined;
 
     const headers: HeadersInit = {
       "Content-Type": "application/json",
     };
 
     if (token) {
-      headers["Authorization"] = `Bearer ${token.value}`;
+      headers["Authorization"] = `Bearer ${token}`;
     }
 
     const response = await fetch(

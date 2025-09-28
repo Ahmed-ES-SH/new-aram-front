@@ -9,6 +9,7 @@ export default function page() {
         إضافة قسم مقالى جديد
       </h1>
       <DynamicForm
+        title="إنشاء قسم مقالى جديد"
         submitValue="إنشاء"
         inputs={Categoryinputs}
         api="/add-article-category"

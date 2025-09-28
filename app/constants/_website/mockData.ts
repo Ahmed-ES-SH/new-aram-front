@@ -1,8 +1,3 @@
-import { Card } from "@/app/_components/_dashboard/_cards/types";
-import { Organization } from "@/app/_components/_dashboard/_organizations/types/organization";
-import { Service } from "@/app/_components/_dashboard/_services/types";
-import { ArticleType } from "@/app/types/_dashboard/GlobalTypes";
-
 export interface StatItem {
   id: number;
   title: string;
@@ -16,7 +11,7 @@ export interface ChartDataPoint {
   value: number;
 }
 
-export const mockCards: Card[] = [
+export const mockCards = [
   {
     id: 1,
     title: "Premium Web Development",
@@ -88,7 +83,7 @@ export const mockCards: Card[] = [
   },
 ];
 
-export const mockOrganizations: Organization[] = [
+export const mockOrganizations = [
   {
     id: 1,
     title: "TechCorp Solutions",
@@ -172,7 +167,7 @@ export const mockOrganizations: Organization[] = [
   },
 ];
 
-export const mockServices: Service[] = [
+export const mockServices = [
   {
     id: 1,
     title: "E-commerce Website Development",
@@ -315,7 +310,7 @@ export const mockServices: Service[] = [
   },
 ];
 
-export const mockArticles: ArticleType[] = [
+export const mockArticles = [
   {
     id: 1,
     title_en: "The Future of Web Development: Trends to Watch in 2024",
@@ -399,7 +394,7 @@ export const mockArticles: ArticleType[] = [
   },
 ];
 
-export const mockStats: StatItem[] = [
+export const mockStats = [
   {
     id: 1,
     title: "Total Users",

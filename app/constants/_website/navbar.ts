@@ -27,7 +27,13 @@ export const navbarlinks = [
     },
     to: "/cards",
   },
-
+  // {
+  //   label: {
+  //     ar: "الخدمات",
+  //     en: "Services",
+  //   },
+  //   to: "/services",
+  // },
   {
     label: {
       ar: "العروض",

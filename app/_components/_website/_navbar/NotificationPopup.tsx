@@ -1,6 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MdNotificationsActive } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
 import { useLocale } from "next-intl";
@@ -9,11 +9,11 @@ import { directionMap } from "@/app/constants/_website/global";
 export default function Notificationpopup() {
   const locale = useLocale() || "en";
 
-  const [newNotification, setNewNotification] = useState({
+  const [newNotification] = useState({
     message: "",
   });
-  const [isVisible, setIsVisible] = useState(false);
-  const [progress, setProgress] = useState(100); // نسبة التقدم في الخط
+  const [isVisible] = useState(false);
+  const [progress] = useState(100); // نسبة التقدم في الخط
 
   const clearnewnot = () => {};
 
@@ -45,7 +45,7 @@ export default function Notificationpopup() {
             {/* خط يتناقص تدريجياً */}
             <div className="w-full mt-2 h-1 bg-white">
               <motion.div
-                className="h-full bg-yellow-400"
+                className="h-full bg-primary"
                 style={{ width: `${progress}%` }}
                 transition={{ duration: 0.1 }}
               />

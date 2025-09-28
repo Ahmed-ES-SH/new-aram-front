@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import Cookie from "cookie-universal";
+import { decryptToken } from "./helpers";
 
 const cookie = Cookie();
 
@@ -13,7 +14,8 @@ export const instance = axios.create({
 // إضافة التوكن قبل كل طلب تلقائيًا
 instance.interceptors.request.use(
   (config) => {
-    const token = cookie.get(`aram_token`);
+    const tokenValue = cookie.get(`aram_token`);
+    const token = tokenValue ? decryptToken(tokenValue) : null;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

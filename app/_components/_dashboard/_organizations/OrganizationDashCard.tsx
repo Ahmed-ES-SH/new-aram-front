@@ -191,7 +191,7 @@ export default function OrganizationDashCard({
         {/* Rating and reservations */}
         <div className="flex items-center justify-between mb-4">
           <RatingStars
-            rating={Number.parseFloat(organization.rating)}
+            rating={Number.parseFloat(organization.rating as any)}
             showNumber
           />
           <span className="text-sm text-gray-500">

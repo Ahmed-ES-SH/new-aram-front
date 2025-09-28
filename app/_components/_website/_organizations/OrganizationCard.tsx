@@ -48,9 +48,9 @@ export default function OrganizationCard({ organization, index }: props) {
         <div className="p-6">
           <div className="flex items-start justify-between mb-3">
             <LocaleLink
-              href={`/organizations/${formatTitle(
-                organization.title
-              )}?organizationId=${organization.id}`}
+              href={`/organizations/${formatTitle(organization.title)}?orgId=${
+                organization.id
+              }`}
               className="text-xl font-bold text-gray-900 text-balance group-hover:text-sky-500  group-hover:underline duration-200"
             >
               {organization.title}

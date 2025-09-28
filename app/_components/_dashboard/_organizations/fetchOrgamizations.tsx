@@ -12,7 +12,7 @@ interface ServicesResponse {
 }
 
 const getTokenFromCookies = async (): Promise<string | null> => {
-  const cookieStore = await cookies();
+  const cookieStore = await cookies(); // ✅ remove await
   const token = cookieStore.get(`aram_token`)?.value;
   return token ? `Bearer ${token}` : null;
 };
@@ -20,9 +20,12 @@ const getTokenFromCookies = async (): Promise<string | null> => {
 export default async function FetchOrganizations({
   api,
   query,
-  category_id,
+  categories,
   subCategories,
   page,
+  time,
+  open_at,
+  close_at,
   status,
   rating,
   active,
@@ -30,11 +33,14 @@ export default async function FetchOrganizations({
 }: {
   api: string;
   query?: string;
-  category_id?: number[];
+  categories?: number[];
   subCategories?: number[];
   status?: string;
   active?: string;
   page?: number;
+  time?: number;
+  open_at?: number;
+  close_at?: number;
   rating?: number;
   number_of_reservations?: number;
 }): Promise<ServicesResponse> {
@@ -43,8 +49,8 @@ export default async function FetchOrganizations({
     const token = await getTokenFromCookies();
 
     if (query) searchParams.append("query", query);
-    if (category_id?.length) {
-      searchParams.append("category_id", category_id.join(","));
+    if (categories?.length) {
+      searchParams.append("categories", categories.join(","));
     }
     if (status !== undefined) {
       searchParams.append("status", String(status));
@@ -55,8 +61,17 @@ export default async function FetchOrganizations({
     if (page) {
       searchParams.append("page", String(page));
     }
-    if (subCategories) {
-      searchParams.append("category_id", subCategories.join(","));
+    if (time) {
+      searchParams.append("time", String(time));
+    }
+    if (open_at) {
+      searchParams.append("open_at", String(open_at));
+    }
+    if (close_at) {
+      searchParams.append("close_at", String(close_at));
+    }
+    if (subCategories?.length) {
+      searchParams.append("sub_categories", subCategories.join(","));
     }
     if (rating) {
       searchParams.append("rating", String(rating));
@@ -80,13 +95,24 @@ export default async function FetchOrganizations({
       }
     );
 
+    if (res.status === 404) {
+      // return empty response instead of breaking the app
+      return {
+        data: [],
+        pagination: {
+          current_page: 1,
+          last_page: 1,
+        },
+      };
+    }
+
     if (!res.ok) {
       throw new Error(`Request failed: ${res.status} ${res.statusText}`);
     }
 
     return await res.json();
   } catch (error) {
-    console.error("Error in FetchServices:", error);
-    throw error; // إعادة الإلقاء ليتم التعامل معها في المكون أو الـ useQuery
+    console.error("Error in FetchOrganizations:", error);
+    throw error;
   }
 }

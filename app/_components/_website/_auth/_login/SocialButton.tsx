@@ -51,7 +51,7 @@ export function SocialButton({
       whileTap={{ scale: disabled ? 1 : 0.98 }}
       className={`
         w-full flex items-center justify-center gap-3 px-4 py-3
-        border-2 rounded-lg font-medium text-gray-700 dark:text-gray-300
+        border-2 rounded-lg font-medium text-gray-700 
         transition-all duration-200 ease-in-out
         focus:outline-none  focus:border-blue-500
         disabled:opacity-50 disabled:cursor-not-allowed

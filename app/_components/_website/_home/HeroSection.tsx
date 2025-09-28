@@ -10,8 +10,6 @@ export default async function HeroSection() {
 
   const slides = await FetchData("/active-slides", false);
 
-  console.log(data);
-
   if (data != "slider") {
     return <HeroVideo data={videoData} />;
   }

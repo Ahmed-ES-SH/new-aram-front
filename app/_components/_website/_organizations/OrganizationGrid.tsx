@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import OrganizationCard from "./OrganizationCard";
 import { Organization } from "../../_dashboard/_organizations/types/organization";
+import NoDataFound from "../_global/NoDataFound";
 
 interface OrganizationGridProps {
   organizations: Organization[];
@@ -26,14 +27,8 @@ export default function OrganizationGrid({
     );
   }
 
-  if (organizations.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-gray-500 dark:text-gray-400 text-lg">
-          No organizations found matching your criteria.
-        </p>
-      </div>
-    );
+  if (!organizations || organizations.length === 0) {
+    return <NoDataFound isEmpty={true} />;
   }
 
   return (

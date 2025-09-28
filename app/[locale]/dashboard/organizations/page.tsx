@@ -5,8 +5,8 @@ import ServerPagination from "@/app/_components/_website/_global/ServerPaginatio
 import FetchOrganizations from "@/app/_components/_dashboard/_organizations/fetchOrgamizations";
 
 export default async function OrganizationsDashPage({ searchParams }: any) {
-  const category_id = searchParams.category_id
-    ? searchParams.category_id.split(",").map(Number)
+  const categories = searchParams.categories
+    ? searchParams.categories.split(",").map(Number)
     : undefined;
 
   const { page, query, status, rating, active, number_of_reservations } =
@@ -17,7 +17,7 @@ export default async function OrganizationsDashPage({ searchParams }: any) {
     api,
     page,
     query,
-    category_id,
+    categories,
     status,
     rating,
     active,
@@ -33,7 +33,7 @@ export default async function OrganizationsDashPage({ searchParams }: any) {
         {/* Main content */}
         <OrganizationsBody data={data} />
       </div>
-      {pagination.last_page > 1 && (
+      {pagination && pagination.last_page > 1 && (
         <ServerPagination
           currentPage={pagination.current_page || 1}
           totalPages={pagination.last_page}

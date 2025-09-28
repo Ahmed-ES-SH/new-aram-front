@@ -1,19 +1,21 @@
-"use client";
 import React from "react";
 import LocaleLink from "../_global/LocaleLink";
 import { CiLogin } from "react-icons/ci";
-import { useTranslations } from "next-intl";
-import { useAppSelector } from "@/app/Store/hooks";
 import UserButton from "./UserButton";
+import FetchData from "@/app/_helpers/FetchData";
+import { getTranslations } from "next-intl/server";
 
-export default function AuthBtns() {
-  const { user } = useAppSelector((state) => state.user);
-  const t = useTranslations("authButtons");
+export default async function AuthBtns() {
+  const t = await getTranslations("authButtons");
+
+  const user = await FetchData("/current-user", false);
+
+  console.log(user);
 
   return (
     <>
-      {user ? (
-        <UserButton />
+      {user && !user.error ? (
+        <UserButton user={user} />
       ) : (
         <div className="flex items-center gap-4 max-sm:hidden">
           <div className="flex gap-4">

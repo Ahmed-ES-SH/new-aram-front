@@ -26,13 +26,8 @@ interface listType {
   links: linkType[];
 }
 
-interface propsTypes {
-  data: listType[];
-  loading: boolean;
-}
-
 export default function FooterLinks() {
-  const { data, loading }: propsTypes = useFetchData("/all-lists", false);
+  const { data, loading } = useFetchData("/all-lists", false);
   const [selectedLink, setSelectedLink] = useState<linkType | null>(null);
   const [listes, setListes] = useState<listType[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -235,7 +230,7 @@ export default function FooterLinks() {
       />
       <ConfirmDeletePopup
         title={selectedLink?.link_title_en || ""}
-        id={selectedLink?.id}
+        id={selectedLink?.id as any}
         showConfirm={confirmPopup}
         onDelete={handleDeleteLink}
         onClose={() => togglePopup("confirm", false)}

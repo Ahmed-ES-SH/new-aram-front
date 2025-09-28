@@ -134,9 +134,9 @@ export default function Footer() {
                         setEmail(e.target.value)
                       }
                       value={email}
-                      className="w-full h-[5vh] outline-none rounded-md px-3 placeholder-shown:px-3 border-none focus:border-transparent focus:ring-transparent sm:text-sm"
+                      className="w-full border border-gray-300 h-[5vh] outline-none rounded-md px-3 placeholder-shown:px-3 sm:text-sm"
                     />
-                    <button className="mt-1 w-full bg-teal-500 px-6 py-3 text-sm font-bold uppercase tracking-wide  transition-none hover:bg-teal-600 sm:mt-0 sm:w-auto sm:shrink-0">
+                    <button className="mt-1 w-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wide rounded-md hover:bg-orange-500 duration-300 text-white sm:mt-0 sm:w-auto sm:shrink-0">
                       {locale == "en" ? "Subscribe" : "اشترك"}
                     </button>
                   </div>

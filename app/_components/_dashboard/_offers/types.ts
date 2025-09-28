@@ -22,13 +22,13 @@ export interface Offer {
   description: string;
   image: string;
   number_of_uses: number;
-  usage_limit: number;
   discount_type: "percentage" | "fixed";
   discount_value: string;
   code: string;
   start_date: string;
   end_date: string;
-  status: "active" | "inactive";
+  status: "active" | "inactive" | "expired";
   organization: Organization;
   category: Category;
+  usage_limit: number;
 }

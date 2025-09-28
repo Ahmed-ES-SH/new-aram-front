@@ -43,7 +43,7 @@ export default function ServerPagination({
           onClick={() => goToPage(1)}
           className={`px-4 py-2 rounded-lg border transition ${
             currentPage === 1
-              ? "bg-blue-600 text-white border-blue-600"
+              ? "bg-primary text-white border-primary"
               : "bg-white text-gray-700 hover:bg-blue-50 border-gray-300"
           }`}
         >
@@ -66,7 +66,7 @@ export default function ServerPagination({
           onClick={() => goToPage(i)}
           className={`px-4 py-2 rounded-lg border transition ${
             i === currentPage
-              ? "bg-blue-600 text-white border-blue-600"
+              ? "bg-primary text-white border-primary"
               : "bg-white text-gray-700 hover:bg-blue-50 border-gray-300"
           }`}
         >
@@ -89,7 +89,7 @@ export default function ServerPagination({
           onClick={() => goToPage(totalPages)}
           className={`px-4 py-2 rounded-lg border transition ${
             currentPage === totalPages
-              ? "bg-blue-600 text-white border-blue-600"
+              ? "bg-primary text-white border-primary"
               : "bg-white text-gray-700 hover:bg-blue-50 border-gray-300"
           }`}
         >

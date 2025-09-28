@@ -24,11 +24,11 @@ export default function Navbar() {
         <TopPart />
 
         {/* main nav */}
-        <div className="mx-auto w-[90%] max-lg:w-[95%] max-md:w-[98%]  ">
-          <div className="flex lg:min-h-16 min-h-12 relative items-center justify-between">
+        <div className="mx-auto w-[90%] max-lg:w-[95%] max-md:w-[95%]">
+          <div className="flex lg:min-h-16 min-h-14 relative items-center justify-between">
             {/* Logo */}
             <LocaleLink className="outline-none" href={"/"}>
-              <Img src="/logo.png" className="lg:w-[60px] w-[40px]" />
+              <Img src="/logo.png" className="lg:w-[60px] w-[50px]" />
             </LocaleLink>
 
             {/* Desktop Navigation */}

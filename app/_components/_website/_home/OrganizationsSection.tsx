@@ -51,7 +51,7 @@ export default function OrganizationsSection({
       </div>
       <LocaleLink
         href="/organizations"
-        className="px-6 py-3 w-fit mx-auto mt-4 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-400 text-white font-semibold text-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-200"
+        className="px-6 py-3 w-fit mx-auto mt-6 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-400 text-white font-semibold text-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-200"
       >
         {t("allOrganizations")}
       </LocaleLink>

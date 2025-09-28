@@ -1,36 +1,62 @@
 "use client";
-import NotificationsComponent from "./NotificationsComponent";
-import LoadingPage from "../_global/LoadingPage";
 import Cookie from "cookie-universal";
 import Img from "../_global/Img";
-
 import { useEffect, useRef, useState } from "react";
 import { HiOutlineLogout } from "react-icons/hi";
-import { FaBell, FaCaretDown } from "react-icons/fa";
+import { FaCaretDown } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 import { GrDashboard } from "react-icons/gr";
 import { BiSolidOffer } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import { instance } from "@/app/_helpers/axios";
-import { useAppSelector } from "@/app/Store/hooks";
 import { directionMap } from "@/app/constants/_website/global";
 import { useLocale } from "next-intl";
 import { formatTitle } from "@/app/_helpers/helpers";
 import { getLinks, getOrganizationLinks } from "./constants";
+import NotificationBell, {
+  NotificationType,
+} from "../_notifications/NotificationBell";
+import { useAppSelector } from "@/app/Store/hooks";
+import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 
-export default function UserButton() {
+export default function UserButton({ user }) {
+  const { unreadNotificationsCount } = useAppSelector((state) => state.user);
+  const { data } = useFetchData<NotificationType[]>(
+    `/last-ten-notifications/${user?.id}/${user.account_type}`,
+    false
+  );
+
   const router = useRouter();
   const locale = useLocale() || "en";
-  const { user, loading } = useAppSelector((state) => state.user);
-
-  const id = user && user.id;
   const role = user && user.account_type == "user" ? user.role : "organization";
-  const prevUserRef = useRef(user && user.id);
   const cookie = Cookie();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [showNots, setShowNots] = useState(false);
-  const [unReadNots, setUnReadNots] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
+
+  const dropdownRef = useRef<HTMLDivElement>(null); // ref to dropdown wrapper
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   const logout = async () => {
     try {
@@ -46,31 +72,6 @@ export default function UserButton() {
     }
   };
 
-  useEffect(() => {
-    const checkNots = async () => {
-      try {
-        const response = await instance.get(
-          `/notifications-isunread/${user.id}`
-        );
-        if (response.status === 200) {
-          setUnReadNots(true);
-        } else {
-          setUnReadNots(false);
-        }
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-
-    // فحص إذا كانت القيمة قد تغيرت بالفعل
-    if (id !== prevUserRef.current) {
-      checkNots();
-      prevUserRef.current = id; // تحديث القيمة المخزنة
-    }
-  }, [id, user]); // التفاعل مع `id` و `type`
-
-  if (loading) return <LoadingPage />;
-
   const handleGo = (href: string) => {
     router.push(`/${locale}/${href}`);
     setIsOpen(false);
@@ -83,6 +84,12 @@ export default function UserButton() {
   const currentLinks = user?.account_type == "user" ? links : orgLinks || [];
   const displayName = user.name ?? user.title ?? "";
 
+  useEffect(() => {
+    if (data) {
+      setNotifications(data);
+    }
+  }, [data]);
+
   if (!user) return null;
 
   return (
@@ -91,53 +98,40 @@ export default function UserButton() {
         <div
           dir={directionMap[locale]}
           className="relative inline-block text-left w-fit"
+          ref={dropdownRef} // attach ref here
         >
-          {/* زر المستخدم */}
+          {/* User button */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center gap-2 w-[150px] max-md:w-[40px] max-md:h-[40px] overflow-hidden max-md:p-0 max-md:rounded-full max-md:border-2 max-md:border-primary  rounded-md  bg-primary  px-3 py-2 shadow-md hover:bg-gray-300  duration-200"
+              className="flex items-center justify-center  gap-2 w-[150px] max-md:w-[40px] max-md:h-[40px] overflow-hidden max-md:p-0 max-md:rounded-full max-md:border-2 max-md:border-primary  rounded-md  bg-primary  px-3 py-2 shadow-md hover:bg-gray-300  duration-200"
             >
               <Img
-                src={user.image}
+                src={user.image ?? "/defaults/male-noimage.jpg"}
                 errorSrc="/defaults/male-noimage.jpg"
-                className="rounded-full w-8 h-8 object-cover"
+                className="rounded-full w-8 h-8  object-cover"
               />
-              <div className="flex relative items-center gap-4">
+              <div className="md:flex hidden relative items-center gap-4">
                 <span className="max-md:hidden sm:inline-block text-sm whitespace-nowrap font-medium text-white">
-                  {displayName.length > 12
-                    ? displayName.slice(0, 12) + "..."
+                  {displayName.length > 6
+                    ? displayName.slice(0, 6) + "..."
                     : displayName}
                 </span>
                 <FaCaretDown className="  size-3 text-white" />
               </div>
             </button>
-            <div
-              onClick={() => setShowNots((prev) => !prev)}
-              className="relative"
-            >
-              <FaBell className="size-6 text-primary cursor-pointer" />
-              {unReadNots && (
-                <div className="top-0 -right-2 absolute animate-ping w-1 h-1 rounded-full bg-orange-500"></div>
-              )}
-            </div>
 
-            <AnimatePresence>
-              {showNots && (
-                <motion.div
-                  className={`fixed top-28 ltr:right-4 rtl:left-4 max-md:right-1 w-96 max-md:w-[95%] h-fit max-h-[80vh] overflow-y-auto hidden-scrollbar bg-white  shadow-lg border border-gray-200  rounded-lg p-4`}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 50 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <NotificationsComponent />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* NotificationBell */}
+            <NotificationBell
+              notifications={notifications}
+              setNotifications={setNotifications}
+              userId={user && user.id}
+              accountType={user && user.account_type}
+              unreadCount={unreadNotificationsCount}
+            />
           </div>
 
-          {/* القائمة المنسدلة */}
+          {/* Dropdown menu */}
           <AnimatePresence>
             {isOpen && (
               <motion.div
@@ -192,7 +186,8 @@ export default function UserButton() {
                       {locale === "en" ? "Dashboard" : "لوحة التحكم"}
                     </p>
                   )}
-                  {/* زر تسجيل الخروج */}
+
+                  {/* Logout */}
                   <button
                     onClick={logout}
                     className="flex items-center gap-2 text-red-500 w-full px-4 py-2 text-sm hover:bg-gray-100  duration-200"

@@ -5,6 +5,11 @@ export interface Keyword {
   title: string;
 }
 
+type benefit = {
+  id: number;
+  title: string;
+};
+
 export interface Card {
   id: number;
   title: string;
@@ -22,6 +27,10 @@ export interface Card {
   keywords_count: number;
   services_count: number;
   benefits_count: number;
+  cardNumber: any;
+  cardHolder: any;
+  expiry: any;
   keywords: Keyword[];
   category: category;
+  benefits: benefit[];
 }

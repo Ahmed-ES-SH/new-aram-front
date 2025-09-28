@@ -31,7 +31,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
       >
         <label
           htmlFor={props.id}
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="block text-sm font-medium text-gray-700 "
         >
           {label}
         </label>
@@ -44,8 +44,6 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
               focus:ring-2 focus:ring-blue-500 focus:border-transparent
               transition-all duration-200 ease-in-out
               placeholder-gray-400 text-gray-900
-              dark:bg-gray-800 dark:border-gray-600 dark:text-white
-              dark:placeholder-gray-500 dark:focus:ring-blue-400
               ${error ? "border-red-500 focus:ring-red-500" : ""}
               ${className}
             `}

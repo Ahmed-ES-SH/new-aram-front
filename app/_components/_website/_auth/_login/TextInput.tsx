@@ -21,7 +21,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       >
         <label
           htmlFor={props.id}
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="block text-sm font-medium text-gray-700 "
         >
           {label}
         </label>
@@ -32,8 +32,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             focus:ring-2 focus:ring-blue-500 focus:border-transparent
             transition-all duration-200 ease-in-out
             placeholder-gray-400 text-gray-900
-            dark:bg-gray-800 dark:border-gray-600 dark:text-white
-            dark:placeholder-gray-500 dark:focus:ring-blue-400
+               
             ${error ? "border-red-500 focus:ring-red-500" : ""}
             ${className}
           `}
@@ -43,7 +42,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           <motion.p
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            className="text-sm text-red-600 dark:text-red-400"
+            className="text-sm text-red-600 "
           >
             {error}
           </motion.p>

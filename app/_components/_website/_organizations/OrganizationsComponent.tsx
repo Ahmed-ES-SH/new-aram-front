@@ -38,35 +38,43 @@ export default function OrganizationsComponent({
   }, []);
 
   return (
-    <div dir={directionMap[locale]} className="min-h-screen mt-32 bg-gray-50 ">
-      <div className="flex">
-        <FilterSidebar />
+    <>
+      <div
+        dir={directionMap[locale]}
+        className="min-h-screen lg:mt-32 mt-20 bg-gray-50 "
+      >
+        <div className="flex">
+          <FilterSidebar />
 
-        <div className="flex-1/2 lg:ml-0">
-          {/* Main content */}
-          <div className="p-6">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold  pb-2 border-b border-primary text-gray-900 ">
-                {t("title")}
-              </h2>
-              <div
-                onClick={() => dispatch(setOrgsSidebar(!orgsSidebar))}
-                className="w-9 h-9 cursor-pointer bg-primary text-white rounded-lg flex items-center justify-center"
-              >
-                <FaFilter className=" size-5" />
+          <div className="flex-1/2 lg:ml-0">
+            {/* Main content */}
+            <div className="lg:p-6 p-2">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold  pb-2 border-b border-primary text-gray-900 ">
+                  {t("title")}
+                </h2>
+                <div
+                  onClick={() => dispatch(setOrgsSidebar(!orgsSidebar))}
+                  className="w-9 h-9 cursor-pointer bg-primary text-white rounded-lg flex items-center justify-center lg:hidden"
+                >
+                  <FaFilter className=" size-5" />
+                </div>
               </div>
-            </div>
-            <OrganizationGrid organizations={organizations} loading={loading} />
-            {pagination.last_page > 1 && (
-              <ServerPagination
-                currentPage={pagination.current_page ?? 1}
-                totalPages={pagination.last_page ?? 0}
+              <OrganizationGrid
+                organizations={organizations}
+                loading={loading}
               />
-            )}
+              {pagination && pagination.last_page > 1 && (
+                <ServerPagination
+                  currentPage={pagination.current_page ?? 1}
+                  totalPages={pagination.last_page ?? 0}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

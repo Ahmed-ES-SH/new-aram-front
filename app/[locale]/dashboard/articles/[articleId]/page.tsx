@@ -78,7 +78,7 @@ export default function ArticlePage() {
         id={articleId}
         api="/article"
         updateEndPoint="/update-article"
-        inputsData={inputsArticleData}
+        inputsData={inputsArticleData as any}
         direct=""
       />
     </>

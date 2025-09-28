@@ -2,13 +2,8 @@ import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/
 import NotFoundItem from "@/app/_components/_dashboard/NotFoundItem";
 import { Categoryinputs } from "@/app/constants/_dashboard/InputsArrays";
 import React from "react";
-interface ParamsType {
-  params: {
-    categoryId: number;
-  };
-}
 
-export default function page({ params }: ParamsType) {
+export default function page({ params }: any) {
   const categoryId = params.categoryId;
 
   if (categoryId) <NotFoundItem />;

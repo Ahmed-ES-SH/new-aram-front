@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { currencies } from "@/app/constants/_website/navbar";
 import { FaArrowDown } from "react-icons/fa";
 import { useLocale } from "next-intl";
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
 import { setActiveCurrency } from "@/app/Store/variablesSlice";
 
 export default function TopPart() {
+  const dropRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
 
   const { activeCurrency } = useAppSelector((state) => state.variables);
@@ -20,12 +21,32 @@ export default function TopPart() {
     dispatch(setActiveCurrency(currency));
   };
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropRef.current && !dropRef.current.contains(event.target as Node)) {
+        setOpenDropCurrency(false);
+      }
+    };
+
+    if (openDropCurrency) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openDropCurrency]);
+
   return (
     <>
       <div className="w-full h-fit py-1 bg-gray-100 border-b border-gray-300">
         <div className="w-[90%] mx-auto">
           <div className="w-fit ml-auto flex items-center gap-4 ">
             <div
+              ref={dropRef}
               onClick={() => setOpenDropCurrency(!openDropCurrency)}
               className="flex items-center gap-1 cursor-pointer relative"
             >

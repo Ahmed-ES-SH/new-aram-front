@@ -18,6 +18,7 @@ import { setUser } from "@/app/Store/userSlice";
 import { toast } from "sonner";
 import { useLoginSchema } from "@/app/validation/useLoginSchema";
 import LocaleLink from "../../_global/LocaleLink";
+import { encryptToken } from "@/app/_helpers/helpers";
 
 interface LoginFormData {
   phoneOrEmail: string;
@@ -70,7 +71,7 @@ export function LoginForm() {
       };
       const response = await instance.post(`/login`, data);
       if (response.status == 200) {
-        const token = response.data.token;
+        const token = encryptToken(response.data.token);
         cookie.set("aram_token", token);
         const user = response.data.account;
         dispatch(setUser(user));

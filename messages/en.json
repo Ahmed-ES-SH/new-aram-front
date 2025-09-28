@@ -9,6 +9,36 @@
     "description": "User login page to access their accounts on the website"
   },
 
+  "metaNotificationsPage": {
+    "title": "Aram Gulf Co. - Notifications",
+    "description": "Stay updated with all your notifications and alerts on the Aram Gulf Co. notifications page. Keep track of the latest updates, offers, and important messages tailored for you."
+  },
+
+  "metaOrganizationsPage": {
+    "title": "Partner Centers - Aram Gulf",
+    "description": "Discover Aram Gulf Co. Ltd. partner centers, where we collaborate with leading healthcare and cosmetic facilities to provide our clients with trusted services. Access exclusive medical cards and enjoy integrated solutions for your beauty and health needs."
+  },
+
+  "metaOffersPage": {
+    "title": "Partner Centers Offers - Aram Gulf",
+    "description": "عروض حصرية من المراكز الشريكة مقدمه خصوصا لعملاء منصة آرام الخليج المحدودة"
+  },
+
+  "metaBlogPage": {
+    "title": "Aram Gulf - Blog - Latest Articles and News",
+    "description": "Aram Gulf - Discover the latest articles, news, and tips across various fields such as science, economy, health, and technology."
+  },
+
+  "metaTagArticlesPage": {
+    "title": "Aram Gulf - Articles by Tag",
+    "description": "Aram Gulf - Browse articles and news filtered by specific tags to easily find the topics that interest you most."
+  },
+
+  "metaCardsPage": {
+    "title": " البطاقات - آرام الخليج المحدودة",
+    "description": "بطاقات آرام المميزة التى تمنح لحامليها العديد من المزايا الخاصة مع توفير العديد من الامور المميزة"
+  },
+
   "authButtons": {
     "login": "Login",
     "register": "Register"
@@ -123,6 +153,7 @@
     "promotional_purchases": "Promotional Purchases",
     "keywords": "Keywords"
   },
+
   "CardsPage": {
     "categories": "Categories",
     "all_categories": "All Categories",
@@ -144,6 +175,30 @@
     "premium": "PREMIUM",
     "cardHolder": "Card Holder",
     "validThru": "Valid Thru"
+  },
+
+  "cardPage": {
+    "addToCart": "Add to Cart",
+    "duration": "Duration",
+    "originalPrice": "Original Price",
+    "currentPrice": "Current Price",
+    "promotionalPurchases": "Promotional Purchases",
+    "benefits": "Benefits",
+    "keywords": "Keywords",
+    "category": "Category",
+    "description": "Description",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "order": "Order",
+    "servicesCount": "Services Count",
+    "share": "share",
+    "save": "save"
+  },
+
+  "freeCardPopup": {
+    "title": "Free Card",
+    "placeholder": "Enter your code here",
+    "submit": "Confirm"
   },
 
   "about": {
@@ -170,6 +225,49 @@
     "book": "Book",
     "allOrganizations": "All Organizations"
   },
+
+  "organization": {
+    "contactCenter": "Contact Center",
+    "bookAppointment": "Book Appointment",
+    "confirmationPrice": "Confirmation Price",
+    "description": "Description",
+    "contactInfo": "Contact Information",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "website": "Website",
+    "workingHours": "Working Hours",
+    "rating": "Rating",
+    "reservations": "Reservations",
+    "benefits": "Benefits",
+    "keywords": "Keywords",
+    "openAt": "Open at",
+    "closeAt": "Close at",
+    "category": "Category",
+    "quickInfo": "Quick Info",
+    "startingAt": "Booking starts from"
+  },
+
+  "reviews": {
+    "addReview": "Add Review",
+    "reviewTitle": "Review Title",
+    "reviewContent": "Review Content",
+    "rating": "Rating",
+    "submitReview": "Submit Review",
+    "noReviews": "Sorry, there are no reviews for this center yet.",
+    "validation": {
+      "fillAll": "Please make sure to fill in all fields."
+    },
+    "success": "Thank you for your time. Your review has been added successfully."
+  },
+
+  "cardsSlider": {
+    "title": "Explore Our Featured Cards",
+    "subtitle": "Choose from our most popular categories and services",
+    "prevButton": "Previous Slide",
+    "nextButton": "Next Slide"
+  },
+
   "services": {
     "title": "Our Services",
     "subtitle": "Distinctive services for Aram card holders",
@@ -231,6 +329,161 @@
     "all_ratings": "All Ratings",
     "all_locations": "All Locations",
     "clear_filters": "Clear All Filters",
-    "searchPlaceHoloder": "Find centers here"
+    "searchPlaceHoloder": "Find centers here",
+    "loadMore": "Load More",
+    "categoriesStep": {
+      "categories": "Categories",
+      "categories_subtitle": "Explore different fields and discover organizations related to each category."
+    },
+    "subcategoriesStep": {
+      "subcategoriesTitle": "Explore Subcategories",
+      "subcategoriesDescription": "Choose from the available subcategories to find the organizations and services you are looking for."
+    },
+    "categoryCard": {
+      "subcategories_count": "{count} Subcategories",
+      "organizations_count": "{count} Organizations",
+      "no_organizations": "No organizations in this category yet!"
+    }
+  },
+
+  "cardsPage": {
+    "headerTitle": "Explore Our Cards",
+    "headerDescription": "Choose from a variety of exclusive cards designed to match your needs.",
+    "showMore": "Show More"
+  },
+
+  "faqSection": {
+    "title": "Frequently Asked Questions",
+    "description": "Find answers to common questions about our services"
+  },
+
+  "testimonials": {
+    "title": "What Our Customers Say",
+    "subtitle": "Don't just take our word for it - hear from the amazing people who trust our platform to power their success.",
+    "previousSlide": "Previous testimonial",
+    "nextSlide": "Next testimonial"
+  },
+
+  "offerCard": {
+    "active": "Active",
+    "expired": "Expired",
+    "from": "From",
+    "discount": "Discount",
+    "code": "Code",
+    "usageLimit": "Usage limit",
+    "timesUsed": "times used",
+    "endsAt": "Ends at",
+    "startsFrom": "Starts from"
+  },
+
+  "offers": {
+    "header": {
+      "title": "Special Offers",
+      "subtitle": "Discover amazing deals and discounts",
+      "searchPlaceholder": "Search offers...",
+      "filter": "Filter",
+      "sort": "Sort by",
+      "categoriesTitle": "Categories",
+      "all": "All",
+      "categories": {
+        "food": "Food",
+        "shopping": "Shopping",
+        "services": "Services"
+      }
+    },
+
+    "statsSection": {
+      "title": "Our Achievements",
+      "subtitle": "Numbers that speak for our success and growth"
+    }
+  },
+
+  "offerPopup": {
+    "close": "Close",
+    "discountCode": "Discount Code",
+    "offerDetails": "Offer Details",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "usageLimit": "Usage Limit",
+    "status": "Status",
+    "rating": "Rating",
+    "active": "Active",
+    "expired": "Expired",
+    "unlimited": "Unlimited"
+  },
+
+  "organizationsSlider": {
+    "title": "Our Partner Centers",
+    "subtitle": "Discover amazing businesses offering exclusive deals and discounts",
+    "prevButton": "Previous Centers",
+    "nextButton": "Next Centers"
+  },
+
+  "ArticleDetail": {
+    "writtenBy": "Written by",
+    "publishedOn": "Published on",
+    "category": "Category",
+    "searchPlaceholder": "Search articles...",
+    "mostViewed": "Most Viewed Articles",
+    "tags": "Tags",
+    "readMore": "Read more",
+    "minutesRead": "min read"
+  },
+
+  "articles": {
+    "noArticles": "No Articles Found",
+    "hero": {
+      "title": "Discover Amazing Articles",
+      "subtitle": "Explore our collection of insightful articles across various topics",
+      "explore": "Explore Articles"
+    },
+    "categories": {
+      "title": "Categories",
+      "all": "All Categories"
+    },
+
+    "list": {
+      "title": "All Articles",
+      "subtitle": "Explore our comprehensive collection of articles and resources"
+    },
+    "sidebar": {
+      "search": "Search articles...",
+      "recent": "Recent Articles",
+      "popular": "Popular Tags",
+      "categories": "Categories",
+      "all": "All Categories"
+    },
+    "article": {
+      "views": "views",
+      "readMore": "Read More",
+      "by": "By"
+    }
+  },
+
+  "notificationsPopup": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "newNotification": "New Notification",
+    "noNotifications": "No notifications"
+  },
+
+  "notificationsPage": {
+    "title": "Notifications",
+    "subtitle": "Stay updated with your latest notifications and messages.",
+    "markAllRead": "Mark all as read",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "read": "Read"
+    },
+    "user": {
+      "online": "Online"
+    },
+    "time": {
+      "just_now": "Just now",
+      "minutes_ago": "{count} m ago",
+      "hours_ago": "{count} h ago",
+      "days_ago": "{count} d ago"
+    }
   }
 }

@@ -27,8 +27,6 @@ export default function HeroVideo({ data }: props) {
       )) ||
     "Not Find The VideoId";
 
-  console.log(videoId);
-
   return (
     <section
       dir={directionMap[locale]}

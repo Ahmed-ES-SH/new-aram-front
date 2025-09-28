@@ -15,6 +15,14 @@ export interface category {
   bg_color: string;
   icon_name: string;
   subcategories?: subCategory[];
+  sub_categories_count: number;
+  organizations_count: number;
+  parent: {
+    id: number;
+    title_en: string;
+    title_ar: string;
+    image: string;
+  };
 }
 
 export interface UserType {

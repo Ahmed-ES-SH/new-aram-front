@@ -39,9 +39,9 @@ export function getLinks(user: any) {
       label: { en: "Conversations", ar: "قائمة المحادثات" },
     },
     {
-      href: `/accountbalance?organizzation_name=${formatTitle(
-        user?.name
-      )}&organization_Id=${user?.id}`,
+      href: `/accountbalance?user_name=${formatTitle(user?.name)}&userId=${
+        user?.id
+      }`,
       icon: <LuBadgeDollarSign className="size-5" />,
       label: { en: "Account balance", ar: "رصيد الحساب" },
     },

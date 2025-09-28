@@ -37,13 +37,15 @@ export default function BlogSection({ articles }: BlogSectionProps) {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
-          {articles.map((article, index) => (
-            <ArticleCard
-              article={article}
-              index={index}
-              key={`${article.id}+${article.title_en}`}
-            />
-          ))}
+          {articles &&
+            articles
+              .slice(0, 8)
+              .map((article) => (
+                <ArticleCard
+                  article={article}
+                  key={`${article.id}+${article.title_en}`}
+                />
+              ))}
         </div>
       </div>
     </section>
