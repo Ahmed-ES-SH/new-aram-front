@@ -1,5 +1,7 @@
 import * as FaIcons from "react-icons/fa";
 import crypto from "crypto";
+import { isToday, isYesterday, isThisWeek, format, parseISO } from "date-fns";
+import { ar, enUS } from "date-fns/locale";
 
 export const getIconComponent = (iconName: string) => {
   return FaIcons[iconName as keyof typeof FaIcons] || FaIcons.FaQuestionCircle;
@@ -82,4 +84,35 @@ export function decryptToken(encryptedToken: string) {
   let decrypted = decipher.update(encrypted, "hex", "utf8");
   decrypted += decipher.final("utf8");
   return decrypted;
+}
+
+export function formatTime(
+  dateInput: string | Date,
+  locale: "en" | "ar" = "en"
+): string {
+  const date = typeof dateInput === "string" ? parseISO(dateInput) : dateInput;
+
+  const isArabic = locale === "ar";
+  const dateLocale = isArabic ? ar : enUS;
+
+  if (isToday(date)) {
+    return format(date, "HH:mm", { locale: dateLocale });
+  }
+
+  if (isYesterday(date)) {
+    return isArabic
+      ? `أمس الساعة ${format(date, "HH:mm", { locale: dateLocale })}`
+      : `Yesterday at ${format(date, "HH:mm", { locale: dateLocale })}`;
+  }
+
+  if (isThisWeek(date)) {
+    return isArabic
+      ? `${format(date, "EEEE", { locale: ar })} الساعة ${format(
+          date,
+          "HH:mm"
+        )}`
+      : `${format(date, "EEEE", { locale: enUS })} at ${format(date, "HH:mm")}`;
+  }
+
+  return format(date, "yyyy/MM/dd 'at' HH:mm", { locale: dateLocale });
 }

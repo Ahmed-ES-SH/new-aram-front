@@ -17,10 +17,9 @@ export default function CartSide() {
   const pathname = usePathname();
   const t = useTranslations("cart");
 
-  const { isCartOpen, activeCurrency } = useAppSelector(
-    (state) => state.variables
-  );
-  const { items } = useAppSelector((state) => state.cartItems);
+  const { isCartOpen } = useAppSelector((state) => state.variables);
+  const { activeCurrency } = useAppSelector((state) => state.currency);
+  const { items } = useAppSelector((state) => state.cartSlice);
   const dispatch = useAppDispatch();
 
   const locale = useLocale();
@@ -47,7 +46,7 @@ export default function CartSide() {
     router.push("/cart");
   };
 
-  const Currency = 1;
+  const Currency = Number(activeCurrency?.exchange_rate);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -128,9 +127,9 @@ export default function CartSide() {
                         animate={{ y: 0 }}
                         transition={{ duration: 0.5 }}
                       >
-                        <BsCartX className="text-6xl text-gray-400 mb-4 " />
+                        <BsCartX className="lg:text-6xl size-8 text-gray-400 mb-4 " />
                         <motion.h2
-                          className="text-xl font-semibold text-gray-600"
+                          className="lg:text-xl  font-semibold text-gray-600"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.3, duration: 0.6 }}
@@ -138,7 +137,7 @@ export default function CartSide() {
                           {t("empty_title")}
                         </motion.h2>
                         <motion.p
-                          className="mt-2 text-gray-500"
+                          className="mt-2 text-sm text-center text-gray-500"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.5, duration: 0.6 }}
@@ -167,7 +166,7 @@ export default function CartSide() {
                           <dt>{t("subtotal")}</dt>
                           <dd>
                             <div className="flex items-center gap-1">
-                              <span>{activeCurrency.symbol}</span>
+                              <span>{activeCurrency?.symbol}</span>
                               <p>{Number(Currency * subtotal).toFixed(2)}</p>
                             </div>
                           </dd>
@@ -176,7 +175,7 @@ export default function CartSide() {
                           <dt>{t("vat")}</dt>
                           <dd>
                             <div className="flex items-center gap-1">
-                              <span>{activeCurrency.symbol}</span>
+                              <span>{activeCurrency?.symbol}</span>
                               <p>{Number(Currency * vat).toFixed(2)}</p>
                             </div>
                           </dd>
@@ -185,7 +184,7 @@ export default function CartSide() {
                           <dt>{t("discount")}</dt>
                           <dd>
                             <div className="flex items-center gap-1">
-                              -<span>{activeCurrency.symbol}</span>
+                              -<span>{activeCurrency?.symbol}</span>
                               <p>{Number(Currency * discount).toFixed(2)}</p>
                             </div>
                           </dd>
@@ -194,7 +193,7 @@ export default function CartSide() {
                           <dt>{t("total")}</dt>
                           <dd>
                             <div className="flex items-center gap-1">
-                              <span>{activeCurrency.symbol}</span>
+                              <span>{activeCurrency?.symbol}</span>
                               <p>{Number(Currency * total).toFixed(2)}</p>
                             </div>
                           </dd>

@@ -1,27 +1,57 @@
 {
   "metaLayoutContent": {
-    "title": "Aram Gulf",
-    "description": "Aram Gulf Co. Ltd. provides a comprehensive platform for cosmetic procedures and offers medical cards for use in healthcare and cosmetic centers affiliated with the platform. We deliver innovative solutions and integrated services to meet your beauty and health needs."
+    "title": "Aram Gulf Ltd.",
+    "description": "Aram Gulf Ltd. Ltd. provides a comprehensive platform for cosmetic procedures and offers medical cards for use in healthcare and cosmetic centers affiliated with the platform. We deliver innovative solutions and integrated services to meet your beauty and health needs."
   },
 
   "metaLoginPage": {
-    "title": "Aram Gulf - Login",
+    "title": "Aram Gulf Ltd.- Login",
     "description": "User login page to access their accounts on the website"
   },
 
+  "metaSignupPage": {
+    "title": "Aram Gulf Ltd.- Register New Account",
+    "description": "Register New Account page to access their accounts on the website"
+  },
+
+  "metaPrivacyPolicyUsers": {
+    "title": "Aram Gulf Ltd. - Privacy Policy - users",
+    "description": "Read the privacy policy to understand how we collect, use, and protect your personal information when using our website."
+  },
+
+  "metaPrivacyPolicyOrganizations": {
+    "title": "Aram Gulf Ltd. - Privacy Policy - centers",
+    "description": "Read the privacy policy to understand how we collect, use, and protect your personal information when using our website."
+  },
+
+  "metaTermsConditionsUsers": {
+    "title": "Aram Gulf Ltd. - Terms & Conditions - users",
+    "description": "Read the terms and conditions to understand the rules, obligations, and rights when using our website."
+  },
+
+  "metaTermsConditionsOrganizations": {
+    "title": "Aram Gulf Ltd. - Terms & Conditions - centers",
+    "description": "Read the terms and conditions to understand the rules, obligations, and rights when using our website."
+  },
+
   "metaNotificationsPage": {
-    "title": "Aram Gulf Co. - Notifications",
-    "description": "Stay updated with all your notifications and alerts on the Aram Gulf Co. notifications page. Keep track of the latest updates, offers, and important messages tailored for you."
+    "title": "Aram Gulf Ltd. - Notifications",
+    "description": "Stay updated with all your notifications and alerts on the Aram Gulf Ltd. notifications page. Keep track of the latest updates, offers, and important messages tailored for you."
   },
 
   "metaOrganizationsPage": {
-    "title": "Partner Centers - Aram Gulf",
-    "description": "Discover Aram Gulf Co. Ltd. partner centers, where we collaborate with leading healthcare and cosmetic facilities to provide our clients with trusted services. Access exclusive medical cards and enjoy integrated solutions for your beauty and health needs."
+    "title": "Partner Centers - Aram Gulf Ltd.",
+    "description": "Discover Aram Gulf Ltd. Ltd. partner centers, where we collaborate with leading healthcare and cosmetic facilities to provide our clients with trusted services. Access exclusive medical cards and enjoy integrated solutions for your beauty and health needs."
   },
 
   "metaOffersPage": {
-    "title": "Partner Centers Offers - Aram Gulf",
+    "title": "Partner Centers Offers - Aram Gulf Ltd.",
     "description": "عروض حصرية من المراكز الشريكة مقدمه خصوصا لعملاء منصة آرام الخليج المحدودة"
+  },
+
+  "metaCartPage": {
+    "title": "Aram Gulf Ltd. - Cart Page",
+    "description": "Review the items in your shopping cart, apply promo codes, and proceed to a secure checkout with Aram Gulf Ltd."
   },
 
   "metaBlogPage": {
@@ -37,6 +67,11 @@
   "metaCardsPage": {
     "title": " البطاقات - آرام الخليج المحدودة",
     "description": "بطاقات آرام المميزة التى تمنح لحامليها العديد من المزايا الخاصة مع توفير العديد من الامور المميزة"
+  },
+
+  "metaConversationsPage": {
+    "title": "Aram Gulf Ltd. - Conversations Page",
+    "description": "Aram Gulf Ltd. - Conversations Page show your conversations"
   },
 
   "authButtons": {
@@ -485,5 +520,380 @@
       "hours_ago": "{count} h ago",
       "days_ago": "{count} d ago"
     }
+  },
+
+  "accountSelection": {
+    "title": "Choose Your Account Type",
+    "user": {
+      "title": "User Account",
+      "description": "Join as a user to enjoy exclusive offers and book services easily"
+    },
+    "organization": {
+      "title": "Center Account",
+      "description": "Register your center to publish offers and manage reservations"
+    }
+  },
+
+  "signup": {
+    "title": "Create User Account",
+    "subtitle": "Complete the form below to get started with your new account",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "image": "Profile Image",
+    "phone": "Phone",
+    "country": "Country",
+    "gender": "Gender",
+    "birthDate": "Birth Date",
+    "role": "Role",
+    "submit": "Create Account",
+    "submitting": "Creating Account...",
+    "placeholders": {
+      "name": "Enter your full name",
+      "email": "Enter your email address",
+      "password": "Enter your password",
+      "phone": "Enter your phone number (10-15 digits)",
+      "selectCountry": "Select your country",
+      "selectRole": "Select a role"
+    },
+    "genderOptions": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "roleOptions": {
+      "admin": "Admin",
+      "client": "Client"
+    },
+    "imageHelp": "Max size: 4MB",
+    "required": "Required",
+    "optional": "Optional"
+  },
+
+  "registerUserPage": {
+    "welcome": "Welcome to Aram",
+    "welcome_subtitle": "We are here to assist you with everything you need. Please fill out the form below to get started.",
+    "id_name": "ID Number",
+    "id_placeholder": "ID number as written on the ID card",
+    "name_label": "Name in ID | Name in Passport",
+    "name_placeholder": "Please enter the name as it appears on your ID or passport.",
+    "email_label": "Email",
+    "email_placeholder": "Make sure to enter a valid email address.",
+    "phone_label": "phone number",
+    "phone_placeholder": "Make sure to enter a valid Phone Number.",
+    "password_label": "Password",
+    "confirm_password_label": "Confirm Password",
+    "gender_label": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "birthdate_label": "Date of Birth",
+    "marketing_accept": "I want to receive emails about events, updates, and announcements.",
+    "and": "and",
+    "terms_text": "By creating an account, you agree to the ",
+    "terms_link": "Terms & Conditions",
+    "cooperation_agreement": "Cooperation Agreement",
+    "privacy_link": "Privacy Policy",
+    "create_account": "Create Account",
+    "already_account": "Already have an account?",
+    "sign_in": "Sign in",
+    "verify_title": "Verify Your Email 📧",
+    "verify_message": "We have sent a verification link to the following email:",
+    "verify_instruction": "Please check your inbox and follow the instructions to activate your account.",
+    "retry": "Retry",
+    "password_mismatch": "The password does not match the confirmation password.",
+    "redirecting_message": "Redirecting to login in"
+  },
+
+  "passwordInput": {
+    "password_mismatch": "The password does not match the confirmation password.",
+    "password_weak": "Weak password",
+    "password_medium": "Medium password",
+    "password_strong": "Strong password",
+    "password_label": "Password",
+    "password_placeholder": "abCD34@#",
+    "confirm_password_label": "Confirm Password"
+  },
+
+  "validation": {
+    "id_number": {
+      "required": "The ID number is required.",
+      "unique": "The ID number has already been taken.",
+      "numeric": "The ID number must be number"
+    },
+    "name": {
+      "required": "The name is required.",
+      "unique": "The name has already been taken."
+    },
+    "email": {
+      "required": "The email is required.",
+      "email": "The email must be a valid email address.",
+      "unique": "The email has already been taken."
+    },
+    "password": {
+      "required": "The password is required.",
+      "min": "The password must be at least 8 characters."
+    },
+    "password_confirmation": {
+      "match": "Password confirmation does not match.",
+      "required": "Password confirmation is required"
+    },
+    "image": {
+      "image": "The file must be an image.",
+      "max": "The image must not exceed 4MB."
+    },
+    "phone": {
+      "required": "The phone number is required.",
+      "regex": "The phone number format is invalid."
+    },
+    "country": {
+      "string": "The country must be a string."
+    },
+    "gender": {
+      "required": "The gender field is required.",
+      "in": "The gender must be either male or female."
+    },
+    "birth_date": {
+      "required": "The birth date field is required.",
+      "date": "The birth date must be a valid date."
+    }
+  },
+
+  "registration": {
+    "title": "center Registration",
+    "steps": {
+      "account": "Account Details",
+      "info": "Basic Information",
+      "scheduling": "Scheduling & Status",
+      "media": "Media & Classification",
+      "offer": "Offer Detailes"
+    },
+    "registrationHeader": {
+      "title": "Register a New Center - Aram Gulf Ltd.",
+      "subtitle": "Welcome to Aram Gulf Ltd. platform, please enter the center details carefully to complete the registration process."
+    },
+    "schedulingTitle": "Set your center's operating hours and booking settings",
+    "infoStepTitle": "Tell us about your center",
+    "offerStepTitle": "Enter the information for the offer submitted by the center",
+    "accountStepTitle": "Create your account to get started with center registration",
+    "mediaStepTitle": "Upload images and select categories for your center",
+    "subCategoriesMessage": "Please select at least one category to see subcategories",
+    "fields": {
+      "email": {
+        "label": "Email Address",
+        "placeholder": "Enter your email"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password"
+      },
+      "location": {
+        "label": "Location",
+        "placeholder": "Enter your Location by select on the map",
+        "selectLocation": "Select Location"
+      },
+      "title": {
+        "label": "center Title",
+        "placeholder": "Enter center name"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Describe your center"
+      },
+      "open_at": {
+        "label": "Opening Time",
+        "placeholder": "Select opening time"
+      },
+      "close_at": {
+        "label": "Closing Time",
+        "placeholder": "Select closing time"
+      },
+      "confirmation_price": {
+        "label": "Confirmation Price (the price the user will pay to confirm the reservation)",
+        "placeholder": "Enter price"
+      },
+      "confirmation_status": {
+        "label": "Confirmation status (if activated, the confirmation price will be requested with each reservation)",
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+      },
+      "booking_status": {
+        "label": "Booking Status (Does the center accept bookings)",
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+      },
+      "image": {
+        "label": "Main center Image",
+        "hint": "Click or drag to upload image",
+        "preview": "Image Preview"
+      },
+      "logo": {
+        "label": "center Logo",
+        "hint": "Click or drag to upload logo",
+        "preview": "Logo Preview"
+      },
+      "categories": {
+        "label": "Categories",
+        "placeholder": "Select categories"
+      },
+      "subcategories": {
+        "label": "Subcategories",
+        "placeholder": "Select subcategories"
+      },
+      "offer": {
+        "title": {
+          "label": "Offer Title",
+          "placeholder": "Enter a title that represents the offer"
+        },
+        "description": {
+          "label": "Offer Details",
+          "placeholder": "Enter the details of the offer"
+        },
+        "image": {
+          "label": "Main Offer Image",
+          "hint": "Click or drag to upload the image",
+          "preview": "Image Preview"
+        },
+        "discount_type": {
+          "label": "Discount Type",
+          "placeholder": "Select discount type (percentage or fixed amount)",
+          "options": {
+            "percentage": "percentage %",
+            "fixed": "fixed amount $"
+          }
+        },
+        "discount_value": {
+          "label": "Discount Value",
+          "placeholder": "Enter the discount value"
+        },
+        "start_date": {
+          "label": "Start Date",
+          "placeholder": "Select the offer start date"
+        },
+        "end_date": {
+          "label": "End Date",
+          "placeholder": "Select the offer end date"
+        },
+        "category_id": {
+          "label": "Target Category",
+          "placeholder": "Select the category this offer belongs to"
+        },
+        "code": {
+          "label": "Offer Code",
+          "placeholder": "Enter the unique code for this offer"
+        }
+      }
+    },
+    "buttons": {
+      "next": "Next",
+      "previous": "Previous",
+      "submit": "Create Account"
+    },
+    "progress": {
+      "step": "Step",
+      "of": "of",
+      "complete": "complete"
+    }
+  },
+
+  "orgValidation": {
+    "offer": {
+      "title": {
+        "required": "Title is required",
+        "min": "Title must be at least 3 characters",
+        "max": "Title is too long"
+      },
+      "description": {
+        "required": "Description is required",
+        "min": "Description must be at least 8 characters",
+        "max": "Description is too long"
+      },
+      "image": {
+        "invalid": "Invalid image file"
+      },
+      "discount_type": {
+        "invalid": "Invalid discount type"
+      },
+      "discount_value": {
+        "required": "Discount value is required",
+        "numeric": "Discount value must be a number",
+        "positive": "Discount must be greater than zero",
+        "range": "Percentage discount must be between 1 and 100"
+      },
+      "start_date": {
+        "required": "Start date is required",
+        "invalid": "Start date is invalid"
+      },
+      "end_date": {
+        "required": "End date is required",
+        "invalid": "End date is invalid",
+        "after_start": "End date must be after start date"
+      },
+      "category_id": {
+        "required": "Please select a category",
+        "invalid": "Category id is invalid"
+      },
+      "code": {
+        "required": "Offer code is required",
+        "min": "Code is too short",
+        "max": "Code is too long",
+        "invalid": "Code contains invalid characters"
+      }
+    }
+  },
+
+  "ConversationsPage": {
+    "noConversationSelected": "No conversation selected",
+    "chooseFromSidebar": "Choose a conversation from the sidebar to start chatting"
+  },
+
+  "cartPage": {
+    "emptyTitle": "Your cart is empty",
+    "emptyMessage": "Looks like you haven't added anything to your cart yet.",
+    "startShopping": "Start Shopping",
+    "promoLabel": "Do you have a promo Code?",
+    "applyCode": "Apply Code",
+    "promoSuccess": "Promo code applied successfully!",
+    "promoError": "Invalid promo code!",
+    "orderSummary": "Order Summary",
+    "subTotal": "Sub Total",
+    "discount": "Discount",
+    "vat": "VAT",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "or": "or",
+    "continueShopping": "Continue Shopping",
+    "termsNotice": "By purchasing the cards, you acknowledge and agree to all applicable terms and conditions and policies, ensuring a smooth and secure experience.",
+    "purchase_notice": {
+      "text_before_terms": "By purchasing the cards, you acknowledge and agree to all applicable",
+      "terms": "terms and conditions",
+      "and": "and",
+      "policies": "policies",
+      "text_after_policies": ", ensuring a smooth and secure experience."
+    },
+    "promo": {
+      "label": "Do you have a promo Code?",
+      "apply_button": "Apply",
+      "success": "Promo code applied successfully!",
+      "error": "Invalid promo code!"
+    }
+  },
+
+  "success": {
+    "title": "Payment Successful!",
+    "message": "Your payment has been processed successfully. Thank you for your purchase.",
+    "invoice": "Invoice Total",
+    "button": "Return to Home",
+    "confirmation": "A confirmation email has been sent to your inbox.",
+    "paid": "Paid",
+    "footer": "Thank you for your trust in us"
+  },
+
+  "paymentFailure": {
+    "title": "Payment Failed",
+    "message": "We couldn't process your payment. Please check your payment details and try again.",
+    "amount": "Transaction Amount",
+    "errorCode": "Something went wrong with your transaction",
+    "retryButton": "Retry Payment",
+    "homeButton": "Return to Home",
+    "supportText": "Need help? Contact our support team"
   }
 }

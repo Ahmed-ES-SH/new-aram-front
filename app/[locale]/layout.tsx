@@ -54,7 +54,7 @@ export default async function RootLayout({
           <NextIntlClientProvider>
             <ClientLayout>
               <Toaster position="top-center" richColors closeButton />
-              <Navbar />
+              <Navbar locale={locale} />
               <CartSide />
               {children}
               <Footer />

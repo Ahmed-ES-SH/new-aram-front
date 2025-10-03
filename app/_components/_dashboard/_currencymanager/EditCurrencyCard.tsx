@@ -41,7 +41,7 @@ const EditCurrencyCard = ({ editData, onChange, onSave, onCancel }) => {
           </label>
           <input
             type="text"
-            name="code"
+            name="symbol"
             value={editData.symbol}
             onChange={handleChange}
             maxLength={3}

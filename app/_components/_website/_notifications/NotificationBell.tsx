@@ -92,7 +92,7 @@ export default function NotificationBell({
     } catch (error: any) {
       console.log(error);
       const message =
-        error?.response?.data?.message ||
+        error?.response?.data?.message[locale] ||
         "حدث خطا اثناء تحديث حالة الاشعارات .";
       toast.error(message);
     } finally {
@@ -156,7 +156,7 @@ export default function NotificationBell({
         >
           <PiBellRingingFill className="text-2xl text-primary" />
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full">
+            <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full">
               {unreadCount}
             </span>
           )}
@@ -170,7 +170,7 @@ export default function NotificationBell({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute ltr:right-0 rtl:left-0 mt-2 lg:w-[460px] w-80 bg-white rounded-2xl shadow-lg border border-gray-200 z-50"
+              className="absolute max-md:ltr:-right-12 ltr:right-0 max-md:rtl:-left-12 rtl:left-0 mt-2 lg:w-[460px] w-80 bg-white rounded-2xl shadow-lg border border-gray-200 z-50"
             >
               <div className="flex items-center justify-between p-3 border-b border-gray-300">
                 <span className="font-semibold text-gray-700">
@@ -198,7 +198,7 @@ export default function NotificationBell({
                     const isUser = notif.sender_type === "user";
                     const senderName = isUser
                       ? notif.sender.name
-                      : notif.sender.title;
+                      : notif.sender.title || "not found";
 
                     const senderImage = isUser
                       ? notif.sender.image ?? "/defaults/male-noimage.jpg"

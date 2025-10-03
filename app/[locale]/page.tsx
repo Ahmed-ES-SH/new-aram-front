@@ -30,7 +30,7 @@ export default async function Home() {
   const articlesData = await FetchData(`/top-ten-articles`, false);
 
   return (
-    <>
+    <div className="overflow-hidden max-lg:mt-20">
       {/* Hero section */}
       <HeroSection />
 
@@ -48,6 +48,6 @@ export default async function Home() {
       <BlogSection articles={articlesData} />
 
       <ContactForm />
-    </>
+    </div>
   );
 }

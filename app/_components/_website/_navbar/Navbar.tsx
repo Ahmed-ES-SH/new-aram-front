@@ -1,27 +1,26 @@
 import { navbarlinks } from "@/app/constants/_website/navbar";
-import { useLocale } from "next-intl";
 import LocaleLink from "../_global/LocaleLink";
 import Img from "../_global/Img";
-import Notificationpopup from "./NotificationPopup";
 import AuthBtns from "./AuthBtns";
 import MobileMenu from "./MobileMenu";
 import TopPart from "./TopPart";
 import MenuButton from "./MenuButton";
 import CartButton from "./CartButton";
 import NavDiv from "./NavDiv";
+import FetchData from "@/app/_helpers/FetchData";
 
 /////////////////////////////////////////
 // end of import lines
 /////////////////////////////////////////
 
-export default function Navbar() {
-  const locale = useLocale() || "en";
-
+export default async function Navbar({ locale }: any) {
+  const currencies = await FetchData(`/currencies`, false);
+  const user = await FetchData("/current-user", false);
   return (
     <NavDiv>
       <header className="bg-white  shadow-md fixed top-0 left-0 w-full">
         {/* language buttuns + currencies */}
-        <TopPart />
+        <TopPart currencies={currencies} />
 
         {/* main nav */}
         <div className="mx-auto w-[90%] max-lg:w-[95%] max-md:w-[95%]">
@@ -50,7 +49,7 @@ export default function Navbar() {
               </ul>
 
               {/* Auth buttuns + userButtun */}
-              <AuthBtns />
+              <AuthBtns serverUser={user} />
 
               {/* shopping cart button */}
               <CartButton />
@@ -64,8 +63,6 @@ export default function Navbar() {
         {/* Mobile Menu */}
         <MobileMenu />
       </header>
-      {/* Notification fixed popup */}
-      <Notificationpopup />
     </NavDiv>
   );
 }

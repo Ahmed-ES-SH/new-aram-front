@@ -15,6 +15,7 @@ export interface category {
   bg_color: string;
   icon_name: string;
   subcategories?: subCategory[];
+  sub_categories?: subCategory[];
   sub_categories_count: number;
   organizations_count: number;
   parent: {

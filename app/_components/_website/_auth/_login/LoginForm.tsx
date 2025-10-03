@@ -11,7 +11,7 @@ import { SocialButton } from "./SocialButton";
 import { PasswordInput } from "./PasswordInput";
 import { TextInput } from "./TextInput";
 import { directionMap } from "@/app/constants/_website/global";
-import { instance } from "@/app/_helpers/axios";
+import { instance, main_api } from "@/app/_helpers/axios";
 import Cookie from "cookie-universal";
 import { useAppDispatch } from "@/app/Store/hooks";
 import { setUser } from "@/app/Store/userSlice";
@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useLoginSchema } from "@/app/validation/useLoginSchema";
 import LocaleLink from "../../_global/LocaleLink";
 import { encryptToken } from "@/app/_helpers/helpers";
+import { useRouter } from "next/navigation";
 
 interface LoginFormData {
   phoneOrEmail: string;
@@ -33,6 +34,8 @@ interface LoginFormErrors {
 export function LoginForm() {
   const cookie = Cookie();
   const dispatch = useAppDispatch();
+
+  const router = useRouter();
 
   const locale = useLocale();
   const t = useTranslations("login");
@@ -76,9 +79,7 @@ export function LoginForm() {
         const user = response.data.account;
         dispatch(setUser(user));
         setTimeout(() => {
-          if (typeof window !== undefined) {
-            window.location.replace(`/${locale}`);
-          }
+          router.push(`/${locale}`);
         }, 300);
       }
     } catch (error: any) {
@@ -111,9 +112,12 @@ export function LoginForm() {
       }
     };
 
-  const handleSocialLogin = (provider: "google" | "facebook") => {
-    console.log(`Login with ${provider}`);
-    // Implement social login logic here
+  const handleFacebook = () => {
+    toast.warning("لا يزال يتم العمل على هذة الميزه ستتوفر قريبا ");
+  };
+
+  const handleGoogleLogin = async () => {
+    location.href = `${main_api}/auth/google/redirect`;
   };
 
   return (
@@ -146,7 +150,7 @@ export function LoginForm() {
         <SocialButton
           provider="google"
           icon={FcGoogle}
-          onClick={() => handleSocialLogin("google")}
+          onClick={() => handleGoogleLogin()}
           disabled={isLoading}
         >
           {t("continueWithGoogle")}
@@ -155,7 +159,7 @@ export function LoginForm() {
         <SocialButton
           provider="facebook"
           icon={FaFacebook}
-          onClick={() => handleSocialLogin("facebook")}
+          onClick={() => handleFacebook()}
           disabled={isLoading}
         >
           {t("continueWithFacebook")}

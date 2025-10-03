@@ -21,6 +21,8 @@ interface SectionData {
 }
 
 export default function CompanyDetails() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [loading, setLoading] = useState(true);
   const [generalError, setGeneralError] = useState<string>("");
   const [mainVideo, setMainVideo] = useState<any>(null);
@@ -73,6 +75,9 @@ export default function CompanyDetails() {
   ];
 
   const [sections, setSections] = useState(initialSections);
+  const [cooperationPdf, setCooperationPdf] = useState<string | null | File>(
+    null
+  );
 
   // Fetch data from the server
   const fetchData = async () => {
@@ -88,7 +93,7 @@ export default function CompanyDetails() {
         titleEn: data[`${section.id}_title_en`] || "",
         image: data[`${section.id}_image`] || null,
       }));
-
+      setCooperationPdf(data.cooperation_pdf);
       setSections(updatedSections);
       setMainVideo(data.main_video);
       setLoading(false);
@@ -134,6 +139,17 @@ export default function CompanyDetails() {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const fileURL = e.target.files[0];
+      setCooperationPdf(fileURL);
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -149,7 +165,10 @@ export default function CompanyDetails() {
             formData.append(`${section.id}_image`, section.image);
           }
         });
-        if (mainVideo) formData.append("main_video", mainVideo);
+      }
+      if (mainVideo) formData.append("main_video", mainVideo);
+      if (cooperationPdf) {
+        formData.append("cooperation_pdf", cooperationPdf);
       }
       const response = await instance.post(`/update-details`, formData);
       if (response.status === 200) {
@@ -198,6 +217,51 @@ export default function CompanyDetails() {
               </div>
             </div>
             <EditVideo mainVideo={mainVideo} setMainVideo={setMainVideo} />
+          </div>
+
+          <div className="w-full my-4 pb-3 border-b-2 border-sky-500">
+            <h1 className="text-xl w-fit mx-auto font-semibold text-center pb-4">
+              التحكم فى ملف اتفاقية التعاون للمنصة
+            </h1>
+
+            {/* Container */}
+            <div className="flex justify-center">
+              {cooperationPdf ? (
+                // Show existing PDF
+                <div
+                  className="relative w-64 h-80 border border-gray-300 rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition"
+                  onClick={handleUploadClick}
+                >
+                  <iframe
+                    src={URL.createObjectURL(cooperationPdf as File)}
+                    className="w-full h-full"
+                    title="Cooperation PDF"
+                  />
+                  <div className="absolute bottom-2 left-2 right-2 bg-white bg-opacity-80 p-1 text-center text-sm rounded">
+                    اضغط لتغيير الملف
+                  </div>
+                </div>
+              ) : (
+                // Show placeholder if no file
+                <div
+                  onClick={handleUploadClick}
+                  className="w-64 h-80 border-2 border-dashed border-sky-500 flex flex-col justify-center items-center rounded-lg cursor-pointer hover:bg-sky-50 transition"
+                >
+                  <p className="text-sky-500 font-medium text-center">
+                    اضغط لإضافة ملف PDF
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Hidden File Input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept="application/pdf"
+              onChange={handleFileChange}
+            />
           </div>
 
           {sections.map((section) => (

@@ -16,7 +16,7 @@ export const navbarlinks = [
   {
     label: {
       ar: "المراكز",
-      en: "organizations",
+      en: "centers",
     },
     to: "/organizations",
   },

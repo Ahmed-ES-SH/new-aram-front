@@ -1,9 +1,14 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Img from "./Img";
-import { FaShoppingCart, FaEye } from "react-icons/fa";
+import { FaShoppingCart, FaEye, FaCheck } from "react-icons/fa";
 import { Card } from "../../_dashboard/_cards/types";
 import LocaleLink from "./LocaleLink";
 import { formatTitle } from "@/app/_helpers/helpers";
+import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
+import { addItemWithOne, isItemInCart } from "@/app/Store/cartSlice";
+import { toast } from "sonner";
+import { useLocale } from "next-intl";
 
 type CreditCardProps = {
   card: Card;
@@ -16,13 +21,36 @@ export default function CreditCard({
   brand = "VISA",
   type = "Platinum",
 }: CreditCardProps) {
+  const locale = useLocale();
+  const successMessage =
+    locale == "en"
+      ? "The card has been added to the cart successfully!"
+      : "تم إضافة البطاقة الى السلة بنجاح !";
+
+  const { activeCurrency } = useAppSelector((state) => state.currency);
+  const dispatch = useAppDispatch();
+
+  const [isIncart, setIsIncart] = useState(false);
+
+  const handleAddToCart = () => {
+    dispatch(addItemWithOne(card));
+    toast.success(successMessage);
+    setIsIncart(true);
+  };
+
+  const inCart = useAppSelector((state) => isItemInCart(state, card?.id));
+
+  useEffect(() => {
+    setIsIncart(inCart);
+  }, [inCart]);
+
   return (
     <div
       className={`group relative w-full min-h-[260px] h-full rounded-xl text-white shadow-2xl flex flex-col justify-between p-6 overflow-hidden`}
       dir="rtl"
     >
       <Img
-        src={card.image}
+        src={card.image ?? "/cards/card_1.jpg"}
         errorSrc="/cards/card_1.jpg"
         className="w-full h-full absolute top-0 left-0"
       />
@@ -31,8 +59,17 @@ export default function CreditCard({
 
       {/* floating actions */}
       <div className="absolute top-3 right-3 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transform translate-y-[-10px] group-hover:translate-y-0 transition-all duration-300">
-        <button className="w-9 h-9 rounded-full bg-orange-500 hover:bg-orange-600 flex items-center justify-center text-white shadow-md hover:scale-110 transition">
-          <FaShoppingCart size={16} />
+        <button
+          onClick={() => handleAddToCart()}
+          disabled={isIncart} // prevent adding again if you want
+          className={`w-9 h-9 rounded-full flex items-center justify-center text-white shadow-md transition 
+    ${
+      isIncart
+        ? "bg-green-500 hover:bg-green-600 cursor-default"
+        : "bg-orange-500 hover:bg-orange-600 hover:scale-110"
+    }`}
+        >
+          {isIncart ? <FaCheck size={16} /> : <FaShoppingCart size={16} />}
         </button>
         <LocaleLink
           href={`/cards/${formatTitle(card.title)}?cardId=${card.id}`}
@@ -88,15 +125,22 @@ export default function CreditCard({
       </div>
 
       {/* price section */}
-      {card.price && (
+      {card.price != "NaN" && (
         <div className="relative z-10 mt-4 flex items-center justify-between bg-black/40 backdrop-blur-sm rounded-lg px-3 py-2">
           {card.price_before_discount && (
             <span className="text-sm line-through text-red-300 mr-2">
-              {card.price_before_discount}$
+              {Number(
+                Number(activeCurrency?.exchange_rate) *
+                  Number(card.price_before_discount)
+              ).toFixed(2)}{" "}
+              {activeCurrency?.symbol}
             </span>
           )}
           <span className="text-lg font-bold text-green-400">
-            {card.price}$
+            {Number(
+              Number(activeCurrency?.exchange_rate) * Number(card.price)
+            ).toFixed(2)}{" "}
+            {activeCurrency?.symbol}
           </span>
         </div>
       )}

@@ -6,6 +6,7 @@ import {
   Marker,
   Popup,
   useMapEvents,
+  useMap,
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -34,17 +35,17 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-// مكون داخلي للتعامل مع نقر المستخدم على الخريطة
-function LocationMarker({ setLocation }: { setLocation: (loc: any) => void }) {
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(
-    null
-  );
-  const [address, setAddress] = useState<string>("");
-
+// مكون داخلي لتحديث الموقع عند الضغط على الخريطة
+function LocationMarker({
+  setLocation,
+  setLocalLocation,
+}: {
+  setLocation: (loc: any) => void;
+  setLocalLocation: (loc: any) => void;
+}) {
   useMapEvents({
     async click(e) {
       const { lat, lng } = e.latlng;
-      setPosition({ lat, lng });
 
       e.originalEvent.preventDefault();
       e.originalEvent.stopPropagation();
@@ -55,27 +56,40 @@ function LocationMarker({ setLocation }: { setLocation: (loc: any) => void }) {
         );
         const data = await res.json();
         const addressText = data.display_name || "Unknown location";
-        setAddress(addressText);
 
-        setLocation({
+        const newLoc = {
           address: addressText,
           coordinates: { lat, lng },
-        });
+        };
+
+        setLocalLocation(newLoc);
+        setLocation(newLoc);
       } catch (err) {
         console.error("Failed to fetch address", err);
-        setLocation({
+        const newLoc = {
           address: "Unknown location",
           coordinates: { lat, lng },
-        });
+        };
+        setLocalLocation(newLoc);
+        setLocation(newLoc);
       }
     },
   });
 
-  return position ? (
-    <Marker position={[position.lat, position.lng]}>
-      <Popup>{address || "جارٍ تحديد العنوان..."}</Popup>
-    </Marker>
-  ) : null;
+  return null;
+}
+
+// مكون لتركيز الخريطة على الموقع الجديد
+function MapFocus({ location }: { location: { lat: number; lng: number } }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (location) {
+      map.flyTo([location.lat, location.lng], 13, { duration: 1.5 });
+    }
+  }, [location, map]);
+
+  return null;
 }
 
 export default function MapSelector({
@@ -151,13 +165,22 @@ export default function MapSelector({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
 
+              {/* Marker واحد فقط للموقع الحالي */}
               <Marker
                 position={[location.coordinates.lat, location.coordinates.lng]}
               >
-                <Popup>{location.address || "موقعك الحالي"}</Popup>
+                <Popup>
+                  {location.address ||
+                    (locale === "ar" ? "موقعك الحالي" : "Your location")}
+                </Popup>
               </Marker>
 
-              <LocationMarker setLocation={setLocation} />
+              <MapFocus location={location.coordinates} />
+
+              <LocationMarker
+                setLocation={setLocation}
+                setLocalLocation={setLocalLocation}
+              />
             </MapContainer>
             <div
               onClick={onClose}

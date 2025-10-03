@@ -5,6 +5,7 @@ import { LuBadgeDollarSign } from "react-icons/lu";
 import { FaCcMastercard, FaRegCalendarAlt } from "react-icons/fa";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { formatTitle } from "@/app/_helpers/helpers";
+import { BiSolidOffer } from "react-icons/bi";
 
 export function getLinks(user: any) {
   if (!user) return [];
@@ -44,6 +45,13 @@ export function getLinks(user: any) {
       }`,
       icon: <LuBadgeDollarSign className="size-5" />,
       label: { en: "Account balance", ar: "رصيد الحساب" },
+    },
+    {
+      href: `/couponesaccount?account_type=${
+        user?.account_type
+      }&account_name=${formatTitle(user?.name)}`,
+      icon: <BiSolidOffer className="size-5" />,
+      label: { en: "Account Coupons", ar: "كوبونات الحساب" },
     },
   ];
 }

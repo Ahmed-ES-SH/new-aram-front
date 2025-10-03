@@ -1,21 +1,58 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import LocaleLink from "../_global/LocaleLink";
 import { CiLogin } from "react-icons/ci";
 import UserButton from "./UserButton";
-import FetchData from "@/app/_helpers/FetchData";
-import { getTranslations } from "next-intl/server";
+import { useLocale, useTranslations } from "next-intl";
+import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
+import { instance } from "@/app/_helpers/axios";
+import { clearUser, UserType } from "@/app/Store/userSlice";
+import Cookie from "cookie-universal";
+import { useRouter } from "next/navigation";
 
-export default async function AuthBtns() {
-  const t = await getTranslations("authButtons");
+export default function AuthBtns({ serverUser }) {
+  const { user } = useAppSelector((state) => state.user);
 
-  const user = await FetchData("/current-user", false);
+  const locale = useLocale();
+  const t = useTranslations("authButtons");
 
-  console.log(user);
+  const dispatch = useAppDispatch();
+  const cookie = Cookie();
+  const router = useRouter();
+
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
+
+  const logout = async () => {
+    try {
+      const response = await instance.post("/logout");
+      if (response.status == 200) {
+        cookie.remove("aram_token");
+        dispatch(clearUser());
+        setCurrentUser(null);
+        setTimeout(() => {
+          router.push(`/${locale}/login`);
+        }, 300);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (serverUser && !serverUser.error) {
+      setCurrentUser(serverUser);
+      return;
+    }
+
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, [user, serverUser]);
 
   return (
     <>
-      {user && !user.error ? (
-        <UserButton user={user} />
+      {currentUser ? (
+        <UserButton user={currentUser} logout={logout} />
       ) : (
         <div className="flex items-center gap-4 max-sm:hidden">
           <div className="flex gap-4">

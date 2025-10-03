@@ -1,9 +1,38 @@
 // store/slices/userSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { instance } from "../_helpers/axios";
+import { Organization } from "../_components/_dashboard/_organizations/types/organization";
+
+type Gender = "male" | "female";
+type AccountType = "user" | "admin";
+type Role = "user" | "admin";
+
+export interface UserType extends Organization {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  gender: Gender;
+  account_type: AccountType;
+  role: Role;
+  birth_date: string | null;
+  country: string | null;
+  image: any;
+  status: any;
+  email_verification_token: string | null;
+  email_verified_at: string | null;
+  failed_attempts: number;
+  is_signed: number;
+  last_login_at: string | null;
+  social_id: string | null;
+  social_type: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
 interface UserState {
-  user: any | null;
+  user: UserType | null;
+  userState: boolean;
   unreadMessagesCount: number;
   unreadNotificationsCount: number;
   loading: boolean;
@@ -13,6 +42,7 @@ interface UserState {
 
 const initialState: UserState = {
   user: null,
+  userState: false,
   loading: true,
   error: null,
   unreadMessagesCount: 0,
@@ -52,6 +82,10 @@ const userSlice = createSlice({
 
     setUser(state, action) {
       state.user = action.payload;
+    },
+
+    setUserState(state, action) {
+      state.userState = action.payload;
     },
 
     setUnreadCount: (state, action) => {
@@ -97,6 +131,7 @@ const userSlice = createSlice({
 
 export const {
   setUser,
+  setUserState,
   clearUser,
   reduceUnreadCount,
   setUnreadCount,

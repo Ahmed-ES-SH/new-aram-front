@@ -1,23 +1,12 @@
 // redux/variablesSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { currencies } from "../constants/_website/navbar";
-
-interface currencyType {
-  code: string;
-  name: {
-    en: string;
-    ar: string;
-  };
-  flag: string;
-  symbol: string;
-}
 
 interface VariablesState {
   locale: "en" | "ar";
   width: number;
-  activeCurrency: currencyType;
   isMenuOpen: boolean;
+  conversationsSidebar: boolean;
   servicesFilterSidebar: boolean;
   sidebardashOrgs: boolean;
   isCartOpen: boolean;
@@ -34,8 +23,8 @@ interface VariablesState {
 const initialState: VariablesState = {
   locale: "en",
   width: 0,
-  activeCurrency: currencies[0],
   isMenuOpen: false,
+  conversationsSidebar: false,
   servicesFilterSidebar: true,
   isCartOpen: false,
   sidebardashOrgs: true,
@@ -59,14 +48,14 @@ const variablesSlice = createSlice({
     setWidth: (state, action: PayloadAction<number>) => {
       state.width = action.payload;
     },
-    setActiveCurrency: (state, action: PayloadAction<currencyType>) => {
-      state.activeCurrency = action.payload;
-    },
     setShowSidebar: (state, action: PayloadAction<boolean>) => {
       state.showSidebar = action.payload;
     },
     setServicesFilterSidebar: (state, action: PayloadAction<boolean>) => {
       state.servicesFilterSidebar = action.payload;
+    },
+    setConversationsSidebar: (state, action: PayloadAction<boolean>) => {
+      state.conversationsSidebar = action.payload;
     },
     setCouponsFilterSidebar: (state, action: PayloadAction<boolean>) => {
       state.couponsFilterSidebar = action.payload;
@@ -105,13 +94,13 @@ export const {
   setShowUserButton,
   setIsCartOpen,
   setIsMenuOpen,
-  setActiveCurrency,
   setSidebardashOrgs,
   setServicesFilterSidebar,
   setOffersFilterSidebar,
   setCouponsFilterSidebar,
   setWidth,
   setShowMessagesDrop,
+  setConversationsSidebar,
   setShowNotificationDrop,
   // website section
   setOrgsSidebar,

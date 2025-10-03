@@ -4,8 +4,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import variablesReducer from "./variablesSlice";
 import dataReducer from "./dataSlice";
 import userReducer from "./userSlice";
-import cartReducer from "./cartItemsSlice";
+import cartReducer from "./cartSlice";
 import CardCategoriesReducer from "./cardCategorySlice";
+import CurrencyReducer from "./currencySlice";
 import CategoriesReducer from "./categoriesSlice";
 
 export const store = configureStore({
@@ -15,7 +16,8 @@ export const store = configureStore({
     user: userReducer,
     cardCategories: CardCategoriesReducer,
     categories: CategoriesReducer,
-    cartItems: cartReducer,
+    cartSlice: cartReducer,
+    currency: CurrencyReducer,
   },
 });
 

@@ -43,7 +43,7 @@ export default function AboutSection({ data }: AboutSectionProps) {
   return (
     <section
       dir={directionMap[locale]}
-      className="py-16 px-4 mt-10 c-container"
+      className="py-16 px-4 mt-10 c-container overflow-hidden"
     >
       <div className="">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">

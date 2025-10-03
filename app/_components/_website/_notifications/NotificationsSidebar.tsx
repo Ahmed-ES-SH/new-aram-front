@@ -56,7 +56,7 @@ export default function NotificationsSidebar({
             <p className="text-sm opacity-80">{texts("user.online")}</p>
           </div>
         </div>
-        <div className="absolute right-4 top-4 bg-white/20 backdrop-blur-sm text-xs px-3 py-1 rounded-full">
+        <div className="absolute ltr:right-4 rtl:left-4 top-4 bg-white/20 backdrop-blur-sm text-xs px-3 py-1 rounded-full">
           {texts("title")}
         </div>
       </motion.div>

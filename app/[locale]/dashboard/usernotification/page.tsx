@@ -85,7 +85,8 @@ export default function UserNotification() {
       formData.append("user_ids", JSON.stringify(selectedUsers));
       formData.append("sender_id", "1");
       formData.append("content", messageuser);
-      formData.append("account_type", "client");
+      formData.append("recipient_type", "user");
+      formData.append("sender_type", "user");
       const response = await instance.post(
         "/send-multiple-notification",
         formData

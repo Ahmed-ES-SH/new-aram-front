@@ -14,9 +14,9 @@ export default function MenuButton() {
     <>
       <button
         onClick={toggleMenu}
-        className="lg:hidden rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75 "
+        className="lg:hidden rounded  p-2 text-gray-600 transition hover:text-gray-600/75 "
       >
-        <FaBars size={20} />
+        <FaBars className="size-5" />
       </button>
     </>
   );

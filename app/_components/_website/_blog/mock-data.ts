@@ -1,4 +1,4 @@
-import type { Article, Category } from "./types";
+import type { Category } from "./types";
 
 export const mockCategories: Category[] = [
   {
@@ -35,7 +35,7 @@ export const mockCategories: Category[] = [
   },
 ];
 
-export const mockArticles: Article[] = [
+export const mockArticles = [
   {
     id: 1,
     image: "/fresh-orange-juice-glass-dark-background.jpg",

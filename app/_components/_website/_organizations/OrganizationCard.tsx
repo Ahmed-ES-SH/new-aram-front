@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { FiStar, FiMapPin, FiCalendar } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Organization } from "../../_dashboard/_organizations/types/organization";
@@ -9,6 +9,12 @@ import { BiSolidMessageRoundedDots } from "react-icons/bi";
 import { LuClock7 } from "react-icons/lu";
 import LocaleLink from "../_global/LocaleLink";
 import { formatTitle } from "@/app/_helpers/helpers";
+import { useAppSelector } from "@/app/Store/hooks";
+import { toast } from "sonner";
+import { instance } from "@/app/_helpers/axios";
+import { useRouter } from "next/navigation";
+import { VscLoading } from "react-icons/vsc";
+import CheckCurrentUserPopup from "../_global/CheckCurrentUserPopup";
 
 interface props {
   organization: Organization;
@@ -16,8 +22,63 @@ interface props {
 }
 
 export default function OrganizationCard({ organization, index }: props) {
+  const { user } = useAppSelector((state) => state.user);
+
+  const router = useRouter();
+
   const t = useTranslations("organizations");
   const locale = useLocale();
+
+  const errorStartConversation =
+    locale == "en"
+      ? "You can't start a conversation with yourself!"
+      : "لا تستطيع بدء محادثة مع نفسك !";
+
+  const [loadingConversation, setLoadingConversation] = useState(false);
+  const [checkCurrentUser, setCheckCurrentUser] = useState(false);
+
+  const handleStartConversation = async () => {
+    if (!user) {
+      setCheckCurrentUser(true);
+      return;
+    }
+
+    if (user?.id == organization?.id) {
+      toast.error(errorStartConversation);
+      return;
+    }
+
+    setLoadingConversation(true);
+    try {
+      const participant_one_id = user?.id;
+      const participant_one_type = user?.account_type;
+      const participant_two_id = organization?.id;
+      const participant_two_type = "organization";
+      const data = {
+        participant_one_id,
+        participant_one_type,
+        participant_two_id,
+        participant_two_type,
+      };
+      const response = await instance.post(`/start-conversation`, data);
+      if (response.status == 201) {
+        const conversation = response.data.data;
+
+        // تغيير المسار
+        router.push(
+          `/${locale}/conversations/${formatTitle(
+            `conversationwith ${organization.title}`
+          )}?conversationId=${conversation.id}&userId=${user?.id}&receiverId=${
+            organization?.id
+          }`
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingConversation(false);
+    }
+  };
 
   return (
     <>
@@ -30,7 +91,8 @@ export default function OrganizationCard({ organization, index }: props) {
       >
         <div className="relative">
           <Img
-            src={organization.image || "/placeholder.png"}
+            src={organization.image ?? "/defaults/noImage.png"}
+            errorSrc="/defaults/noImage.png"
             alt={organization.title}
             className="w-full h-48 object-cover"
           />
@@ -105,9 +167,18 @@ export default function OrganizationCard({ organization, index }: props) {
           </div>
 
           <div className="flex gap-2 cursor-pointer">
-            <div className="flex-1 bg-primary hover:bg-orange-500 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1">
-              <BiSolidMessageRoundedDots className="w-3 h-3" />
-              {t("contact")}
+            <div
+              onClick={() => handleStartConversation()}
+              className="flex-1  bg-primary hover:bg-orange-500 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
+            >
+              {loadingConversation ? (
+                <VscLoading className="animate-spin" />
+              ) : (
+                <div className="flex items-center gap-1">
+                  <BiSolidMessageRoundedDots className="w-3 h-3" />
+                  {t("contact")}
+                </div>
+              )}
             </div>
             <div className="flex-1 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1">
               <LuClock7 className="w-3 h-3" />
@@ -116,6 +187,10 @@ export default function OrganizationCard({ organization, index }: props) {
           </div>
         </div>
       </motion.div>
+      <CheckCurrentUserPopup
+        isOpen={checkCurrentUser}
+        onClose={() => setCheckCurrentUser(false)}
+      />
     </>
   );
 }

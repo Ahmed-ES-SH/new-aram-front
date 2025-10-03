@@ -109,7 +109,7 @@ export default function NotificationsPage({
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <NotificationsSidebar
-              currentUser={currentUser}
+              currentUser={currentUser as any}
               activeFilter={activeFilter}
               onFilterChange={setActiveFilter}
               unreadCount={unreadCount}

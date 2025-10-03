@@ -15,16 +15,8 @@ type RawSender = {
   image?: string;
   title?: string;
   logo?: string;
+  account_type: string;
   email: string;
-};
-
-// Normalized sender
-type Sender = {
-  id: number;
-  name: string;
-  image: string | null;
-  email: string;
-  account_type: "User" | "Organization";
 };
 
 type NotificationPopupProps = {
@@ -46,18 +38,18 @@ export default function NotificationPopup({
   const [progress, setProgress] = useState(100);
 
   // ✅ Normalize sender data based on sender_type
-  const normalizedSender: Sender | undefined = sender
-    ? sender_type === "organization"
+  const normalizedSender = sender
+    ? sender.account_type == "organization"
       ? {
           id: sender.id,
-          name: sender.title ?? "Organization",
+          name: sender.title ?? "organization",
           email: sender.email,
           image: sender.logo ?? null,
           account_type: "Organization",
         }
       : {
           id: sender.id,
-          name: sender.name ?? "User",
+          name: sender.name ?? "user",
           email: sender.email,
           image: sender.image ?? null,
           account_type: "User",
@@ -94,7 +86,7 @@ export default function NotificationPopup({
   return (
     <div dir={directionMap[locale]}>
       <AnimatePresence>
-        {visible && (
+        {true && (
           <motion.div
             initial={{ x: 400, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -125,9 +117,7 @@ export default function NotificationPopup({
                 errorSrc="/defaults/male-noimage.jpg"
                 alt={normalizedSender.name}
                 className={`h-[40px] w-[40px] object-cover ${
-                  normalizedSender.account_type === "Organization"
-                    ? "rounded-lg"
-                    : "rounded-full"
+                  sender_type === "organization" ? "rounded-lg" : "rounded-full"
                 }`}
               />
               <div>
