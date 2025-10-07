@@ -4,15 +4,21 @@ import { FaStar, FaCalendarAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Organization } from "@/app/_components/_dashboard/_organizations/types/organization";
 import { BiSolidMessageSquareDetail } from "react-icons/bi";
+import { VscLoading } from "react-icons/vsc";
 
 interface props {
   organization: Organization;
   t: any;
+  loadingConversation: boolean;
+  handleStartConversation: () => void;
 }
 
-export default function OrganizationSidebar({ organization, t }: props) {
-  const handleStartConversation = async () => {};
-
+export default function OrganizationSidebar({
+  organization,
+  t,
+  loadingConversation,
+  handleStartConversation,
+}: props) {
   const handleBookAppointment = async () => {};
 
   return (
@@ -49,8 +55,14 @@ export default function OrganizationSidebar({ organization, t }: props) {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <BiSolidMessageSquareDetail className="w-4 h-4" />{" "}
-              {t("contactCenter")}
+              {loadingConversation ? (
+                <VscLoading className="animate-spin size-6" />
+              ) : (
+                <div className="flex items-center gap-1">
+                  <BiSolidMessageSquareDetail className="w-4 h-4" />
+                  {t("contactCenter")}
+                </div>
+              )}
             </motion.button>
 
             {organization.booking_status === 1 && (

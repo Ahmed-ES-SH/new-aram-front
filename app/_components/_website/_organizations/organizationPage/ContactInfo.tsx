@@ -57,27 +57,35 @@ export default function ContactInfo({ organization, t }: props) {
       >
         <h2 className="text-xl font-semibold">{t("contactInfo")}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <ContactItem
-            icon={<FaMapMarkerAlt className="text-primary" />}
-            label={t("address")}
-            value={organization.location.address}
-          />
-          <ContactItem
-            icon={<FaPhone className="text-primary" />}
-            label={t("phone")}
-            value={organization.phone_number}
-          />
-          <ContactItem
-            icon={<FaEnvelope className="text-primary" />}
-            label={t("email")}
-            value={organization.email}
-          />
-          <ContactItem
-            icon={<FaGlobe className="text-primary" />}
-            label={t("website")}
-            value={organization.url}
-            isLink
-          />
+          {organization.location.address && (
+            <ContactItem
+              icon={<FaMapMarkerAlt className="text-primary" />}
+              label={t("address")}
+              value={organization.location.address}
+            />
+          )}
+          {organization.phone_number && (
+            <ContactItem
+              icon={<FaPhone className="text-primary" />}
+              label={t("phone")}
+              value={organization.phone_number}
+            />
+          )}
+          {organization.email && (
+            <ContactItem
+              icon={<FaEnvelope className="text-primary" />}
+              label={t("email")}
+              value={organization.email}
+            />
+          )}
+          {organization.url && (
+            <ContactItem
+              icon={<FaGlobe className="text-primary" />}
+              label={t("website")}
+              value={organization.url}
+              isLink
+            />
+          )}
         </div>
       </motion.div>
     </>

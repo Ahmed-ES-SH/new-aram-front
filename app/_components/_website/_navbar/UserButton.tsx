@@ -2,7 +2,7 @@
 import Img from "../_global/Img";
 import { useEffect, useRef, useState } from "react";
 import { HiOutlineLogout } from "react-icons/hi";
-import { FaCaretDown } from "react-icons/fa";
+import { FaBell, FaCaretDown } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 import { GrDashboard } from "react-icons/gr";
 import { useRouter } from "next/navigation";
@@ -82,7 +82,7 @@ export default function UserButton({ user, logout }) {
   const errorimage =
     user.account_type == "user"
       ? "/defaults/male-noimage.jpg"
-      : "/defaults/noImage.png";
+      : "/defaults/female-noimage.jpg";
 
   if (!user) return null;
 
@@ -92,18 +92,22 @@ export default function UserButton({ user, logout }) {
         <div
           dir={directionMap[locale]}
           className="relative inline-block text-left w-fit"
-          // attach ref here
         >
           {/* User button */}
           <div className="flex items-center gap-3">
             <button
               ref={dropdownRef}
               onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center justify-center  gap-2 w-[150px] max-md:w-[40px] max-md:h-[40px] overflow-hidden max-md:p-0 max-md:rounded-full max-md:border-2 max-md:border-primary  rounded-md  bg-primary  px-3 py-2 shadow-md hover:bg-gray-300  duration-200"
+              className="flex items-center justify-center outline-none gap-2 w-[150px] max-md:w-[40px] max-md:h-[40px] overflow-hidden max-md:p-0 max-md:rounded-full max-md:border-2 max-md:border-primary  rounded-md  bg-primary  px-3 py-2 shadow-md hover:bg-gray-300  duration-200"
             >
+              {unreadMessagesCount > 0 && (
+                <div className="absolute animate-pulse -top-1 ltr:-left-1 rtl:-right-1 rounded-full text-xs  flex items-center justify-center text-red-500">
+                  <FaBell className="size-6" />
+                  <p className=" absolute text-white">{unreadMessagesCount}</p>
+                </div>
+              )}
               <Img
                 src={image ?? errorimage}
-                errorSrc={errorimage}
                 className="rounded-full w-8 h-8  object-cover"
               />
               <div className="md:flex hidden relative items-center gap-4">
@@ -160,7 +164,7 @@ export default function UserButton({ user, logout }) {
                     <div
                       onClick={() =>
                         handleGo(
-                          `/userdashboard?account_type=${
+                          `/usercontrolpanel?account_type=${
                             user?.account_type
                           }&account_name=${formatTitle(displayName)}&userId=${
                             user?.id
@@ -181,7 +185,7 @@ export default function UserButton({ user, logout }) {
                     <div
                       onClick={() =>
                         handleGo(
-                          `/organizationdashboard?account_type=${
+                          `/centercontrolpanel?account_type=${
                             user?.account_type
                           }&account_name=${formatTitle(displayName)}&userId=${
                             user?.id

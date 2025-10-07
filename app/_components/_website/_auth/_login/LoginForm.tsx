@@ -14,7 +14,11 @@ import { directionMap } from "@/app/constants/_website/global";
 import { instance, main_api } from "@/app/_helpers/axios";
 import Cookie from "cookie-universal";
 import { useAppDispatch } from "@/app/Store/hooks";
-import { setUser } from "@/app/Store/userSlice";
+import {
+  setUnreadCount,
+  setUnreadNotificationsCount,
+  setUser,
+} from "@/app/Store/userSlice";
 import { toast } from "sonner";
 import { useLoginSchema } from "@/app/validation/useLoginSchema";
 import LocaleLink from "../../_global/LocaleLink";
@@ -77,7 +81,12 @@ export function LoginForm() {
         const token = encryptToken(response.data.token);
         cookie.set("aram_token", token);
         const user = response.data.account;
+        const unreadCountMessages = response.data.unread_count;
+        const unreadNotificationsCount =
+          response.data.unread_notifications_count;
         dispatch(setUser(user));
+        dispatch(setUnreadCount(unreadCountMessages));
+        dispatch(setUnreadNotificationsCount(unreadNotificationsCount));
         setTimeout(() => {
           router.push(`/${locale}`);
         }, 300);

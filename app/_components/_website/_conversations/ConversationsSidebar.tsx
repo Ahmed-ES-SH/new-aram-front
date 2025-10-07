@@ -1,8 +1,5 @@
 "use client";
-import {
-  Conversation,
-  User,
-} from "@/app/[locale]/(routes)/conversations/layout";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { FiSearch, FiX } from "react-icons/fi";
 import { CiImageOn } from "react-icons/ci";
@@ -14,23 +11,24 @@ import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
 import { formatTime, formatTitle } from "@/app/_helpers/helpers";
 import { reduceUnreadCount } from "@/app/Store/userSlice";
 import { instance } from "@/app/_helpers/axios";
-import useFetchData from "@/app/_helpers/FetchDataWithAxios";
-import LoadingPage from "../_global/LoadingPage";
 import { setConversationsSidebar } from "@/app/Store/variablesSlice";
 import Img from "../_global/Img";
+import { Conversation, User } from "@/app/[locale]/(routes)/conversations/page";
+import { useLocale } from "next-intl";
 
-export default function ConversationsSidebar() {
+interface props {
+  data: Conversation[];
+}
+
+export default function ConversationsSidebar({ data }: props) {
   const { user, unreadConversations } = useAppSelector((state) => state.user);
 
-  const { data, loading } = useFetchData<Conversation[]>(
-    `/user/${user?.id}/conversations`,
-    true
-  );
+  const locale = useLocale() as "en" | "ar";
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const { locale, width, conversationsSidebar } = useAppSelector(
+  const { width, conversationsSidebar } = useAppSelector(
     (state) => state.variables
   );
 
@@ -44,12 +42,6 @@ export default function ConversationsSidebar() {
   const onClose = () => {
     dispatch(setConversationsSidebar(false));
   };
-
-  useEffect(() => {
-    if (data) {
-      setConversations(data);
-    }
-  }, [data]);
 
   // Filter conversations by participant name
   const filteredConversations =
@@ -156,9 +148,11 @@ export default function ConversationsSidebar() {
     }
   }, [dispatch, width]);
 
-  console.log(filteredConversations);
-
-  if (loading) return <LoadingPage />;
+  useEffect(() => {
+    if (data) {
+      setConversations(data);
+    }
+  }, [data]);
 
   return (
     <AnimatePresence>

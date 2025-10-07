@@ -31,6 +31,7 @@ export interface Organization {
   order: number;
   open_at: string;
   close_at: string;
+  account_type: string;
   url: string;
   rating: string | number;
   category_id: number;

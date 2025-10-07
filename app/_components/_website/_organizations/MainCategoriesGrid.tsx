@@ -57,7 +57,9 @@ export default function MainCategoriesGrid({ response }: props) {
     router.push(
       `/organizations?categories=${cat.id}&main_category=${formatTitle(
         cat.title_en
-      )}&main_categoryId=${cat.id}&step=2`
+      )}&main_categoryId=${cat.id}&subCategoriesLength=${
+        cat.sub_categories_count
+      }&organizationsCount=${cat.organizations_count}&step=2`
     );
   };
 

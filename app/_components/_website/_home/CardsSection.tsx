@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Card } from "../../_dashboard/_cards/types";
 import { directionMap } from "@/app/constants/_website/global";
 import CreditCard from "../_global/CreditCard";
-import LocaleLink from "../_global/LocaleLink";
+// import LocaleLink from "../_global/LocaleLink";
 import { useLocale, useTranslations } from "next-intl";
 
 interface CardsSectionProps {
@@ -56,12 +56,12 @@ export default function CardsSection({ cards }: CardsSectionProps) {
           ))}
         </div>
       </div>
-      <LocaleLink
+      {/* <LocaleLink
         href="/cards"
         className="px-6 py-3 mt-8 w-fit rtl:mr-auto ltr:ml-auto  rounded-2xl bg-gradient-to-r from-orange-500 to-orange-400 text-white font-semibold text-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-200"
       >
         {t("allCards")}
-      </LocaleLink>
+      </LocaleLink> */}
     </section>
   );
 }

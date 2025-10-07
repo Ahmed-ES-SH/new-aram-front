@@ -16,8 +16,8 @@ interface VariablesState {
   showUserButton: boolean;
   showMessagesDrop: boolean;
   showNotificationDrop: boolean;
-  // website variables
   orgsSidebar: boolean;
+  userPanalSidebar: boolean;
 }
 
 const initialState: VariablesState = {
@@ -34,8 +34,8 @@ const initialState: VariablesState = {
   showUserButton: false,
   showMessagesDrop: false,
   showNotificationDrop: false,
-  // website variables
   orgsSidebar: true,
+  userPanalSidebar: true,
 };
 
 const variablesSlice = createSlice({
@@ -81,9 +81,11 @@ const variablesSlice = createSlice({
     setShowNotificationDrop: (state, action: PayloadAction<boolean>) => {
       state.showNotificationDrop = action.payload;
     },
-    // website section
     setOrgsSidebar: (state, action: PayloadAction<boolean>) => {
       state.orgsSidebar = action.payload;
+    },
+    setUserPanalSidebar: (state, action: PayloadAction<boolean>) => {
+      state.userPanalSidebar = action.payload;
     },
   },
 });
@@ -102,8 +104,8 @@ export const {
   setShowMessagesDrop,
   setConversationsSidebar,
   setShowNotificationDrop,
-  // website section
   setOrgsSidebar,
+  setUserPanalSidebar,
 } = variablesSlice.actions;
 
 export default variablesSlice.reducer;

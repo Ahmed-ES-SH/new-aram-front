@@ -1,6 +1,7 @@
 import FetchOrganizations from "@/app/_components/_dashboard/_organizations/fetchOrgamizations";
 import MainCategoriesGrid from "@/app/_components/_website/_organizations/MainCategoriesGrid";
 import OrganizationsComponent from "@/app/_components/_website/_organizations/OrganizationsComponent";
+import RedirectClient from "@/app/_components/_website/_organizations/RedirectClient";
 import SubCategoriesGrid from "@/app/_components/_website/_organizations/SubCategoriesGrid";
 import FetchData from "@/app/_helpers/FetchData";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
@@ -27,6 +28,19 @@ export default async function OrganizationsPage({ searchParams }: any) {
 
   if (step == 2) {
     const main_categoryId = await searchParams.main_categoryId;
+    const subCategoriesCount = await searchParams.subCategoriesLength;
+    const organizationsCount = await searchParams.organizationsCount;
+    const main_category = await searchParams.main_category;
+
+    // Instead of direct redirect()
+    if (subCategoriesCount == 0 && organizationsCount > 0) {
+      return (
+        <RedirectClient
+          targetUrl={`/organizations?categories=${main_categoryId}&main_category=${main_category}&main_categoryId=${main_categoryId}&subCategoriesLength=${subCategoriesCount}&organizationsCount=${organizationsCount}&step=3`}
+        />
+      );
+    }
+
     const subcategoriesResponse = await FetchData(
       `/sub-categories-by-parent?parent_id=${main_categoryId}&is_active=1`,
       true

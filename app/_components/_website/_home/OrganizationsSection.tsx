@@ -6,7 +6,7 @@ import { Organization } from "../../_dashboard/_organizations/types/organization
 import { directionMap } from "@/app/constants/_website/global";
 import OrganizationCard from "../_organizations/OrganizationCard";
 import { useLocale, useTranslations } from "next-intl";
-import LocaleLink from "../_global/LocaleLink";
+// import LocaleLink from "../_global/LocaleLink";
 
 interface OrganizationsSectionProps {
   organizations: Organization[];
@@ -49,12 +49,12 @@ export default function OrganizationsSection({
           ))}
         </div>
       </div>
-      <LocaleLink
+      {/* <LocaleLink
         href="/organizations"
         className="px-6 py-3 w-fit mx-auto mt-6 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-400 text-white font-semibold text-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-200"
       >
         {t("allOrganizations")}
-      </LocaleLink>
+      </LocaleLink> */}
     </section>
   );
 }

@@ -1,4 +1,5 @@
 // Utility function to append nested objects/arrays into FormData
+
 export const appendFormData = (
   formData: FormData,
   data: Record<string, any>,

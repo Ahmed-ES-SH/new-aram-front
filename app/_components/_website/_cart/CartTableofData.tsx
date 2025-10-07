@@ -5,7 +5,7 @@ import LocaleLink from "../_global/LocaleLink";
 import { FaTrash } from "react-icons/fa";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { BsCartX } from "react-icons/bs";
-import { useAppSelector } from "@/app/Store/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
 import {
   decreaseQuantity,
   increaseQuantity,
@@ -13,6 +13,7 @@ import {
 } from "@/app/Store/cartSlice";
 import Minicard from "../_global/_cart/MiniCard";
 import { useLocale, useTranslations } from "next-intl";
+import { truncateContent } from "@/app/_helpers/helpers";
 
 export default function CartTableofData() {
   const locale = useLocale();
@@ -20,6 +21,7 @@ export default function CartTableofData() {
 
   const { items } = useAppSelector((state) => state.cartSlice);
   const { activeCurrency } = useAppSelector((state) => state.currency);
+  const dispatch = useAppDispatch();
 
   const headers = [
     {
@@ -49,7 +51,7 @@ export default function CartTableofData() {
   return (
     <div className="xl:min-h-screen h-fit flex-1/2 max-xl:w-full flex-grow">
       <div className="table-products border border-gray-300 rounded-lg   h-fit max-xl:h-fit  overflow-auto  ">
-        <table className="min-w-full  rounded-lg shadow-lg  min-h-[60vh] overflow-x-auto bg-gray-100  text-sm">
+        <table className="min-w-full  rounded-lg shadow-lg h-fit max-h-[60vh] overflow-x-auto bg-gray-100  text-sm">
           <thead className="ltr:text-left rtl:text-right border-b  border-gray-300">
             <tr>
               {headers.map((header, index) => (
@@ -65,7 +67,7 @@ export default function CartTableofData() {
           <tbody className="divide-y divide-gray-200 ">
             {items && items.length > 0 ? (
               items.map((item, index) => (
-                <tr className="h-[80px]" key={index}>
+                <tr className="h-[120px]" key={index}>
                   <td className="whitespace-nowrap  px-4 py-2 font-medium text-gray-900">
                     <div className="w-fit ltr:mr-auto rtl:ml-auto">
                       <Minicard
@@ -74,7 +76,7 @@ export default function CartTableofData() {
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-4 py-2 h-[20px]  text-gray-700 ">
-                    {item.title}
+                    {truncateContent(item.title)}
                   </td>
                   <td className="whitespace-nowrap  px-4 py-2 h-[20px]  text-gray-700 ">
                     <div className="flex items-center gap-1">
@@ -92,7 +94,7 @@ export default function CartTableofData() {
                     <div className="flex items-center justify-center w-fit ltr:mr-auto rtl:ml-auto  border border-gray-300 rounded-sm shadow-sm px-2">
                       <div className="flex items-center gap-1 ">
                         <button
-                          onClick={() => decreaseQuantity(item.id)}
+                          onClick={() => dispatch(decreaseQuantity(item.id))}
                           type="button"
                           className="  text-gray-600 transition hover:opacity-75"
                         >
@@ -100,7 +102,7 @@ export default function CartTableofData() {
                         </button>
                         <p className=" p-2 text-center">{item.quantity}</p>
                         <button
-                          onClick={() => increaseQuantity(item.id)}
+                          onClick={() => dispatch(increaseQuantity(item.id))}
                           type="button"
                           className="  text-gray-600 transition hover:opacity-75"
                         >
@@ -111,7 +113,7 @@ export default function CartTableofData() {
                   </td>
                   <td className="whitespace-nowrap px-4 py-2 h-[20px]  text-gray-700 ">
                     <button
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => dispatch(removeItem(item.id))}
                       className="cursor-pointer hover:text-red-600 duration-200 text-red-400"
                     >
                       <FaTrash />

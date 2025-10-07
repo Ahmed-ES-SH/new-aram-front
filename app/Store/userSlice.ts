@@ -12,6 +12,7 @@ export interface UserType extends Organization {
   name: string;
   email: string;
   phone: string;
+  id_number: string;
   gender: Gender;
   account_type: AccountType;
   role: Role;
@@ -26,6 +27,7 @@ export interface UserType extends Organization {
   last_login_at: string | null;
   social_id: string | null;
   social_type: string | null;
+  password: null | string;
   created_at: string;
   updated_at: string;
 }
@@ -59,7 +61,7 @@ export const fetchCurrentUser = createAsyncThunk(
       return {
         user: res.data.data,
         unreadMessagesCount: res.data.unread_count ?? 0,
-        unreadNotificationsCount: res.data.unread_notifications_count ?? 0,
+        unreadNotificationsCount: res.data.unread_notifications_count,
       };
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
@@ -120,6 +122,8 @@ const userSlice = createSlice({
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.unreadMessagesCount = action.payload.unreadMessagesCount;
+        state.unreadNotificationsCount =
+          action.payload.unreadNotificationsCount ?? 0;
         state.loading = false;
       })
       .addCase(fetchCurrentUser.rejected, (state, action: any) => {

@@ -74,6 +74,11 @@
     "description": "Aram Gulf Ltd. - Conversations Page show your conversations"
   },
 
+  "metaUserControlPage": {
+    "title": "Aram Gulf Ltd. - User Control Panal",
+    "description": "Aram Gulf Ltd. - Manage your account in easy ways"
+  },
+
   "authButtons": {
     "login": "Login",
     "register": "Register"
@@ -877,23 +882,185 @@
     }
   },
 
-  "success": {
-    "title": "Payment Successful!",
-    "message": "Your payment has been processed successfully. Thank you for your purchase.",
-    "invoice": "Invoice Total",
-    "button": "Return to Home",
-    "confirmation": "A confirmation email has been sent to your inbox.",
-    "paid": "Paid",
-    "footer": "Thank you for your trust in us"
+  "payment": {
+    "successTitle": "Payment Successful!",
+    "successMessage": "Your payment has been completed successfully.",
+    "failedTitle": "Payment Failed",
+    "failedMessage": "Something went wrong during the payment process.",
+    "orderId": "Order ID",
+    "invoiceNumber": "Invoice Number",
+    "total": "Total",
+    "backHome": "Back to Home",
+    "retry": "Try Again"
   },
 
-  "paymentFailure": {
-    "title": "Payment Failed",
-    "message": "We couldn't process your payment. Please check your payment details and try again.",
-    "amount": "Transaction Amount",
-    "errorCode": "Something went wrong with your transaction",
-    "retryButton": "Retry Payment",
-    "homeButton": "Return to Home",
-    "supportText": "Need help? Contact our support team"
+  "userControl": {
+    "hi": "Hi",
+    "welcome": "Welcome to your Dashboard",
+    "subtitle": "Manage your cards, bookings, balance, payments, and messages easily.",
+    "cards": {
+      "title": "Cards Management",
+      "desc": "View and manage all your business and personal cards."
+    },
+    "profile": {
+      "title": "Profile Settings",
+      "desc": "Manage your personal information, password, and contact details."
+    },
+    "coupons": {
+      "title": "Coupons & Discounts",
+      "desc": "View and redeem available coupons to save on your purchases."
+    },
+    "bookings": {
+      "title": "Bookings",
+      "desc": "Track and control all your reservations efficiently."
+    },
+    "balance": {
+      "title": "Your Balance",
+      "desc": "Check your current wallet balance and transactions."
+    },
+    "payments": {
+      "title": "Payments",
+      "desc": "Monitor incoming and outgoing payments securely."
+    },
+    "chats": {
+      "title": "Messages",
+      "desc": "Stay connected and communicate with clients easily."
+    }
+  },
+
+  "userProfile": {
+    "title": "Profile Settings",
+    "subtitle": "Manage your personal information and preferences",
+    "emailVerified": "Email Verified",
+    "emailVerifiedMessage": "Your email address has been successfully verified.",
+    "emailNotVerified": "Email Not Verified",
+    "emailNotVerifiedMessage": "Please verify your email address to access all features.",
+    "sendVerification": "Send Verification Email",
+    "sendingVerification": "Sending...",
+    "verificationSent": "Email Sent!",
+    "emailReadOnly": "Verified emails cannot be changed",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "saved": "Saved!",
+    "successMessage": "Your profile has been updated successfully",
+    "editlocation": "Edit Location",
+    "fields": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "password": "password",
+      "location": "Location",
+      "phone": "Phone Number",
+      "gender": "Gender",
+      "birthDate": "Birth Date",
+      "country": "Country"
+    },
+    "placeholders": {
+      "name": "Enter your full name",
+      "email": "Enter your email address",
+      "password": "Enter your new password",
+      "location": "Locate your address using the map.",
+      "phone": "Enter your phone number"
+    },
+    "gender": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "countries": {
+      "india": "India",
+      "usa": "United States",
+      "uk": "United Kingdom",
+      "canada": "Canada",
+      "australia": "Australia"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  },
+
+  "card": {
+    "title": "Your Aram Cards",
+    "subtitle": "Manage and view your Aram card details securely",
+    "cardNumber": "Card Number",
+    "cardHolder": "Card Holder",
+    "validThru": "Valid Thru",
+    "cvv": "CVV",
+    "status": "Status",
+    "issueDate": "Issue Date",
+    "expiryDate": "Expiry Date",
+    "usageLimit": "Usage Limit",
+    "currentUsage": "Current Usage",
+    "viewDetails": "View Details",
+    "cardDetails": "Card Details",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "unlimited": "Unlimited",
+    "active": "Active",
+    "inactive": "Inactive",
+    "expired": "Expired"
+  },
+
+  "noCards": {
+    "title": "You don't own any cards yet",
+    "description": "It looks like you haven't added any cards to your account. Start now to manage and use your cards easily.",
+    "button": "Go to Cards Page"
+  },
+
+  "myCoupons": {
+    "title": "My Coupons",
+    "subtitle": "Here you can view all your available coupons and their usage details."
+  },
+  "couponCard": {
+    "active": "Active",
+    "off": "off",
+    "discountValue": "Discount Value",
+    "freeCard": "Free Card",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "from": "From",
+    "to": "To",
+    "usage": "Usage",
+    "unlimited": "Unlimited"
+  },
+  "couponPopup": {
+    "discount": "Discount",
+    "period": "Valid Period",
+    "status": "Status",
+    "usage": "Usage",
+    "freeCard": "Free Card",
+    "unlimited": "Unlimited"
+  },
+
+  "noCoupons": {
+    "title": "No Coupons Found",
+    "description": "It seems there are no available coupons associated with this account. Check back later for new offers."
+  },
+
+  "noAppointments": {
+    "title": "No Appointments Found",
+    "description": "You don’t have any appointments yet. Explore available organizations and book your first appointment easily.",
+    "button": "Browse Organizations"
+  },
+
+  "appointments": {
+    "title": "Appointments",
+    "subtitle": "Manage and track all your appointments in one place",
+    "id": "ID",
+    "organization": "Organization",
+    "dateTime": "Date & Time",
+    "price": "Price",
+    "status": "Status",
+    "actions": "Actions",
+    "actionsPlaceholder": "—",
+    "noAppointments": "No appointments found"
+  },
+
+  "appointmentActions": {
+    "cancel": "Cancel Booking",
+    "delete": "Delete",
+    "rateCenter": "Rate Center",
+    "goToCenters": "Go to Centers",
+    "noActions": "No available actions"
   }
 }

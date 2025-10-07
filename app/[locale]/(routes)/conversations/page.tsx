@@ -1,36 +1,59 @@
-"use client";
+import ConversationMainPage from "@/app/_components/_website/_conversations/ConversationMainPage";
+import ConversationsSidebar from "@/app/_components/_website/_conversations/ConversationsSidebar";
+import FetchData from "@/app/_helpers/FetchData";
+import { getSharedMetadata } from "@/app/_helpers/helpers";
+import { directionMap } from "@/app/constants/_website/global";
+import { getTranslations } from "next-intl/server";
 
-import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
-import { setConversationsSidebar } from "@/app/Store/variablesSlice";
-import { useTranslations } from "next-intl";
-import { BiSolidConversation } from "react-icons/bi";
-import { TbMessageMinus } from "react-icons/tb";
+export interface User {
+  id: number;
+  name: string;
+  image: string;
+  type: string;
+  title: string;
+  logo: string;
+}
 
-export default function ConversationsPage() {
-  const { conversationsSidebar } = useAppSelector((state) => state.variables);
-  const dispatch = useAppDispatch();
+export interface Message {
+  id: number;
+  message: string;
+  attachment: string | null;
+  sender_id: number;
+  created_at: string; // ISO format
+  message_type: "text" | "audio" | "image" | "pdf"; // adjust types if needed
+}
 
-  const t = useTranslations("ConversationsPage");
+export interface Conversation {
+  id: number;
+  participant: User;
+  last_message: Message;
+  unread_count: number;
+}
 
+export async function generateMetadata() {
+  const t = await getTranslations("metaConversationsPage");
+  const sharedMetadata = await getSharedMetadata(t("title"), t("description"));
+  return {
+    title: t("title"),
+    describtion: t("description"),
+    ...sharedMetadata,
+  };
+}
+
+export default async function ConversationsPage({ searchParams, params }) {
+  const userId = await searchParams.userId;
+  const locale = await params.locale;
+
+  const { data } = await FetchData(`/user/${userId}/conversations`, true);
   return (
-    <div className="flex-1/2 h-full flex items-center justify-center relative">
-      {!conversationsSidebar && (
-        <div
-          onClick={() => dispatch(setConversationsSidebar(true))}
-          className="w-16 h-16 cursor-pointer hover:bg-white hover:text-primary hover:scale-105 duration-300 flex items-center justify-center absolute bottom-4 left-4 border border-primary bg-primary text-white rounded-full"
-        >
-          <BiSolidConversation className="size-7" />
-        </div>
-      )}
-      <div className="text-center">
-        <div className="w-40 h-40 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <TbMessageMinus className="text-gray-400 size-32" />
-        </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
-          {t("noConversationSelected")}
-        </h3>
-        <p className="text-gray-500">{t("chooseFromSidebar")}</p>
-      </div>
+    <div
+      dir={directionMap[locale]}
+      className="flex items-start justify-between pt-[93px] h-[93vh]"
+    >
+      {/* conversations sidebar */}
+      <ConversationsSidebar data={data} />
+      {/* main content */}
+      <ConversationMainPage />
     </div>
   );
 }

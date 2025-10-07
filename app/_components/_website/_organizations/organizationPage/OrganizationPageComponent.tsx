@@ -9,13 +9,23 @@ import {
   FaUtensils,
   FaTag,
 } from "react-icons/fa";
-import { Organization } from "@/app/_components/_dashboard/_organizations/types/organization";
+import {
+  LocationType,
+  Organization,
+} from "@/app/_components/_dashboard/_organizations/types/organization";
 import { directionMap } from "@/app/constants/_website/global";
 import Img from "../../_global/Img";
 import dynamic from "next/dynamic";
 import ContactInfo from "./ContactInfo";
 import OrganizationSidebar from "./OrganizationSidebar";
 import RatingSection from "./RatingSection";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "@/app/Store/hooks";
+import { toast } from "sonner";
+import { instance } from "@/app/_helpers/axios";
+import { useRouter } from "next/navigation";
+import { formatTitle } from "@/app/_helpers/helpers";
+import CheckCurrentUserPopup from "../../_global/CheckCurrentUserPopup";
 
 const MapComponentWithRoute = dynamic(
   () => import("@/app/_components/_maps/MapComponentWithRoute"),
@@ -41,6 +51,10 @@ const staggerContainer = {
 };
 
 export default function CenterDetails({ organization }: CenterDetailsProps) {
+  const { user } = useAppSelector((state) => state.user);
+
+  const router = useRouter();
+
   const t = useTranslations("organization");
   const locale = useLocale();
 
@@ -60,10 +74,65 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
     }).format(date);
   };
 
-  const userLocation = {
-    address: "Giza Pyramids, Giza",
-    coordinates: { lat: 29.9792, lang: 31.1342 },
+  const errorStartConversation =
+    locale == "en"
+      ? "You can't start a conversation with yourself!"
+      : "لا تستطيع بدء محادثة مع نفسك !";
+
+  const [loadingConversation, setLoadingConversation] = useState(false);
+  const [checkCurrentUser, setCheckCurrentUser] = useState(false);
+  const [location, setLocation] = useState<LocationType | null>(null);
+
+  const handleStartConversation = async () => {
+    if (!user) {
+      setCheckCurrentUser(true);
+      return;
+    }
+
+    if (user?.id == organization?.id) {
+      toast.error(errorStartConversation);
+      return;
+    }
+
+    setLoadingConversation(true);
+    try {
+      const participant_one_id = user?.id;
+      const participant_one_type = user?.account_type;
+      const participant_two_id = organization?.id;
+      const participant_two_type = "organization";
+      const data = {
+        participant_one_id,
+        participant_one_type,
+        participant_two_id,
+        participant_two_type,
+      };
+      const response = await instance.post(`/start-conversation`, data);
+      if (response.status == 201) {
+        const conversation = response.data.data;
+
+        // تغيير المسار
+        router.push(
+          `/${locale}/conversations/${formatTitle(
+            `conversationwith ${organization.title}`
+          )}?conversationId=${conversation.id}&userId=${user?.id}&userType=${
+            user?.account_type
+          }&receiverId=${organization?.id}&receiverType=${
+            organization.account_type
+          }`
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingConversation(false);
+    }
   };
+
+  useEffect(() => {
+    if (user?.location) {
+      setLocation(user.location);
+    }
+  }, [user]);
 
   return (
     <div
@@ -92,12 +161,12 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
               />
               <div className="absolute inset-0 bg-black/30" />
               <div className="absolute bottom-4 left-4">
-                <div className="w-20 h-20 rounded-full overflow-hidden border border-white shadow-lg bg-transparent">
+                <div className="w-20 h-20 flex items-center justify-center rounded-full overflow-hidden border border-white shadow-lg bg-white">
                   <Img
                     src={organization.logo ?? "/logo.png"}
                     errorSrc="/logo.png"
                     alt={`${organization.title} logo`}
-                    className="object-contain w-12 h-12  p-2"
+                    className="w-16 h-16 object-cover  p-2"
                   />
                 </div>
               </div>
@@ -157,7 +226,7 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
             {/* location on map  */}
             <MapComponentWithRoute
               orgLocation={organization.location}
-              userLocation={userLocation.coordinates}
+              userLocation={location?.coordinates ?? null}
             />
 
             {/* Working Hours */}
@@ -220,9 +289,19 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
           </motion.div>
 
           {/* Right Section - Sidebar */}
-          <OrganizationSidebar organization={organization} t={t} />
+          <OrganizationSidebar
+            organization={organization}
+            t={t}
+            loadingConversation={loadingConversation}
+            handleStartConversation={handleStartConversation}
+          />
         </div>
       </div>
+
+      <CheckCurrentUserPopup
+        isOpen={checkCurrentUser}
+        onClose={() => setCheckCurrentUser(false)}
+      />
     </div>
   );
 }

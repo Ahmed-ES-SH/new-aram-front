@@ -48,7 +48,7 @@ export default function CartSidebar() {
 
   const { subtotal, vat, discount, total } = calculateTotal();
 
-  const handlesubmit = async () => {
+  const handleSubmit = async () => {
     if (!user) {
       setCheckCurrentuser(true);
     }
@@ -56,6 +56,12 @@ export default function CartSidebar() {
       setLoading(true);
       const formdata = new FormData();
       if (purchaseId) formdata.append("purchase_id", purchaseId);
+      if (user) formdata.append("account_type", user?.account_type);
+      if (user) formdata.append("user_id", user.id.toString());
+      formdata.append("total_invoice", total);
+      formdata.append("invoice_type", "cards");
+      formdata.append("payment_method", "thawani");
+
       formdata.append("cardsDetailes", JSON.stringify(cardsDetailes));
       const response = await instance.post("/payment/create-session", formdata);
       if (response.status == 200) {
@@ -69,8 +75,6 @@ export default function CartSidebar() {
       setLoading(false);
     }
   };
-
-  console.log(cardsDetailes);
 
   const checkPromoCode = async () => {
     try {
@@ -203,7 +207,7 @@ export default function CartSidebar() {
           </div>
 
           <button
-            onClick={handlesubmit}
+            onClick={handleSubmit}
             className="flex w-full items-center justify-center rounded-lg bg-primary border border-transparent duration-200 hover:bg-transparent  hover:text-black hover:border-primary hover:scale-105 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800"
           >
             {loading ? (

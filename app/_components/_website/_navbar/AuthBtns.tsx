@@ -19,6 +19,7 @@ export default function AuthBtns({ serverUser }) {
   const dispatch = useAppDispatch();
   const cookie = Cookie();
   const router = useRouter();
+  const token = cookie.get("aram_token");
 
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
@@ -51,7 +52,7 @@ export default function AuthBtns({ serverUser }) {
 
   return (
     <>
-      {currentUser ? (
+      {currentUser && token ? (
         <UserButton user={currentUser} logout={logout} />
       ) : (
         <div className="flex items-center gap-4 max-sm:hidden">

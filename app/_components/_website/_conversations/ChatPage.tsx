@@ -8,8 +8,6 @@ import { setConversationsSidebar } from "@/app/Store/variablesSlice";
 import { useEffect } from "react";
 import { instance, main_api } from "@/app/_helpers/axios";
 import { useSearchParams } from "next/navigation";
-import useFetchData from "@/app/_helpers/FetchDataWithAxios";
-import LoadingPage from "../_global/LoadingPage";
 
 export interface MessageType {
   id: number;
@@ -33,17 +31,15 @@ export interface conversationType {
   messages: MessageType[];
 }
 
+interface props {
+  conversation: conversationType;
+}
+
 // Main Chat Component
-export default function ChatPage() {
+export default function ChatPage({ conversation }: props) {
   const searchParams = useSearchParams();
   const conversationId = searchParams.get("conversationId");
   const userId = searchParams.get("userId");
-  const userType = searchParams.get("userType");
-
-  const { data: conversation, loading } = useFetchData<conversationType>(
-    `/conversation/show?conversation_id=${conversationId}&participant_id=${userId}&participant_type=${userType}`,
-    false
-  );
 
   const { conversationsSidebar } = useAppSelector((state) => state.variables);
   const dispatch = useAppDispatch();
@@ -73,8 +69,6 @@ export default function ChatPage() {
       instance.post("/clear-active-conversation"); // ← عند تبديل الصفحة يدويًا
     };
   }, []);
-
-  if (loading) return <LoadingPage />;
 
   return (
     <div className="h-full flex-1/2">

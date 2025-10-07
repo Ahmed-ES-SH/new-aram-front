@@ -68,8 +68,10 @@ export default function OrganizationCard({ organization, index }: props) {
         router.push(
           `/${locale}/conversations/${formatTitle(
             `conversationwith ${organization.title}`
-          )}?conversationId=${conversation.id}&userId=${user?.id}&receiverId=${
-            organization?.id
+          )}?conversationId=${conversation.id}&userId=${user?.id}&userType=${
+            user?.account_type
+          }&receiverId=${organization?.id}&receiverType=${
+            organization.account_type
           }`
         );
       }

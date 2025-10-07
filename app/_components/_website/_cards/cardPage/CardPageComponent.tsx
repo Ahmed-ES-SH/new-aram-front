@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaShoppingCart, FaClock } from "react-icons/fa";
+import { FaClock } from "react-icons/fa";
 import { useLocale, useTranslations } from "next-intl";
 import { Card } from "@/app/_components/_dashboard/_cards/types";
 import Img from "../../_global/Img";
@@ -9,15 +9,25 @@ import { directionMap } from "@/app/constants/_website/global";
 import MiniCreditCard from "../../_global/MiniCreditCard";
 import { FaFacebook, FaTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { BiSolidOffer } from "react-icons/bi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FreeCardPopup from "./FreeCardPopup";
 import { getIconComponent } from "@/app/_helpers/helpers";
+import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
+import { toast } from "sonner";
+import { addItemWithOne, isItemInCart } from "@/app/Store/cartSlice";
+import AddToCartButton from "./AddToCartButton";
 
 interface CardDetailsProps {
   card: Card;
 }
 
 export default function CardPageComponent({ card }: CardDetailsProps) {
+  const GlobalisInCart = useAppSelector((state) =>
+    isItemInCart(state, card.id)
+  );
+  const { activeCurrency } = useAppSelector((state) => state.currency);
+  const dispatch = useAppDispatch();
+
   const locale = useLocale();
   const t = useTranslations("cardPage");
 
@@ -43,6 +53,7 @@ export default function CardPageComponent({ card }: CardDetailsProps) {
   };
 
   const [copunePopup, setCopunePopup] = useState(false);
+  const [isIncart, setIsIncart] = useState(false);
 
   // Function to share current page
   const handleShare = (platform: string) => {
@@ -69,6 +80,27 @@ export default function CardPageComponent({ card }: CardDetailsProps) {
   };
 
   const CategoryIcon = getIconComponent(card.category.icon_name);
+
+  const successMessage =
+    locale == "en"
+      ? "The card has been added to the cart successfully!"
+      : "تم إضافة البطاقة الى السلة بنجاح !";
+
+  const handleAddToCart = () => {
+    dispatch(addItemWithOne(card));
+    toast.success(successMessage);
+    setIsIncart(true);
+  };
+
+  const savedPrice =
+    Number.parseFloat(card.price_before_discount) -
+    Number.parseFloat(card.price);
+
+  useEffect(() => {
+    if (GlobalisInCart) {
+      setIsIncart(GlobalisInCart);
+    }
+  }, [GlobalisInCart]);
 
   return (
     <div
@@ -231,7 +263,11 @@ export default function CardPageComponent({ card }: CardDetailsProps) {
                       {t("originalPrice")}
                     </span>
                     <span className="text-lg text-gray-400 line-through">
-                      ${card.price_before_discount}
+                      {Number(
+                        Number(activeCurrency?.exchange_rate) *
+                          Number(card.price_before_discount)
+                      ).toFixed(2)}{" "}
+                      {activeCurrency?.symbol}
                     </span>
                   </div>
                   <div className="flex items-center justify-between mb-4">
@@ -239,15 +275,19 @@ export default function CardPageComponent({ card }: CardDetailsProps) {
                       {t("currentPrice")}
                     </span>
                     <span className="text-3xl font-bold text-green-600">
-                      ${card.price}
+                      {Number(
+                        Number(activeCurrency?.exchange_rate) *
+                          Number(card.price)
+                      ).toFixed(2)}{" "}
+                      {activeCurrency?.symbol}
                     </span>
                   </div>
                   <div className="bg-red-400 text-white lg:text-lg  px-6 py-1 rounded-full w-fit text-center">
-                    {t("save")} $
-                    {(
-                      Number.parseFloat(card.price_before_discount) -
-                      Number.parseFloat(card.price)
-                    ).toFixed(2)}
+                    {t("save")}{" "}
+                    {Number(
+                      Number(activeCurrency?.exchange_rate) * Number(savedPrice)
+                    ).toFixed(2)}{" "}
+                    {activeCurrency?.symbol}
                   </div>
                 </div>
 
@@ -261,14 +301,10 @@ export default function CardPageComponent({ card }: CardDetailsProps) {
                 </div>
 
                 {/* Add to Cart Button */}
-                <motion.button
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center transition-colors duration-200"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <FaShoppingCart className="mr-2" />
-                  {t("addToCart")}
-                </motion.button>
+                <AddToCartButton
+                  isInCart={isIncart}
+                  handleAddToCart={handleAddToCart}
+                />
 
                 <motion.button
                   whileHover={{ scale: 1.02 }}

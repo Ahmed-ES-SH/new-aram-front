@@ -1,7 +1,5 @@
-import { PaymentFailureContent } from "@/app/_components/_website/_faildpayment/PaymentFailureContent";
+import PaymentFailedPage from "@/app/_components/_website/_faildpayment/PaymentFailedPage";
 
-export default function PaymentFailurePage({ searchParams }: any) {
-  const totalInvoice = searchParams.total_invoice || "0.00";
-
-  return <PaymentFailureContent totalInvoice={totalInvoice} />;
+export default function PaymentFailurePage() {
+  return <PaymentFailedPage />;
 }
