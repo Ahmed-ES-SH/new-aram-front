@@ -73,6 +73,7 @@ export default function OfferStep({
       setLoading(true);
       const formData = new FormData();
       appendFormData(formData, orgForm);
+      formData.append("category_id", categories[0].id.toString());
 
       const response = await instance.post(`/register-org`, formData);
       if (response.status === 201) {

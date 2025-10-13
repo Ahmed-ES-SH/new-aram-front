@@ -15,6 +15,7 @@ import { instance } from "@/app/_helpers/axios";
 import { useRouter } from "next/navigation";
 import { VscLoading } from "react-icons/vsc";
 import CheckCurrentUserPopup from "../_global/CheckCurrentUserPopup";
+import SelectTimePopup from "../../_popups/_bookAppointment/SelectTimePopup";
 
 interface props {
   organization: Organization;
@@ -36,6 +37,7 @@ export default function OrganizationCard({ organization, index }: props) {
 
   const [loadingConversation, setLoadingConversation] = useState(false);
   const [checkCurrentUser, setCheckCurrentUser] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleStartConversation = async () => {
     if (!user) {
@@ -182,16 +184,28 @@ export default function OrganizationCard({ organization, index }: props) {
                 </div>
               )}
             </div>
-            <div className="flex-1 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1">
+            <div
+              onClick={() => setShowPopup(true)}
+              className="flex-1 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
+            >
               <LuClock7 className="w-3 h-3" />
               {t("book")}
             </div>
           </div>
         </div>
       </motion.div>
+
+      {/*  */}
       <CheckCurrentUserPopup
         isOpen={checkCurrentUser}
         onClose={() => setCheckCurrentUser(false)}
+      />
+
+      {/*  */}
+      <SelectTimePopup
+        organizationId={organization.id}
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
       />
     </>
   );

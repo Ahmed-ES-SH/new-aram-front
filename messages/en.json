@@ -79,6 +79,36 @@
     "description": "Aram Gulf Ltd. - Manage your account in easy ways"
   },
 
+  "metaAccountWallet": {
+    "title": "Aram Gulf Ltd. - Account Wallet",
+    "description": "Aram Gulf Ltd. - Manage your wallet, view balance, and track your transactions easily."
+  },
+
+  "metaFamilyMembers": {
+    "title": "Aram Gulf Ltd. - Family Members",
+    "description": "Aram Gulf Ltd. - Manage and view your registered family members easily."
+  },
+
+  "metaAppointments": {
+    "title": "Aram Gulf Ltd. - My Appointments",
+    "description": "Aram Gulf Ltd. - View, manage, and schedule your appointments quickly and conveniently."
+  },
+
+  "metaMyCards": {
+    "title": "Aram Gulf Ltd. - My Cards",
+    "description": "Aram Gulf Ltd. - Manage your saved cards and payment methods securely."
+  },
+
+  "metaMyProfile": {
+    "title": "Aram Gulf Ltd. - My Profile",
+    "description": "Aram Gulf Ltd. - Update your personal information and account settings easily."
+  },
+
+  "metaOwnedCoupones": {
+    "title": "Aram Gulf Ltd. - My Coupons",
+    "description": "Aram Gulf Ltd. - View and manage your available discount coupons."
+  },
+
   "authButtons": {
     "login": "Login",
     "register": "Register"
@@ -525,6 +555,13 @@
       "hours_ago": "{count} h ago",
       "days_ago": "{count} d ago"
     }
+  },
+
+  "time": {
+    "just_now": "Just now",
+    "minutes_ago": "{count} m ago",
+    "hours_ago": "{count} h ago",
+    "days_ago": "{count} d ago"
   },
 
   "accountSelection": {
@@ -1062,5 +1099,202 @@
     "rateCenter": "Rate Center",
     "goToCenters": "Go to Centers",
     "noActions": "No available actions"
+  },
+
+  "UserIdNotFound": {
+    "title": "User not found",
+    "description": "We couldn't find the requested user. The ID might be incorrect, or the user account was removed.",
+    "goBack": "Go back",
+    "home": "Home",
+    "hint": "If you think this is an error, try searching for the user or contact support."
+  },
+
+  "walletOverview": {
+    "title": "My Wallet",
+    "subtitle": "This is your account wallet overview showing all balances.",
+    "availableBalance": "Available Balance",
+    "pendingBalance": "Pending Balance",
+    "totalBalance": "Total Balance",
+    "withdrawbtn": "Balance withdrawal"
+  },
+
+  "wallet": {
+    "transactions": {
+      "title": "Transaction History",
+      "type": "Type",
+      "amount": "Amount",
+      "direction": "Direction",
+      "status": "Status",
+      "note": "Note",
+      "date": "Date",
+      "empty": "No transactions found",
+      "emptyDescription": "Your transaction history will appear here",
+      "in": "In",
+      "out": "Out",
+      "types": {
+        "deposit": "Deposit",
+        "withdrawal": "Withdrawal",
+        "purchase": "Purchase",
+        "sale": "Sale",
+        "commission": "Commission",
+        "refund": "Refund",
+        "transfer": "Transfer",
+        "book": "Book"
+      },
+      "statuses": {
+        "pending": "Pending",
+        "completed": "Completed",
+        "failed": "Failed"
+      }
+    }
+  },
+
+  "withdraw": {
+    "title": "Withdraw Funds",
+    "subtitle": "Choose your withdrawal method and enter the required information.",
+    "amountLabel": "Amount",
+    "amountPlaceholder": "Enter withdrawal amount",
+    "methodLabel": "Withdrawal Method",
+    "methods": {
+      "bank": "Bank Transfer",
+      "bankDescription": "Transfer to your bank account",
+      "paypal": "PayPal",
+      "paypalDescription": "Withdraw to your PayPal account"
+    },
+    "bankNumberLabel": "Bank Account Number",
+    "bankNumberPlaceholder": "Enter your bank account number",
+    "paypalEmailLabel": "PayPal Email",
+    "paypalEmailPlaceholder": "Enter your PayPal email address",
+    "detailsLabel": "Additional Details",
+    "detailsPlaceholder": "Any additional notes or instructions...",
+    "optional": "Optional",
+    "submitButton": "Withdraw Funds",
+    "submitting": "Processing Withdrawal...",
+    "validation": {
+      "amountMin20": "The minimum withdrawal amount is 20.",
+      "insufficientBalance": "You don't have enough available balance.",
+      "bankNumberRequired": "Bank account number is required",
+      "paypalEmailRequired": "PayPal email is required",
+      "invalidEmail": "Please enter a valid email address"
+    },
+    "messages": {
+      "success": "Your withdrawal request has been submitted successfully!",
+      "submitError": "Please check your inputs and try again."
+    }
+  },
+
+  "familyCard": {
+    "memberId": "ID",
+    "age": "Age",
+    "years": "years",
+    "birthDate": "Birth Date",
+    "phone": "Phone",
+    "relationship": "Relationship",
+    "status": {
+      "title": "Status",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "actions": {
+      "accept": "Accept",
+      "reject": "Reject",
+      "delete": "Delete"
+    }
+  },
+
+  "header": {
+    "welcome": "Welcome",
+    "profile": "Profile",
+    "sendinvitation": "Send an invitation",
+    "logout": "Logout",
+    "active": "Active",
+    "lastLogin": "Last Login",
+    "memberSince": "Member Since",
+    "verified": "Verified",
+    "notVerified": "Not Verified"
+  },
+
+  "SendInvitation": {
+    "title": "Send Invitation",
+    "closeButton": "Close",
+    "searchPlaceholder": "Search by name, email or phone",
+    "sendButton": "Send Invitation",
+    "cancelButton": "Cancel",
+    "noResults": "No users found",
+    "loading": "Loading users...",
+    "error": "Failed to load users. Try again",
+    "retry": "Retry",
+    "selected": "{count} selected",
+    "noSelected": "No user selected",
+    "previewTitle": "Selected user",
+    "noSelectedPreview": "No user selected to preview",
+    "relationship": "Relationship",
+    "relationshipPlaceholder": "Select relationship",
+    "relationshipOptions": {
+      "father": "Father",
+      "mother": "Mother",
+      "son": "Son",
+      "daughter": "Daughter",
+      "brother": "Brother",
+      "sister": "Sister",
+      "husband": "Husband",
+      "wife": "Wife",
+      "grandfather": "Grandfather",
+      "grandmother": "Grandmother",
+      "grandson": "Grandson",
+      "granddaughter": "Granddaughter",
+      "uncle": "Uncle",
+      "aunt": "Aunt",
+      "nephew": "Nephew",
+      "niece": "Niece",
+      "cousin": "Cousin",
+      "other": "Other"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "status": "Status",
+      "createdAt": "Created"
+    }
+  },
+
+  "selectTime": {
+    "title": "Select time and date",
+    "chooseTime": "Choose a time",
+    "chooseDate": "Choose a date",
+    "proceedPayment": "Proceed to payment",
+    "proceedToPayment": "Proceed to payment",
+    "selectedTime": "Selected time",
+    "selectedDate": "Selected date",
+    "bookingNotAvailable": "Booking is currently not available for this organization.",
+    "tryAgain": "Try again",
+    "back": "Back",
+    "continue": "Continue",
+    "close": "Close",
+    "available": "Available",
+    "hasBookings": "Has bookings",
+    "selected": "Selected",
+    "booked": "Booked",
+    "bookingSummary": "Booking summary",
+    "date": "Date",
+    "time": "Time",
+    "price": "Price",
+    "currency": "SAR",
+    "paymentDetails": "Payment details",
+    "cardNumber": "Card number",
+    "expiryDate": "Expiry date",
+    "cardHolder": "Cardholder name",
+    "cvv": "CVV",
+    "totalAmount": "Total amount",
+    "confirmBooking": "Confirm booking",
+    "confirmationMessage": "Please review your booking details and confirm the booking",
+    "confirmBookingButton": "Confirm booking",
+    "errors": {
+      "fetchData": "Failed to load data. Please try again.",
+      "fetchBookingStatus": "Failed to verify booking status. Please try again."
+    }
   }
 }

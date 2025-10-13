@@ -151,7 +151,25 @@ export default function AppointmentActions({
         );
 
       case "confirmed":
-        return <span className="text-gray-400 text-sm">{t("noActions")}</span>;
+        return daysDiff > 2 ? (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={handleCanel}
+            className="flex items-center justify-center gap-2 bg-amber-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-amber-600 transition-colors"
+          >
+            {loading == "cancelled_by_user" ? (
+              <VscLoading className="animate-spin" />
+            ) : (
+              <div className="flex items-center gap-1">
+                <FiXCircle />
+                {t("cancel")}
+              </div>
+            )}
+          </motion.button>
+        ) : (
+          <span className="text-gray-400 text-sm">{t("noActions")}</span>
+        );
 
       case "rejected":
         return (

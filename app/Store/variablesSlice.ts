@@ -18,6 +18,8 @@ interface VariablesState {
   showNotificationDrop: boolean;
   orgsSidebar: boolean;
   userPanalSidebar: boolean;
+  withdrawOpen: boolean;
+  showSendPopup: boolean;
 }
 
 const initialState: VariablesState = {
@@ -36,6 +38,8 @@ const initialState: VariablesState = {
   showNotificationDrop: false,
   orgsSidebar: true,
   userPanalSidebar: true,
+  withdrawOpen: false,
+  showSendPopup: false,
 };
 
 const variablesSlice = createSlice({
@@ -87,6 +91,12 @@ const variablesSlice = createSlice({
     setUserPanalSidebar: (state, action: PayloadAction<boolean>) => {
       state.userPanalSidebar = action.payload;
     },
+    setWithdrawOpen: (state, action: PayloadAction<boolean>) => {
+      state.withdrawOpen = action.payload;
+    },
+    setShowSendPopup: (state, action: PayloadAction<boolean>) => {
+      state.showSendPopup = action.payload;
+    },
   },
 });
 
@@ -106,6 +116,8 @@ export const {
   setShowNotificationDrop,
   setOrgsSidebar,
   setUserPanalSidebar,
+  setWithdrawOpen,
+  setShowSendPopup,
 } = variablesSlice.actions;
 
 export default variablesSlice.reducer;

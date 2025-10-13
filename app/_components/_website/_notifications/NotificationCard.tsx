@@ -2,18 +2,21 @@
 import { easeOut, motion } from "framer-motion";
 import { NotificationType } from "./NotificationBell";
 import Img from "../_global/Img";
+import { useLocale, useTranslations } from "next-intl";
+import { directionMap } from "@/app/constants/_website/global";
 
 interface NotificationCardProps {
   notification: NotificationType;
   index: number;
-  texts: any;
 }
 
 export default function NotificationCard({
   notification,
   index,
-  texts,
 }: NotificationCardProps) {
+  const locale = useLocale();
+  const t = useTranslations("time");
+
   const cardVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
     visible: {
@@ -41,18 +44,18 @@ export default function NotificationCard({
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return texts("time.just_now");
+    if (diffInSeconds < 60) return t("just_now");
     if (diffInSeconds < 3600) {
       const count = Math.floor(diffInSeconds / 60);
-      return texts("time.minutes_ago").replace("{count}", count.toString());
+      return t("minutes_ago", { count });
     }
     if (diffInSeconds < 86400) {
       const count = Math.floor(diffInSeconds / 3600);
-      return texts("time.hours_ago").replace("{count}", count.toString());
+      return t("hours_ago", { count });
     }
     if (diffInSeconds < 604800) {
       const count = Math.floor(diffInSeconds / 86400);
-      return texts("time.days_ago").replace("{count}", count.toString());
+      return t("days_ago", { count });
     }
 
     return date.toLocaleDateString();
@@ -60,6 +63,7 @@ export default function NotificationCard({
 
   return (
     <motion.div
+      dir="rtl"
       variants={cardVariants}
       initial="hidden"
       animate="visible"
@@ -98,7 +102,10 @@ export default function NotificationCard({
               </span>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <span className="text-xs text-gray-500">
+              <span
+                dir={directionMap[locale]}
+                className="text-xs text-gray-500"
+              >
                 {formatTimeAgo(notification.created_at)}
               </span>
               {!notification.is_read && (

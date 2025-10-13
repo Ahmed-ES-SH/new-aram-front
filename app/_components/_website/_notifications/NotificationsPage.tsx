@@ -103,7 +103,7 @@ export default function NotificationsPage({
   if (userLoading) return <LoadingPage />;
 
   return (
-    <div dir={directionMap[locale]} className="min-h-screen mt-20 bg-gray-50">
+    <div dir={directionMap[locale]} className="min-h-screen mt-24 bg-gray-50">
       <div className="c-container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
@@ -160,7 +160,6 @@ export default function NotificationsPage({
                       key={notification.id}
                       notification={notification}
                       index={index}
-                      texts={t}
                     />
                   ))}
                 </motion.div>

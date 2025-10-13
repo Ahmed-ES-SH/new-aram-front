@@ -6,18 +6,36 @@ import { AppointmentStatusBadge } from "./AppointmentStatusBadge";
 import { Appointment } from "./types";
 import Img from "../../../_global/Img";
 import AppointmentActions from "./AppointmentActions";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Pagination from "@/app/_components/PaginationComponent";
+import { instance } from "@/app/_helpers/axios";
+import { useAppSelector } from "@/app/Store/hooks";
+import { GiNotebook } from "react-icons/gi";
+import SpinLoading from "../../../_global/SpinLoading";
+
+type pagination = {
+  current_page: number;
+  last_page: number;
+};
 
 interface AppointmentTableProps {
   appointments: Appointment[];
+  pagination: pagination;
 }
 
 export function AppointmentTable({
   appointments: data,
+  pagination,
 }: AppointmentTableProps) {
+  const { user } = useAppSelector((state) => state.user);
+
   const t = useTranslations("appointments");
 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [currentPage, setCurrentPage] = useState(pagination.current_page ?? 1);
+  const [lastPage, setLastPage] = useState(pagination.last_page ?? 1);
+  const [loading, setLoading] = useState(false);
+  const hasMounted = useRef(false);
 
   const formatDateTime = (startTime: string, endTime: string) => {
     const start = new Date(startTime);
@@ -51,16 +69,53 @@ export function AppointmentTable({
     }).format(numPrice);
   };
 
+  const handlePageChange = async (newPage: number) => {
+    if (newPage >= 1 && newPage <= pagination.last_page) {
+      setCurrentPage(newPage);
+    }
+  };
+
   useEffect(() => {
     if (data) {
       setAppointments(data);
     }
   }, [data]);
 
+  useEffect(() => {
+    if (hasMounted.current) {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const response = await instance.get(
+            `/appointments/${user?.account_type}/${user?.id}?page=${currentPage}`
+          );
+          if (response.status === 200) {
+            const { data, pagination } = response.data;
+            setAppointments(data);
+            setCurrentPage(pagination.current_page);
+            setLastPage(pagination.last_page);
+            scrollTo(0, 0);
+          }
+        } catch (error: any) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    } else {
+      hasMounted.current = true;
+    }
+  }, [currentPage, user]);
+
   if (appointments.length === 0) {
     return (
-      <div className="text-center py-12 text-slate-500">
-        <p className="text-lg">{t("noAppointments")}</p>
+      <div className="text-center w-full min-h-[75vh] flex items-center justify-center py-12 text-slate-500">
+        <div className="flex flex-col items-center gap-4">
+          <GiNotebook className="size-52 text-primary" />
+          <p className="text-lg">{t("noAppointments")}</p>
+        </div>
       </div>
     );
   }
@@ -91,74 +146,89 @@ export function AppointmentTable({
           </tr>
         </thead>
         <tbody>
-          {appointments.map((appointment, index) => {
-            const { dateStr, timeStr } = formatDateTime(
-              appointment.start_time,
-              appointment.end_time
-            );
+          {loading ? (
+            <tr>
+              <td colSpan={6} className="p-10">
+                <div className="min-h-[75vh] flex items-center justify-center w-full">
+                  <SpinLoading />
+                </div>
+              </td>
+            </tr>
+          ) : (
+            appointments.map((appointment, index) => {
+              const { dateStr, timeStr } = formatDateTime(
+                appointment.start_time,
+                appointment.end_time
+              );
 
-            return (
-              <motion.tr
-                key={appointment.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
-              >
-                <td className="py-4 px-4 text-sm text-slate-600">
-                  #{appointment.id}
-                </td>
-                <td className="py-4 px-4">
-                  <div className="flex items-center gap-3">
-                    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                      <Img
-                        src={appointment.organization.logo ?? "/logo.png"}
-                        errorSrc="/logo.png"
-                        alt={appointment.organization.title}
-                        className="object-cover w-full h-full rounded-full"
-                      />
+              return (
+                <motion.tr
+                  key={appointment.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
+                >
+                  <td className="py-4 px-4 text-sm text-slate-600">
+                    #{appointment.id}
+                  </td>
+                  <td className="py-4 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
+                        <Img
+                          src={appointment.organization.logo ?? "/logo.png"}
+                          errorSrc="/logo.png"
+                          alt={appointment.organization.title}
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-slate-800">
+                          {appointment.organization.title}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {appointment.organization.email}
+                        </p>
+                      </div>
                     </div>
+                  </td>
+                  <td className="py-4 px-4">
                     <div>
                       <p className="text-sm font-medium text-slate-800">
-                        {appointment.organization.title}
+                        {dateStr}
                       </p>
-                      <p className="text-xs text-slate-500">
-                        {appointment.organization.email}
-                      </p>
+                      <p className="text-xs text-slate-500">{timeStr}</p>
                     </div>
-                  </div>
-                </td>
-                <td className="py-4 px-4">
-                  <div>
-                    <p className="text-sm font-medium text-slate-800">
-                      {dateStr}
-                    </p>
-                    <p className="text-xs text-slate-500">{timeStr}</p>
-                  </div>
-                </td>
-                <td className="py-4 px-4 text-sm font-semibold text-slate-800">
-                  {formatPrice(appointment.price)}
-                </td>
-                <td className="py-4 px-4">
-                  <AppointmentStatusBadge status={appointment.status} />
-                </td>
-                <td className="py-4 px-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400">
-                      <AppointmentActions
-                        status={appointment.status}
-                        startTime={appointment.start_time}
-                        appointmentId={appointment.id}
-                        setAppointments={setAppointments}
-                      />
-                    </span>
-                  </div>
-                </td>
-              </motion.tr>
-            );
-          })}
+                  </td>
+                  <td className="py-4 px-4 text-sm font-semibold text-slate-800">
+                    {formatPrice(appointment.price)}
+                  </td>
+                  <td className="py-4 px-4">
+                    <AppointmentStatusBadge status={appointment.status} />
+                  </td>
+                  <td className="py-4 px-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-slate-400">
+                        <AppointmentActions
+                          status={appointment.status}
+                          startTime={appointment.start_time}
+                          appointmentId={appointment.id}
+                          setAppointments={setAppointments}
+                        />
+                      </span>
+                    </div>
+                  </td>
+                </motion.tr>
+              );
+            })
+          )}
         </tbody>
       </table>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={lastPage ?? 1}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

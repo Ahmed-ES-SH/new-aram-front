@@ -23,7 +23,6 @@ import { toast } from "sonner";
 import { useLoginSchema } from "@/app/validation/useLoginSchema";
 import LocaleLink from "../../_global/LocaleLink";
 import { encryptToken } from "@/app/_helpers/helpers";
-import { useRouter } from "next/navigation";
 
 interface LoginFormData {
   phoneOrEmail: string;
@@ -38,8 +37,6 @@ interface LoginFormErrors {
 export function LoginForm() {
   const cookie = Cookie();
   const dispatch = useAppDispatch();
-
-  const router = useRouter();
 
   const locale = useLocale();
   const t = useTranslations("login");
@@ -88,16 +85,23 @@ export function LoginForm() {
         dispatch(setUnreadCount(unreadCountMessages));
         dispatch(setUnreadNotificationsCount(unreadNotificationsCount));
         setTimeout(() => {
-          router.push(`/${locale}`);
+          location.pathname = `/${locale}`;
         }, 300);
       }
     } catch (error: any) {
       console.error("Login error:", error);
+      const message =
+        error?.response?.data?.message[locale] ??
+        error?.response?.data?.message ??
+        "حدث خطأ غير متوقع اثناء تسجيل الدخول الرجاء المحاولة لاحقا !";
       if (error.status == 401) {
         toast.error(loginError("invalid_credentials"));
       }
       if (error.status == 404) {
         toast.error(loginError("user_not_found"));
+      }
+      if (error.status == 500) {
+        toast.error(message);
       }
     } finally {
       setIsLoading(false);

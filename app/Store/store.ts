@@ -8,6 +8,7 @@ import cartReducer from "./cartSlice";
 import CardCategoriesReducer from "./cardCategorySlice";
 import CurrencyReducer from "./currencySlice";
 import CategoriesReducer from "./categoriesSlice";
+import WalletReducer from "./walletSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     categories: CategoriesReducer,
     cartSlice: cartReducer,
     currency: CurrencyReducer,
+    wallet: WalletReducer,
   },
 });
 

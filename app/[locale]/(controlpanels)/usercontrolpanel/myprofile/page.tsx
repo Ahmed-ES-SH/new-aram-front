@@ -2,7 +2,19 @@ import { EmailVerificationAlert } from "@/app/_components/_website/_controlpanal
 import { ProfileForm } from "@/app/_components/_website/_controlpanals/_usercontrol/_Userprofile/ProfileForm";
 import { ProfileHeader } from "@/app/_components/_website/_controlpanals/_usercontrol/_Userprofile/ProfileHeader";
 import FetchData from "@/app/_helpers/FetchData";
+import { getSharedMetadata } from "@/app/_helpers/helpers";
+import { getTranslations } from "next-intl/server";
 import React from "react";
+
+export async function generateMetadata() {
+  const t = await getTranslations("metaMyProfile");
+  const sharedMetadata = await getSharedMetadata(t("title"), t("description"));
+  return {
+    title: t("title"),
+    describtion: t("description"),
+    ...sharedMetadata,
+  };
+}
 
 export default async function UserProfilePage() {
   const user = await FetchData(`/current-user`, false);

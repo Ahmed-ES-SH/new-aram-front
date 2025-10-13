@@ -21,13 +21,13 @@ export default async function CenterControlPanalLayout({
   params,
 }: any) {
   const user = await FetchData(`/current-user`, false);
-  const userLinks =
+  const centerLinks =
     user && user?.account_type != "user" && getOrganizationLinks(user);
 
   const locale = (await params.locale) ?? "en";
   return (
     <div dir={directionMap[locale]} className="flex items-start gap-3 mt-20">
-      <ControlSidebar items={userLinks} />
+      <ControlSidebar items={centerLinks} />
       {children}
     </div>
   );

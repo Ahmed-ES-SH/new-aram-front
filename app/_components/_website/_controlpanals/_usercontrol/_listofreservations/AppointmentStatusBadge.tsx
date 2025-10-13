@@ -62,6 +62,14 @@ const statusConfig = {
       ar: "ألغاه المركز",
     },
   },
+  done: {
+    color: "bg-green-100 text-green-700 border-green-200",
+    icon: FiCheckCircle,
+    label: {
+      en: "Completed",
+      ar: "تم بنجاح",
+    },
+  },
 };
 
 export function AppointmentStatusBadge({

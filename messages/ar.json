@@ -79,6 +79,36 @@
     "description": "شركة أرام الخليج المحدودة - إدارة حسابك بطرق سهلة"
   },
 
+  "metaAccountWallet": {
+    "title": "شركة أرام الخليج المحدودة - المحفظة",
+    "description": "شركة أرام الخليج المحدودة - إدارة محفظتك، عرض الرصيد، وتتبع معاملاتك بسهولة."
+  },
+
+  "metaFamilyMembers": {
+    "title": "شركة أرام الخليج المحدودة - أفراد العائلة",
+    "description": "شركة أرام الخليج المحدودة - إدارة وعرض أفراد العائلة المسجلين لديك بسهولة."
+  },
+
+  "metaAppointments": {
+    "title": "شركة أرام الخليج المحدودة - مواعيدي",
+    "description": "شركة أرام الخليج المحدودة - عرض، إدارة، وحجز المواعيد الخاصة بك بسرعة وسهولة."
+  },
+
+  "metaMyCards": {
+    "title": "شركة أرام الخليج المحدودة - بطاقاتي",
+    "description": "شركة أرام الخليج المحدودة - إدارة بطاقاتك وطرق الدفع الخاصة بك بأمان."
+  },
+
+  "metaMyProfile": {
+    "title": "شركة أرام الخليج المحدودة - ملفي الشخصي",
+    "description": "شركة أرام الخليج المحدودة - تحديث معلوماتك الشخصية وإعدادات حسابك بسهولة."
+  },
+
+  "metaOwnedCoupones": {
+    "title": "شركة أرام الخليج المحدودة - كوبوناتي",
+    "description": "شركة أرام الخليج المحدودة - عرض وإدارة كوبونات الخصم المتاحة لديك."
+  },
+
   "authButtons": {
     "login": "دخول",
     "register": "إنشاء حساب"
@@ -537,6 +567,13 @@
       "hours_ago": "منذ {count} ساعة",
       "days_ago": "منذ {count} يوم"
     }
+  },
+
+  "time": {
+    "just_now": "الآن",
+    "minutes_ago": "منذ {count} دقيقة",
+    "hours_ago": "منذ {count} ساعة",
+    "days_ago": "منذ {count} يوم"
   },
 
   "accountSelection": {
@@ -1075,5 +1112,202 @@
     "rateCenter": "تقييم المركز",
     "goToCenters": "الذهاب إلى المراكز",
     "noActions": "لا توجد إجراءات متاحة"
+  },
+
+  "UserIdNotFound": {
+    "title": "المستخدم غير موجود",
+    "description": "لم نتمكن من العثور على المستخدم المطلوب. قد يكون المعرف غير صحيح أو تم حذف حساب المستخدم.",
+    "goBack": "الرجوع",
+    "home": "الرئيسية",
+    "hint": "إذا كنت تعتقد أن هناك خطأ، حاول البحث عن المستخدم أو تواصل مع الدعم الفني."
+  },
+
+  "walletOverview": {
+    "title": "محفظتي",
+    "subtitle": "هذه هي محفظة حسابك التي تعرض جميع الأرصدة.",
+    "availableBalance": "الرصيد المتاح",
+    "pendingBalance": "الرصيد المعلق",
+    "totalBalance": "إجمالي الرصيد",
+    "withdrawbtn": "سحب الرصيد"
+  },
+
+  "wallet": {
+    "transactions": {
+      "title": "سجل المعاملات",
+      "type": "النوع",
+      "amount": "المبلغ",
+      "direction": "الاتجاه",
+      "status": "الحالة",
+      "note": "ملاحظة",
+      "date": "التاريخ",
+      "empty": "لا توجد معاملات",
+      "emptyDescription": "سوف تظهر سجل معاملاتك هنا",
+      "in": "داخل",
+      "out": "خارج",
+      "types": {
+        "deposit": "إيداع",
+        "withdrawal": "سحب",
+        "purchase": "شراء",
+        "sale": "بيع",
+        "commission": "عمولة",
+        "refund": "استرداد",
+        "transfer": "تحويل",
+        "book": "كتاب"
+      },
+      "statuses": {
+        "pending": "قيد الانتظار",
+        "completed": "مكتمل",
+        "failed": "فشل"
+      }
+    }
+  },
+
+  "withdraw": {
+    "title": "سحب الأموال",
+    "subtitle": "اختر طريقة السحب وأدخل المعلومات المطلوبة.",
+    "amountLabel": "المبلغ",
+    "amountPlaceholder": "أدخل مبلغ السحب",
+    "methodLabel": "طريقة السحب",
+    "methods": {
+      "bank": "تحويل بنكي",
+      "bankDescription": "تحويل إلى حسابك البنكي",
+      "paypal": "باي بال",
+      "paypalDescription": "سحب إلى حساب الباي بال الخاص بك"
+    },
+    "bankNumberLabel": "رقم الحساب البنكي",
+    "bankNumberPlaceholder": "أدخل رقم الحساب البنكي",
+    "paypalEmailLabel": "البريد الإلكتروني للباي بال",
+    "paypalEmailPlaceholder": "أدخل بريدك الإلكتروني للباي بال",
+    "detailsLabel": "تفاصيل إضافية",
+    "detailsPlaceholder": "أي ملاحظات أو تعليمات إضافية...",
+    "optional": "اختياري",
+    "submitButton": "سحب الأموال",
+    "submitting": "جاري معالجة طلب السحب...",
+    "validation": {
+      "amountMin": "يجب أن يكون المبلغ 20 على الأقل",
+      "insufficientBalance": "ليس لديك رصيد متاح كافٍ.",
+      "bankNumberRequired": "رقم الحساب البنكي مطلوب",
+      "paypalEmailRequired": "بريد الباي بال الإلكتروني مطلوب",
+      "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح"
+    },
+    "messages": {
+      "success": "تم تقديم طلب السحب بنجاح!",
+      "submitError": "يرجى التحقق من المدخلات والمحاولة مرة أخرى."
+    }
+  },
+
+  "familyCard": {
+    "memberId": "المعرف",
+    "age": "العمر",
+    "years": "سنة",
+    "birthDate": "تاريخ الميلاد",
+    "phone": "الهاتف",
+    "relationship": "صلة القرابة",
+    "status": {
+      "title": "الحالة",
+      "pending": "معلق",
+      "accepted": "مقبول",
+      "rejected": "مرفوض"
+    },
+    "actions": {
+      "accept": "قبول",
+      "reject": "رفض",
+      "delete": "حذف"
+    }
+  },
+
+  "header": {
+    "welcome": "مرحباً",
+    "profile": "الملف الشخصي",
+    "sendinvitation": "ارسل دعوه",
+    "logout": "تسجيل الخروج",
+    "active": "نشط",
+    "lastLogin": "آخر تسجيل دخول",
+    "memberSince": "عضو منذ",
+    "verified": "موثق",
+    "notVerified": "غير موثق"
+  },
+
+  "SendInvitation": {
+    "title": "إرسال دعوة",
+    "closeButton": "إغلاق",
+    "searchPlaceholder": "البحث بالاسم، البريد الإلكتروني أو الهاتف",
+    "sendButton": "إرسال الدعوة",
+    "cancelButton": "إلغاء",
+    "noResults": "لم يتم العثور على مستخدمين",
+    "loading": "جاري تحميل المستخدمين...",
+    "error": "فشل في تحميل المستخدمين. حاول مرة أخرى",
+    "retry": "إعادة المحاولة",
+    "selected": "{count} مُحدد",
+    "noSelected": "لم يتم تحديد مستخدم",
+    "previewTitle": "المستخدم المحدد",
+    "noSelectedPreview": "لم يتم تحديد مستخدم للمعاينة",
+    "relationship": "صلة القرابة",
+    "relationshipPlaceholder": "اختر صلة القرابة",
+    "relationshipOptions": {
+      "father": "الأب",
+      "mother": "الأم",
+      "son": "الابن",
+      "daughter": "الابنة",
+      "brother": "الأخ",
+      "sister": "الأخت",
+      "husband": "الزوج",
+      "wife": "الزوجة",
+      "grandfather": "الجد",
+      "grandmother": "الجدة",
+      "grandson": "الحفيد",
+      "granddaughter": "الحفيدة",
+      "uncle": "العم",
+      "aunt": "العمة",
+      "nephew": "ابن الأخ/الأخت",
+      "niece": "ابنة الأخ/الأخت",
+      "cousin": "ابن العم/العمة",
+      "other": "أخرى"
+    },
+    "columns": {
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "role": "الدور",
+      "status": "الحالة",
+      "createdAt": "تاريخ الإنشاء"
+    }
+  },
+
+  "selectTime": {
+    "title": "اختر الوقت والتاريخ",
+    "chooseTime": "اختر موعدًا",
+    "chooseDate": "اختر تاريخًا",
+    "proceedPayment": "المتابعة للدفع",
+    "proceedToPayment": "المتابعة للدفع",
+    "selectedTime": "الوقت المختار",
+    "selectedDate": "التاريخ المختار",
+    "bookingNotAvailable": "الحجز غير متاح حاليًا لهذه المؤسسة.",
+    "tryAgain": "حاول مرة أخرى",
+    "back": "رجوع",
+    "continue": "متابعة",
+    "close": "إغلاق",
+    "available": "متاح",
+    "hasBookings": "يوجد حجوزات",
+    "selected": "محدد",
+    "booked": "محجوز",
+    "bookingSummary": "ملخص الحجز",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "price": "السعر",
+    "currency": "ر.س",
+    "paymentDetails": "تفاصيل الدفع",
+    "cardNumber": "رقم البطاقة",
+    "expiryDate": "تاريخ الانتهاء",
+    "cardHolder": "اسم حامل البطاقة",
+    "cvv": "CVV",
+    "totalAmount": "المبلغ الإجمالي",
+    "confirmBooking": "تأكيد الحجز",
+    "confirmationMessage": "يرجى مراجعة معلومات الحجز وتأكيد الحجز",
+    "confirmBookingButton": "تأكيد الحجز",
+    "errors": {
+      "fetchData": "فشل في تحميل البيانات. يرجى المحاولة مرة أخرى.",
+      "fetchBookingStatus": "فشل في التحقق من حالة الحجز. يرجى المحاولة مرة أخرى."
+    }
   }
 }

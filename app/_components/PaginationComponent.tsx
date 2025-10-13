@@ -30,7 +30,7 @@ export default function Pagination({
     }
 
     if (currentPage <= 4) {
-      pages.push(1, 2, 3, 4, 5, "...", totalPages - 1, totalPages);
+      pages.push(1, 2, 3, "...", totalPages - 1, totalPages);
     } else if (currentPage >= totalPages - 3) {
       pages.push(
         1,
@@ -63,7 +63,7 @@ export default function Pagination({
     totalPages > 1 && (
       <ol
         style={{ direction: "ltr" }}
-        className="flex justify-center flex-wrap gap-1 text-xs font-medium pt-2 border-t border-gray-300 dark:border-gray-700 my-6"
+        className="flex justify-center flex-wrap gap-1 text-xs font-medium pt-2 border-t border-gray-300  my-6"
       >
         {/* Previous Button */}
         <li>
@@ -92,7 +92,7 @@ export default function Pagination({
                 className={`block w-8 h-8 rounded border text-center leading-8 font-medium transition
                   ${
                     page === currentPage
-                      ? "bg-primary-boldgray text-white border-secondary-dash"
+                      ? "bg-primary text-white border-primary"
                       : "bg-white text-gray-900 border-gray-100 hover:bg-gray-200"
                   }`}
               >

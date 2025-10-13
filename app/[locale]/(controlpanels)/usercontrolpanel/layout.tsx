@@ -1,4 +1,5 @@
 import ControlSidebar from "@/app/_components/_website/_controlpanals/ControlSidebar";
+import SidbarButton from "@/app/_components/_website/_controlpanals/SidbarButton";
 import { getLinks } from "@/app/_components/_website/_navbar/constants";
 import FetchData from "@/app/_helpers/FetchData";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
@@ -27,6 +28,7 @@ export default async function UserControlPanalLayout({
   return (
     <div dir={directionMap[locale]} className="flex items-start gap-3 mt-20">
       <ControlSidebar items={userLinks} />
+      <SidbarButton />
       {children}
     </div>
   );
