@@ -136,10 +136,12 @@ export default function OrganizationCard({ organization, index }: props) {
           </p>
 
           <div className="space-y-2 mb-4">
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <FiMapPin className="w-4 h-4" />
-              <span>{organization.location.address}</span>
-            </div>
+            {organization?.location && (
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <FiMapPin className="w-4 h-4" />
+                <span>{organization?.location?.address}</span>
+              </div>
+            )}
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <FiCalendar className="w-4 h-4" />
               <span>
@@ -148,16 +150,18 @@ export default function OrganizationCard({ organization, index }: props) {
             </div>
           </div>
 
-          <div className="flex items-center justify-between mb-4">
-            <div
-              className="px-3 py-1 rounded-full text-xs font-medium text-white"
-              style={{ backgroundColor: organization.category.bg_color }}
-            >
-              {locale == "ar"
-                ? organization.category.title_ar
-                : organization.category.title_en}
+          {organization.category && (
+            <div className="flex items-center justify-between mb-4">
+              <div
+                className="px-3 py-1 rounded-full text-xs font-medium text-white"
+                style={{ backgroundColor: organization.category.bg_color }}
+              >
+                {locale == "ar"
+                  ? organization.category.title_ar
+                  : organization.category.title_en}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex flex-wrap gap-1 mb-4">
             {organization.keywords.slice(0, 2).map((keyword) => (
@@ -203,6 +207,7 @@ export default function OrganizationCard({ organization, index }: props) {
 
       {/*  */}
       <SelectTimePopup
+        organizationTitle={organization.title}
         organizationId={organization.id}
         isOpen={showPopup}
         onClose={() => setShowPopup(false)}

@@ -18,6 +18,7 @@ export interface category {
   sub_categories?: subCategory[];
   sub_categories_count: number;
   organizations_count: number;
+  parent_id?: number;
   parent: {
     id: number;
     title_en: string;

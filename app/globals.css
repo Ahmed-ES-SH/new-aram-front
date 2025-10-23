@@ -188,6 +188,10 @@ textarea {
   }
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 .hidden-scrollbar {
   /* لجميع المتصفحات */
   scrollbar-width: none; /* Firefox */

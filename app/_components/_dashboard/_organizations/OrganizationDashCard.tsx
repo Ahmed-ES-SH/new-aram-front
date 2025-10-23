@@ -165,7 +165,9 @@ export default function OrganizationDashCard({
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
             {organization.title}
           </h3>
-          <CategoryBadge category={organization.category} />
+          {organization.category && (
+            <CategoryBadge category={organization.category} />
+          )}
         </div>
 
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">

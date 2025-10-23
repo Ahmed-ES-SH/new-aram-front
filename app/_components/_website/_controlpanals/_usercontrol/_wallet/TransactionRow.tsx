@@ -10,9 +10,9 @@ import {
   FaPercent,
   FaUndoAlt,
   FaExchangeAlt,
-  FaBookOpen,
 } from "react-icons/fa";
 import { Transaction, TransactionType } from "./types";
+import { GiNotebook } from "react-icons/gi";
 
 interface TransactionRowProps {
   transaction: Transaction;
@@ -38,7 +38,7 @@ const getTransactionIcon = (type: TransactionType) => {
     case "transfer":
       return <FaExchangeAlt {...iconProps} />;
     case "book":
-      return <FaBookOpen {...iconProps} />;
+      return <GiNotebook {...iconProps} />;
     default:
       return <FaExchangeAlt {...iconProps} />;
   }

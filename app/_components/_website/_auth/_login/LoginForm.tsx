@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { useLoginSchema } from "@/app/validation/useLoginSchema";
 import LocaleLink from "../../_global/LocaleLink";
 import { encryptToken } from "@/app/_helpers/helpers";
+import { useRouter } from "next/navigation";
 
 interface LoginFormData {
   phoneOrEmail: string;
@@ -37,6 +38,7 @@ interface LoginFormErrors {
 export function LoginForm() {
   const cookie = Cookie();
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const locale = useLocale();
   const t = useTranslations("login");
@@ -85,7 +87,7 @@ export function LoginForm() {
         dispatch(setUnreadCount(unreadCountMessages));
         dispatch(setUnreadNotificationsCount(unreadNotificationsCount));
         setTimeout(() => {
-          location.pathname = `/${locale}`;
+          router.push(`/${locale}`);
         }, 300);
       }
     } catch (error: any) {

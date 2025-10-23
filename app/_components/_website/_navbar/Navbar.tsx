@@ -15,7 +15,6 @@ import FetchData from "@/app/_helpers/FetchData";
 
 export default async function Navbar({ locale }: any) {
   const currencies = await FetchData(`/currencies`, false);
-  const user = await FetchData("/current-user", false);
   return (
     <NavDiv>
       <header className="bg-white  shadow-md fixed top-0 left-0 w-full">
@@ -49,7 +48,7 @@ export default async function Navbar({ locale }: any) {
               </ul>
 
               {/* Auth buttuns + userButtun */}
-              <AuthBtns serverUser={user} />
+              <AuthBtns />
 
               {/* shopping cart button */}
               <CartButton />

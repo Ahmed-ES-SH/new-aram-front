@@ -1292,9 +1292,83 @@
     "confirmBooking": "Confirm booking",
     "confirmationMessage": "Please review your booking details and confirm the booking",
     "confirmBookingButton": "Confirm booking",
+    "bookingSuccess": "The reservation request has been sent successfully, awaiting the center's response.",
+    "redirectingToPayment": "Redirect to the payment page",
     "errors": {
       "fetchData": "Failed to load data. Please try again.",
       "fetchBookingStatus": "Failed to verify booking status. Please try again."
     }
+  },
+
+  "organizationProfile": {
+    "tabs": {
+      "bookingSettings": "Booking Settings",
+      "organizationInfo": "Organization Information",
+      "OrganizationSpecializations": "Organization's specializations"
+    },
+    "bookingSettings": {
+      "title": "Booking Settings",
+      "openTime": "Open Time",
+      "closeTime": "Close Time",
+      "confirmationPrice": "Confirmation Price",
+      "confirmationStatus": "Confirmation Status",
+      "bookingStatus": "Booking Status",
+      "acceptableMessage": "Acceptable Message",
+      "unacceptableMessage": "Unacceptable Message",
+      "messages": {
+        "confirmationStatus_enabled": "Confirmation is enabled",
+        "confirmationStatus_disabled": "Confirmation is disabled",
+        "bookingStatus_enabled": "Booking is enabled",
+        "bookingStatus_disabled": "Booking is disabled"
+      }
+    },
+    "organizationInfo": {
+      "title": "Organization Information",
+      "organizationTitle": "Organization Title",
+      "description": "Description",
+      "email": "Email",
+      "phoneNumber": "Phone Number",
+      "logo": "Logo URL",
+      "image": "Image URL",
+      "url": "Website URL",
+      "category": "Category",
+      "password": "Password",
+      "benefits": "Benefits",
+      "addNewBenefit": "Add New Benefit",
+      "addNewBenefitPlaceholder": "Add New Benefit ...",
+      "mange": "mange",
+      "keywords": "Keywords",
+      "location": "Location",
+      "address": "Address",
+      "latitude": "Latitude",
+      "longitude": "Longitude"
+    },
+    "organizationSubCategories": {
+      "mainTitle": "Organization Categories",
+      "title": "Organization Subcategories",
+      "availableSubCategories": "Available Subcategories",
+      "selectedSubCategories": "Selected Subcategories",
+      "addSubCategory": "Add Subcategory",
+      "removeSubCategory": "Remove"
+    },
+    "common": {
+      "save": "Save Changes",
+      "cancel": "Cancel",
+      "loading": "Loading...",
+      "error": "An error occurred",
+      "success": "Changes saved successfully"
+    }
+  },
+
+  "categoriesSelector": {
+    "main_label": "Main Categories",
+    "sub_label": "Subcategories",
+    "add_category": "Add Category",
+    "add_subcategory": "Add Subcategory",
+    "no_categories": "No categories selected yet",
+    "no_subcategories": "No subcategories selected yet",
+    "summary_title": "Total Selected:",
+    "mainCategories": "main category ",
+    "SubCategories": "subcategory "
   }
 }

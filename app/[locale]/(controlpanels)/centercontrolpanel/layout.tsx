@@ -1,4 +1,5 @@
 import ControlSidebar from "@/app/_components/_website/_controlpanals/ControlSidebar";
+import SidbarButton from "@/app/_components/_website/_controlpanals/SidbarButton";
 import { getOrganizationLinks } from "@/app/_components/_website/_navbar/constants";
 import FetchData from "@/app/_helpers/FetchData";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
@@ -21,13 +22,18 @@ export default async function CenterControlPanalLayout({
   params,
 }: any) {
   const user = await FetchData(`/current-user`, false);
-  const centerLinks =
-    user && user?.account_type != "user" && getOrganizationLinks(user);
+  const centerLinks = user ? getOrganizationLinks(user) : [];
+
+  console.log(user);
 
   const locale = (await params.locale) ?? "en";
   return (
-    <div dir={directionMap[locale]} className="flex items-start gap-3 mt-20">
-      <ControlSidebar items={centerLinks} />
+    <div
+      dir={directionMap[locale]}
+      className="flex items-start gap-3 mt-20  hidden-scrollbar"
+    >
+      <ControlSidebar items={centerLinks as any} />
+      <SidbarButton />
       {children}
     </div>
   );

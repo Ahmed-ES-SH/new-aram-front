@@ -39,10 +39,7 @@ export default function OrganizationsComponent({
 
   return (
     <>
-      <div
-        dir={directionMap[locale]}
-        className="min-h-screen lg:mt-32 mt-20 bg-gray-50 "
-      >
+      <div dir={directionMap[locale]} className="min-h-screen lg:mt-32 mt-20">
         <div className="flex">
           <FilterSidebar />
 

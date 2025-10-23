@@ -93,20 +93,69 @@ export function getOrganizationLinks(user: any) {
   if (!user) return [];
 
   return [
-    ...getLinks(user),
     {
-      href: `/centeroffers?organizzation_name=${formatTitle(
+      href: `/centercontrolpanel/orgprofile?account_name=${formatTitle(
         user?.title
-      )}&organization_Id=${user?.id}`,
+      )}&acouunt_type=${user?.account_type}&id=${user.id}`,
+      icon: <FaCircleUser className="w-5 h-5" />,
+      label: { en: "My Profile", ar: "الملف الشخصي" },
+    },
+    {
+      href: `/centercontrolpanel/orgcards?account_name=${formatTitle(
+        user?.title
+      )}&acouunt_type=${user?.account_type}&userId=${user.id}`,
+      icon: <FaCcMastercard className="w-5 h-5" />,
+      label: { en: "My Cards", ar: "بطاقاتى" },
+    },
+    {
+      href: `/centercontrolpanel/orgreservations?account_name=${formatTitle(
+        user?.title
+      )}&acouunt_type=${user?.account_type}&userId=${user.id}`,
+      icon: <PiListChecksFill className="w-5 h-5" />,
+      label: { en: "List of reservations", ar: "قائمة الحجوزات" },
+    },
+    {
+      href: `/conversations?account_name=${formatTitle(
+        user?.title
+      )}&acouunt_type=${user?.account_type}&userId=${user.id}`,
+      icon: <BiSolidConversation className="w-5 h-5" />,
+      label: { en: "Conversations", ar: "قائمة المحادثات" },
+    },
+    {
+      href: `/centercontrolpanel/accountwallet?user_name=${formatTitle(
+        user?.title
+      )}&userId=${user?.id}&account_type=${user?.account_type}`,
+      icon: <FaWallet className="size-5" />,
+      label: { en: "Account balance", ar: "رصيد الحساب" },
+    },
+    {
+      href: `/centercontrolpanel/orgownedcoupones?account_type=${
+        user?.account_type
+      }&userId=${user.id}&account_name=${formatTitle(user?.title)}`,
+      icon: <BiSolidOffer className="size-5" />,
+      label: { en: "Account Coupons", ar: "كوبونات الحساب" },
+    },
+
+    {
+      href: `/centercontrolpanel/orgoffers?organization_title=${formatTitle(
+        user?.title
+      )}&orgId=${user?.id}`,
       icon: <MdLocalOffer className="size-5" />,
       label: { en: "organization offers", ar: "عروض المركز" },
     },
     {
-      href: `/centerschedule?organizzation_name=${formatTitle(
+      href: `/centercontrolpanel/orgschedule?organization_title=${formatTitle(
         user?.title
-      )}&organization_Id=${user?.id}`,
+      )}&orgId=${user?.id}`,
       icon: <FaRegCalendarAlt className="size-5" />,
       label: { en: "organization Schedule", ar: "مواعيد المركز" },
+    },
+    {
+      href: "/logout",
+      icon: <HiOutlineLogout className="w-5 h-5" />,
+      label: { en: "Logout", ar: "تسجيل الخروج" },
+      section: "settings",
+      danger: true,
     },
   ];
 }

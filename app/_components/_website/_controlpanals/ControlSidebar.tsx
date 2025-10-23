@@ -94,40 +94,42 @@ export default function ControlSidebar({ items }: SidebarProps) {
                 {locale == "en" ? "Over View" : "نظرة عامة"}
               </div>
               <nav className="flex flex-col  gap-3">
-                {items
-                  .filter(
-                    (item) => item.section === "overview" || !item.section
-                  )
-                  .map((item) => {
-                    const mainPath = item.href.split("?")[0];
-                    const active = pathname.includes(mainPath);
-                    const isConversations =
-                      item.href.includes(`/conversations`);
-                    return (
-                      <LocaleLink
-                        className={`flex items-center justify-between w-full relative rounded-xl ${
-                          active
-                            ? "bg-primary text-white font-medium"
-                            : "text-gray-600 hover:bg-gray-100"
-                        }`}
-                        key={item.href}
-                        href={item.href}
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          className={`flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all `}
+                {items &&
+                  items.length > 0 &&
+                  items
+                    .filter(
+                      (item) => item.section === "overview" || !item.section
+                    )
+                    .map((item) => {
+                      const mainPath = item.href.split("?")[0];
+                      const active = pathname.includes(mainPath);
+                      const isConversations =
+                        item.href.includes(`/conversations`);
+                      return (
+                        <LocaleLink
+                          className={`flex items-center justify-between w-full relative rounded-xl ${
+                            active
+                              ? "bg-primary text-white font-medium"
+                              : "text-gray-600 hover:bg-gray-100"
+                          }`}
+                          key={item.href}
+                          href={item.href}
                         >
-                          {item.icon}
-                          <span>{item.label[locale as "en" | "ar"]}</span>
-                        </motion.div>
-                        {isConversations && unreadMessagesCount > 0 && (
-                          <span className="bg-red-400 rounded-full w-4 h-4 text-xs animate-bounce ltr:mr-2 rtl:ml-2 flex items-center justify-center text-white">
-                            {unreadMessagesCount}
-                          </span>
-                        )}
-                      </LocaleLink>
-                    );
-                  })}
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className={`flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all `}
+                          >
+                            {item.icon}
+                            <span>{item.label[locale as "en" | "ar"]}</span>
+                          </motion.div>
+                          {isConversations && unreadMessagesCount > 0 && (
+                            <span className="bg-red-400 rounded-full w-4 h-4 text-xs animate-bounce ltr:mr-2 rtl:ml-2 flex items-center justify-center text-white">
+                              {unreadMessagesCount}
+                            </span>
+                          )}
+                        </LocaleLink>
+                      );
+                    })}
               </nav>
             </div>
 

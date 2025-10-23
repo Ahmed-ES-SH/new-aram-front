@@ -62,7 +62,7 @@ export default function OfferCard({ offer, index }: OfferCardProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: index * 0.3 }}
-        className="relative group bg-white rounded-2xl shadow-lg overflow-hidden w-full max-w-md mx-auto border border-gray-100"
+        className="relative group bg-white rounded-2xl shadow-lg overflow-hidden w-full w-full border border-gray-100"
       >
         {/* Discount Circle - Top Right Corner */}
         <div className="absolute top-4 ltr:left-4 rtl:right-4 z-20">

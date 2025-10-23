@@ -23,9 +23,14 @@ export async function generateMetadata({ params, searchParams }: any) {
 }
 
 export default async function OrganizationPage({ searchParams }: any) {
-  const oranizationId = searchParams.orgId;
+  const organizationId = searchParams.orgId;
   const organization = await FetchData(
-    `/organizations/${oranizationId}`,
+    `/organizations/${organizationId}`,
+    false
+  );
+
+  const offers = await FetchData(
+    `/active-offers/${organizationId}?limit=8`,
     false
   );
 
@@ -33,7 +38,7 @@ export default async function OrganizationPage({ searchParams }: any) {
 
   return (
     <>
-      <OrganizationPageComponent organization={organization} />
+      <OrganizationPageComponent offers={offers} organization={organization} />
       <CardsSlider cards={cards} />
     </>
   );

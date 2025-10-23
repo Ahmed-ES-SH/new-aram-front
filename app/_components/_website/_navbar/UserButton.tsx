@@ -79,10 +79,6 @@ export default function UserButton({ user, logout }) {
   }, [data]);
 
   const image = user.account_type == "user" ? user.image : user.logo;
-  const errorimage =
-    user.account_type == "user"
-      ? "/defaults/male-noimage.jpg"
-      : "/defaults/female-noimage.jpg";
 
   if (!user) return null;
 
@@ -107,7 +103,8 @@ export default function UserButton({ user, logout }) {
                 </div>
               )}
               <Img
-                src={image ?? errorimage}
+                src={image ?? "/defaults/male-noimage.jpg"}
+                errorSrc="/defaults/male-noimage.jpg"
                 className="rounded-full w-8 h-8  object-cover"
               />
               <div className="md:flex hidden relative items-center gap-4">

@@ -51,6 +51,7 @@ export default function CartSidebar() {
   const handleSubmit = async () => {
     if (!user) {
       setCheckCurrentuser(true);
+      return;
     }
     try {
       setLoading(true);
@@ -61,7 +62,6 @@ export default function CartSidebar() {
       formdata.append("total_invoice", total);
       formdata.append("invoice_type", "cards");
       formdata.append("payment_method", "thawani");
-
       formdata.append("cardsDetailes", JSON.stringify(cardsDetailes));
       const response = await instance.post("/payment/create-session", formdata);
       if (response.status == 200) {

@@ -17,7 +17,6 @@ import { directionMap } from "@/app/constants/_website/global";
 import Img from "../../_global/Img";
 import dynamic from "next/dynamic";
 import ContactInfo from "./ContactInfo";
-import OrganizationSidebar from "./OrganizationSidebar";
 import RatingSection from "./RatingSection";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/app/Store/hooks";
@@ -26,6 +25,12 @@ import { instance } from "@/app/_helpers/axios";
 import { useRouter } from "next/navigation";
 import { formatTitle } from "@/app/_helpers/helpers";
 import CheckCurrentUserPopup from "../../_global/CheckCurrentUserPopup";
+import SelectTimePopup from "@/app/_components/_popups/_bookAppointment/SelectTimePopup";
+import { Offer } from "@/app/_components/_dashboard/_offers/types";
+import OffersSidebar from "./offersSidebar/OffersSidebar";
+import CTASection from "./CTASection";
+import { GiPriceTag } from "react-icons/gi";
+import OffersSlider from "./offersSidebar/OffersSlider";
 
 const MapComponentWithRoute = dynamic(
   () => import("@/app/_components/_maps/MapComponentWithRoute"),
@@ -34,6 +39,7 @@ const MapComponentWithRoute = dynamic(
 
 interface CenterDetailsProps {
   organization: Organization;
+  offers: Offer[];
 }
 
 export const fadeInUp = {
@@ -50,7 +56,10 @@ const staggerContainer = {
   },
 };
 
-export default function CenterDetails({ organization }: CenterDetailsProps) {
+export default function CenterDetails({
+  organization,
+  offers,
+}: CenterDetailsProps) {
   const { user } = useAppSelector((state) => state.user);
 
   const router = useRouter();
@@ -80,6 +89,7 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
       : "لا تستطيع بدء محادثة مع نفسك !";
 
   const [loadingConversation, setLoadingConversation] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [checkCurrentUser, setCheckCurrentUser] = useState(false);
   const [location, setLocation] = useState<LocationType | null>(null);
 
@@ -128,6 +138,14 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
     }
   };
 
+  const handleBook = () => {
+    if (!user) {
+      setCheckCurrentUser(true);
+      return;
+    }
+    setShowPopup(true);
+  };
+
   useEffect(() => {
     if (user?.location) {
       setLocation(user.location);
@@ -137,20 +155,20 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
   return (
     <div
       dir={directionMap[locale]}
-      className="min-h-screen mt-24 bg-background"
+      className="min-h-screen mt-24 mb-8 bg-background"
     >
-      <div className="c-container">
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-10">
+      <div className="xl:w-[90%] w-[98%] mx-auto pt-4">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 lg:gap-3">
           {/* Left Section - Main Content */}
           <motion.div
-            className="xl:col-span-3 max-xl:order-2"
+            className="xl:col-span-3 xl:border xl:border-gray-300 xl:rounded-t-2xl xl:shadow-md p-2 relative"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
           >
             {/* Hero */}
             <motion.div
-              className="relative h-64 sm:h-80 rounded-2xl overflow-hidden mb-10"
+              className="h-64 sm:h-80 absolute top-0 left-0 w-full rounded-t-2xl overflow-hidden mb-8 lg:mb-10"
               variants={fadeInUp}
             >
               <Img
@@ -160,46 +178,51 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
                 className="object-cover w-full h-full"
               />
               <div className="absolute inset-0 bg-black/30" />
-              <div className="absolute bottom-4 left-4">
-                <div className="w-20 h-20 flex items-center justify-center rounded-full overflow-hidden border border-white shadow-lg bg-white">
-                  <Img
-                    src={organization.logo ?? "/logo.png"}
-                    errorSrc="/logo.png"
-                    alt={`${organization.title} logo`}
-                    className="w-16 h-16 object-cover  p-2"
-                  />
-                </div>
-              </div>
             </motion.div>
+            <div className="sm:h-80 h-64 w-full"></div>
 
-            {/* Title + Category + Stats */}
+            {/* logo + Title + Category + Stats */}
             <motion.div
-              className="pb-8 border-b border-gray-200 space-y-4"
+              className="pb-6 lg:pb-8 border-b border-gray-200 space-y-4"
               variants={fadeInUp}
             >
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
-                  {organization.title}
-                </h1>
-                <span
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-white text-sm font-medium"
-                  style={{
-                    backgroundColor: `${organization.category.bg_color}30`,
-                    color: organization.category.bg_color,
-                  }}
-                >
-                  <FaUtensils className="w-4 h-4" />
-                  {locale == "en"
-                    ? organization.category.title_en
-                    : organization.category.title_ar}
-                </span>
+              <div className="flex items-center max-md:flex-col max-md:items-start gap-2">
+                <Img
+                  src={organization.logo ?? "/logo.png"}
+                  errorSrc="/logo.png"
+                  alt={`${organization.title} logo`}
+                  className="w-20 rounded-full lg:w-16 lg:h-16 object-cover p-1 lg:p-2"
+                />
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
+                    {organization.title}
+                  </h1>
+                  <span
+                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-white text-sm font-medium w-fit"
+                    style={{
+                      backgroundColor: `${organization.category.bg_color}30`,
+                      color: organization.category.bg_color,
+                    }}
+                  >
+                    <FaUtensils className="w-4 h-4" />
+                    {locale == "en"
+                      ? organization.category.title_en
+                      : organization.category.title_ar}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex items-center gap-6 text-muted-foreground text-sm">
-                <div className="flex items-center bg-primary/20 px-3 rounded-full text-primary gap-1">
+              <div className="flex flex-wrap items-center gap-4 lg:gap-6 text-muted-foreground text-sm">
+                <div className="flex items-center bg-primary/20 px-3 py-1 rounded-full text-primary gap-1">
                   <FaStar className="w-4 h-4 text-primary" />
                   <span className="font-medium">{organization.rating}</span>
                 </div>
+                {organization.confirmation_status && (
+                  <div className="flex items-center gap-1">
+                    <GiPriceTag className="text-green-400" />
+                    <span>${organization.confirmation_price}</span>
+                  </div>
+                )}
                 <div className="flex items-center gap-1">
                   <FaCalendarAlt className="w-4 h-4" />
                   <span>
@@ -207,15 +230,21 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
                   </span>
                 </div>
               </div>
+              <CTASection
+                loadingConversation={loadingConversation}
+                organization={organization}
+                handleStartConversation={handleStartConversation}
+                handleBook={handleBook}
+              />
             </motion.div>
 
             {/* Description */}
             <motion.div
-              className="py-8 border-b border-gray-200 space-y-3"
+              className="py-6 lg:py-8 border-b border-gray-200 space-y-3"
               variants={fadeInUp}
             >
               <h2 className="text-xl font-semibold">{t("description")}</h2>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
                 {organization.description}
               </p>
             </motion.div>
@@ -231,14 +260,13 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
 
             {/* Working Hours */}
             <motion.div
-              className="py-8 border-b border-gray-200 space-y-3"
+              className="py-6 lg:py-8 border-b border-gray-200 space-y-3"
               variants={fadeInUp}
             >
               <h2 className="text-xl font-semibold">{t("workingHours")}</h2>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <FaClock className="w-5 h-5 text-primary" />
-
-                <span>
+                <span className="text-sm lg:text-base">
                   {t("openAt")} {formatTime(organization.open_at, locale)} –{" "}
                   {t("closeAt")} {formatTime(organization.close_at, locale)}
                 </span>
@@ -248,15 +276,15 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
             {/* Benefits */}
             {organization.benefits && organization.benefits.length > 0 && (
               <motion.div
-                className="py-8 border-b border-gray-200 space-y-4"
+                className="py-6 lg:py-8 border-b border-gray-200 space-y-4"
                 variants={fadeInUp}
               >
                 <h2 className="text-xl font-semibold">{t("benefits")}</h2>
                 <ul className="space-y-3">
                   {organization.benefits.map((benefit) => (
                     <li key={benefit.id} className="flex items-start gap-3">
-                      <FaCheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                      <span className="text-muted-foreground">
+                      <FaCheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-muted-foreground text-sm lg:text-base">
                         {benefit.title}
                       </span>
                     </li>
@@ -266,18 +294,17 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
             )}
 
             {/* rating section */}
-
             <RatingSection />
 
             {/* Keywords */}
             {organization.keywords && organization.keywords.length > 0 && (
-              <motion.div className="py-8" variants={fadeInUp}>
+              <motion.div className="py-6 lg:py-8" variants={fadeInUp}>
                 <h2 className="text-xl font-semibold">{t("keywords")}</h2>
                 <div className="flex flex-wrap gap-2 mt-3">
                   {organization.keywords.map((keyword) => (
                     <span
                       key={keyword.id}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-xs lg:text-sm"
                     >
                       <FaTag className="w-3 h-3" />
                       {keyword.title}
@@ -287,20 +314,21 @@ export default function CenterDetails({ organization }: CenterDetailsProps) {
               </motion.div>
             )}
           </motion.div>
-
-          {/* Right Section - Sidebar */}
-          <OrganizationSidebar
-            organization={organization}
-            t={t}
-            loadingConversation={loadingConversation}
-            handleStartConversation={handleStartConversation}
-          />
+          <OffersSlider offers={offers} />
+          <OffersSidebar offers={offers} />
         </div>
       </div>
 
       <CheckCurrentUserPopup
         isOpen={checkCurrentUser}
         onClose={() => setCheckCurrentUser(false)}
+      />
+
+      <SelectTimePopup
+        organizationTitle={organization.title}
+        organizationId={organization.id}
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
       />
     </div>
   );

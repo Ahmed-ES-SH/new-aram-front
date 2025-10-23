@@ -110,7 +110,7 @@ export default function NotificationBell({
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
     });
 
-    const channel = pusher.subscribe(`notifications.${userId}`);
+    const channel = pusher.subscribe(`notifications.${accountType}.${userId}`);
 
     channel.bind("NotificationSent", (data: NotificationType) => {
       setNewNotification(data);

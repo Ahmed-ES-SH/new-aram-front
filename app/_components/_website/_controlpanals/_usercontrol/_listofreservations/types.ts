@@ -3,6 +3,7 @@ export type Appointment = {
   user_id: number;
   organization_id: number;
   start_time: string;
+  is_paid: boolean;
   end_time: string;
   price: number | string;
   status:

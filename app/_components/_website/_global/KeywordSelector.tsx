@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes } from "react-icons/fa";
 import { instance } from "@/app/_helpers/axios";
 import { toast } from "sonner";
+import { useLocale } from "next-intl";
+import { useAppSelector } from "@/app/Store/hooks";
 
 export type Keyword = {
   id: number;
@@ -17,7 +19,8 @@ export default function KeywordSelector({
   selectedKeywords: Keyword[];
   setSelectedKeywords: (keywords: Keyword[]) => void;
 }) {
-  const locale = "ar";
+  const { width } = useAppSelector((state) => state.variables);
+  const locale = useLocale();
   const maxLengthError = {
     ar: "الحد الأقصى للكلمات المفتاحية هو 5 كلمات",
     en: "Maximum keywords are 5 words.",
@@ -28,7 +31,7 @@ export default function KeywordSelector({
   };
 
   const [keywords, setKeywords] = useState<Keyword[]>([]);
-  const [displayedKeys, setDisplayedKeys] = useState(30);
+  const [displayedKeys, setDisplayedKeys] = useState(20);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -70,6 +73,18 @@ export default function KeywordSelector({
     }
   };
 
+  useEffect(() => {
+    if (width > 1024) {
+      setDisplayedKeys(25);
+    } else if (width > 760) {
+      setDisplayedKeys(12);
+    } else if (width > 500) {
+      setDisplayedKeys(8);
+    } else {
+      setDisplayedKeys(5);
+    }
+  }, [width]);
+
   return (
     <div className="space-y-4">
       {/* Search Input */}
@@ -84,7 +99,7 @@ export default function KeywordSelector({
           placeholder={
             locale === "ar" ? "ابحث عن كلمة مفتاحية..." : "Search keywords..."
           }
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
 
@@ -97,11 +112,11 @@ export default function KeywordSelector({
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
-              className="flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full cursor-pointer"
+              className="flex items-center gap-2 bg-primary/80 text-white px-3 py-1 rounded-full cursor-pointer"
               onClick={() => handleSelect(k)}
             >
               <span>{k.title}</span>
-              <FaTimes className="text-xs" />
+              <FaTimes className="text-xs text-red-500" />
             </motion.div>
           ))}
         </AnimatePresence>
@@ -134,7 +149,7 @@ export default function KeywordSelector({
                     onClick={() => handleSelect(k)}
                     className={`px-4 py-2 cursor-pointer rounded-full border transition ${
                       isSelected
-                        ? "bg-blue-600 text-white border-blue-600"
+                        ? "bg-primary text-white border-primary"
                         : "bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200"
                     }`}
                   >

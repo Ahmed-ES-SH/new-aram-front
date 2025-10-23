@@ -201,7 +201,9 @@ export function AppointmentTable({
                     </div>
                   </td>
                   <td className="py-4 px-4 text-sm font-semibold text-slate-800">
-                    {formatPrice(appointment.price)}
+                    {appointment.is_paid
+                      ? formatPrice(appointment.price)
+                      : "----"}
                   </td>
                   <td className="py-4 px-4">
                     <AppointmentStatusBadge status={appointment.status} />

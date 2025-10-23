@@ -1152,7 +1152,7 @@
         "commission": "عمولة",
         "refund": "استرداد",
         "transfer": "تحويل",
-        "book": "كتاب"
+        "book": "حجز"
       },
       "statuses": {
         "pending": "قيد الانتظار",
@@ -1305,9 +1305,82 @@
     "confirmBooking": "تأكيد الحجز",
     "confirmationMessage": "يرجى مراجعة معلومات الحجز وتأكيد الحجز",
     "confirmBookingButton": "تأكيد الحجز",
+    "bookingSuccess": "تم ارسال طلب الحجز بنجاح فى انتظار رد المركز .",
+    "redirectingToPayment": "إعادة التوجية الى صفحة الدفع",
     "errors": {
       "fetchData": "فشل في تحميل البيانات. يرجى المحاولة مرة أخرى.",
       "fetchBookingStatus": "فشل في التحقق من حالة الحجز. يرجى المحاولة مرة أخرى."
     }
+  },
+
+  "organizationProfile": {
+    "tabs": {
+      "bookingSettings": "إعدادات الحجز",
+      "organizationInfo": "معلومات المركز",
+      "OrganizationSpecializations": "تخصصات المركز"
+    },
+    "bookingSettings": {
+      "title": "إعدادات الحجز",
+      "openTime": "وقت الفتح",
+      "closeTime": "وقت الإغلاق",
+      "confirmationPrice": "سعر التأكيد",
+      "confirmationStatus": "حالة التأكيد",
+      "bookingStatus": "حالة الحجز",
+      "acceptableMessage": "رسالة القبول",
+      "unacceptableMessage": "رسالة الرفض",
+      "messages": {
+        "confirmationStatus_enabled": "تأكيد الحجز مُفعل",
+        "confirmationStatus_disabled": "تأكيد الحجز غير مُفعل",
+        "bookingStatus_enabled": "الحجز مُفعل",
+        "bookingStatus_disabled": "الحجز غير مُفعل"
+      }
+    },
+    "organizationInfo": {
+      "title": "معلومات المنظمة",
+      "organizationTitle": "عنوان المنظمة",
+      "description": "الوصف",
+      "email": "البريد الإلكتروني",
+      "phoneNumber": "رقم الهاتف",
+      "logo": "رابط الشعار",
+      "image": "رابط الصورة",
+      "url": "رابط الموقع",
+      "password": "كلمة السر",
+      "category": "الفئة",
+      "benefits": "الفوائد",
+      "addNewBenefit": "إضافة ميزة جديدة",
+      "addNewBenefitPlaceholder": "إضافة ميزة جديدة ...",
+      "mange": "إدارة",
+      "keywords": "الكلمات المفتاحية",
+      "location": "الموقع",
+      "address": "العنوان",
+      "latitude": "خط العرض",
+      "longitude": "خط الطول"
+    },
+    "organizationSubCategories": {
+      "title": "الفئات الفرعية للمنظمة",
+      "availableSubCategories": "الفئات الفرعية المتاحة",
+      "selectedSubCategories": "الفئات الفرعية المختارة",
+      "addSubCategory": "إضافة فئة فرعية",
+      "removeSubCategory": "إزالة"
+    },
+    "common": {
+      "save": "حفظ التغييرات",
+      "cancel": "إلغاء",
+      "loading": "جاري التحميل...",
+      "error": "حدث خطأ",
+      "success": "تم حفظ التغييرات بنجاح"
+    }
+  },
+
+  "categoriesSelector": {
+    "main_label": "الأقسام الرئيسية",
+    "sub_label": "الأقسام الفرعية",
+    "add_category": "إضافة قسم",
+    "add_subcategory": "إضافة قسم فرعي",
+    "no_categories": "لم يتم اختيار أي أقسام بعد",
+    "no_subcategories": "لم يتم اختيار أي أقسام فرعية بعد",
+    "summary_title": "إجمالي الأقسام المختارة:",
+    "mainCategories": " قسم رئيسي ",
+    "SubCategories": " قسم فرعي"
   }
 }

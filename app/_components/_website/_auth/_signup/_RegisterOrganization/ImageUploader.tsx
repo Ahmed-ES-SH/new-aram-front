@@ -117,7 +117,8 @@ export function ImageUploader({
               className="relative lg:h-[350px] h-[220px] w-full"
             >
               <Img
-                src={(preview as string) || "/placeholder.svg"}
+                src={(preview as string) ?? "/defaults/noImage.png"}
+                errorSrc="/defaults/noImage.png"
                 alt="Preview"
                 className="w-full h-full object-cover"
               />
