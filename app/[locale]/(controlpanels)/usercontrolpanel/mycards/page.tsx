@@ -17,8 +17,13 @@ export async function generateMetadata() {
 }
 
 export default async function UserCardsPage({ searchParams }: any) {
-  const type = searchParams.acouunt_type;
-  const userId = searchParams.userId;
+  const user = await FetchData(`/current-user`, false);
+
+  if (!user) return null;
+
+  const userId = user.id;
+  const type = user.account_type;
+
   const page = searchParams.page;
   const endPoint = page
     ? `/cards-account?owner_id=${userId}&owner_type=${type}&page=${page}`
@@ -27,7 +32,7 @@ export default async function UserCardsPage({ searchParams }: any) {
 
   const t = await getTranslations("card");
 
-  if (!response || response.error === 0) return <NoCardsFound />;
+  if (!response || response.error) return <NoCardsFound />;
 
   const cards = response.data.cards;
   const pagination = response.data.pagination;

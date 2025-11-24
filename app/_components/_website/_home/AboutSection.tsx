@@ -96,9 +96,10 @@ export default function AboutSection({ data }: AboutSectionProps) {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+            <div className="relative h-full w-full overflow-hidden rounded-2xl shadow-2xl">
               <Img
-                src={image || "/about-img.png"}
+                src={image ?? "/about.jpg"}
+                errorSrc="/about.jpg"
                 alt="About us"
                 className="w-full h-96 object-cover"
               />

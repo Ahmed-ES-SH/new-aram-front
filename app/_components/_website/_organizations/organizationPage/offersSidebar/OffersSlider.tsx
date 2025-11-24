@@ -5,11 +5,13 @@ import { Navigation, Autoplay } from "swiper/modules";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useLocale } from "next-intl";
 import { directionMap } from "@/app/constants/_website/global";
+import { motion } from "framer-motion";
+import { Offer } from "@/app/_components/_dashboard/_offers/types";
+import OfferCard from "../../../_offers/OfferCard";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Offer } from "@/app/_components/_dashboard/_offers/types";
-import OfferCard from "../../../_offers/OfferCard";
+import { BiSolidOffer } from "react-icons/bi";
 
 interface CardsSliderProps {
   offers: Offer[];
@@ -21,18 +23,28 @@ export default function OffersSlider({ offers }: CardsSliderProps) {
   // Swiper navigation refs
   const navigationPrevRef = React.useRef<HTMLButtonElement>(null);
   const navigationNextRef = React.useRef<HTMLButtonElement>(null);
-
-  if (!offers) {
+  if (!Array.isArray(offers)) {
     return (
-      <div className="w-full min-h-[50vh] flex items-center justify-center border border-gray-300 rounded-lg shadow-md max-xl:hidden">
-        <div>
-          <p>
-            {locale == "en"
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="flex-1 h-[86vh] sticky top-28 left-0 flex flex-col items-center justify-center border border-gray-200 bg-white rounded-2xl shadow-md xl:hidden"
+      >
+        <motion.div
+          initial={{ rotate: -10, opacity: 0 }}
+          animate={{ rotate: 0, opacity: 1 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+          className="flex flex-col items-center text-center p-6"
+        >
+          <BiSolidOffer className="size-32 text-red-500 mb-4" />
+          <p className="text-gray-600 text-base leading-relaxed">
+            {locale === "en"
               ? "This center currently has no displayable offers."
-              : "هذا المركز حتى الان لا يحتوى على عروض قابلة للعرض"}
+              : "هذا المركز حتى الآن لا يحتوي على عروض قابلة للعرض"}
           </p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
@@ -76,11 +88,12 @@ export default function OffersSlider({ offers }: CardsSliderProps) {
             }}
             className="pb-12"
           >
-            {offers.map((card, index) => (
-              <SwiperSlide key={card.id}>
-                <OfferCard offer={card} index={index} />
-              </SwiperSlide>
-            ))}
+            {offers &&
+              offers.map((card, index) => (
+                <SwiperSlide key={card.id}>
+                  <OfferCard offer={card} index={index} />
+                </SwiperSlide>
+              ))}
           </Swiper>
 
           {/* Custom Navigation Arrows */}

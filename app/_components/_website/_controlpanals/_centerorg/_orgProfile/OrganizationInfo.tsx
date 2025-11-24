@@ -147,7 +147,7 @@ export default function OrganizationInfo({
       <div className="flex items-center justify-between max-md:flex-col gap-3 w-full relative">
         {/* Image Uploader */}
         <ImageUpload
-          label={t("fields.image.label")}
+          label={t("image")}
           hint={t("fields.image.hint")}
           src={formData.image as any}
           name="image"
@@ -181,7 +181,11 @@ export default function OrganizationInfo({
         />
       </div>
 
-      <FormInput field={passwordField} error={""} handleChange={onChange} />
+      <FormInput
+        field={passwordField as any}
+        error={""}
+        handleChange={onChange}
+      />
 
       <FormInput field={urlField} error={""} handleChange={onChange} />
 

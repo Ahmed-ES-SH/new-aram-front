@@ -30,6 +30,7 @@ export interface UserType extends Organization {
   password: null | string;
   created_at: string;
   updated_at: string;
+  is_promoter: boolean | number;
 }
 
 interface UserState {
@@ -40,6 +41,7 @@ interface UserState {
   loading: boolean;
   error: string | null;
   unreadConversations: any | null;
+  isPromoter: boolean;
 }
 
 const initialState: UserState = {
@@ -50,6 +52,7 @@ const initialState: UserState = {
   unreadMessagesCount: 0,
   unreadNotificationsCount: 0,
   unreadConversations: null,
+  isPromoter: false,
 };
 
 // Async thunk to fetch current user
@@ -62,6 +65,7 @@ export const fetchCurrentUser = createAsyncThunk(
         user: res.data.data,
         unreadMessagesCount: res.data.unread_count ?? 0,
         unreadNotificationsCount: res.data.unread_notifications_count,
+        isPromoter: res.data.is_promoter,
       };
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
@@ -122,6 +126,7 @@ const userSlice = createSlice({
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.unreadMessagesCount = action.payload.unreadMessagesCount;
+        state.isPromoter = action.payload.isPromoter;
         state.unreadNotificationsCount =
           action.payload.unreadNotificationsCount ?? 0;
         state.loading = false;

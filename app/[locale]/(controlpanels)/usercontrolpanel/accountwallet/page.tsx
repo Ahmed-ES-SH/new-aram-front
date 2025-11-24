@@ -17,18 +17,22 @@ export async function generateMetadata() {
   };
 }
 
-export default async function WalletPage({ searchParams, params }: any) {
-  const userId = searchParams.userId;
-  const account_type = searchParams.account_type;
+export default async function WalletPage({ params }: any) {
+  const user = await FetchData(`/current-user`, false);
+
+  if (!user) return null;
+
+  const userId = user.id;
+  const type = user.account_type;
 
   const locale = await params.locale;
 
   const wallet = await FetchData(
-    `/wallet?user_id=${userId}&type=${account_type}`,
+    `/wallet?user_id=${userId}&type=${type}`,
     false
   );
   const { data: transactions, pagination } = await FetchData(
-    `/user-transactions?user_id=${userId}&type=${account_type}`,
+    `/user-transactions?user_id=${userId}&type=${type}`,
     true
   );
 

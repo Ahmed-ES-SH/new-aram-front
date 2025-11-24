@@ -79,6 +79,11 @@
     "description": "Aram Gulf Ltd. - Manage your account in easy ways"
   },
 
+  "metaCenterControlPage": {
+    "title": "Aram Gulf Ltd. - Center Control Panal",
+    "description": "Aram Gulf Ltd. - Manage your account in easy ways"
+  },
+
   "metaAccountWallet": {
     "title": "Aram Gulf Ltd. - Account Wallet",
     "description": "Aram Gulf Ltd. - Manage your wallet, view balance, and track your transactions easily."
@@ -1085,6 +1090,7 @@
     "subtitle": "Manage and track all your appointments in one place",
     "id": "ID",
     "organization": "Organization",
+    "user": "User",
     "dateTime": "Date & Time",
     "price": "Price",
     "status": "Status",
@@ -1329,7 +1335,7 @@
       "email": "Email",
       "phoneNumber": "Phone Number",
       "logo": "Logo URL",
-      "image": "Image URL",
+      "image": "Image",
       "url": "Website URL",
       "category": "Category",
       "password": "Password",
@@ -1370,5 +1376,181 @@
     "summary_title": "Total Selected:",
     "mainCategories": "main category ",
     "SubCategories": "subcategory "
+  },
+
+  "centerPanal": {
+    "hi": "Hi",
+    "welcome": "Welcome to your Dashboard",
+    "subtitle": "Manage your cards, bookings, balance, payments, and messages easily.",
+    "profile": {
+      "title": "My Profile",
+      "desc": "Manage and update your organization’s personal information."
+    },
+    "cards": {
+      "title": "My Cards",
+      "desc": "View and manage all your connected payment cards."
+    },
+    "reservations": {
+      "title": "List of Reservations",
+      "desc": "Check and manage your organization’s booking history."
+    },
+    "conversations": {
+      "title": "Conversations",
+      "desc": "View and reply to your client messages and inquiries."
+    },
+    "wallet": {
+      "title": "Account Balance",
+      "desc": "Track your balance, transactions, and withdrawals."
+    },
+    "coupons": {
+      "title": "Account Coupons",
+      "desc": "Manage your available and expired promotional coupons."
+    },
+    "offers": {
+      "title": "Organization Offers",
+      "desc": "Create and manage special offers for your customers."
+    },
+    "schedule": {
+      "title": "Organization Schedule",
+      "desc": "Set up and manage your organization’s working schedule."
+    }
+  },
+
+  "orgAppointmentActions": {
+    "confirm": "Confirm",
+    "reject": "Reject",
+    "delete": "Delete",
+    "noActions": "No actions available",
+    "confirmSuccess": "Appointment has been confirmed successfully!",
+    "rejectSuccess": "Appointment has been rejected.",
+    "deleteSuccess": "Appointment has been deleted successfully!",
+    "unexpectedError": "An unexpected error occurred, please try again later."
+  },
+
+  "offersHeader": {
+    "title": "Center Offers",
+    "subtitle": "Manage your active and upcoming offers easily from here.",
+    "addButton": "Add New Offer"
+  },
+
+  "noOffers": {
+    "title": "No Offers Yet",
+    "subtitle": "Your account doesn’t have any offers right now. Add new offers to attract more clients!"
+  },
+
+  "addOfferHeader": {
+    "title": "Add a New Offer",
+    "subtitle": "Fill in the details below to create an attractive new offer for your center and attract more clients."
+  },
+
+  "offerValidation": {
+    "offer": {
+      "title": {
+        "required": "Title is required",
+        "min": "Title must be at least 3 characters",
+        "max": "Title is too long"
+      },
+      "description": {
+        "required": "Description is required",
+        "min": "Description must be at least 8 characters",
+        "max": "Description is too long"
+      },
+      "image": {
+        "invalid": "Invalid image file"
+      },
+      "discount_type": {
+        "invalid": "Invalid discount type"
+      },
+      "discount_value": {
+        "required": "Discount value is required",
+        "numeric": "Discount value must be a number",
+        "positive": "Discount must be greater than zero",
+        "range": "Percentage discount must be between 1 and 100"
+      },
+      "start_date": {
+        "required": "Start date is required",
+        "invalid": "Start date is invalid"
+      },
+      "end_date": {
+        "required": "End date is required",
+        "invalid": "End date is invalid",
+        "after_start": "End date must be after start date"
+      },
+      "category_id": {
+        "required": "Please select a category",
+        "invalid": "Category id is invalid"
+      },
+      "code": {
+        "required": "Offer code is required",
+        "min": "Code is too short",
+        "max": "Code is too long",
+        "invalid": "Code contains invalid characters"
+      }
+    }
+  },
+
+  "offerFildes": {
+    "submit": "Submit",
+    "title": {
+      "label": "Offer Title",
+      "placeholder": "Enter a title that represents the offer"
+    },
+    "description": {
+      "label": "Offer Details",
+      "placeholder": "Enter the details of the offer"
+    },
+    "image": {
+      "label": "Main Offer Image",
+      "hint": "Click or drag to upload the image",
+      "preview": "Image Preview"
+    },
+    "discount_type": {
+      "label": "Discount Type",
+      "placeholder": "Select discount type (percentage or fixed amount)",
+      "options": {
+        "percentage": "percentage %",
+        "fixed": "fixed amount $"
+      }
+    },
+    "discount_value": {
+      "label": "Discount Value",
+      "placeholder": "Enter the discount value"
+    },
+    "start_date": {
+      "label": "Start Date",
+      "placeholder": "Select the offer start date"
+    },
+    "end_date": {
+      "label": "End Date",
+      "placeholder": "Select the offer end date"
+    },
+    "category_id": {
+      "label": "Target Category",
+      "placeholder": "Select the category this offer belongs to"
+    },
+    "code": {
+      "label": "Offer Code",
+      "placeholder": "Enter the unique code for this offer"
+    }
+  },
+
+  "promoter": {
+    "yourCode": "Your Referral Code",
+    "yourLinks": "Your Referral Links",
+    "visits": "Visits",
+    "signups": "Signups",
+    "purchases": "Purchases"
+  },
+
+  "promoterTable": {
+    "id": "ID",
+    "activityType": "Activity Type",
+    "country": "Country",
+    "deviceType": "Device Type",
+    "ipAddress": "IP Address",
+    "referralCode": "Referral Code",
+    "commission": "Commission",
+    "createdDate": "Created Date",
+    "noData": "No activity data available"
   }
 }

@@ -310,6 +310,7 @@ export default function OfferStep({
             {t("buttons.previous")}
           </motion.button>
         </div>
+
         <div className="w-full mt-4 pt-3 border-t border-gray-300">
           <motion.div
             className="col-span-6"

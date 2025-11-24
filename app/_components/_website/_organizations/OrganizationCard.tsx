@@ -20,9 +20,14 @@ import SelectTimePopup from "../../_popups/_bookAppointment/SelectTimePopup";
 interface props {
   organization: Organization;
   index: number;
+  isAble: boolean;
 }
 
-export default function OrganizationCard({ organization, index }: props) {
+export default function OrganizationCard({
+  organization,
+  index,
+  isAble,
+}: props) {
   const { user } = useAppSelector((state) => state.user);
 
   const router = useRouter();
@@ -45,7 +50,10 @@ export default function OrganizationCard({ organization, index }: props) {
       return;
     }
 
-    if (user?.id == organization?.id) {
+    if (
+      user?.id == organization?.id &&
+      user?.account_type === organization.account_type
+    ) {
       toast.error(errorStartConversation);
       return;
     }
@@ -84,6 +92,15 @@ export default function OrganizationCard({ organization, index }: props) {
     }
   };
 
+  const handleShowBookPoupe = () => {
+    if (!user) {
+      setCheckCurrentUser(true);
+      return;
+    }
+
+    setShowPopup(true);
+  };
+
   return (
     <>
       <motion.div
@@ -91,14 +108,14 @@ export default function OrganizationCard({ organization, index }: props) {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.1 }}
-        className="bg-white h-full rounded-xl group shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-3 duration-300"
+        className="bg-white min-h-[530px] relative rounded-xl pb-4 group shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-3 duration-300"
       >
         <div className="relative">
           <Img
             src={organization.image ?? "/defaults/noImage.png"}
             errorSrc="/defaults/noImage.png"
             alt={organization.title}
-            className="w-full h-48 object-cover"
+            className="w-full h-[230px] object-cover"
           />
 
           <div className="absolute bottom-4 left-4">
@@ -111,7 +128,7 @@ export default function OrganizationCard({ organization, index }: props) {
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="lg:p-6 p-3 h-1/2 flex flex-col">
           <div className="flex items-start justify-between mb-3">
             <LocaleLink
               href={`/organizations/${formatTitle(organization.title)}?orgId=${
@@ -174,28 +191,30 @@ export default function OrganizationCard({ organization, index }: props) {
             ))}
           </div>
 
-          <div className="flex gap-2 cursor-pointer">
-            <div
-              onClick={() => handleStartConversation()}
-              className="flex-1  bg-primary hover:bg-orange-500 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
-            >
-              {loadingConversation ? (
-                <VscLoading className="animate-spin" />
-              ) : (
-                <div className="flex items-center gap-1">
-                  <BiSolidMessageRoundedDots className="w-3 h-3" />
-                  {t("contact")}
-                </div>
-              )}
+          {isAble && (
+            <div className="flex gap-2 absolute bottom-2  w-[90%] left-1/2 -translate-x-1/2  cursor-pointer">
+              <div
+                onClick={() => handleStartConversation()}
+                className="flex-1  bg-primary hover:bg-orange-500 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
+              >
+                {loadingConversation ? (
+                  <VscLoading className="animate-spin" />
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <BiSolidMessageRoundedDots className="w-3 h-3" />
+                    {t("contact")}
+                  </div>
+                )}
+              </div>
+              <div
+                onClick={handleShowBookPoupe}
+                className="flex-1 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
+              >
+                <LuClock7 className="w-3 h-3" />
+                {t("book")}
+              </div>
             </div>
-            <div
-              onClick={() => setShowPopup(true)}
-              className="flex-1 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
-            >
-              <LuClock7 className="w-3 h-3" />
-              {t("book")}
-            </div>
-          </div>
+          )}
         </div>
       </motion.div>
 

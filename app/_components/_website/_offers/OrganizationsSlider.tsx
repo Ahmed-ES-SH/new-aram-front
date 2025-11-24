@@ -47,7 +47,7 @@ export default function OrganizationsSlider({
         </div>
 
         {/* Slider Container */}
-        <div className="relative  h-[550px]">
+        <div className="relative  h-fit">
           <Swiper
             modules={[Navigation, Autoplay]}
             spaceBetween={24}
@@ -84,11 +84,19 @@ export default function OrganizationsSlider({
               swiper.navigation.init();
               swiper.navigation.update();
             }}
-            className="pb-12"
+            className="pb-12 "
           >
             {organizations.map((organization, index) => (
-              <SwiperSlide key={organization.id}>
-                <OrganizationCard index={index} organization={organization} />
+              <SwiperSlide
+                style={{ height: "fit-content" }}
+                className=" shadow-none bg-white"
+                key={organization.id}
+              >
+                <OrganizationCard
+                  index={index}
+                  organization={organization}
+                  isAble={false}
+                />
               </SwiperSlide>
             ))}
           </Swiper>

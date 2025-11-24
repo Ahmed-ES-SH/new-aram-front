@@ -122,7 +122,7 @@ export function getOrganizationLinks(user: any) {
       label: { en: "Conversations", ar: "قائمة المحادثات" },
     },
     {
-      href: `/centercontrolpanel/accountwallet?user_name=${formatTitle(
+      href: `/centercontrolpanel/orgwallet?user_name=${formatTitle(
         user?.title
       )}&userId=${user?.id}&account_type=${user?.account_type}`,
       icon: <FaWallet className="size-5" />,
@@ -141,14 +141,14 @@ export function getOrganizationLinks(user: any) {
         user?.title
       )}&orgId=${user?.id}`,
       icon: <MdLocalOffer className="size-5" />,
-      label: { en: "organization offers", ar: "عروض المركز" },
+      label: { en: "Center offers", ar: "عروض المركز" },
     },
     {
       href: `/centercontrolpanel/orgschedule?organization_title=${formatTitle(
         user?.title
       )}&orgId=${user?.id}`,
       icon: <FaRegCalendarAlt className="size-5" />,
-      label: { en: "organization Schedule", ar: "مواعيد المركز" },
+      label: { en: "Center Schedule", ar: "مواعيد المركز" },
     },
     {
       href: "/logout",

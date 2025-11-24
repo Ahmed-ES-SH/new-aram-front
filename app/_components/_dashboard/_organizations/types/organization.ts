@@ -4,7 +4,7 @@ export interface LocationType {
   address: string;
   coordinates: {
     lat: number;
-    lang: number;
+    lng: number;
   };
 }
 
@@ -25,7 +25,7 @@ export interface Organization {
   title: string;
   description: string;
   email: string;
-  password: string;
+  password: string | null;
   location: LocationType;
   phone_number: string;
   confirmation_price: string;
@@ -51,6 +51,7 @@ export interface Organization {
   logo: string;
   image: string;
   keywords: { id: number; title: string }[];
+  is_promoter: boolean | number;
 }
 
 export interface FilterState {

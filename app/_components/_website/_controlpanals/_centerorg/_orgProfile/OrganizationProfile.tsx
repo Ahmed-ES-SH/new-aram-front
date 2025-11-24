@@ -10,6 +10,7 @@ import { instance } from "@/app/_helpers/axios";
 import { Organization } from "@/app/_components/_dashboard/_organizations/types/organization";
 import { category } from "@/app/types/_dashboard/GlobalTypes";
 import OrganizationSecializations from "./OrganizationSecializations";
+import { toast } from "sonner";
 
 interface OrganizationProfileProps {
   organization: Organization;
@@ -29,10 +30,6 @@ export default function OrganizationProfile({
     "booking" | "info" | "subcategories"
   >("booking");
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
   // Initialize form data with organization data (excluding non-editable fields)
   const [formData, setFormData] = useState<Partial<Organization>>({
@@ -50,7 +47,6 @@ export default function OrganizationProfile({
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      setMessage(null);
 
       const updatedData = new FormData();
       // Define excluded fields
@@ -117,17 +113,14 @@ export default function OrganizationProfile({
       );
 
       if (response.status === 200) {
-        setMessage({
-          type: "success",
-          text: t("common.success"),
-        });
+        toast.success("تم تحديث البيانات الخاصة بالمركز بنجاح .");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting form:", error);
-      setMessage({
-        type: "error",
-        text: t("common.error"),
-      });
+      const message =
+        error?.response?.data?.message ||
+        "حدث خطا غير متوقع حاول فى فترة اخرى !";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -136,7 +129,6 @@ export default function OrganizationProfile({
   // Handle cancel
   const handleCancel = () => {
     setFormData(organization);
-    setMessage(null);
   };
 
   const handleBenfitChange = (items) => {
@@ -211,21 +203,6 @@ export default function OrganizationProfile({
 
         {/* Footer with Actions */}
         <div className="border-t border-gray-200  px-6 py-4 flex justify-between items-center">
-          <div>
-            {message && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className={`text-sm font-medium ${
-                  message.type === "success" ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {message.text}
-              </motion.div>
-            )}
-          </div>
-
           <div className="flex gap-3">
             <motion.button
               onClick={handleCancel}

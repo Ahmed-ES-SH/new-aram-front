@@ -45,7 +45,11 @@ export default function OrganizationGrid({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 }}
         >
-          <OrganizationCard index={index} organization={organization} />
+          <OrganizationCard
+            index={index}
+            organization={organization}
+            isAble={true}
+          />
         </motion.div>
       ))}
     </motion.div>

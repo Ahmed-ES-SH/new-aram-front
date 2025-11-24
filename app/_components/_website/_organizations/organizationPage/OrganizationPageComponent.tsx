@@ -99,7 +99,10 @@ export default function CenterDetails({
       return;
     }
 
-    if (user?.id == organization?.id) {
+    if (
+      user?.id == organization?.id &&
+      user?.account_type === organization.account_type
+    ) {
       toast.error(errorStartConversation);
       return;
     }

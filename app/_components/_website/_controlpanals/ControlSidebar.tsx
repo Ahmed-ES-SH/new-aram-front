@@ -4,7 +4,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { AnimatePresence, motion, spring } from "framer-motion";
 import { ReactNode, useEffect } from "react";
-import LocaleLink from "../_global/LocaleLink";
 import Cookie from "cookie-universal";
 import { instance } from "@/app/_helpers/axios";
 import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
@@ -36,7 +35,7 @@ export default function ControlSidebar({ items }: SidebarProps) {
 
   const pathname = usePathname();
   const router = useRouter();
-  const locale = useLocale();
+  const locale = useLocale() as "en" | "ar";
 
   const handleLogout = async () => {
     try {
@@ -50,6 +49,13 @@ export default function ControlSidebar({ items }: SidebarProps) {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleGo = (href: string) => {
+    router.push(href);
+    if (width <= 1280) {
+      dispatch(setUserPanalSidebar(false));
     }
   };
 
@@ -106,14 +112,14 @@ export default function ControlSidebar({ items }: SidebarProps) {
                       const isConversations =
                         item.href.includes(`/conversations`);
                       return (
-                        <LocaleLink
+                        <div
+                          onClick={() => handleGo(item.href)}
                           className={`flex items-center justify-between w-full relative rounded-xl ${
                             active
                               ? "bg-primary text-white font-medium"
                               : "text-gray-600 hover:bg-gray-100"
                           }`}
                           key={item.href}
-                          href={item.href}
                         >
                           <motion.div
                             whileHover={{ scale: 1.02 }}
@@ -127,7 +133,7 @@ export default function ControlSidebar({ items }: SidebarProps) {
                               {unreadMessagesCount}
                             </span>
                           )}
-                        </LocaleLink>
+                        </div>
                       );
                     })}
               </nav>
@@ -139,24 +145,26 @@ export default function ControlSidebar({ items }: SidebarProps) {
                 Settings
               </div>
               <nav className="flex flex-col gap-1">
-                {items
-                  .filter((item) => item.section === "settings")
-                  .map((item) => (
-                    <LocaleLink key={item.href} href={item.href}>
-                      <motion.div
-                        onClick={item.danger ? handleLogout : () => {}}
-                        whileHover={{ scale: 1.02 }}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all ${
-                          item.danger
-                            ? "text-red-600 hover:bg-red-100"
-                            : "text-gray-600 hover:bg-gray-100"
-                        }`}
-                      >
-                        {item.icon}
-                        <span>{item.label[locale as "en" | "ar"]}</span>
-                      </motion.div>
-                    </LocaleLink>
-                  ))}
+                {items &&
+                  items.length > 0 &&
+                  items
+                    .filter((item) => item.section === "settings")
+                    .map((item) => (
+                      <div key={item.href} onClick={() => handleGo(item.href)}>
+                        <motion.div
+                          onClick={item.danger ? handleLogout : () => {}}
+                          whileHover={{ scale: 1.02 }}
+                          className={`flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all ${
+                            item.danger
+                              ? "text-red-600 hover:bg-red-100"
+                              : "text-gray-600 hover:bg-gray-100"
+                          }`}
+                        >
+                          {item.icon}
+                          <span>{item.label[locale]}</span>
+                        </motion.div>
+                      </div>
+                    ))}
               </nav>
             </div>
           </motion.aside>

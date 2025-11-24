@@ -14,9 +14,13 @@ export async function generateMetadata() {
   };
 }
 
-export default async function AppointmentsPage({ searchParams }: any) {
-  const type = searchParams.acouunt_type;
-  const userId = searchParams.userId;
+export default async function AppointmentsPage() {
+  const user = await FetchData(`/current-user`, false);
+
+  if (!user) return null;
+
+  const userId = user.id;
+  const type = user.account_type;
 
   const response = await FetchData(`/appointments/${type}/${userId}`, true);
 

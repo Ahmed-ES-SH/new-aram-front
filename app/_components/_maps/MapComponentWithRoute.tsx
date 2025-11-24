@@ -35,7 +35,7 @@ const customIconUser = new L.Icon({
 
 interface LatLng {
   lat: number;
-  lang: number;
+  lng: number;
 }
 
 interface Props {
@@ -49,10 +49,10 @@ function FitBounds({ org, user }: { org: LatLng; user?: LatLng | null }) {
 
   useEffect(() => {
     if (user) {
-      const bounds = L.latLngBounds([org.lat, org.lang], [user.lat, user.lang]);
+      const bounds = L.latLngBounds([org.lat, org.lng], [user.lat, user.lng]);
       map.fitBounds(bounds, { padding: [50, 50] });
     } else {
-      map.setView([org.lat, org.lang], 12); // default zoom if no user location
+      map.setView([org.lat, org.lng], 12); // default zoom if no user location
     }
   }, [org, user, map]);
 
@@ -70,7 +70,7 @@ export default function MapComponentWithRoute({
 
   return (
     <MapContainer
-      center={{ lat: orderLatLng.lat, lng: orderLatLng.lang }}
+      center={{ lat: orderLatLng.lat, lng: orderLatLng.lng }}
       zoom={12}
       scrollWheelZoom
       className="lg:h-[600px] h-[60vh] w-full outline-none rounded-2xl z-0"
@@ -85,7 +85,7 @@ export default function MapComponentWithRoute({
 
       {/* Marker: Organization */}
       <Marker
-        position={{ lat: orderLatLng.lat, lng: orderLatLng.lang }}
+        position={{ lat: orderLatLng.lat, lng: orderLatLng.lng }}
         icon={customIconOrder}
       >
         <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
@@ -96,7 +96,7 @@ export default function MapComponentWithRoute({
       {/* Marker: User */}
       {userLatLng && (
         <Marker
-          position={{ lat: userLatLng.lat, lng: userLatLng.lang }}
+          position={{ lat: userLatLng.lat, lng: userLatLng.lng }}
           icon={customIconUser}
         >
           <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
@@ -109,8 +109,8 @@ export default function MapComponentWithRoute({
       {userLatLng && (
         <Polyline
           positions={[
-            [orderLatLng.lat, orderLatLng.lang],
-            [userLatLng.lat, userLatLng.lang],
+            [orderLatLng.lat, orderLatLng.lng],
+            [userLatLng.lat, userLatLng.lng],
           ]}
           color="#007bff"
           weight={4}

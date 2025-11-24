@@ -1,23 +1,16 @@
 "use client";
-
+import React from "react";
 import { motion } from "framer-motion";
+import { VscLoading } from "react-icons/vsc";
 
-interface LoadingSpinnerProps {
-  size?: "sm" | "md" | "lg";
-}
-
-export const LoadingSpinner = ({ size = "md" }: LoadingSpinnerProps) => {
-  const sizeClasses = {
-    sm: "w-4 h-4",
-    md: "w-6 h-6",
-    lg: "w-8 h-8",
-  };
-
+export default function LoadingSpinner() {
   return (
     <motion.div
-      className={`${sizeClasses[size]} border-2 border-white border-t-transparent rounded-full`}
-      animate={{ rotate: 360 }}
-      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-    />
+      animate={{ rotate: [360, 0, -360] }}
+      transition={{ duration: 1.5, repeat: Infinity }}
+      className="w-fit h-fit"
+    >
+      <VscLoading className="size-12 text-primary" />
+    </motion.div>
   );
-};
+}

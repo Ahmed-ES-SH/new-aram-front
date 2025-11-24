@@ -58,7 +58,7 @@ const statusConfig = {
     color: "bg-slate-100 text-slate-700 border-slate-200",
     icon: FiBriefcase,
     label: {
-      en: "Cancelled by Organization",
+      en: "Cancelled by Center",
       ar: "ألغاه المركز",
     },
   },

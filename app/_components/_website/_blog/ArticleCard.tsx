@@ -50,10 +50,7 @@ export default function ArticleCard({ article }: props) {
           className="w-full h-48 object-cover"
         />
         <div className="absolute top-4 right-4">
-          <div
-            className="px-3 py-1 rounded-full text-xs font-medium text-white"
-            style={{ backgroundColor: article.category.bg_color }}
-          >
+          <div className="px-3 py-1 bg-primary rounded-full text-xs font-medium text-white">
             {locale === "ar"
               ? article.category.title_ar
               : article.category.title_en}

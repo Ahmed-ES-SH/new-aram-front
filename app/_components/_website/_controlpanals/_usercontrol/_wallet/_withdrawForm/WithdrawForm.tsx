@@ -12,7 +12,7 @@ import {
   FaInfoCircle,
   FaTimes,
 } from "react-icons/fa";
-import { LoadingSpinner } from "./LoadingSpinner";
+import LoadingSpinner from "./LoadingSpinner";
 import { ErrorMessage } from "./ErrorMessage";
 import { WithdrawFormData, WithdrawMethod } from "./withdraw";
 import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
@@ -451,7 +451,7 @@ export default function WithdrawForm({ setTransactions }: props) {
                 >
                   {loading ? (
                     <>
-                      <LoadingSpinner size="sm" />
+                      <LoadingSpinner />
                       <span>{t("submitting")}</span>
                     </>
                   ) : (

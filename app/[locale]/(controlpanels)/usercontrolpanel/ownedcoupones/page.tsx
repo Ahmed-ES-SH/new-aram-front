@@ -17,8 +17,13 @@ export async function generateMetadata() {
 }
 
 export default async function OwnedCoupones({ searchParams }: any) {
-  const type = searchParams.account_type;
-  const userId = searchParams.userId;
+  const user = await FetchData(`/current-user`, false);
+
+  if (!user) return null;
+
+  const userId = user.id;
+  const type = user.account_type;
+
   const page = searchParams.page;
   const endPoint = page
     ? `/account-coupons?id=${userId}&type=${type}&page=${page}`

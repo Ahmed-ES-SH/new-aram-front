@@ -19,10 +19,7 @@ export default function OrganizationsSection({
   const t = useTranslations("organizations");
 
   return (
-    <section
-      dir={directionMap[locale]}
-      className="py-16 px-4 c-container bg-gray-50"
-    >
+    <section dir={directionMap[locale]} className="py-16 px-4 c-container">
       <div className="">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -45,6 +42,7 @@ export default function OrganizationsSection({
               organization={org}
               index={index}
               key={`${org.id}+org--${index}`}
+              isAble={true}
             />
           ))}
         </div>
