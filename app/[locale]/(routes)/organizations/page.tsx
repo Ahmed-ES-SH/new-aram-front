@@ -19,7 +19,7 @@ export async function generateMetadata() {
 }
 
 export default async function OrganizationsPage({ searchParams }: any) {
-  const step = (await searchParams.step) ?? 1;
+  const { step } = await searchParams;
 
   if (step == 1) {
     const categoriesResponse = await FetchData(`/public-categories`, true);
@@ -27,10 +27,12 @@ export default async function OrganizationsPage({ searchParams }: any) {
   }
 
   if (step == 2) {
-    const main_categoryId = await searchParams.main_categoryId;
-    const subCategoriesCount = await searchParams.subCategoriesLength;
-    const organizationsCount = await searchParams.organizationsCount;
-    const main_category = await searchParams.main_category;
+    const {
+      main_categoryId,
+      subCategoriesCount,
+      organizationsCount,
+      main_category,
+    } = await searchParams;
 
     // Instead of direct redirect()
     if (subCategoriesCount == 0 && organizationsCount > 0) {

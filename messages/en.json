@@ -617,6 +617,8 @@
   },
 
   "registerUserPage": {
+    "success": "Your Account has been created successfully",
+    "error": "An error occurred while creating your account. Please try again later.",
     "welcome": "Welcome to Aram",
     "welcome_subtitle": "We are here to assist you with everything you need. Please fill out the form below to get started.",
     "id_name": "ID Number",
@@ -838,7 +840,9 @@
       "step": "Step",
       "of": "of",
       "complete": "complete"
-    }
+    },
+    "success": "Account created successfully. Redirected to login page.",
+    "error": "An error occurred while creating your account. Please try again later."
   },
 
   "orgValidation": {

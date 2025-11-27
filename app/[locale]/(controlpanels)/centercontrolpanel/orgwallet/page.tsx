@@ -25,7 +25,7 @@ export default async function CenterWalletPage({ params }: any) {
   const userId = user.id;
   const type = user.account_type;
 
-  const locale = await params.locale;
+  const { locale } = await params;
 
   const wallet = await FetchData(
     `/wallet?user_id=${userId}&type=${type}`,

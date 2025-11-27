@@ -10,6 +10,7 @@ import ReduxProvider from "../_components/_website/_global/ReduxProvider";
 import CartSide from "../_components/_website/_global/_cart/CartSide";
 import Footer from "../_components/_website/_global/Footer";
 import ".././globals.css";
+import FetchData from "../_helpers/FetchData";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,14 +37,10 @@ export default async function RootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: "en" | "ar" }>;
 }) {
-  // Ensure that the incoming `locale` is valid
   const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) {
-    console.log("error");
-    return;
-  }
+  const user = await FetchData(`/current-user`, false);
 
   return (
     <html lang={locale}>
@@ -54,7 +51,7 @@ export default async function RootLayout({
           <NextIntlClientProvider>
             <ClientLayout>
               <Toaster position="top-center" richColors closeButton />
-              <Navbar locale={locale} />
+              <Navbar locale={locale} user={user ?? null} />
               <CartSide />
               {children}
               <Footer />

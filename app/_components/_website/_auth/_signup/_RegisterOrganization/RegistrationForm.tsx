@@ -10,9 +10,9 @@ import { MediaStep } from "./steps/MediaStep";
 import { RegistrationFormData, RegistrationStep } from "./types";
 import { directionMap } from "@/app/constants/_website/global";
 import { useLocale } from "next-intl";
-import RegistrationHeader from "./RegistrationHeader";
 import { Location } from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
 import { category } from "@/app/types/_dashboard/GlobalTypes";
+import RegistrationHeader from "./RegistrationHeader";
 import OfferStep from "./steps/OfferStep";
 
 const TOTAL_STEPS = 5;

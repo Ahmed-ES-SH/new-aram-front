@@ -80,7 +80,7 @@ export async function generateMetadata() {
 }
 
 export default async function CardsPage({ searchParams }: any) {
-  const category_id = await searchParams.category_id;
+  const { category_id } = await searchParams;
 
   const cardsApi = category_id
     ? `/public-cards?category_id=${category_id}`

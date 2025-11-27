@@ -2,8 +2,8 @@ import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/
 import { addCategoryinputs } from "@/app/constants/_dashboard/InputsArrays";
 import React from "react";
 
-export default function page({ params }: any) {
-  const subcategoryId = params.subcategoryId;
+export default async function page({ params }: any) {
+  const { subcategoryId } = await params;
   return (
     <>
       <DynamicElementPage

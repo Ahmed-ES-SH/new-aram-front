@@ -417,6 +417,7 @@ export default function DynamicTable<
         title={
           selectedItem?.name ??
           selectedItem?.user?.name ??
+          selectedItem?.promoter?.name ??
           selectedItem?.title_en ??
           ""
         }

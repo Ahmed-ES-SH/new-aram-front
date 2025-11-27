@@ -21,6 +21,7 @@ export function SuccessContent() {
   // params
   const total_invoice = searchParams.get(`total_invoice`);
   const payment_id = searchParams.get(`payment_id`);
+  const activity_id = searchParams.get(`activity_id`);
   const provisionalData_id = searchParams.get(`provisionalData_id`);
   const orderId = searchParams.get(`orderId`);
   const payment_type = searchParams.get(`payment_type`);
@@ -32,7 +33,7 @@ export function SuccessContent() {
   useEffect(() => {
     const check = async () => {
       const response = await instance.post(
-        `/payments/callback?order_id=${orderId}&payment_id=${payment_id}&provisionalData_id=${provisionalData_id}&payment_type=${payment_type}&invoice_number=${invoice_number}&session_id=${session_id}`
+        `/payments/callback?order_id=${orderId}&payment_id=${payment_id}&provisionalData_id=${provisionalData_id}&payment_type=${payment_type}&invoice_number=${invoice_number}&session_id=${session_id}&activity_id=${activity_id}`
       );
       if (response.status == 200) {
         dispatch(clearCart());
@@ -48,6 +49,7 @@ export function SuccessContent() {
     payment_type,
     provisionalData_id,
     session_id,
+    activity_id,
   ]);
 
   const details: any = [

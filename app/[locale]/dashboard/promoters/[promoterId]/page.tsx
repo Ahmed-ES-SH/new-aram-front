@@ -1,12 +1,12 @@
 import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
 import React from "react";
 
-export default function PromoterPage({ params }: any) {
-  const promoterId = params.promoterId;
+export default async function PromoterPage({ params }: any) {
+  const { promoterId } = await params;
 
   const updatePromoterInputs = [
     {
-      name: "user.name",
+      name: "promoter.name",
       type: "text",
       fildType: "short-text",
       label: { ar: "الإسم", en: "" },
@@ -14,7 +14,7 @@ export default function PromoterPage({ params }: any) {
       readOnly: true,
     },
     {
-      name: "user.email",
+      name: "promoter.email",
       type: "email",
       fildType: "short-text",
       label: { ar: "البريد الإلكترونى", en: "" },

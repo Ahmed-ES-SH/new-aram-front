@@ -8,13 +8,24 @@ import MenuButton from "./MenuButton";
 import CartButton from "./CartButton";
 import NavDiv from "./NavDiv";
 import FetchData from "@/app/_helpers/FetchData";
+import { UserType } from "@/app/Store/userSlice";
 
 /////////////////////////////////////////
 // end of import lines
 /////////////////////////////////////////
 
-export default async function Navbar({ locale }: any) {
+interface props {
+  locale: "en" | "ar";
+  user: UserType | null;
+}
+
+export default async function Navbar({ locale, user }: props) {
   const currencies = await FetchData(`/currencies`, false);
+  const notifications = await FetchData(
+    `/last-ten-notifications/${user?.id}/${user?.account_type}`,
+    false
+  );
+
   return (
     <NavDiv>
       <header className="bg-white  shadow-md fixed top-0 left-0 w-full">
@@ -48,7 +59,7 @@ export default async function Navbar({ locale }: any) {
               </ul>
 
               {/* Auth buttuns + userButtun */}
-              <AuthBtns />
+              <AuthBtns notifications={notifications} user={user ?? null} />
 
               {/* shopping cart button */}
               <CartButton />

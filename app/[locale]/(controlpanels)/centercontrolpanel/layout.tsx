@@ -35,10 +35,10 @@ export default async function CenterControlPanalLayout({
   const centerLinks =
     user && links && user.promoter ? [...links, promoterRoute] : links;
 
-  const locale = (await params.locale) ?? "en";
+  const { locale } = await params;
   return (
     <div
-      dir={directionMap[locale]}
+      dir={directionMap[locale ?? "en"]}
       className="flex items-start gap-3 mt-20  hidden-scrollbar"
     >
       <ControlSidebar items={centerLinks as any} />

@@ -10,22 +10,14 @@ import { directionMap } from "@/app/constants/_website/global";
 import { useLocale } from "next-intl";
 import { formatTitle } from "@/app/_helpers/helpers";
 // import { getLinks, getOrganizationLinks } from "./constants";
-import NotificationBell, {
-  NotificationType,
-} from "../_notifications/NotificationBell";
+import NotificationBell from "../_notifications/NotificationBell";
 import { useAppSelector } from "@/app/Store/hooks";
-import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { BsBuildingsFill, BsChatDots } from "react-icons/bs";
 
-export default function UserButton({ user, logout }) {
+export default function UserButton({ user, logout, notifications }) {
   const { unreadNotificationsCount, unreadMessagesCount } = useAppSelector(
     (state) => state.user
-  );
-
-  const { data } = useFetchData<NotificationType[]>(
-    `/last-ten-notifications/${user?.id}/${user.account_type}`,
-    false
   );
 
   const router = useRouter();
@@ -33,7 +25,6 @@ export default function UserButton({ user, logout }) {
   const role = user && user.account_type == "user" ? user.role : "organization";
 
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<NotificationType[]>([]);
 
   const dropdownRef = useRef<HTMLButtonElement>(null); // ref to dropdown wrapper
 
@@ -70,15 +61,9 @@ export default function UserButton({ user, logout }) {
 
   // const currentLinks = user?.account_type == "user" ? links : orgLinks || [];
 
-  const displayName = user.name ?? user.title ?? "";
+  const displayName = user?.name ?? user?.title ?? "";
 
-  useEffect(() => {
-    if (data) {
-      setNotifications(data);
-    }
-  }, [data]);
-
-  const image = user.account_type == "user" ? user.image : user.logo;
+  const image = user?.account_type == "user" ? user?.image : user?.logo;
 
   if (!user) return null;
 
@@ -119,10 +104,9 @@ export default function UserButton({ user, logout }) {
 
             {/* NotificationBell */}
             <NotificationBell
-              notifications={notifications}
-              setNotifications={setNotifications}
-              userId={user && user.id}
-              accountType={user && user.account_type}
+              notifications={notifications ?? []}
+              userId={user?.id}
+              accountType={user?.account_type}
               unreadCount={unreadNotificationsCount}
             />
           </div>
@@ -140,7 +124,7 @@ export default function UserButton({ user, logout }) {
               >
                 <div className="py-1" role="none">
                   {role == "admin" ||
-                    (role == "Admin" && (
+                    (role == "super_admin" && (
                       <div
                         onClick={() =>
                           handleGo(

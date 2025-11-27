@@ -5,7 +5,7 @@ import { getSharedMetadata } from "@/app/_helpers/helpers";
 import React from "react";
 
 export async function generateMetadata({ params, searchParams }: any) {
-  const locale = params.locale;
+  const { locale } = await params;
   const cardId = searchParams.cardId;
 
   const card = await FetchData(`/get-card/${cardId}`, false);

@@ -25,7 +25,7 @@ export default async function WalletPage({ params }: any) {
   const userId = user.id;
   const type = user.account_type;
 
-  const locale = await params.locale;
+  const { locale } = await params;
 
   const wallet = await FetchData(
     `/wallet?user_id=${userId}&type=${type}`,
@@ -40,7 +40,7 @@ export default async function WalletPage({ params }: any) {
 
   return (
     <div
-      dir={directionMap[locale]}
+      dir={directionMap[locale ?? "en"]}
       className="flex flex-col gap-4 w-full mb-6 p-2"
     >
       <WalletOverview wallet={wallet} />

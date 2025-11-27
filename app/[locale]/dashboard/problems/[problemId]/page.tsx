@@ -1,8 +1,8 @@
 import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
 import React from "react";
 
-export default function page({ params }: any) {
-  const problemId = params.problemId;
+export default async function page({ params }: any) {
+  const { problemId } = await params;
 
   const problemInputs = [
     {

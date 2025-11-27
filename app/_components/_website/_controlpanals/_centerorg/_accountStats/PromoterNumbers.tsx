@@ -36,8 +36,6 @@ export default function PromoterNumbers({
     }
   };
 
-  // Generate referral links
-  const mainLink = `${baseUrl}/?ref=${promoter.referral_code}`;
   const signupLink = `${baseUrl}/membership?ref=${promoter.referral_code}`;
 
   // Statistics data for mapping
@@ -115,43 +113,6 @@ export default function PromoterNumbers({
           {t("yourLinks")}
         </h2>
         <div className="space-y-4">
-          {/* Main Referral Link */}
-          <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-            <div className="flex-1">
-              <p className="text-sm text-gray-600 mb-1">Main Referral Link</p>
-              <code className="font-mono text-gray-700 break-all">
-                {mainLink}
-              </code>
-            </div>
-            <button
-              onClick={() => handleCopy(mainLink, "mainLink")}
-              className="p-3 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-              aria-label="Copy main referral link"
-            >
-              <AnimatePresence mode="wait">
-                {copiedItem === "mainLink" ? (
-                  <motion.div
-                    key="check"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    className="text-green-500"
-                  >
-                    <FaCheckCircle size={20} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="copy"
-                    initial={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                  >
-                    <FaCopy size={20} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
-          </div>
-
           {/* Signup Link */}
           <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
             <div className="flex-1">

@@ -6,11 +6,12 @@ import { addCategoryinputs } from "@/app/constants/_dashboard/InputsArrays";
 import React from "react";
 
 export default async function CardCategoryPage({ params }: any) {
-  const cardcategoryId = params.cardcategoryId;
+  const { cardcategoryId } = await params;
   const cardcategory = await FetchData(`/category/${cardcategoryId}`, false);
   const cardsLength = cardcategory?.sub_categories?.length || 0;
 
   if (!cardcategoryId) return <NotFoundItem />;
+
   return (
     <>
       <div className="flex items-center gap-4 max-md:flex-col w-fit mx-auto max-md:w-full">

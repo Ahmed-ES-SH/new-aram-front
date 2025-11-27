@@ -15,15 +15,6 @@ export default function CartSidebar() {
   const { items } = useAppSelector((state) => state.cartSlice);
   const { activeCurrency } = useAppSelector((state) => state.currency);
 
-  const [cardsDetailes, setCardsDetailes] = useState<any>([]);
-  const [checkCurrentuser, setCheckCurrentuser] = useState(false);
-  const [purchaseId, setpurchaseId] = useState("");
-  const [checkLoading, setCheckLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
-  const [promoCode, setPromoCode] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const calculateTotal = () => {
     // calculate subtotal from items (price * quantity)
     const subtotal = items.reduce((acc, item) => {
@@ -43,10 +34,22 @@ export default function CartSidebar() {
     // calculate total
     const total = ((subtotal + vat - discount) * exchangeRate).toFixed(2);
 
-    return { subtotal, vat, discount, total };
+    return { subtotal, vat, total };
   };
 
-  const { subtotal, vat, discount, total } = calculateTotal();
+  const { subtotal, vat, total } = calculateTotal();
+
+  const [cardsDetailes, setCardsDetailes] = useState<any>([]);
+  const [checkCurrentuser, setCheckCurrentuser] = useState(false);
+  const [promoter, setPromoter] = useState(null);
+  const [checkLoading, setCheckLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const [refCode, setRefCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isDiscount, setIsDiscount] = useState(false);
+  const [mainDiscount, setMainDiscount] = useState(0);
+  const [mainTotal, setMainTotal] = useState<number>(Number(total) ?? 0);
 
   const handleSubmit = async () => {
     if (!user) {
@@ -56,10 +59,12 @@ export default function CartSidebar() {
     try {
       setLoading(true);
       const formdata = new FormData();
-      if (purchaseId) formdata.append("purchase_id", purchaseId);
+      if (refCode) formdata.append("ref_code", refCode);
       if (user) formdata.append("account_type", user?.account_type);
-      if (user) formdata.append("user_id", user.id.toString());
-      formdata.append("total_invoice", total);
+      if (user) formdata.append("user_id", user?.id.toString());
+      formdata.append("total_invoice", mainTotal.toString());
+      formdata.append("before_discount", total.toString());
+      formdata.append("discount", mainDiscount.toString());
       formdata.append("invoice_type", "cards");
       formdata.append("payment_method", "thawani");
       formdata.append("cardsDetailes", JSON.stringify(cardsDetailes));
@@ -79,25 +84,29 @@ export default function CartSidebar() {
   const checkPromoCode = async () => {
     try {
       setCheckLoading(true);
-      const data = {
-        promo_code: promoCode,
-        amount: total,
-        buyer_id: user && user?.id,
-        buyer_type: user && user?.account_type,
-      };
-      const response = await instance.post("/purchase", data);
+
+      const response = await instance.post(
+        `/check-promoter-code?ref_code=${refCode}`
+      );
       if (response.status == 200) {
         const data = response.data.data;
-        setpurchaseId(data.uniqId);
+        const discountPersantage = response.data.data.discount_percentage;
+
+        const discountAmount = (mainTotal * discountPersantage) / 100;
+        const finalTotal = mainTotal - discountAmount;
+        setPromoter(data);
+        setMainDiscount(Number(discountAmount.toFixed(2)));
+        setMainTotal(Number(finalTotal.toFixed(2)));
+        setIsDiscount(true);
         // إظهار علامة النجاح
         setSuccess(true);
-        setTimeout(() => setSuccess(false), 2000); // إخفاء العلامة بعد ثانيتين
+        setTimeout(() => setSuccess(false), 3000); // إخفاء العلامة بعد ثانيتين
       }
     } catch (error: any) {
       console.log(error);
       // إظهار علامة الفشل
       setError(true);
-      setTimeout(() => setError(false), 2000); // إخفاء العلامة بعد ثانيتين
+      setTimeout(() => setError(false), 3000); // إخفاء العلامة بعد ثانيتين
     } finally {
       setCheckLoading(false);
     }
@@ -134,6 +143,11 @@ export default function CartSidebar() {
     });
   }, [items]);
 
+  useEffect(() => {
+    const { total } = calculateTotal();
+    setMainTotal(Number(Number(total).toFixed(2)));
+  }, [items]);
+
   if (!activeCurrency) return null;
 
   return (
@@ -167,7 +181,7 @@ export default function CartSidebar() {
                   {t("discount")}
                 </dt>
                 <dd className="text-base font-medium text-green-600">
-                  -%{` ${discount && discount.toFixed(2)}`}
+                  -%{` ${mainDiscount && mainDiscount.toFixed(2)}`}
                 </dd>
               </dl>
               <dl className="flex items-center justify-between gap-4">
@@ -187,7 +201,7 @@ export default function CartSidebar() {
               </dt>
               <dd className="text-base flex items-center gap-1 font-bold text-gray-900 ">
                 <span>{activeCurrency.symbol}</span>
-                <p>{total && total}</p>
+                <p>{mainTotal}</p>
               </dd>
             </dl>
           </div>
@@ -231,9 +245,10 @@ export default function CartSidebar() {
         </div>
         {/* promo box */}
         <PromoCodeBox
-          setPromoCode={setPromoCode}
-          promoCode={promoCode}
+          setPromoCode={setRefCode}
+          promoCode={refCode}
           success={success}
+          isDiscount={isDiscount}
           error={error}
           checkLoading={checkLoading}
           checkPromoCode={checkPromoCode}

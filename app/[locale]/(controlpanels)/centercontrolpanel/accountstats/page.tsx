@@ -1,20 +1,20 @@
 import PromoterActivitiesTable from "@/app/_components/_website/_controlpanals/_centerorg/_accountStats/PromoterActivitiesTable";
 import PromoterNumbers from "@/app/_components/_website/_controlpanals/_centerorg/_accountStats/PromoterNumbers";
 import FetchData from "@/app/_helpers/FetchData";
+import { getBaseUrl } from "@/app/_helpers/GetBaseUrl";
 import React from "react";
 
 export default async function AccountStats() {
+  const baseUrl = await getBaseUrl();
+
   const user = await FetchData(`/current-user`, false);
   const promoter = user && user.promoter;
-  const response = await FetchData(
-    `/user-activites?user_id=${user.id}&user_type=organization`,
-    true
-  );
+  const response = await FetchData(`/promoter-activities`, true);
   const { data, pagination } = await response;
 
   return (
     <div className="w-full mt-4 p-6 space-y-4">
-      <PromoterNumbers promoter={promoter} baseUrl="http://localhost:3000/en" />
+      <PromoterNumbers promoter={promoter} baseUrl={baseUrl} />
       <PromoterActivitiesTable
         data={data ?? []}
         pagination={pagination}

@@ -20,8 +20,8 @@ export default function RegisterUserComponent() {
   const t_validation = useTranslations("validation");
 
   const searchParams = useSearchParams();
-  const promoCode: any = searchParams.get("currentCode");
-  const decodeCode = atob(promoCode);
+  const promoCode: any = searchParams.get("ref");
+
   const imageref = useRef<any>(null);
   const [form, setForm] = useState({
     id_number: "",
@@ -42,25 +42,6 @@ export default function RegisterUserComponent() {
     const files = e.target.files;
     if (files && files.length > 0) {
       setimage(files[0]);
-    }
-  };
-
-  const checkCode = async (newuserId: any) => {
-    try {
-      if (newuserId) {
-        const response = await instance.post(`/promoter-new-member`, {
-          promoter_code: decodeCode,
-          new_account_id: newuserId,
-          new_account_type: "User",
-        });
-        if (response.status == 201) {
-          setStep(2);
-        }
-      } else {
-        setStep(2);
-      }
-    } catch (error: any) {
-      console.log(error);
     }
   };
 
@@ -109,23 +90,26 @@ export default function RegisterUserComponent() {
         formdata.append(key, value as string)
       );
       if (image) formdata.append("image", image);
+      if (promoCode) formdata.append("ref_code", promoCode);
 
       const response = await instance.post("/register", formdata);
 
-      if (response.status === 201) {
-        setStep(2);
-        await instance.post(`/resend-verification-email/User`, {
-          email: form.email,
-        });
-        const user = response.data.data;
-        if (decodeCode && user) checkCode(user.id);
+      if (response.status == 201) {
+        toast.success(t("success"));
+        try {
+          await instance.post(`/send-verify-email?email=${form.email}`);
+          toast.success(t("email_sent"));
+          setStep(2);
+        } catch (Emailerror: any) {
+          toast.error(Emailerror?.response?.data?.message ?? t("error"));
+        }
       }
     } catch (error: any) {
       console.error("Validation or request error:", error);
+      const message = error?.response?.data?.message ?? t("error");
+      toast.error(message);
       if (error?.response?.data?.errors) {
         seterrors(error.response.data.errors);
-      } else if (error) {
-        toast.error("حدث خطأ غير متوقع. يرجى المحاولة لاحقًا.");
       }
     } finally {
       setloading(false);
@@ -216,7 +200,7 @@ export default function RegisterUserComponent() {
                       {image ? (
                         <Img
                           src={URL.createObjectURL(image)}
-                          className="w-full"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         <FaCameraRetro className="size-7 text-indigo-400 group-hover:text-white duration-200" />

@@ -145,11 +145,11 @@ export default function OfferCard({ offer, index }: OfferCardProps) {
               <span className="text-sm text-gray-600">{t("from")}</span>
               <LocaleLink
                 href={`/organizations/${formatTitle(
-                  offer.organization.title
-                )}?organizationId=${offer.organization.id}`}
+                  offer?.organization?.title
+                )}?organizationId=${offer?.organization?.id}`}
                 className="mr-1 text-sm hover:underline font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
               >
-                {offer.organization.title}
+                {offer?.organization?.title}
               </LocaleLink>
             </div>
             <div className="flex items-center gap-1 max-sm:self-end px-2 rounded-full bg-primary text-white mr-2">

@@ -7,7 +7,7 @@ import { CiCirclePlus } from "react-icons/ci";
 import LocaleLink from "@/app/_components/_website/_global/LocaleLink";
 
 export default async function CategoryPage({ params }: any) {
-  const categoryId = params.categoryId;
+  const { categoryId } = await params;
   const category = await FetchData(`/category/${categoryId}`, false);
   const subCategoriesLength = category?.sub_categories?.length || 0;
 

@@ -29,22 +29,12 @@ export async function generateMetadata() {
 }
 
 export default async function OffersPage({ searchParams, params }: any) {
-  const locale = params.locale ?? "ar";
+  const { locale } = await params;
 
-  // Extract parameters correctly
-  const query =
-    typeof searchParams.query === "string" ? searchParams.query : undefined;
-  const category =
-    typeof searchParams.category === "string"
-      ? searchParams.category
-      : undefined;
-  const sortby =
-    typeof searchParams.sort_by === "string" ? searchParams.sort_by : undefined;
-  const page =
-    typeof searchParams.page === "string" ? parseInt(searchParams.page) : 1;
+  const { query, category, sort_by, page } = await searchParams;
 
   // Fetch data
-  const response = await FetchOffers({ query, category, sortby, page });
+  const response = await FetchOffers({ query, category, sort_by, page });
 
   const organizations = await FetchData(`/top-public-organizations`, false);
 

@@ -1,17 +1,23 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import LocaleLink from "../_global/LocaleLink";
 import { CiLogin } from "react-icons/ci";
 import UserButton from "./UserButton";
 import { useLocale, useTranslations } from "next-intl";
 import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
 import { instance } from "@/app/_helpers/axios";
-import { clearUser } from "@/app/Store/userSlice";
+import { clearUser, setUser, UserType } from "@/app/Store/userSlice";
 import Cookie from "cookie-universal";
 import { useRouter } from "next/navigation";
+import { NotificationType } from "../_notifications/NotificationBell";
 
-export default function AuthBtns() {
-  const { user } = useAppSelector((state) => state.user);
+interface props {
+  notifications: NotificationType[];
+  user: UserType | null;
+}
+
+export default function AuthBtns({ notifications, user }: props) {
+  const { user: currentUser } = useAppSelector((state) => state.user);
 
   const locale = useLocale();
   const t = useTranslations("authButtons");
@@ -36,10 +42,18 @@ export default function AuthBtns() {
     }
   };
 
+  useEffect(() => {
+    dispatch(setUser(user));
+  }, [user]);
+
   return (
     <>
-      {user && token ? (
-        <UserButton user={user} logout={logout} />
+      {currentUser && token ? (
+        <UserButton
+          notifications={notifications ?? []}
+          user={currentUser}
+          logout={logout}
+        />
       ) : (
         <div className="flex items-center gap-4 max-sm:hidden">
           <div className="flex gap-4">

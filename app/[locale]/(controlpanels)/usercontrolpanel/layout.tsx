@@ -1,12 +1,13 @@
-import ControlSidebar from "@/app/_components/_website/_controlpanals/ControlSidebar";
-import SidbarButton from "@/app/_components/_website/_controlpanals/SidbarButton";
+import React from "react";
 import { getLinks } from "@/app/_components/_website/_navbar/constants";
-import FetchData from "@/app/_helpers/FetchData";
 import { formatTitle, getSharedMetadata } from "@/app/_helpers/helpers";
 import { directionMap } from "@/app/constants/_website/global";
 import { getTranslations } from "next-intl/server";
-import React from "react";
 import { ImStatsBars } from "react-icons/im";
+import FetchData from "@/app/_helpers/FetchData";
+import ControlSidebar from "@/app/_components/_website/_controlpanals/ControlSidebar";
+import SidbarButton from "@/app/_components/_website/_controlpanals/SidbarButton";
+import ProductAuthRoutes from "@/app/_components/_productRoutes/ProductAuthRoutes";
 
 export async function generateMetadata() {
   const t = await getTranslations("metaUserControlPage");
@@ -38,12 +39,17 @@ export default async function UserControlPanalLayout({
       ? [...userLinks, promoterRoute]
       : userLinks;
 
-  const locale = (await params.locale) ?? "en";
+  const { locale } = await params;
   return (
-    <div dir={directionMap[locale]} className="flex items-start gap-3 mt-20">
-      <ControlSidebar items={currentLinks ?? []} />
-      <SidbarButton />
-      {children}
-    </div>
+    <ProductAuthRoutes locale={locale}>
+      <div
+        dir={directionMap[locale ?? "en"]}
+        className="flex items-start gap-3 mt-20"
+      >
+        <ControlSidebar items={currentLinks ?? []} />
+        <SidbarButton />
+        {children}
+      </div>
+    </ProductAuthRoutes>
   );
 }

@@ -429,7 +429,7 @@ export default function DynamicElementPage({
                     type={input.type}
                     value={(value as string) || ""}
                     onChange={handleChange}
-                    className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100"
+                    className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100 read-only:cursor-not-allowed"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (

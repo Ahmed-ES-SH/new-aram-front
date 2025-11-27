@@ -8,6 +8,7 @@ interface props {
   checkLoading: boolean;
   success: boolean;
   error: boolean;
+  isDiscount: boolean;
   promoCode: string;
   setPromoCode: Dispatch<SetStateAction<string>>;
 }
@@ -18,6 +19,7 @@ export default function PromoCodeBox({
   checkPromoCode,
   checkLoading,
   success,
+  isDiscount,
   error,
 }: props) {
   const t = useTranslations("cartPage.promo");
@@ -36,7 +38,9 @@ export default function PromoCodeBox({
             name="promo_code"
             type="text"
             id="voucher"
-            className="block outline-none w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500"
+            className={`block outline-none w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 ${
+              isDiscount ? "bg-green-200 text-green-600 border-green-300" : ""
+            }`}
             placeholder=""
             value={promoCode}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -47,7 +51,7 @@ export default function PromoCodeBox({
         <div className="flex flex-col items-center gap-2 w-full">
           <button
             onClick={checkPromoCode}
-            disabled={checkLoading}
+            disabled={checkLoading || isDiscount}
             className={`${
               checkLoading ? "bg-orange-500" : "bg-green-500"
             } text-white p-2 rounded-md  transition-all duration-300 hover:bg-green-600 disabled:bg-gray-300`}

@@ -16,7 +16,7 @@ export async function generateMetadata() {
 }
 
 export default async function LoginPage({ params }: any) {
-  const locale = await params.locale;
+  const { locale } = await params;
   const user = await FetchData("/current-user", false);
 
   if (user && !user.error) redirect(`/${locale}`);

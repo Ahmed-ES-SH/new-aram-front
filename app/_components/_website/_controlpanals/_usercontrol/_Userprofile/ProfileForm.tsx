@@ -170,8 +170,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 />
               ) : (
                 <Img
-                  src={formData.image ?? "/defaults/noImage.png"}
-                  errorSrc="/defaults/noImage.png"
+                  src={formData.image ?? "/defaults/male-noimage.jpg"}
+                  errorSrc="/defaults/male-noimage.jpg"
                   alt={formData.name}
                   className="w-24 h-24  object-cover"
                 />

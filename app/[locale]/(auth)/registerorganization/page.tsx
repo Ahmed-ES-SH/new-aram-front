@@ -16,7 +16,7 @@ export async function generateMetadata() {
 }
 
 export default async function RegisterOrganizationPage({ params }: any) {
-  const locale = await params.locale;
+  const { locale } = await params;
   const categories = await FetchData(
     `/categories-with-subcategories?state=1`,
     false
@@ -24,7 +24,7 @@ export default async function RegisterOrganizationPage({ params }: any) {
 
   const user = await FetchData(`/current-user`, false);
 
-  if (user && !user.error) redirect(`/${locale}`);
+  if (user) redirect(`/${locale}`);
 
   return <RegistrationForm categories={categories as category[]} />;
 }

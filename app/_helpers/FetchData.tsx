@@ -4,7 +4,7 @@ import { decryptToken } from "./helpers";
 export default async function FetchData<T = any>(
   api: string,
   paginationState: boolean
-): Promise<{ data: T; pagination?: any } | T | { error: string }> {
+): Promise<{ data: T; pagination?: any } | T | boolean> {
   try {
     const cookieStore = cookies();
 
@@ -44,6 +44,6 @@ export default async function FetchData<T = any>(
     return result.data || [];
   } catch (error) {
     console.error("Error fetching data:", error);
-    return { error: "Something went wrong while fetching data." };
+    return false;
   }
 }

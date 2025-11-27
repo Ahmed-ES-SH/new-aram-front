@@ -3,8 +3,8 @@ import NotFoundItem from "@/app/_components/_dashboard/NotFoundItem";
 import { Categoryinputs } from "@/app/constants/_dashboard/InputsArrays";
 import React from "react";
 
-export default function page({ params }: any) {
-  const categoryId = params.categoryId;
+export default async function page({ params }: any) {
+  const { categoryId } = await params;
 
   if (categoryId) <NotFoundItem />;
 

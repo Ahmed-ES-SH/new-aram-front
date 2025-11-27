@@ -19,7 +19,7 @@ import { instance } from "@/app/_helpers/axios";
 import { toast } from "sonner";
 import { VscLoading } from "react-icons/vsc";
 import { appendFormData } from "../helpers";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   offer: RegistrationFormData["offer"];
@@ -46,6 +46,8 @@ export default function OfferStep({
   const locale = useLocale() as "en" | "ar";
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const ref_code = searchParams.get("ref");
 
   const schema = getOfferSchema(t_3);
 
@@ -74,12 +76,11 @@ export default function OfferStep({
       const formData = new FormData();
       appendFormData(formData, orgForm);
       formData.append("category_id", categories[0].id.toString());
+      if (ref_code) formData.append("ref_code", ref_code);
 
       const response = await instance.post(`/register-org`, formData);
       if (response.status === 201) {
-        toast.success(
-          "تم انشاء الحساب بنجاح جارى اعادة التوجية الى صفحة تسجيل الدخول ."
-        );
+        toast.success(t("success"));
         setOrgForm({
           email: "",
           password: "",
@@ -110,10 +111,12 @@ export default function OfferStep({
         setCurrentStep(1);
         setTimeout(() => {
           router.push(`/${locale}/login`);
-        }, 400);
+        }, 300);
       }
     } catch (error: any) {
       console.log(error);
+      const message = error?.response?.data?.message ?? t("error");
+      toast.error(message);
     } finally {
       setLoading(false);
     }

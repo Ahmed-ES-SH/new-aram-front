@@ -1,9 +1,11 @@
 "use client";
 import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
 import { useAppSelector } from "@/app/Store/hooks";
+import { useParams } from "next/navigation";
 import React from "react";
 
-export default function OrganizationPage({ params }: any) {
+export default function OrganizationPage() {
+  const params = useParams();
   const organizationId = params.organizationId;
   const { categories } = useAppSelector((state) => state.categories);
 
@@ -182,7 +184,7 @@ export default function OrganizationPage({ params }: any) {
       <DynamicElementPage
         api={"/organizations"}
         updateEndPoint={"/update-organization"}
-        id={organizationId}
+        id={organizationId as string}
         inputsData={organizationInputs}
         direct={"/ar/dashboard/organizations"}
       />

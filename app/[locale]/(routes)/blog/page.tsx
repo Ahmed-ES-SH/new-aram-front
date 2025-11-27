@@ -18,19 +18,8 @@ export async function generateMetadata() {
 }
 
 export default async function BlogPage({ params, searchParams }: any) {
-  const locale = params.locale ?? "ar";
-
-  // Extract parameters correctly
-  const query =
-    typeof searchParams.query === "string" ? searchParams.query : undefined;
-  const category =
-    typeof searchParams.category === "string"
-      ? searchParams.category
-      : undefined;
-  const tag =
-    typeof searchParams.tag === "string" ? searchParams.tag : undefined;
-  const page =
-    typeof searchParams.page === "string" ? parseInt(searchParams.page) : 1;
+  const { locale } = await params;
+  const { query, category, tag, page } = await searchParams;
 
   // main data
   const articlesResponse = await FetchArticles({

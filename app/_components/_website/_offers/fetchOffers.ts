@@ -20,12 +20,12 @@ const getTokenFromCookies = async (): Promise<string | null> => {
 export default async function FetchOffers({
   query,
   category,
-  sortby, // This should probably be renamed to sortBy for consistency
+  sort_by, // This should probably be renamed to sortBy for consistency
   page = 1, // Default value
 }: {
   query?: string;
   category?: string;
-  sortby?: string;
+  sort_by?: string;
   page?: number;
 }): Promise<OffersResponse> {
   try {
@@ -35,7 +35,7 @@ export default async function FetchOffers({
     if (query) searchParams.append("query", query);
     if (page) searchParams.append("page", String(page));
     if (category) searchParams.append("category", category); // ✅ Fixed: was "time"
-    if (sortby) searchParams.append("sort_by", sortby); // ✅ Consistent with backend
+    if (sort_by) searchParams.append("sort_by", sort_by); // ✅ Consistent with backend
 
     const apiUrl = `${
       process.env.NEXT_PUBLIC_API_BASE_URL

@@ -5,21 +5,20 @@ import { FaUser, FaBuilding } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
+import LocaleLink from "../../_global/LocaleLink";
 
 type CardProps = {
   icon: React.ReactNode;
   title: string;
   description: string;
-  onClick: () => void;
 };
 
-const Card: React.FC<CardProps> = ({ icon, title, description, onClick }) => {
+const Card: React.FC<CardProps> = ({ icon, title, description }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.97 }}
       className="w-full bg-white border border-gray-200 rounded-2xl shadow-md lg:p-8 p-4 cursor-pointer transition-all hover:shadow-xl hover:border-primary"
-      onClick={onClick}
     >
       <div className="flex items-center max-md:flex-col max-md:items-start gap-4 mb-4">
         <div className="lg:p-4 p-2 bg-primary/10 text-primary rounded-full text-2xl">
@@ -59,20 +58,20 @@ export default function AccountSelection() {
 
         {/* Cards */}
         <div className="flex flex-col gap-6">
-          <Card
-            icon={<FaUser />}
-            title={t("user.title")}
-            description={t("user.description")}
-            onClick={() => router.push(`/${locale}/registeruser?type=user`)}
-          />
-          <Card
-            icon={<FaBuilding />}
-            title={t("organization.title")}
-            description={t("organization.description")}
-            onClick={() =>
-              router.push(`/${locale}/registerorganization?type=organization`)
-            }
-          />
+          <LocaleLink href="/registeruser?type=user">
+            <Card
+              icon={<FaUser />}
+              title={t("user.title")}
+              description={t("user.description")}
+            />
+          </LocaleLink>
+          <LocaleLink href="/registerorganization?type=organization">
+            <Card
+              icon={<FaBuilding />}
+              title={t("organization.title")}
+              description={t("organization.description")}
+            />
+          </LocaleLink>
         </div>
       </motion.div>
     </div>

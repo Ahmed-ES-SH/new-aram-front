@@ -1,11 +1,13 @@
 "use client";
 import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
 import { useAppSelector } from "@/app/Store/hooks";
+import { useParams } from "next/navigation";
 import React from "react";
 
-export default function ServicePage({ params }: any) {
+export default function ServicePage() {
+  const params = useParams();
   const { categories } = useAppSelector((state) => state.categories);
-  const serviceId = params.serviceId;
+  const serviceId = params.serviceId as string;
 
   const serviceInputs = [
     {

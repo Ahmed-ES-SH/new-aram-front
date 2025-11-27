@@ -18,16 +18,14 @@ export async function generateMetadata() {
 }
 
 export default async function TagArticles({ searchParams, params }: any) {
-  const locale = params.locale;
+  const { locale, tag } = await params;
+  const { tagId, category } = await searchParams;
+
   const t = await getTranslations("articles.list");
 
-  const tagId = searchParams.tagId;
-  const categoryId = searchParams.category;
-  const tag = params.tag;
-
   //  main data
-  const api = categoryId
-    ? `/articles-by-tag?tag_id=${tagId}&category=${categoryId}`
+  const api = category
+    ? `/articles-by-tag?tag_id=${tagId}&category=${category}`
     : `/articles-by-tag?tag_id=${tagId}`;
 
   const articlesResponse = await FetchData(api, true);

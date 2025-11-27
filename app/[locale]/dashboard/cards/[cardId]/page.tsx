@@ -2,9 +2,11 @@
 import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
 import LoadingPage from "@/app/_components/_website/_global/LoadingPage";
 import { useAppSelector } from "@/app/Store/hooks";
+import { useParams } from "next/navigation";
 import React from "react";
 
-export default function CardPage({ params }: any) {
+export default function CardPage() {
+  const params = useParams();
   const cardId = params.cardId;
   const { categories, loading } = useAppSelector(
     (state) => state.cardCategories
@@ -85,7 +87,7 @@ export default function CardPage({ params }: any) {
       <DynamicElementPage
         api={"/get-card"}
         updateEndPoint={"/dashboard/update-card"}
-        id={cardId}
+        id={cardId as any}
         inputsData={Cradinputs}
         direct={"/ar/dashboard/cards"}
       />

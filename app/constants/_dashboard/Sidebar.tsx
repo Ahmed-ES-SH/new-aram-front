@@ -46,7 +46,7 @@ import {
   RiNewsLine,
 } from "react-icons/ri";
 import { SiHeroku } from "react-icons/si";
-import { TbDiscount, TbListDetails } from "react-icons/tb";
+import { TbAffiliateFilled, TbDiscount, TbListDetails } from "react-icons/tb";
 import { CiCreditCard1 } from "react-icons/ci";
 import { LuSend } from "react-icons/lu";
 import { BsInfoSquareFill } from "react-icons/bs";
@@ -86,6 +86,13 @@ export const pages = [
         icon: <IoMdPersonAdd className={iconStyle} />,
         to: "/dashboard/adduser",
       },
+    ],
+  },
+  {
+    title: "المروجون",
+    icon: <TbAffiliateFilled className={iconStyle} />,
+    to: "",
+    minilinks: [
       {
         title: "جميع المروجون",
         icon: <LiaUserMdSolid className={iconStyle} />,

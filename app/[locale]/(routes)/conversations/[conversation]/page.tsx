@@ -17,7 +17,7 @@ export async function generateMetadata() {
 }
 
 export default async function Conversation({ searchParams, params }: any) {
-  const locale = await params.lcoale;
+  const { locale } = await params;
 
   const conversationId = searchParams.conversationId;
   const userId = searchParams.userId;
@@ -38,7 +38,7 @@ export default async function Conversation({ searchParams, params }: any) {
 
   return (
     <div
-      dir={directionMap[locale]}
+      dir={directionMap[locale ?? "en"]}
       className="flex items-start justify-between pt-[93px] h-[93vh]"
     >
       {/* conversations sidebar */}

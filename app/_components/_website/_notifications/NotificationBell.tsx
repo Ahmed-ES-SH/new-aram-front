@@ -52,15 +52,13 @@ export type NotificationType = {
 
 interface NotificationBellProps {
   notifications: NotificationType[];
-  setNotifications: Dispatch<SetStateAction<NotificationType[]>>;
   userId: number | string;
   accountType: string;
   unreadCount: number;
 }
 
 export default function NotificationBell({
-  notifications,
-  setNotifications,
+  notifications: notificationsData,
   userId,
   accountType,
   unreadCount,
@@ -74,6 +72,9 @@ export default function NotificationBell({
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationType[]>(
+    notificationsData ?? []
+  );
   const [newNotification, setNewNotification] =
     useState<NotificationType | null>(null);
 
@@ -195,15 +196,6 @@ export default function NotificationBell({
               <div className="max-h-96 overflow-y-auto">
                 {notifications && notifications.length > 0 ? (
                   notifications.map((notif) => {
-                    const isUser = notif.sender_type === "user";
-                    const senderName = isUser
-                      ? notif.sender.name
-                      : notif.sender.title || "not found";
-
-                    const senderImage = isUser
-                      ? notif.sender.image ?? "/defaults/male-noimage.jpg"
-                      : notif.sender.logo ?? "/logo.png";
-
                     return (
                       <div
                         dir="rtl"
@@ -213,11 +205,13 @@ export default function NotificationBell({
                         }`}
                       >
                         <Img
-                          src={senderImage}
-                          errorSrc={
-                            isUser ? "/defaults/male-noimage.jpg" : "/logo.png"
+                          src={
+                            notif.sender?.image ??
+                            notif.sender?.logo ??
+                            "/defaults/male-noimage.jpg"
                           }
-                          alt={senderName}
+                          errorSrc={"/defaults/male-noimage.jpg"}
+                          alt={"sender name"}
                           className="rounded-full w-14 h-14 object-cover"
                         />
                         <div className="flex-1 flex flex-col gap-1 items-start">
@@ -225,7 +219,9 @@ export default function NotificationBell({
                             {notif.content}
                           </p>
                           <span className="block text-xs text-gray-600 font-medium">
-                            {senderName}
+                            {notif.sender?.name ||
+                              notif.sender?.title ||
+                              "not found"}
                           </span>
                           <span className="text-xs text-gray-500">
                             {new Date(notif.created_at).toLocaleString()}
