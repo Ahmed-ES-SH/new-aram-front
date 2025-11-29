@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { getTranslations } from "next-intl/server";
 import { getSharedMetadata } from "../_helpers/helpers";
 import { Toaster } from "sonner";
-import { routing } from "@/i18n/routing";
 import Navbar from "../_components/_website/_navbar/Navbar";
 import ClientLayout from "../_components/_website/ClientLayout";
 import ReduxProvider from "../_components/_website/_global/ReduxProvider";
@@ -32,13 +31,7 @@ export async function generateMetadata() {
   };
 }
 
-export default async function RootLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: Promise<{ locale: "en" | "ar" }>;
-}) {
+export default async function RootLayout({ children, params }: any) {
   const { locale } = await params;
   const user = await FetchData(`/current-user`, false);
 

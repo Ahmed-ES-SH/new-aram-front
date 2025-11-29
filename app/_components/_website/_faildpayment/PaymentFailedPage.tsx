@@ -12,7 +12,7 @@ export default function PaymentFailedPage() {
   const params = useParams();
   const t = useTranslations("payment");
 
-  const { locale } = await params; as string;
+  const locale = params.locale;
   const isRTL = locale === "ar";
 
   const invoiceNumber = searchParams.get("invoice_number") || "N/A";

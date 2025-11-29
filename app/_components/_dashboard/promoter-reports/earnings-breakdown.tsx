@@ -74,35 +74,6 @@ export default function EarningsBreakdown({
       .slice(0, 5);
   }, [purchaseActivities]);
 
-  // Earnings by referred member
-  const earningsByMember = useMemo(() => {
-    const grouped: Record<
-      string,
-      { name: string; earnings: number; purchases: number }
-    > = {};
-    purchaseActivities.forEach((a) => {
-      if (a.referredMemberId) {
-        if (!grouped[a.referredMemberId]) {
-          grouped[a.referredMemberId] = {
-            name: a.referredMemberName || `عضو #${a.referredMemberId}`,
-            earnings: 0,
-            purchases: 0,
-          };
-        }
-        grouped[a.referredMemberId].earnings += a.commission_amount || 0;
-        grouped[a.referredMemberId].purchases++;
-      }
-    });
-    return Object.values(grouped)
-      .sort((a, b) => b.earnings - a.earnings)
-      .slice(0, 5);
-  }, [purchaseActivities]);
-
-  const totalEarnings = purchaseActivities.reduce(
-    (sum, a) => sum + (a.commission_amount || 0),
-    0
-  );
-
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}

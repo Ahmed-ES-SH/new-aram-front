@@ -5,7 +5,7 @@ import { decryptToken } from "./helpers";
 
 const cookie = Cookie();
 
-export const main_api = "http://127.0.0.1:8000/api";
+export const main_api = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const instance = axios.create({
   baseURL: main_api,
