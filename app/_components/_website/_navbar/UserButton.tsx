@@ -9,11 +9,10 @@ import { useRouter } from "next/navigation";
 import { directionMap } from "@/app/constants/_website/global";
 import { useLocale } from "next-intl";
 import { formatTitle } from "@/app/_helpers/helpers";
-// import { getLinks, getOrganizationLinks } from "./constants";
-import NotificationBell from "../_notifications/NotificationBell";
 import { useAppSelector } from "@/app/Store/hooks";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { BsBuildingsFill, BsChatDots } from "react-icons/bs";
+import NotificationBell from "../_notifications/NotificationBell";
 
 export default function UserButton({ user, logout, notifications }) {
   const { unreadNotificationsCount, unreadMessagesCount } = useAppSelector(
@@ -22,7 +21,6 @@ export default function UserButton({ user, logout, notifications }) {
 
   const router = useRouter();
   const locale = useLocale() || "en";
-  const role = user && user.account_type == "user" ? user.role : "organization";
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -123,23 +121,22 @@ export default function UserButton({ user, logout, notifications }) {
                 transition={{ duration: 0.3 }}
               >
                 <div className="py-1" role="none">
-                  {role == "admin" ||
-                    (role == "super_admin" && (
-                      <div
-                        onClick={() =>
-                          handleGo(
-                            `/dashboard?account_type=${
-                              user?.account_type
-                            }&account_name=${formatTitle(displayName)}`
-                          )
-                        }
-                        className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-gray-700  hover:bg-gray-100  duration-200"
-                        role="menuitem"
-                      >
-                        <GrDashboard className="w-5 h-5" />
-                        <p>{locale === "en" ? "Dashboard" : "لوحة التحكم"}</p>
-                      </div>
-                    ))}
+                  {(user.role == "admin" || user.role == "super_admin") && (
+                    <div
+                      onClick={() =>
+                        handleGo(
+                          `/dashboard?account_type=${
+                            user?.account_type
+                          }&account_name=${formatTitle(displayName)}`
+                        )
+                      }
+                      className="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-gray-700  hover:bg-gray-100  duration-200"
+                      role="menuitem"
+                    >
+                      <GrDashboard className="w-5 h-5" />
+                      <p>{locale === "en" ? "Dashboard" : "لوحة التحكم"}</p>
+                    </div>
+                  )}
 
                   {user && user.account_type == "user" && (
                     <div

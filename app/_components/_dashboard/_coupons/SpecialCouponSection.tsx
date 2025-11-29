@@ -28,7 +28,7 @@ export default function SpecialCouponSection({ form, setForm }: props) {
         <label className="input-label">
           حدد المستخدمين التى تريد إرسال الكوبون اليهم
         </label>
-        <UsersSelector form={form} setForm={setForm} />
+        <UsersSelector form={form as any} setForm={setForm as any} />
       </div>
     );
   }

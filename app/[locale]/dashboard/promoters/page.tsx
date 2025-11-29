@@ -8,6 +8,7 @@ export default function PromotersPage() {
     "الإسم", // user.name
     "البريد الإلكترونى", // user.email
     "رقم الهاتف", // user.phone
+    "نسبة الخصم", // discount_percentage
     "كود الإحالة", // code
     "التسجيلات", // registrations
     "المشتريات", // purchases
@@ -20,6 +21,7 @@ export default function PromotersPage() {
     { key: "promoter.name", cellType: "text" },
     { key: "promoter.email", cellType: "text" },
     { key: "promoter.phone", cellType: "text" },
+    { key: "discount_percentage", cellType: "text" },
     { key: "referral_code", cellType: "text" },
     { key: "total_signups", cellType: "text" },
     { key: "total_purchases", cellType: "text" },

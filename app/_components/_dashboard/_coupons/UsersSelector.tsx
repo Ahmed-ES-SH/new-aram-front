@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import Pagination from "../../PaginationComponent";
 
 // Define user type
-interface MiniUser {
+export interface MiniUser {
   id: number;
   name: string;
   email: string;
@@ -16,14 +16,15 @@ interface MiniUser {
 }
 
 interface Props {
-  form: any;
-  setForm: Dispatch<SetStateAction<any>>;
+  form: { users: MiniUser[] };
+  setForm: Dispatch<SetStateAction<{ users: MiniUser[] }>>;
 }
 
 export default function UsersSelector({ form, setForm }: Props) {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [users, setUsers] = useState<MiniUser[]>([]);
+  const [selectedUser, setSelectedUser] = useState<MiniUser | null>(null);
 
   const [allPublicIds, setAllPublicIds] = useState<{ id: number }[]>([]);
   const { data: usersIds } = useFetchData<{ id: number }[]>(

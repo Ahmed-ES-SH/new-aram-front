@@ -16,7 +16,7 @@ export default function Topbar() {
 
   return (
     <>
-      <div className="w-full fixed top-0 left-0 z-[99999] h-[70px] bg-fourth-dash shadow-md">
+      <div className="w-full fixed top-0 left-0 z-99999 h-[70px] bg-fourth-dash shadow-md">
         <div className="w-[95%] h-full  mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <HiBars3BottomRight

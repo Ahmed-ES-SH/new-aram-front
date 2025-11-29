@@ -99,9 +99,9 @@ export const pages = [
         to: "/dashboard/promoters",
       },
       {
-        title: "تقارير المروجون",
-        icon: <ImStatsDots className={iconStyle} />,
-        to: "/dashboard/users",
+        title: "اضف مروج جديد",
+        icon: <IoMdPersonAdd className={iconStyle} />,
+        to: "/dashboard/addpromoter",
       },
     ],
   },

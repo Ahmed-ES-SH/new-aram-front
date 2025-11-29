@@ -30,6 +30,7 @@ interface Props {
 
 export default function DynamicTable<
   T extends {
+    [x: string]: any;
     role?: string;
     id: number;
   }
@@ -375,7 +376,9 @@ export default function DynamicTable<
                           <button
                             onClick={() =>
                               handleRoute(
-                                `/en/dashboard/${itemDirect}/${item.id}`
+                                `/en/dashboard/${itemDirect}/${
+                                  (item?.promoter?.id as any) ?? item.id
+                                }`
                               )
                             }
                             className="text-blue-500 hover:text-blue-700 cursor-pointer"
