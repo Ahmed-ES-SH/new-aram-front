@@ -5,7 +5,7 @@ import React from "react";
 
 export async function generateMetadata({ params, searchParams }: any) {
   const { locale } = await params;
-  const articleId = searchParams.articleId;
+  const { articleId } = await searchParams;
 
   const article = await FetchData(`/articles/${articleId}`, false);
   const title =
@@ -14,7 +14,7 @@ export async function generateMetadata({ params, searchParams }: any) {
 
   return {
     title: `${title} - ${locale == "en" ? article.title_en : article.title_ar}`,
-    describtion: `${title} - ${
+    description: `${title} - ${
       locale == "en" ? article.title_en : article.title_ar
     }`,
     ...sharedMetadata,
@@ -22,7 +22,7 @@ export async function generateMetadata({ params, searchParams }: any) {
 }
 
 export default async function ArticlePage({ searchParams }: any) {
-  const articleId = searchParams.articleId;
+  const { articleId } = await searchParams;
   const article = await FetchData(`/articles/${articleId}`, false);
   const randomArticles = await FetchData(`/random-articles`, false);
   const commentsResponse = await FetchData(

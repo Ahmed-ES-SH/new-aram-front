@@ -50,7 +50,11 @@ export default async function Navbar({ locale, user }: props) {
                   <li className="relative group duration-300" key={index}>
                     <LocaleLink
                       className="text-gray-500 flex items-center gap-2  -primary transition hover:text-primary duration-200"
-                      href={link.to}
+                      href={
+                        link.to == "/organizations"
+                          ? "/organizations?step=1"
+                          : link.to
+                      }
                     >
                       <p>{link.label[locale]}</p>
                     </LocaleLink>

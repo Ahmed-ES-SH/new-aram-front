@@ -6,9 +6,9 @@ import React from "react";
 
 export async function generateMetadata({ params, searchParams }: any) {
   const { locale } = await params;
-  const oranizationId = searchParams.orgId;
+  const { orgId } = await searchParams;
 
-  const oranization = await FetchData(`/organizations/${oranizationId}`, false);
+  const oranization = await FetchData(`/organizations/${orgId}`, false);
   const title =
     locale == "en"
       ? "Aram Gulf - Partner Centers"
@@ -17,22 +17,16 @@ export async function generateMetadata({ params, searchParams }: any) {
 
   return {
     title: `${title} - ${oranization.title}`,
-    describtion: `${title} - ${oranization.title}`,
+    description: `${title} - ${oranization.title}`,
     ...sharedMetadata,
   };
 }
 
 export default async function OrganizationPage({ searchParams }: any) {
-  const organizationId = searchParams.orgId;
-  const organization = await FetchData(
-    `/organizations/${organizationId}`,
-    false
-  );
+  const { orgId } = await searchParams;
+  const organization = await FetchData(`/organizations/${orgId}`, false);
 
-  const offers = await FetchData(
-    `/active-offers/${organizationId}?limit=8`,
-    false
-  );
+  const offers = await FetchData(`/active-offers/${orgId}?limit=8`, false);
 
   const cards = await FetchData(`/eight-public-cards`, false);
 

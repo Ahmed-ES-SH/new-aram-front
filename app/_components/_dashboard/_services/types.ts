@@ -33,7 +33,7 @@ export type miniOrg = {
   logo: string;
 };
 
-export type Creater = {
+export type creater = {
   id: number;
   name: string;
   image: string;
@@ -45,10 +45,11 @@ export type Service = {
   description: string;
   image: string;
   rating: number;
+  price: number;
   orders_count: number;
   status: "approved" | "pending" | "rejected" | "suspended";
   benefit_type: "percentage" | "fixed" | "none";
-  is_exclusive: 0 | 1;
+  is_exclusive: 0 | 1 | boolean;
   discount_percentage: number | null;
   discount_price: number | null;
   exclusive_start_date: string | null;
@@ -61,10 +62,19 @@ export type Service = {
   updated_at: string;
   organizations: miniOrg[];
   category: Category;
-  creater: Creater;
+  creater: creater;
   images: ImageLike[];
   deletedImages?: any;
   keywords: Keyword[];
+  benefits: benfit[];
+};
+
+type benfit = {
+  id: number;
+  title: string;
+  service_id: number;
+  created_at: string;
+  updated_at: string;
 };
 
 export type FilterState = {

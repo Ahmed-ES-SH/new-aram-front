@@ -11,7 +11,7 @@ export async function generateMetadata() {
   const sharedMetadata = await getSharedMetadata(t("title"), t("description"));
   return {
     title: t("title"),
-    describtion: t("description"),
+    description: t("description"),
     ...sharedMetadata,
   };
 }
@@ -24,7 +24,7 @@ export default async function UserCardsPage({ searchParams }: any) {
   const userId = user.id;
   const type = user.account_type;
 
-  const page = searchParams.page;
+  const { page } = await searchParams;
   const endPoint = page
     ? `/cards-account?owner_id=${userId}&owner_type=${type}&page=${page}`
     : `/cards-account?owner_id=${userId}&owner_type=${type}`;

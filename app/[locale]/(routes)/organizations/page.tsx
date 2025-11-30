@@ -13,7 +13,7 @@ export async function generateMetadata() {
   const sharedMetadata = await getSharedMetadata(t("title"), t("description"));
   return {
     title: t("title"),
-    describtion: t("description"),
+    description: t("description"),
     ...sharedMetadata,
   };
 }
@@ -23,6 +23,7 @@ export default async function OrganizationsPage({ searchParams }: any) {
 
   if (step == 1) {
     const categoriesResponse = await FetchData(`/public-categories`, true);
+    console.log(categoriesResponse);
     return <MainCategoriesGrid response={categoriesResponse} />;
   }
 
@@ -51,12 +52,14 @@ export default async function OrganizationsPage({ searchParams }: any) {
   }
 
   if (step == 3) {
-    const categories = searchParams.categories
-      ? searchParams.categories.split(",").map(Number)
+    const { categories: categoriesParams } = await searchParams;
+    const categories = categoriesParams
+      ? categoriesParams.split(",").map(Number)
       : undefined;
 
-    const subCategories = searchParams.sub_categories
-      ? searchParams.sub_categories.split(",").map(Number)
+    const { sub_categories: subCategoriesParams } = await searchParams;
+    const subCategories = subCategoriesParams
+      ? subCategoriesParams.split(",").map(Number)
       : undefined;
 
     const { page, query, rating, time, open_at, close_at } = await searchParams;

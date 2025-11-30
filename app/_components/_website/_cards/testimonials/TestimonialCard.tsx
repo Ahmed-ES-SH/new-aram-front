@@ -46,7 +46,7 @@ export function TestimonialCard({ testimonial, index }: TestimonialCardProps) {
           <div className="relative h-12 w-12 rounded-full overflow-hidden bg-blue-50 flex items-center justify-center">
             {testimonial.avatar ? (
               <Img
-                src={testimonial.avatar || "/placeholder.svg"}
+                src={testimonial.avatar ?? "/defaults/noImage.png"}
                 alt={testimonial.name}
                 className="h-full w-full object-cover"
               />

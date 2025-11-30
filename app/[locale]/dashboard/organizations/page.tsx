@@ -5,8 +5,9 @@ import ServerPagination from "@/app/_components/_website/_global/ServerPaginatio
 import FetchOrganizations from "@/app/_components/_dashboard/_organizations/fetchOrgamizations";
 
 export default async function OrganizationsDashPage({ searchParams }: any) {
-  const categories = searchParams.categories
-    ? searchParams.categories.split(",").map(Number)
+  const { categories: categoriesParams } = await searchParams;
+  const categories = categoriesParams
+    ? categoriesParams.split(",").map(Number)
     : undefined;
 
   const { page, query, status, rating, active, number_of_reservations } =

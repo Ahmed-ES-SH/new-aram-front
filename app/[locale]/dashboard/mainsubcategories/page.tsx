@@ -9,8 +9,8 @@ interface CategoryType {
   image: string;
 }
 
-export default function MainSubcategories({ searchParams }: any) {
-  const parantId = searchParams.parentId;
+export default async function MainSubcategories({ searchParams }: any) {
+  const { parentId } = await searchParams;
 
   const headers = [
     "id",
@@ -42,7 +42,7 @@ export default function MainSubcategories({ searchParams }: any) {
         itemDirect="mainsubcategories"
         headers={headers}
         keys={keys}
-        api={`/sub-categories-by-parent?parent_id=${parantId}`}
+        api={`/sub-categories-by-parent?parent_id=${parentId}`}
         searchApi="/sub-categories/search"
         deletedApi="/delete-sub-category"
       />

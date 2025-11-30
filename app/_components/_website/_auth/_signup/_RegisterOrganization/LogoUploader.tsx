@@ -113,7 +113,7 @@ export function LogoUploader({
               className="relative lg:h-[350px] h-[220px] w-full max-w-xs mx-auto"
             >
               <Img
-                src={(preview as string) || "/placeholder.svg"}
+                src={(preview as string) ?? "/defaults/noImage.png"}
                 alt="Logo Preview"
                 className="w-full h-full object-contain p-4"
               />

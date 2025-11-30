@@ -14,7 +14,7 @@ export async function generateMetadata() {
   const sharedMetadata = await getSharedMetadata(t("title"), t("description"));
   return {
     title: t("title"),
-    describtion: t("description"),
+    description: t("description"),
     ...sharedMetadata,
   };
 }

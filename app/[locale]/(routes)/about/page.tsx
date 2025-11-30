@@ -5,7 +5,7 @@ import React from "react";
 
 export default async function AboutPage() {
   const data = await FetchData(`/details`, false);
-
+  console.log(data);
   return (
     <>
       <VideoSection mainVideo={data.main_video} />

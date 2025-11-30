@@ -97,7 +97,7 @@ export default function OfferPopup({
                   <div className="mb-8">
                     <div className="relative w-full h-64 mb-6 rounded-xl overflow-hidden">
                       <Image
-                        src={offer.image || "/placeholder.svg"}
+                        src={offer.image ?? "/defaults/noImage.png"}
                         alt={offer.title}
                         fill
                         className="object-cover"
@@ -116,7 +116,9 @@ export default function OfferPopup({
                     <div className="flex items-start gap-6">
                       <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
                         <Image
-                          src={offer.organization.image || "/placeholder.svg"}
+                          src={
+                            offer.organization.image ?? "/defaults/noImage.png"
+                          }
                           alt={offer.organization.title}
                           fill
                           className="object-cover"

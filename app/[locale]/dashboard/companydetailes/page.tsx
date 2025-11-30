@@ -233,7 +233,11 @@ export default function CompanyDetails() {
                   onClick={handleUploadClick}
                 >
                   <iframe
-                    src={URL.createObjectURL(cooperationPdf as File)}
+                    src={
+                      cooperationPdf instanceof File
+                        ? URL.createObjectURL(cooperationPdf)
+                        : cooperationPdf
+                    }
                     className="w-full h-full"
                     title="Cooperation PDF"
                   />

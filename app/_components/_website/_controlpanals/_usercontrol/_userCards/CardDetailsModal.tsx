@@ -96,7 +96,7 @@ export function CardDetailsModal({
                 {data.card.image && (
                   <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-100">
                     <Img
-                      src={data.card.image || "/placeholder.svg"}
+                      src={data.card.image ?? "/defaults/noImage.png"}
                       alt={data.card.title}
                       className="w-full h-full object-cover"
                     />

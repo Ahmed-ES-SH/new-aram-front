@@ -59,7 +59,7 @@ export default function SearchResultes({ articles, loading, isOpen }: props) {
         <div key={article.id} className="flex gap-3 group cursor-pointer">
           <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
             <Img
-              src={article.image || "/placeholder.svg"}
+              src={article.image ?? "/defaults/noImage.png"}
               errorSrc="/defaults/noImage.png"
               alt={locale === "ar" ? article.title_ar : article.title_en}
               className="object-cover transition-transform duration-300 group-hover:scale-110"

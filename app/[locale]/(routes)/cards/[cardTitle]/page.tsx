@@ -6,7 +6,7 @@ import React from "react";
 
 export async function generateMetadata({ params, searchParams }: any) {
   const { locale } = await params;
-  const cardId = searchParams.cardId;
+  const { cardId } = await searchParams;
 
   const card = await FetchData(`/get-card/${cardId}`, false);
   const title =
@@ -15,13 +15,13 @@ export async function generateMetadata({ params, searchParams }: any) {
 
   return {
     title: `${title} - ${card.title}`,
-    describtion: `${title} - ${card.title}`,
+    description: `${title} - ${card.title}`,
     ...sharedMetadata,
   };
 }
 
 export default async function CardPage({ searchParams }: any) {
-  const cardId = searchParams.cardId;
+  const { cardId } = await searchParams;
 
   const card = await FetchData(`/get-card/${cardId}`, false);
   const organizations = await FetchData(`/top-public-organizations`, false);

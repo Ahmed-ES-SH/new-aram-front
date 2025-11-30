@@ -14,6 +14,11 @@
     "description": "Register New Account page to access their accounts on the website"
   },
 
+  "metaServicesPage": {
+    "title": "Aram Gulf Ltd. - Services",
+    "description": "Discover our premium services and find the perfect service for your needs from our curated collection of top-rated professionals"
+  },
+
   "metaPrivacyPolicyUsers": {
     "title": "Aram Gulf Ltd. - Privacy Policy - users",
     "description": "Read the privacy policy to understand how we collect, use, and protect your personal information when using our website."
@@ -1556,5 +1561,77 @@
     "commission": "Commission",
     "createdDate": "Created Date",
     "noData": "No activity data available"
+  },
+
+  "servicesPage": {
+    "hero": {
+      "title": "Discover Our Premium Services",
+      "subtitle": "Find the perfect service for your needs from our curated collection of top-rated professionals"
+    },
+    "search": {
+      "placeholder": "Search for services..."
+    },
+    "categories": {
+      "all": "All Categories"
+    },
+    "serviceCard": {
+      "orders": "orders",
+      "exclusive": "Exclusive",
+      "off": "OFF",
+      "by": "by"
+    },
+    "whyChoose": {
+      "title": "Why Choose Our Platform",
+      "subtitle": "We provide the best experience for both service providers and customers",
+      "features": {
+        "quality": {
+          "title": "Quality Guaranteed",
+          "description": "All services are vetted and reviewed to ensure the highest quality standards"
+        },
+        "support": {
+          "title": "24/7 Support",
+          "description": "Our dedicated support team is always ready to help you with any questions"
+        },
+        "secure": {
+          "title": "Secure Payments",
+          "description": "Your transactions are protected with industry-leading security measures"
+        },
+        "fast": {
+          "title": "Fast Delivery",
+          "description": "Get your services delivered quickly with our efficient workflow system"
+        }
+      }
+    },
+    "noResults": "No services found matching your criteria"
+  },
+
+  "service": {
+    "orders": "orders",
+    "rating": "Rating",
+    "exclusive": "Exclusive",
+    "discount": "OFF",
+    "benefits": "Benefits",
+    "keywords": "Keywords",
+    "organizations": "Trusted By",
+    "gallery": "Gallery",
+    "description": "Description",
+    "creator": "Service Provider",
+    "category": "Category",
+    "price": "Price",
+    "originalPrice": "Original Price",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now"
+  },
+
+  "chat": {
+    "title": "Ask Me",
+    "subtitle": "",
+    "footer": "",
+    "getStarted": "New Chat",
+    "inputPlaceholder": "...Type your question",
+    "initialMessages": [
+      "Welcome to Aram Gulf Marketing",
+      "How can I help you today?"
+    ]
   }
 }

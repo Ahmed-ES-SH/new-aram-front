@@ -10,7 +10,7 @@ export async function generateMetadata() {
   const sharedMetadata = await getSharedMetadata(t("title"), t("description"));
   return {
     title: `${t("title")} - user Account`,
-    describtion: `${t("description")} - user Account`,
+    description: `${t("description")} - user Account`,
     ...sharedMetadata,
   };
 }

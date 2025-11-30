@@ -8,8 +8,11 @@ import ClientLayout from "../_components/_website/ClientLayout";
 import ReduxProvider from "../_components/_website/_global/ReduxProvider";
 import CartSide from "../_components/_website/_global/_cart/CartSide";
 import Footer from "../_components/_website/_global/Footer";
-import ".././globals.css";
 import FetchData from "../_helpers/FetchData";
+import FacebookPixelHead from "../_components/_layout/FacebookPixelHead";
+import TikTokPixelHead from "../_components/_layout/TikTokPixelHead";
+import ".././globals.css";
+import N8nChat from "../_components/_website/_N8nChat/N8nChat";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +29,12 @@ export async function generateMetadata() {
   const sharedMetadata = await getSharedMetadata(t("title"), t("description"));
   return {
     title: t("title"),
-    describtion: t("description"),
+    description: t("description"),
+    icons: {
+      icon: "https://aram-gulf.com/favicon.ico",
+      shortcut: "https://aram-gulf.com/logo-16x16.png",
+      apple: "https://aram-gulf.com/apple-touch-icon.png",
+    },
     ...sharedMetadata,
   };
 }
@@ -37,6 +45,10 @@ export default async function RootLayout({ children, params }: any) {
 
   return (
     <html lang={locale}>
+      <head>
+        <FacebookPixelHead />
+        <TikTokPixelHead />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -46,6 +58,7 @@ export default async function RootLayout({ children, params }: any) {
               <Toaster position="top-center" richColors closeButton />
               <Navbar locale={locale} user={user ?? null} />
               <CartSide />
+              <N8nChat webhookUrl="https://n8nwithhelal.shop/webhook/c4a09c88-96fa-40d4-899a-c52faceb466f/chat" />
               {children}
               <Footer />
             </ClientLayout>
