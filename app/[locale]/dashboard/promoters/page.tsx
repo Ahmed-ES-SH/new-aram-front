@@ -17,7 +17,7 @@ export default function PromotersPage() {
   ];
   const keys = [
     { key: "id", cellType: "text" },
-    { key: "promoter.image", cellType: "image" },
+    { key: "promoter.image", cellType: "user-image" },
     { key: "promoter.name", cellType: "text" },
     { key: "promoter.email", cellType: "text" },
     { key: "promoter.phone", cellType: "text" },

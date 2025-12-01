@@ -37,8 +37,6 @@ export default function PromoterReportsPage({ promoterData }: props) {
     setPromoter((prev) => ({ ...prev, ...updates }));
   };
 
-  console.log(promoter);
-
   if (!promoter) return <PromoterDataNotFound />;
 
   return (

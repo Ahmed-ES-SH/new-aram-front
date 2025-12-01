@@ -9,23 +9,7 @@ import {
   Area,
   AreaChart,
 } from "recharts";
-import { UserChartData } from "../types";
-
-// Sample data for users over last 12 months
-const usersData: UserChartData[] = [
-  { month: "يناير", users: 1200 },
-  { month: "فبراير", users: 1450 },
-  { month: "مارس", users: 1680 },
-  { month: "أبريل", users: 1920 },
-  { month: "مايو", users: 2150 },
-  { month: "يونيو", users: 2480 },
-  { month: "يوليو", users: 2750 },
-  { month: "أغسطس", users: 3100 },
-  { month: "سبتمبر", users: 3450 },
-  { month: "أكتوبر", users: 3820 },
-  { month: "نوفمبر", users: 4200 },
-  { month: "ديسمبر", users: 4580 },
-];
+import { UsageItem } from "../charts-section";
 
 // Custom tooltip component
 function CustomTooltip({ active, payload, label }: any) {
@@ -42,8 +26,23 @@ function CustomTooltip({ active, payload, label }: any) {
   return null;
 }
 
+interface props {
+  usersData: UsageItem[];
+}
+
 // Users line chart component
-export function UsersChart() {
+export function UsersChart({ usersData }: props) {
+  // Extract last two months
+  const lastMonth = usersData[usersData.length - 1]?.usage ?? 0;
+  const prevMonth = usersData[usersData.length - 2]?.usage ?? 0;
+
+  // Calculate growth percentage
+  const growthPercent =
+    prevMonth === 0 ? 100 : ((lastMonth - prevMonth) / prevMonth) * 100;
+
+  // Round to whole number
+  const formattedPercent = Math.round(growthPercent);
+
   return (
     <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
       <div className="mb-6 flex items-center justify-between">
@@ -54,7 +53,10 @@ export function UsersChart() {
           </p>
         </div>
         <div className="rounded-lg bg-blue-50 px-3 py-1.5">
-          <span className="text-sm font-semibold text-blue-600">+282%</span>
+          <span className="text-sm font-semibold text-blue-600">
+            {formattedPercent > 0 ? "+" : ""}
+            {formattedPercent}%
+          </span>
         </div>
       </div>
 

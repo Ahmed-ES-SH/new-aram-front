@@ -1,12 +1,36 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { UsersChart } from "./charts/users-chart"
-import { ServicesChart } from "./charts/services-chart"
-import { CentersDistributionChart } from "./charts/centers-distribution-chart"
+import { motion } from "framer-motion";
+import { UsersChart } from "./charts/users-chart";
+import { ServicesChart } from "./charts/services-chart";
+import { CentersDistributionChart } from "./charts/centers-distribution-chart";
+
+export interface UsageItem {
+  service: string;
+  usage: number;
+}
+
+export interface CenterItem {
+  name: string;
+  value: number;
+  color: string;
+}
+
+export interface DashboardData {
+  users: UsageItem[];
+  services: UsageItem[];
+  organizations: CenterItem[];
+  message: string;
+}
+
+interface props {
+  chartsData: DashboardData;
+}
 
 // Main charts section wrapper component
-export function ChartsSection() {
+export function ChartsSection({ chartsData }: props) {
+  const { users, services, organizations } = chartsData;
+
   return (
     <section className="mt-8">
       <motion.h2
@@ -25,7 +49,7 @@ export function ChartsSection() {
           transition={{ duration: 0.5 }}
           className="lg:col-span-2"
         >
-          <UsersChart />
+          <UsersChart usersData={users} />
         </motion.div>
 
         {/* Services Bar Chart */}
@@ -34,7 +58,7 @@ export function ChartsSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <ServicesChart />
+          <ServicesChart servicesData={services} />
         </motion.div>
 
         {/* Centers Distribution Pie Chart */}
@@ -43,9 +67,9 @@ export function ChartsSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <CentersDistributionChart />
+          <CentersDistributionChart centersData={organizations} />
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

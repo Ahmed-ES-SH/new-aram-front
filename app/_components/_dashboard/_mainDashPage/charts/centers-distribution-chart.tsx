@@ -28,8 +28,12 @@ function CustomTooltip({ active, payload }: any) {
   return null;
 }
 
+interface props {
+  centersData: CenterDistribution[];
+}
+
 // Centers distribution pie chart component
-export function CentersDistributionChart() {
+export function CentersDistributionChart({ centersData }: props) {
   const totalCenters = centersData.reduce((acc, curr) => acc + curr.value, 0);
 
   return (

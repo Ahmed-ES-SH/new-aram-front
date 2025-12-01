@@ -2,6 +2,7 @@ import {
   BiCategoryAlt,
   BiMessageSquareAdd,
   BiSolidCoupon,
+  BiStats,
 } from "react-icons/bi";
 import { FaBloggerB, FaQuestion } from "react-icons/fa";
 import { LiaUserMdSolid } from "react-icons/lia";
@@ -102,6 +103,11 @@ export const pages = [
         title: "اضف مروج جديد",
         icon: <IoMdPersonAdd className={iconStyle} />,
         to: "/dashboard/addpromoter",
+      },
+      {
+        title: "نسب العمليات الترويجية",
+        icon: <BiStats className={iconStyle} />,
+        to: "/dashboard/promotersration",
       },
     ],
   },

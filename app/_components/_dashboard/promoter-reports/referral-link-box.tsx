@@ -62,7 +62,7 @@ export default function ReferralLinkBox({ promoter }: ReferralLinkBoxProps) {
         >
           <div className="flex items-center gap-2 mb-4">
             <FiLink className="w-5 h-5 text-blue-600" />
-            <h3 className="font-bold text-gray-800 text-lg">رابط الإحالة</h3>
+            <h3 className="font-bold text-gray-800 text-lg">رابط الزيارة</h3>
           </div>
 
           <p className="text-gray-600 mb-4 text-sm">

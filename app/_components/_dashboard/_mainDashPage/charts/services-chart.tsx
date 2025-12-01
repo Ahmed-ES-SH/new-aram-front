@@ -12,16 +12,6 @@ import {
 } from "recharts";
 import { ServicesChartData } from "../types";
 
-// Sample data for services usage
-const servicesData: ServicesChartData[] = [
-  { service: "العلاج الطبيعي", usage: 450 },
-  { service: "التدليك", usage: 380 },
-  { service: "السبا", usage: 320 },
-  { service: "اللياقة", usage: 280 },
-  { service: "التجميل", usage: 240 },
-  { service: "الصحة النفسية", usage: 180 },
-];
-
 // Colors for bars
 const barColors = [
   "#3b82f6",
@@ -47,8 +37,12 @@ function CustomTooltip({ active, payload, label }: any) {
   return null;
 }
 
+interface props {
+  servicesData: ServicesChartData[];
+}
+
 // Services bar chart component
-export function ServicesChart() {
+export function ServicesChart({ servicesData }: props) {
   return (
     <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 h-full">
       <div className="mb-6">

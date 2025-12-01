@@ -6,6 +6,7 @@ export interface Promoter {
   status: "active" | "disabled";
   promoter: promoterDetailas;
   total_signups: number;
+  total_visits: number;
   total_purchases: number;
   total_earnings: number | string;
   referral_code: string;

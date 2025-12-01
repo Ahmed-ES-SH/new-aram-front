@@ -4,31 +4,12 @@ import { motion } from "framer-motion";
 import { FiTrendingUp, FiAward, FiUserCheck } from "react-icons/fi";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import { Promoter } from "./types";
+import LocaleLink from "../../_website/_global/LocaleLink";
 
-// Sample promoters data
-const promotersData: Promoter[] = [
-  {
-    id: "1",
-    name: "خالد السالم",
-    sales: 125000,
-    avatar: "/professional-arab-man-avatar.jpg",
-    trend: [20, 35, 45, 60, 75, 90, 125],
-  },
-  {
-    id: "2",
-    name: "نورة الفهد",
-    sales: 98500,
-    avatar: "/professional-arab-woman-avatar.jpg",
-    trend: [15, 25, 40, 55, 70, 85, 98],
-  },
-  {
-    id: "3",
-    name: "فيصل العمري",
-    sales: 87200,
-    avatar: "/arab-businessman-avatar.png",
-    trend: [10, 20, 35, 50, 65, 78, 87],
-  },
-];
+interface PromoterResponse {
+  data: Promoter[];
+  total: number;
+}
 
 // Mini sparkline chart component
 function SparklineChart({ data, color }: { data: number[]; color: string }) {
@@ -102,9 +83,15 @@ function PromoterCard({
 }
 
 // Promoters overview section component
-export function PromotersOverview() {
-  const totalPromoters = 186;
-  const totalSales = promotersData.reduce((acc, p) => acc + p.sales, 0);
+export function PromotersOverview({
+  topPromotersResponse,
+}: {
+  topPromotersResponse: PromoterResponse;
+}) {
+  const { total, data: topPromoters } = topPromotersResponse;
+
+  const totalPromoters = total ?? 0;
+  const totalSales = topPromoters.reduce((acc, p) => acc + Number(p.sales), 0);
 
   return (
     <motion.div
@@ -138,7 +125,7 @@ export function PromotersOverview() {
           <h4 className="font-semibold text-gray-900">أفضل المسوقين</h4>
         </div>
         <div className="space-y-3">
-          {promotersData.map((promoter, index) => (
+          {topPromoters.map((promoter, index) => (
             <PromoterCard
               key={promoter.id}
               promoter={promoter}
@@ -150,10 +137,13 @@ export function PromotersOverview() {
       </div>
 
       {/* View all link */}
-      <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-50 py-3 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100">
+      <LocaleLink
+        href="/dashboard/promoters"
+        className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-50 py-3 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
+      >
         <FiTrendingUp className="h-4 w-4" />
         عرض جميع المسوقين
-      </button>
+      </LocaleLink>
     </motion.div>
   );
 }

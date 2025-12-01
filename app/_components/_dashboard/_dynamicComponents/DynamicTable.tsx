@@ -271,13 +271,21 @@ export default function DynamicTable<
                       return (
                         <td key={i} className="px-6 py-4">
                           <Img
-                            src={
-                              value
-                                ? value
-                                : item["gender"] == "male"
-                                ? "/defaults/male-noimage.jpg"
-                                : "/defaults/female-noimage.jpg"
-                            }
+                            src={value ?? "/defaults/noImage.png"}
+                            errorSrc="/defaults/noImage.png"
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
+                        </td>
+                      );
+                    }
+
+                    if (cell.cellType === "user-image") {
+                      const value = getNestedValue(item, cell.key);
+                      return (
+                        <td key={i} className="px-6 py-4">
+                          <Img
+                            src={value ?? "/defaults/male-noimage.jpg"}
+                            errorSrc="/defaults/male-noimage.jpg"
                             className="w-12 h-12 rounded-full object-cover"
                           />
                         </td>

@@ -11,6 +11,7 @@ export default function useFetchData<T>(
   const [data, setData] = useState<T | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({});
 
@@ -39,6 +40,7 @@ export default function useFetchData<T>(
             const pagination = response.data.pagination;
             setCurrentPage(pagination.current_page);
             setLastPage(pagination.last_page);
+            setTotal(pagination.total);
           }
         }
       } catch (err) {
@@ -59,6 +61,7 @@ export default function useFetchData<T>(
     currentPage,
     setCurrentPage,
     lastPage,
+    total,
     loading,
     error,
   };

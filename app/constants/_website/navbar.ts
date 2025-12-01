@@ -18,7 +18,7 @@ export const navbarlinks = [
       ar: "المراكز",
       en: "centers",
     },
-    to: "/organizations",
+    to: "/organizations?step=1",
   },
   {
     label: {

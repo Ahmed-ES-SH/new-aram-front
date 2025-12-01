@@ -162,7 +162,7 @@ export default function AddPromoterComponent({ data, last_page }: props) {
   }, [query]); // يعمل فقط عندما يتغير النص المكتوب
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gray-50 p-6">
+    <div dir="rtl" className="min-h-screen p-6">
       <div className="lg:max-w-[90%] w-full mx-auto">
         {/* Header */}
         <motion.div
@@ -215,7 +215,7 @@ export default function AddPromoterComponent({ data, last_page }: props) {
             ) : (
               <div className="">
                 {/* Users Grid */}
-                <div className="space-y-3 max-h-96 overflow-y-auto">
+                <div className="space-y-3 max-h-[60vh] overflow-y-auto">
                   <AnimatePresence>
                     {users.length == 0 ? (
                       <div className="min-h-[40vh] flex items-center justify-center">
@@ -244,7 +244,8 @@ export default function AddPromoterComponent({ data, last_page }: props) {
                           <div className="flex items-center gap-4">
                             <div className="relative">
                               <Img
-                                src={user.image}
+                                src={user.image ?? `/defaults/male-noimage.jpg`}
+                                errorSrc="/defaults/male-noimage.jpg"
                                 alt={user.name}
                                 className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
                               />
