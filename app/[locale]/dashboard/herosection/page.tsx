@@ -90,12 +90,12 @@ const SectionsContainer = () => {
     `/active-hero-section`,
     false
   );
-  const [active, setIsActive] = useState<boolean | null>(null);
+  const [active, setIsActive] = useState<string | null>(null);
   const [updateLoading, setUpdateLoading] = useState(false);
 
   useEffect(() => {
     if (isActive !== undefined && isActive !== null) {
-      setIsActive(isActive);
+      setIsActive(isActive ? "video" : "swiper");
     }
   }, [isActive]);
 
@@ -109,7 +109,7 @@ const SectionsContainer = () => {
       });
       if (response.status == 200) {
         toast.success("تم تحديث قسم الواجهة الفعال بنجاح . ");
-        setIsActive(activeState);
+        setIsActive(activeState ? "video" : "swiper");
       }
     } catch (error: any) {
       console.log(error);
@@ -131,7 +131,7 @@ const SectionsContainer = () => {
         <SectionToggle
           title="قسم الفيديو"
           icon={<FaVideo />}
-          active={active === true}
+          active={active == "video"}
           loading={updateLoading}
           onEdit={() => router.push(`/en/dashboard/editherovideosection`)}
           onToggle={handleChangeSection}
@@ -141,7 +141,7 @@ const SectionsContainer = () => {
         <SectionToggle
           title="قسم الشرائح"
           icon={<FaImages />}
-          active={active === false}
+          active={active == "swiper"}
           loading={updateLoading}
           onEdit={() => router.push(`/en/dashboard/slidescontrol`)}
           onToggle={handleChangeSection}

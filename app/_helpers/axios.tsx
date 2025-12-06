@@ -16,7 +16,6 @@ instance.interceptors.request.use(
   (config) => {
     const tokenValue = cookie.get(`aram_token`);
     const token = tokenValue ? decryptToken(tokenValue) : null;
-    console.log(token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
