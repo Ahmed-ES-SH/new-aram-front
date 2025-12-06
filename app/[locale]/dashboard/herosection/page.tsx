@@ -102,14 +102,14 @@ const SectionsContainer = () => {
   const handleChangeSection = async () => {
     if (active === null) return;
     try {
-      const activeState = !active;
       setUpdateLoading(true);
       const response = await instance.post(`/update-section/1`, {
-        column_30: activeState ? 1 : 0,
+        column_30: active == "swiper" ? 1 : 0,
       });
       if (response.status == 200) {
+        const data = response.data.data;
         toast.success("تم تحديث قسم الواجهة الفعال بنجاح . ");
-        setIsActive(activeState ? "video" : "swiper");
+        setIsActive(data?.column_30 == 1 ? "video" : "swiper");
       }
     } catch (error: any) {
       console.log(error);
