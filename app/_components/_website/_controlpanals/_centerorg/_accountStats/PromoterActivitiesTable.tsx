@@ -139,6 +139,9 @@ export default function PromoterActivitiesTable({
               {t("commission")}
             </th>
             <th className="px-6 py-4 ltr:text-left rtl:text-right text-sm font-semibold text-foreground">
+              {t("deviceType")}
+            </th>
+            <th className="px-6 py-4 ltr:text-left rtl:text-right text-sm font-semibold text-foreground">
               {t("createdDate")}
             </th>
           </tr>

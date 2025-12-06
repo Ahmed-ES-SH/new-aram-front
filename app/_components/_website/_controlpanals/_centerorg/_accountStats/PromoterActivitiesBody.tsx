@@ -1,4 +1,3 @@
-import React from "react";
 import { easeOut, motion } from "framer-motion";
 import { ActivityData } from "./PromoterActivitiesTable";
 import {
@@ -36,6 +35,8 @@ export default function PromoterActivitiesBody({ data, t }: props) {
 
   // Get device type icon
   const getDeviceIcon = (type: string) => {
+    if (type == null || type == undefined || typeof type !== "string")
+      return "_";
     switch (type.toLowerCase()) {
       case "mobile":
         return <FaMobile className="w-4 h-4" />;
@@ -44,7 +45,7 @@ export default function PromoterActivitiesBody({ data, t }: props) {
       case "desktop":
         return <FaDesktop className="w-4 h-4" />;
       default:
-        return <FaDesktop className="w-4 h-4" />;
+        return "_";
     }
   };
 
@@ -62,8 +63,9 @@ export default function PromoterActivitiesBody({ data, t }: props) {
 
   // Format commission
   const formatCommission = (amount: number | null) => {
-    if (amount === null) return "—";
-    return `$${amount.toFixed(2)}`;
+    if (amount == null || amount == undefined || typeof amount !== "number")
+      return "—";
+    return `${amount.toFixed(2)} ${locale === "en" ? "Points" : "نقاط"}`;
   };
 
   // Row animation variants
@@ -124,7 +126,13 @@ export default function PromoterActivitiesBody({ data, t }: props) {
 
             {/* Commission Column */}
             <td className="px-6 py-4 text-sm text-foreground font-semibold">
-              {formatCommission(row.commission_amount)}
+              {formatCommission(Number(row.commission_amount))}
+            </td>
+
+            {/* device type Column */}
+            <td className="px-6 py-4 text-primary text-xs flex items-center gap-1 font-semibold">
+              {getDeviceIcon(row.device_type)}
+              <span className="capitalize">{row.device_type}</span>
             </td>
 
             {/* Created Date Column */}

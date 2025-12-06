@@ -1,6 +1,6 @@
-import { AppointmentTable } from "@/app/_components/_website/_controlpanals/_usercontrol/_listofreservations/AppointmentsTable";
 import NoAppointmentsFound from "@/app/_components/_website/_controlpanals/_usercontrol/_listofreservations/NoAppointmentsFound";
 import FetchData from "@/app/_helpers/FetchData";
+import { AppointmentTable } from "@/app/_components/_website/_controlpanals/_usercontrol/_listofreservations/AppointmentsTable";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
 import { getTranslations } from "next-intl/server";
 
@@ -17,14 +17,13 @@ export async function generateMetadata() {
 export default async function AppointmentsPage() {
   const user = await FetchData(`/current-user`, false);
 
-  if (!user) return null;
-
   const userId = user.id;
   const type = user.account_type;
 
   const response = await FetchData(`/appointments/${type}/${userId}`, true);
 
-  if (!response || response.error) return <NoAppointmentsFound />;
+  if (!response) return <NoAppointmentsFound />;
+
   const t = await getTranslations("appointments");
 
   const appointments = response.data;

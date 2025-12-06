@@ -85,7 +85,7 @@ export default function TermsConditionsUsers() {
   return (
     <div
       style={{ direction: "rtl" }}
-      className="p-6 bg-gray-50 min-h-[140vh] max-md:h-fit py-4 overflow-y-auto dark:bg-fourth_dash  text-white rounded-lg shadow-md"
+      className="p-6 bg-gray-50 min-h-[140vh] max-md:h-fit py-4 overflow-y-auto   text-white rounded-lg shadow-md"
     >
       <h2 className="text-2xl pb-3 text-primary-boldgray border-b w-fit mx-auto border-sky-400 font-bold mb-4 text-center">
         الشروط والأحكام للمستخدمين
@@ -113,13 +113,13 @@ export default function TermsConditionsUsers() {
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="flex justify-between items-center bg-white dark:bg-primary_dash p-4 rounded shadow"
+            className="flex justify-between items-center bg-white  p-4 rounded shadow"
           >
             <div>
-              <p className="text-sm text-right block mb-4 font-medium text-gray-700 dark:text-gray-300">
+              <p className="text-sm text-right block mb-4 font-medium text-gray-700 ">
                 العربية: {policy.content_ar}
               </p>
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <p className="text-sm font-medium text-gray-700 ">
                 English: {policy.content_en}
               </p>
             </div>
@@ -207,13 +207,13 @@ export default function TermsConditionsUsers() {
         </motion.div>
       )}
       {showconfirm && (
-        <div className="w-full h-screen fixed top-0 left-0 flex items-center justify-center bg-black/50 z-[9999999]">
+        <div className="w-full h-screen fixed top-0 left-0 flex items-center justify-center bg-black/50 z-9999999">
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: -50 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="w-1/4 h-auto max-md:w-[95%] p-6 flex flex-col items-center justify-between rounded-lg shadow-lg bg-white dark:bg-main_dash dark:text-white"
+            className="w-1/4 h-auto max-md:w-[95%] p-6 flex flex-col items-center justify-between rounded-lg shadow-lg bg-white  "
           >
             <p className="text-lg text-center text-primary-boldgray font-semibold mb-6">
               هل أنت متأكد؟ سيتم الحذف بشكل نهائي!

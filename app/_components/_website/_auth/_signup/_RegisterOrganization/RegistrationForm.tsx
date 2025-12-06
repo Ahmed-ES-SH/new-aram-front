@@ -28,6 +28,7 @@ export function RegistrationForm({ categories }: props) {
   const [formData, setFormData] = useState<RegistrationFormData>({
     email: "",
     password: "",
+    phone_number: "",
     title: "",
     description: "",
     open_at: "",
@@ -95,6 +96,7 @@ export function RegistrationForm({ categories }: props) {
                 <AccountStep
                   email={formData.email}
                   password={formData.password}
+                  phone_number={formData.phone_number}
                   location={location}
                   setLocation={setLocation}
                   onUpdate={updateFormData}

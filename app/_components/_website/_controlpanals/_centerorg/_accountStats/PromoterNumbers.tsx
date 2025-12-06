@@ -10,7 +10,7 @@ import {
   FaShoppingCart,
   FaUserPlus,
 } from "react-icons/fa";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { promoterType } from "./types";
 
 interface PromoterNumbersProps {
@@ -22,6 +22,7 @@ export default function PromoterNumbers({
   promoter,
   baseUrl,
 }: PromoterNumbersProps) {
+  const locale = useLocale();
   const t = useTranslations("promoter");
   const [copiedItem, setCopiedItem] = useState<string | null>(null);
 
@@ -36,7 +37,8 @@ export default function PromoterNumbers({
     }
   };
 
-  const signupLink = `${baseUrl}/membership?ref=${promoter.referral_code}`;
+  const signupLink = `${baseUrl}/signup?ref=${promoter.referral_code}`;
+  const visitLink = `${baseUrl}?ref=${promoter.referral_code}`;
 
   // Statistics data for mapping
   const stats = [
@@ -113,41 +115,85 @@ export default function PromoterNumbers({
           {t("yourLinks")}
         </h2>
         <div className="space-y-4">
-          {/* Signup Link */}
-          <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-            <div className="flex-1">
-              <p className="text-sm text-gray-600 mb-1">Signup Link</p>
-              <code className="font-mono text-gray-700 break-all">
-                {signupLink}
-              </code>
+          <div className="space-y-4">
+            {/* Signup Link */}
+            <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 mb-1">
+                  {locale == "ar" ? "رابط التسجيل" : "Signup Link"}
+                </p>
+                <code className="font-mono text-gray-700 break-all">
+                  {signupLink}
+                </code>
+              </div>
+              <button
+                onClick={() => handleCopy(signupLink, "signupLink")}
+                className="p-3 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                aria-label="Copy signup link"
+              >
+                <AnimatePresence mode="wait">
+                  {copiedItem === "signupLink" ? (
+                    <motion.div
+                      key="check"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="text-green-500"
+                    >
+                      <FaCheckCircle size={20} />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="copy"
+                      initial={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                    >
+                      <FaCopy size={20} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </button>
             </div>
-            <button
-              onClick={() => handleCopy(signupLink, "signupLink")}
-              className="p-3 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-              aria-label="Copy signup link"
-            >
-              <AnimatePresence mode="wait">
-                {copiedItem === "signupLink" ? (
-                  <motion.div
-                    key="check"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    className="text-green-500"
-                  >
-                    <FaCheckCircle size={20} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="copy"
-                    initial={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                  >
-                    <FaCopy size={20} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
+          </div>
+          <div className="space-y-4">
+            {/* Signup Link */}
+            <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 mb-1">
+                  {locale == "ar" ? "رابط زيارة" : "Visit Link"}
+                </p>
+                <code className="font-mono text-gray-700 break-all">
+                  {visitLink}
+                </code>
+              </div>
+              <button
+                onClick={() => handleCopy(visitLink, "visitLink")}
+                className="p-3 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                aria-label="Copy visit link"
+              >
+                <AnimatePresence mode="wait">
+                  {copiedItem === "visitLink" ? (
+                    <motion.div
+                      key="check"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="text-green-500"
+                    >
+                      <FaCheckCircle size={20} />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="copy"
+                      initial={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                    >
+                      <FaCopy size={20} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </button>
+            </div>
           </div>
         </div>
       </section>

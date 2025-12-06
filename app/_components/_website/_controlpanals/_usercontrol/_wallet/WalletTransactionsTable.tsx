@@ -24,8 +24,8 @@ export const WalletTransactionsTable = ({
   const dispatch = useAppDispatch();
 
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(pagination.current_page ?? 1);
-  const [lastPage, setLastPage] = useState(pagination.last_page ?? 1);
+  const [currentPage, setCurrentPage] = useState(pagination?.current_page ?? 1);
+  const [lastPage, setLastPage] = useState(pagination?.last_page ?? 1);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const hasMounted = useRef(false);
 

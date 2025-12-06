@@ -23,23 +23,22 @@ export default async function OrganizationsPage({ searchParams }: any) {
 
   if (step == 1) {
     const categoriesResponse = await FetchData(`/public-categories`, true);
-    console.log(categoriesResponse);
     return <MainCategoriesGrid response={categoriesResponse} />;
   }
 
   if (step == 2) {
     const {
       main_categoryId,
-      subCategoriesCount,
+      subCategoriesLength,
       organizationsCount,
       main_category,
     } = await searchParams;
 
     // Instead of direct redirect()
-    if (subCategoriesCount == 0 && organizationsCount > 0) {
+    if (subCategoriesLength == 0 && organizationsCount > 0) {
       return (
         <RedirectClient
-          targetUrl={`/organizations?categories=${main_categoryId}&main_category=${main_category}&main_categoryId=${main_categoryId}&subCategoriesLength=${subCategoriesCount}&organizationsCount=${organizationsCount}&step=3`}
+          targetUrl={`/organizations?categories=${main_categoryId}&main_category=${main_category}&main_categoryId=${main_categoryId}&subCategoriesLength=${subCategoriesLength}&organizationsCount=${organizationsCount}&step=3`}
         />
       );
     }
@@ -48,6 +47,7 @@ export default async function OrganizationsPage({ searchParams }: any) {
       `/sub-categories-by-parent?parent_id=${main_categoryId}&is_active=1`,
       true
     );
+
     return <SubCategoriesGrid response={subcategoriesResponse} />;
   }
 

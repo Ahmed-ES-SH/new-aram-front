@@ -68,7 +68,7 @@ export default function Footer() {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await instance.get("/getsociallinks");
+      const response = await instance.get("/social-contact-info");
       const data = response.data.data;
       setForm({
         facebook: data.facebook_account,
@@ -95,7 +95,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-gray-100">
-      <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="lg:flex lg:items-start lg:gap-8">
           <div className="text-teal-600 max-md:w-fit max-md:mx-auto">
             <Img src="/logo.png" className="w-[120px] object-contain" />
@@ -134,7 +134,7 @@ export default function Footer() {
                         setEmail(e.target.value)
                       }
                       value={email}
-                      className="w-full border border-gray-300 h-[5vh] outline-none rounded-md px-3 placeholder-shown:px-3 sm:text-sm"
+                      className="w-full focus:border-primary focus:bg-white duration-300 border border-gray-300 h-[5vh] outline-none rounded-md px-3 placeholder-shown:px-3 sm:text-sm"
                     />
                     <button className="mt-1 w-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wide rounded-md hover:bg-orange-500 duration-300 text-white sm:mt-0 sm:w-auto sm:shrink-0">
                       {locale == "en" ? "Subscribe" : "اشترك"}
@@ -176,9 +176,9 @@ export default function Footer() {
                 >
                   <Img
                     src={item.imgsrc}
-                    className="w-[20px] z-[2] cursor-pointer"
+                    className="w-[20px] z-2 cursor-pointer"
                   />
-                  <div className="group-hover:w-full left absolute left-0 top-0 z-[1] bg-sky-400 w-0 duration-300 cursor-pointer h-[500px]"></div>
+                  <div className="group-hover:w-full left absolute left-0 top-0 z-1 bg-primary w-0 duration-300 cursor-pointer h-[500px]"></div>
                 </Link>
               ))}
             </div>

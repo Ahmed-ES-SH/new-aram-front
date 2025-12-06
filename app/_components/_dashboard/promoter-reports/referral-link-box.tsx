@@ -22,7 +22,7 @@ export default function ReferralLinkBox({ promoter }: ReferralLinkBoxProps) {
   const [copiedRegistration, setCopiedRegistration] = useState(false);
 
   const referralLink = `https://aram-gulf.com?ref=${promoter.referral_code}`;
-  const registrationLink = `https://aram-gulf.com/membership?ref=${promoter.referral_code}`;
+  const registrationLink = `https://aram-gulf.com/signup?ref=${promoter.referral_code}`;
 
   const handleCopyReferral = async () => {
     try {

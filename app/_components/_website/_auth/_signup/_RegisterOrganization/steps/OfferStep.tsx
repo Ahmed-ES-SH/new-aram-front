@@ -78,6 +78,12 @@ export default function OfferStep({
       formData.append("category_id", categories[0].id.toString());
       if (ref_code) formData.append("ref_code", ref_code);
 
+      // Debug logging
+      console.log("Submitting Organization Form:");
+      for (const pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
       const response = await instance.post(`/register-org`, formData);
       if (response.status === 201) {
         toast.success(t("success"));
@@ -88,6 +94,7 @@ export default function OfferStep({
           description: "",
           open_at: "",
           close_at: "",
+          phone_number: "",
           confirmation_price: 0,
           confirmation_status: false,
           booking_status: false,

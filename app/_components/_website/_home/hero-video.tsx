@@ -137,7 +137,7 @@ export default function HeroVideo({ data }: props) {
             transition={{ duration: 1, delay: 0.8 }}
             className="mt-16 lg:mt-24"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 lg:gap-12">
               {stats &&
                 stats.map((stat, index) => (
                   <motion.div
@@ -187,34 +187,6 @@ export default function HeroVideo({ data }: props) {
           />
         </motion.div>
       </motion.div>
-
-      {/* Floating Elements */}
-      <motion.div
-        animate={{
-          y: [-20, 20, -20],
-          rotate: [0, 5, 0, -5, 0],
-        }}
-        transition={{
-          duration: 6,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
-        className="absolute top-1/4 right-10 w-20 h-20 bg-yellow-500/20 backdrop-blur-sm rounded-full border border-yellow-500/30 hidden lg:block"
-      />
-
-      <motion.div
-        animate={{
-          y: [20, -20, 20],
-          rotate: [0, -5, 0, 5, 0],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-          delay: 1,
-        }}
-        className="absolute bottom-1/4 right-20 w-16 h-16 bg-purple-500/20 backdrop-blur-sm rounded-full border border-purple-500/30 hidden lg:block"
-      />
 
       <motion.div
         animate={{

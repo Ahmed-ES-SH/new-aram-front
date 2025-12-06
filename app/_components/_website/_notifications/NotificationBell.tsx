@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaBellSlash } from "react-icons/fa";
 import { toast } from "sonner";
@@ -153,9 +153,9 @@ export default function NotificationBell({
         {/* Bell button */}
         <button
           onClick={() => setIsOpen((prev) => !prev)}
-          className="relative rounded-full hover:bg-gray-100 transition"
+          className="relative rounded-full pt-2 hover:bg-gray-100 transition"
         >
-          <PiBellRingingFill className="text-2xl text-primary" />
+          <PiBellRingingFill className="size-6 text-primary" />
           {unreadCount > 0 && (
             <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full">
               {unreadCount}

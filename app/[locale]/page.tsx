@@ -1,14 +1,13 @@
 import React from "react";
 import AboutSection from "../_components/_website/_home/AboutSection";
 import CardsSection from "../_components/_website/_home/CardsSection";
-import OrganizationsSection from "../_components/_website/_home/OrganizationsSection";
 import ServicesSection from "../_components/_website/_home/ServicesSection";
-import StatsSection from "../_components/_website/_home/StatsSection";
-import BlogSection from "../_components/_website/_home/BlogSection";
 import ContactForm from "../_components/_website/_home/ConatctForm";
 import HeroSection from "../_components/_website/_home/HeroSection";
 import FetchData from "../_helpers/FetchData";
-import { mockStats } from "../constants/_website/mockData";
+import { CentersSection } from "../_components/_website/_home/_organizations_v2";
+import { StatsSection } from "../_components/_website/_home/_stats_v2/StatsSection";
+import BlogSection from "../_components/_website/_home/_articles-section-v2/BlogSection";
 
 export default async function Home() {
   // about section data
@@ -39,11 +38,13 @@ export default async function Home() {
 
       <CardsSection cards={cardsData} />
 
-      <OrganizationsSection organizations={organizationsData} />
+      {/* <OrganizationsSection organizations={organizationsData} /> */}
+
+      <CentersSection organizations={organizationsData} />
 
       <ServicesSection services={servicesData} />
 
-      <StatsSection stats={mockStats} />
+      <StatsSection />
 
       <BlogSection articles={articlesData} />
 

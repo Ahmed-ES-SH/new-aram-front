@@ -129,6 +129,7 @@ export default function QuickActions() {
               min-h-[100px]
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
             `}
+            key={`quick-action-${action.id}`}
             href={action.to}
           >
             <div className={`${action.color} mb-3`}>{action.icon}</div>

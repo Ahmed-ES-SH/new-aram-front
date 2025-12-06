@@ -67,7 +67,7 @@ export default function AuthBtns({ notifications, user }: props) {
             <div className="">
               <LocaleLink
                 className="rounded-md bg-gray-100 text-gray-400 hover:bg-primary hover:text-white duration-200 px-5 py-2.5 text-sm font-medium "
-                href="/membership"
+                href="/signup"
               >
                 {t("register")}
               </LocaleLink>

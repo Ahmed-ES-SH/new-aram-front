@@ -85,7 +85,7 @@ export default function MobileMenu() {
                         >
                           {link.label[locale]}
                         </p>
-                        <div className="w-0 h-[1px] bg-primary group-hover:w-full duration-200"></div>
+                        <div className="w-0 h-px bg-primary group-hover:w-full duration-200"></div>
                       </li>
                     </>
                   ))}
@@ -103,7 +103,7 @@ export default function MobileMenu() {
                       <li className="w-full">
                         <button
                           className="rounded-md ltr:text-left rtl:text-right w-full block bg-gray-200 text-gray-400 hover:bg-primary hover:text-white duration-200 px-5 py-2.5 text-sm font-medium "
-                          onClick={() => handleGo("/membership")}
+                          onClick={() => handleGo("/signup")}
                         >
                           {locale == "en" ? "Register" : "إنضم الأن"}
                         </button>

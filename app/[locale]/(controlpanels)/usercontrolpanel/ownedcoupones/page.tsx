@@ -4,7 +4,6 @@ import ServerPagination from "@/app/_components/_website/_global/ServerPaginatio
 import FetchData from "@/app/_helpers/FetchData";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
 import { getTranslations } from "next-intl/server";
-import React from "react";
 
 export async function generateMetadata() {
   const t = await getTranslations("metaOwnedCoupones");
@@ -19,12 +18,11 @@ export async function generateMetadata() {
 export default async function OwnedCoupones({ searchParams }: any) {
   const user = await FetchData(`/current-user`, false);
 
-  if (!user) return null;
-
   const userId = user.id;
   const type = user.account_type;
 
   const { page } = await searchParams;
+
   const endPoint = page
     ? `/account-coupons?id=${userId}&type=${type}&page=${page}`
     : `/account-coupons?id=${userId}&type=${type}`;
@@ -33,7 +31,7 @@ export default async function OwnedCoupones({ searchParams }: any) {
 
   const t = await getTranslations("myCoupons");
 
-  if (!response || response.error) return <NoCouponsFound />;
+  if (!response) return <NoCouponsFound />;
 
   const coupones = response.data;
   const pagination = response.pagination;

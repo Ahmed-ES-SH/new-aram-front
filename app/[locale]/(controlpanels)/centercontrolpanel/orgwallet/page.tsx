@@ -20,6 +20,8 @@ export async function generateMetadata() {
 export default async function CenterWalletPage({ params }: any) {
   const user = await FetchData(`/current-user`, false);
 
+  console.log(user);
+
   if (!user) return null;
 
   const userId = user.id;

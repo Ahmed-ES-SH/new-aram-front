@@ -3,6 +3,8 @@ import { FC } from "react";
 import { motion } from "framer-motion";
 import { FaStar, FaShoppingCart, FaTag } from "react-icons/fa";
 import Img from "../_global/Img";
+import LocaleLink from "../_global/LocaleLink";
+import { formatTitle } from "@/app/_helpers/helpers";
 
 type Keyword = {
   id: number;
@@ -51,7 +53,7 @@ const ServiceCard: FC<Props> = ({ service, locale = "en" }) => {
     <motion.div
       whileHover={{ scale: 1.03 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col"
+      className="bg-white group rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col"
     >
       {/* Service Image */}
       <div className="relative w-full h-48">
@@ -68,8 +70,15 @@ const ServiceCard: FC<Props> = ({ service, locale = "en" }) => {
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col gap-3 flex-grow">
-        <h3 className="text-lg font-semibold line-clamp-1">{title}</h3>
+      <div className="p-4 flex flex-col gap-3 grow">
+        <LocaleLink
+          href={`/services/${formatTitle(service.title)}?serviceId=${
+            service.id
+          }`}
+          className="text-lg font-semibold line-clamp-1 group-hover:cursor-pointer group-hover:text-primary group-hover:underline group-hover:underline-offset-2"
+        >
+          {title}
+        </LocaleLink>
         <p className="text-gray-600 text-sm line-clamp-2">{description}</p>
 
         {/* Rating & Orders */}

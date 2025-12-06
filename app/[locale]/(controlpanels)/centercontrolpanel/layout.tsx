@@ -1,3 +1,4 @@
+import ProductAuthRoutes from "@/app/_components/_productRoutes/ProductAuthRoutes";
 import ControlSidebar from "@/app/_components/_website/_controlpanals/ControlSidebar";
 import SidbarButton from "@/app/_components/_website/_controlpanals/SidbarButton";
 import { getOrganizationLinks } from "@/app/_components/_website/_navbar/constants";
@@ -5,7 +6,6 @@ import FetchData from "@/app/_helpers/FetchData";
 import { formatTitle, getSharedMetadata } from "@/app/_helpers/helpers";
 import { directionMap } from "@/app/constants/_website/global";
 import { getTranslations } from "next-intl/server";
-import React from "react";
 import { ImStatsBars } from "react-icons/im";
 
 export async function generateMetadata() {
@@ -37,13 +37,15 @@ export default async function CenterControlPanalLayout({
 
   const { locale } = await params;
   return (
-    <div
-      dir={directionMap[locale ?? "en"]}
-      className="flex items-start gap-3 mt-20  hidden-scrollbar"
-    >
-      <ControlSidebar items={centerLinks as any} />
-      <SidbarButton />
-      {children}
-    </div>
+    <ProductAuthRoutes locale={locale}>
+      <div
+        dir={directionMap[locale ?? "en"]}
+        className="flex items-start gap-3 mt-20  hidden-scrollbar"
+      >
+        <ControlSidebar items={centerLinks as any} />
+        <SidbarButton />
+        {children}
+      </div>
+    </ProductAuthRoutes>
   );
 }

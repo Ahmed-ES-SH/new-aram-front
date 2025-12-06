@@ -3,7 +3,6 @@ import UserHeader from "@/app/_components/_website/_controlpanals/_usercontrol/_
 import FetchData from "@/app/_helpers/FetchData";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
 import { getTranslations } from "next-intl/server";
-import React from "react";
 
 export async function generateMetadata() {
   const t = await getTranslations("metaFamilyMembers");

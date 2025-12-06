@@ -136,6 +136,10 @@ export default function OrganizationInfo({
     }
   }, [location, setFormData]);
 
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, keywords: selectedKeywords }));
+  }, [selectedKeywords, setFormData]);
+
   return (
     <motion.div
       className="space-y-6 lg:p-6 p-2"

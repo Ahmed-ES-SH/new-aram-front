@@ -1,45 +1,47 @@
 import React from "react";
 import OrganizationsBody from "@/app/_components/_dashboard/_organizations/OrganizationsBody";
-import { FilterSidebar } from "@/app/_components/_dashboard/_organizations/FilterSidebar";
-import ServerPagination from "@/app/_components/_website/_global/ServerPagination";
-import FetchOrganizations from "@/app/_components/_dashboard/_organizations/fetchOrgamizations";
+import FetchData from "@/app/_helpers/FetchData";
 
 export default async function OrganizationsDashPage({ searchParams }: any) {
-  const { categories: categoriesParams } = await searchParams;
-  const categories = categoriesParams
-    ? categoriesParams.split(",").map(Number)
+  const search = await searchParams;
+
+  // Convert categories to array of numbers
+  const categories = search.categories?.length
+    ? search.categories.split(",").map(Number)
     : undefined;
 
-  const { page, query, status, rating, active, number_of_reservations } =
-    await searchParams;
-  const api = "/dashboard/organizations";
+  // Prepare URLSearchParams
+  const params = new URLSearchParams();
 
-  const { data, pagination } = await FetchOrganizations({
-    api,
-    page,
-    query,
-    categories,
-    status,
-    rating,
-    active,
-    number_of_reservations,
-  });
+  // Add basic params only if they exist
+  if (search.page) params.append("page", search.page);
+  if (search.status) params.append("status", search.status);
+  if (search.rating) params.append("rating", search.rating);
+  if (search.active) params.append("active", search.active);
+  if (search.number_of_reservations)
+    params.append("number_of_reservations", search.number_of_reservations);
+
+  // Add categories if exist
+  if (categories?.length) {
+    params.append("categories", categories.join(","));
+  }
+
+  // Final API
+  const api = `/dashboard/organizations?${params.toString()}`;
+
+  const response = await FetchData(api, true);
+
+  if (!response) return null;
+
+  const { data, pagination } = await response;
 
   return (
     <div dir="rtl" className="min-h-screen w-[90%] mx-auto bg-gray-50">
-      <div className="flex items-start gap-3 min-h-screen relative w-full">
-        {/* Sidebar */}
-        <FilterSidebar />
-
-        {/* Main content */}
-        <OrganizationsBody data={data} />
-      </div>
-      {pagination && pagination.last_page > 1 && (
-        <ServerPagination
-          currentPage={pagination.current_page || 1}
-          totalPages={pagination.last_page}
-        />
-      )}
+      <OrganizationsBody
+        data={data}
+        last_page={pagination.last_page}
+        total={pagination.total}
+      />
     </div>
   );
 }

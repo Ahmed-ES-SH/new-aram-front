@@ -58,7 +58,7 @@ export default function N8nChat({ webhookUrl }: N8nChatProps) {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-5 right-5 bg-primary hover:bg-orange-600  text-white p-4 rounded-full shadow-lg z-50 flex items-center justify-center transition-colors"
+          className=" bg-primary hover:bg-orange-600  text-white p-3 rounded-full shadow-lg z-50 flex items-center justify-center transition-colors"
         >
           <GoDependabot className="size-6 z-50" />
         </button>

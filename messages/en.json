@@ -206,7 +206,8 @@
     "orContinueWith": "Or continue with",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "noCards": "No cards found matching your criteria"
   },
 
   "forgetPassword": {
@@ -296,11 +297,7 @@
       "24/7 customer support"
     ]
   },
-  "homeCards": {
-    "title": "Aram Premium Cards",
-    "subtitle": "Discover our most popular cards",
-    "allCards": "All Cards"
-  },
+
   "organizations": {
     "title": "Trusted Organizations",
     "subtitle": "Partner with verified businesses",
@@ -361,7 +358,8 @@
     "discount": "Discount",
     "view": "view"
   },
-  "stats": {
+
+  "stats_v1": {
     "title": "Platform Statistics",
     "subtitle": "Growing together with our community",
     "totalUsers": "Total Users",
@@ -428,13 +426,37 @@
       "subcategories_count": "{count} Subcategories",
       "organizations_count": "{count} Organizations",
       "no_organizations": "No organizations in this category yet!"
+    },
+    "hero": {
+      "getStarted": "Get Started",
+      "learnMore": "Learn More",
+      "scrollToExplore": "Scroll to explore",
+      "stats": {
+        "categories": "Categories",
+        "items": "Items",
+        "satisfaction": "Satisfaction"
+      }
     }
   },
 
   "cardsPage": {
     "headerTitle": "Explore Our Cards",
     "headerDescription": "Choose from a variety of exclusive cards designed to match your needs.",
-    "showMore": "Show More"
+    "showMore": "Show More",
+    "loading": "Loading...",
+    "noCards": "No cards found matching your criteria",
+    "hero": {
+      "title": "Exclusive Membership Cards",
+      "subtitle": "Unlock a world of benefits and premium services with our exclusive membership cards.",
+      "getStarted": "Get Started",
+      "learnMore": "Learn More",
+      "scrollToExplore": "Scroll to explore",
+      "stats": {
+        "cards": "Cards",
+        "users": "Active Users",
+        "satisfaction": "Satisfaction"
+      }
+    }
   },
 
   "faqSection": {
@@ -744,6 +766,10 @@
         "label": "Password",
         "placeholder": "Enter your password"
       },
+      "phone_number": {
+        "label": "Phone Number",
+        "placeholder": "Enter your phone number"
+      },
       "location": {
         "label": "Location",
         "placeholder": "Enter your Location by select on the map",
@@ -782,20 +808,24 @@
       "image": {
         "label": "Main center Image",
         "hint": "Click or drag to upload image",
-        "preview": "Image Preview"
+        "preview": "Image Preview",
+        "required": "Main image is required"
       },
       "logo": {
         "label": "center Logo",
         "hint": "Click or drag to upload logo",
-        "preview": "Logo Preview"
+        "preview": "Logo Preview",
+        "required": "Logo is required"
       },
       "categories": {
         "label": "Categories",
-        "placeholder": "Select categories"
+        "placeholder": "Select categories",
+        "required": "Please select at least one category"
       },
       "subcategories": {
         "label": "Subcategories",
-        "placeholder": "Select subcategories"
+        "placeholder": "Select subcategories",
+        "required": "Please select at least one subcategory"
       },
       "offer": {
         "title": {
@@ -1563,7 +1593,7 @@
     "deviceType": "Device Type",
     "ipAddress": "IP Address",
     "referralCode": "Referral Code",
-    "commission": "Commission",
+    "commission": "Commission Points",
     "createdDate": "Created Date",
     "noData": "No activity data available"
   },
@@ -1638,5 +1668,125 @@
       "Welcome to Aram Gulf Marketing",
       "How can I help you today?"
     ]
+  },
+
+  "membership_card": {
+    "add_to_cart": "Add to Cart",
+    "view_details": "View Details",
+    "member_id": "Member ID",
+    "member_level": "Member Level",
+    "join_date": "Join Date",
+    "expiry_date": "Expiry Date",
+    "per_month": "/month",
+    "per_year": "/year"
+  },
+
+  "homeCards": {
+    "badge": {
+      "premium": "PREMIUM COLLECTION"
+    },
+    "title": "Exclusive Membership Cards",
+    "subtitle": "Unlock premium benefits, exclusive access, and personalized experiences with our curated membership collection",
+    "features": {
+      "premium": "Premium Quality",
+      "secure": "Secure & Safe",
+      "exclusive": "Exclusive Offers",
+      "lifetime": "Lifetime Updates"
+    },
+    "stats": {
+      "members": "Active Members",
+      "satisfaction": "Satisfaction Rate",
+      "support": "Support"
+    },
+    "featured": "FEATURED",
+    "scroll": "Scroll for more"
+  },
+
+  "membershipCard": {
+    "memberIdLabel": "Member ID",
+    "levelLabel": "Level",
+    "joinDateLabel": "Member Since",
+    "validThruLabel": "Valid Thru",
+    "priceLabel": "Price",
+    "originalPriceLabel": "Was",
+    "currentPriceLabel": "Now",
+    "currencySymbol": "$",
+    "skillsLabel": "Skills & Expertise",
+    "addToCart": "Add to Cart",
+    "viewDetails": "View Details",
+    "removeFromCart": "Remove",
+    "removededMessage": "The card has been removed from the cart successfully!",
+    "premiumBadge": "PREMIUM",
+    "exclusiveAccess": "Exclusive Access"
+  },
+  "membership": {
+    "platinum": "Platinum",
+    "gold": "Gold",
+    "silver": "Silver"
+  },
+
+  "Centers": {
+    "explore": "Explore Excellence",
+    "premiumCenters": "Premium Centers",
+    "discoverExcellence": "Discover top-rated centers offering exceptional services across 25+ categories. Find your perfect match with our curated selection.",
+    "searchPlaceholder": "Search for centers, services, or categories...",
+    "search": "Search",
+    "filterBy": "Filter by"
+  },
+  "Common": {
+    "featured": "Featured",
+    "active_centers": "Active Centers",
+    "categories": "Categories",
+    "monthly_visitors": "Monthly Visitors",
+    "satisfaction_rate": "Satisfaction Rate"
+  },
+
+  "services_v2": {
+    "badge": "Our Services",
+    "title": "Explore Premium",
+    "titleHighlight": "Creative Services",
+    "subtitle": "Discover a world of professional services crafted by talented freelancers. From stunning designs to powerful solutions, find exactly what your business needs.",
+    "stats": {
+      "services": "Services",
+      "clients": "Happy Clients",
+      "rating": "Avg. Rating"
+    },
+    "viewAll": "View All Services",
+    "orders": "orders",
+    "discount": "OFF",
+    "exclusive": "Exclusive",
+    "viewDetails": "View Details"
+  },
+
+  "stats": {
+    "title": "Our Achievements",
+    "subtitle": "Numbers that speak for themselves",
+    "items": {
+      "clients": "Happy Clients",
+      "projects": "Projects Completed",
+      "experience": "Years Experience",
+      "awards": "Awards Won"
+    }
+  },
+
+  "articles_section": {
+    "title": "Our Blog",
+    "subtitle": "Discover the latest articles and insights from our experts",
+    "viewAll": "View All Articles"
+  },
+
+  "heroCategories": {
+    "title": "Discover by Category",
+    "description": "Explore our curated collection of organizations and services, meticulously organized to help you find exactly what you need.",
+    "subDescription": "Each category is carefully selected to provide the most relevant results for your search.",
+    "badge": "{{count}} Main Categories",
+    "exploreButton": "Explore Categories",
+    "viewAllButton": "View All",
+    "scrollHint": "Scroll to discover",
+    "stats": {
+      "categories": "Categories",
+      "organizations": "Organizations",
+      "support": "Support"
+    }
   }
 }

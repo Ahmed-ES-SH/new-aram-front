@@ -13,6 +13,7 @@ import FacebookPixelHead from "../_components/_layout/FacebookPixelHead";
 import TikTokPixelHead from "../_components/_layout/TikTokPixelHead";
 import ".././globals.css";
 import N8nChat from "../_components/_website/_N8nChat/N8nChat";
+import ChatBtns from "../_components/_website/_global/ChatBtns";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,7 +59,7 @@ export default async function RootLayout({ children, params }: any) {
               <Toaster position="top-center" richColors closeButton />
               <Navbar locale={locale} user={user ?? null} />
               <CartSide />
-              <N8nChat webhookUrl="https://n8nwithhelal.shop/webhook/c4a09c88-96fa-40d4-899a-c52faceb466f/chat" />
+              <ChatBtns />
               {children}
               <Footer />
             </ClientLayout>

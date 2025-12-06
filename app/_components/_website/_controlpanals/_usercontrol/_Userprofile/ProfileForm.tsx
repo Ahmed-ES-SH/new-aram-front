@@ -38,7 +38,16 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [openMap, setOpenMap] = useState(false);
-  const [location, setLocation] = useState(user?.location ?? null);
+  const [location, setLocation] = useState(() => {
+    if (typeof user?.location === "string") {
+      try {
+        return JSON.parse(user.location);
+      } catch (e) {
+        return null;
+      }
+    }
+    return user?.location ?? null;
+  });
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -149,6 +158,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
       return () => clearTimeout(timer);
     }
   }, [isSaved]);
+
+  console.log(location);
 
   return (
     <motion.div
@@ -285,7 +296,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
         onClose={() => setOpenMap(false)}
         locale={locale}
         showMap={openMap}
-        initialLocation={formData?.location}
+        initialLocation={location}
         setLocation={setLocation}
       />
     </motion.div>

@@ -2,7 +2,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaBullseye, FaInfoCircle } from "react-icons/fa";
+import {
+  FaBullseye,
+  FaInfoCircle,
+  FaLightbulb,
+  FaRocket,
+} from "react-icons/fa";
 import { MdOutlineChecklist } from "react-icons/md";
 import { AiOutlineFundView } from "react-icons/ai";
 import { useLocale } from "next-intl";
@@ -13,10 +18,11 @@ interface Props {
   data: any;
 }
 
-const icons = [FaInfoCircle, FaBullseye, MdOutlineChecklist, AiOutlineFundView];
+const icons = [FaInfoCircle, FaBullseye, FaLightbulb, FaRocket];
 
 export default function AboutMainSections({ data }: Props) {
   const locale = useLocale();
+  const isRTL = locale === "ar";
 
   const initialSections: any = [
     {
@@ -45,7 +51,7 @@ export default function AboutMainSections({ data }: Props) {
 
   useEffect(() => {
     if (data) {
-      const updatedSections = initialSections.map((section) => ({
+      const updatedSections = initialSections.map((section: any) => ({
         ...section,
         titleEn: data[`${section.id}_title_en`] || "",
         titleAr: data[`${section.id}_title_ar`] || "",
@@ -57,49 +63,77 @@ export default function AboutMainSections({ data }: Props) {
     }
   }, [data]);
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
-
   return (
-    <div dir={directionMap[locale]} className="c-container mx-auto px-4 py-8">
-      {sections.map((section, index) => {
-        const Icon = icons[index];
-        const isMirrored = index % 2 !== 0; // mirror every second section
+    <div
+      dir={directionMap[locale]}
+      className="w-full bg-gray-50 py-20 overflow-hidden"
+    >
+      <div className="container mx-auto px-4">
+        {sections.map((section: any, index: number) => {
+          const Icon = icons[index] || FaInfoCircle;
+          const isEven = index % 2 === 0;
 
-        return (
-          <motion.section
-            key={section.id}
-            className={`w-full bg-white overflow-hidden flex flex-col md:flex-row ${
-              isMirrored ? "md:flex-row-reverse" : ""
-            } items-stretch mb-12`}
-            variants={sectionVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {/* Text Content */}
-            <div className="flex-1 p-6 flex flex-col justify-center">
-              <h2 className="text-3xl font-bold mb-4 flex items-center gap-2">
-                <Icon className="text-primary" />
-                {locale === "en" ? section.titleEn : section.titleAr}
-              </h2>
-              <p className="text-gray-700 leading-relaxed">
-                {locale === "en" ? section.contentEn : section.contentAr}
-              </p>
-            </div>
+          return (
+            <motion.div
+              key={section.id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className={`flex flex-col lg:flex-row items-center gap-12 lg:gap-20 mb-32 last:mb-0 ${
+                isEven ? "" : "lg:flex-row-reverse"
+              }`}
+            >
+              {/* Image Side */}
+              <div className="w-full lg:w-1/2 relative group">
+                <div className="relative h-[400px] lg:h-[500px] w-full rounded-2xl overflow-hidden shadow-2xl transform transition-transform duration-500 group-hover:scale-[1.02]">
+                  <Img
+                    src={section.image}
+                    alt={isRTL ? section.titleAr : section.titleEn}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Overlay Gradient */}
+                  <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-60" />
+                </div>
 
-            {/* Image */}
-            <div className="flex-1 relative h-[300px] md:h-[600px] bg-primary rounded-xl overflow-hidden">
-              <Img
-                src={section.image}
-                alt={section.titleAr}
-                className="w-full h-full object-cover rounded-xl"
-              />
-            </div>
-          </motion.section>
-        );
-      })}
+                {/* Decorative Elements */}
+                <div
+                  className={`absolute -bottom-6 -right-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl -z-10 ${
+                    isRTL ? "right-auto -left-6" : ""
+                  }`}
+                />
+                <div
+                  className={`absolute -top-6 -left-6 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -z-10 ${
+                    isRTL ? "left-auto -right-6" : ""
+                  }`}
+                />
+              </div>
+
+              {/* Content Side */}
+              <div className="w-full lg:w-1/2 space-y-6">
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <Icon className="text-2xl" />
+                  </div>
+                  <span className="text-sm font-bold text-primary tracking-wider uppercase">
+                    0{index + 1}
+                  </span>
+                </div>
+
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
+                  {isRTL ? section.titleAr : section.titleEn}
+                </h2>
+
+                <div className="h-1 w-20 bg-linear-to-r from-primary to-transparent rounded-full" />
+
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  {isRTL ? section.contentAr : section.contentEn}
+                </p>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }

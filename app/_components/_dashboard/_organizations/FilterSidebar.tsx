@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { motion } from "framer-motion";
 import {
   FaSearch,
@@ -15,7 +15,17 @@ import SearchBox from "./ui/SearchBox";
 import RenderStars from "../../_website/_global/RenderStars";
 import { setSidebardashOrgs } from "@/app/Store/variablesSlice";
 
-export function FilterSidebar() {
+interface props {
+  setQuery: Dispatch<SetStateAction<string>>;
+  setHypired: Dispatch<SetStateAction<boolean>>;
+  query: string;
+}
+
+export default function OrganizationsFilterSidebar({
+  setQuery,
+  query,
+  setHypired,
+}: props) {
   const { categories } = useAppSelector((state) => state.categories);
   const { sidebardashOrgs } = useAppSelector((state) => state.variables);
   const dispatch = useAppDispatch();
@@ -51,6 +61,7 @@ export function FilterSidebar() {
 
   // Update params in URL (single value only for status)
   const updateParam = (key: string, value: string | number | null) => {
+    setHypired(true);
     const params = new URLSearchParams(searchParams.toString());
 
     const stringValue = value !== null ? String(value) : null;
@@ -119,7 +130,12 @@ export function FilterSidebar() {
         <div className="mb-6">
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <SearchBox />
+            <input
+              type="text"
+              className="input-style"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
           </div>
         </div>
 

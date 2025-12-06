@@ -294,11 +294,7 @@
       "دعم العملاء على مدار الساعة"
     ]
   },
-  "homeCards": {
-    "title": "بطاقات آرام المميزة",
-    "subtitle": "اكتشف بطاقات آرام الأكثر شعبية",
-    "allCards": "جميع البطاقات"
-  },
+
   "organizations": {
     "title": "المنظمات الموثوقة",
     "subtitle": "شراكة مع الشركات المعتمدة",
@@ -359,7 +355,8 @@
     "discount": "خصم",
     "view": "شاهد التفاصيل"
   },
-  "stats": {
+
+  "stats_v1": {
     "title": "إحصائيات المنصة",
     "subtitle": "نمو مشترك مع مجتمعنا",
     "totalUsers": "إجمالي المستخدمين",
@@ -426,13 +423,37 @@
       "subcategories_count": "{count} قسم فرعي",
       "organizations_count": "{count} مركز",
       "no_organizations": "لا توجد مراكز ضمن هذا القسم حتى الآن!"
+    },
+    "hero": {
+      "getStarted": "ابدأ الآن",
+      "learnMore": "اعرف المزيد",
+      "scrollToExplore": "مرر للاستكشاف",
+      "stats": {
+        "categories": "الفئات",
+        "items": "العناصر",
+        "satisfaction": "نسبة الرضا"
+      }
     }
   },
 
   "cardsPage": {
     "headerTitle": "استكشف بطاقاتنا",
     "headerDescription": "اختر من بين مجموعة متنوعة من البطاقات المصممة لتناسب احتياجاتك.",
-    "showMore": "إظهار المزيد"
+    "showMore": "إظهار المزيد",
+    "loading": "جاري التحميل...",
+    "noCards": "لا توجد بطاقات تطابق معايير البحث",
+    "hero": {
+      "title": "بطاقات عضوية حصرية",
+      "subtitle": "افتح عالماً من المزايا والخدمات المتميزة مع بطاقات العضوية الحصرية لدينا.",
+      "getStarted": "ابدأ الآن",
+      "learnMore": "اعرف المزيد",
+      "scrollToExplore": "مرر للاستكشاف",
+      "stats": {
+        "cards": "بطاقات",
+        "users": "مستخدم نشط",
+        "satisfaction": "نسبة الرضا"
+      }
+    }
   },
 
   "faqSection": {
@@ -755,6 +776,10 @@
         "label": "كلمة المرور",
         "placeholder": "أدخل كلمة المرور"
       },
+      "phone_number": {
+        "label": "رقم الهاتف",
+        "placeholder": "أدخل رقم الهاتف"
+      },
       "location": {
         "label": "الموقع",
         "placeholder": "أدخل موقع المركز عن طريق استخدام الخريطة",
@@ -792,82 +817,644 @@
       },
       "image": {
         "label": "صورة المركز الرئيسية",
-        "hint": "انقر أو اسحب لتحميل الصورة",
-        "preview": "معاينة الصورة"
+        "hint": "اضغط او اسحب لرفع الصورة",
+        "preview": "معاينة الصورة",
+        "required": "الصورة الرئيسية مطلوبة"
       },
       "logo": {
         "label": "شعار المركز",
-        "hint": "انقر أو اسحب لتحميل الشعار",
-        "preview": "معاينة الشعار"
+        "hint": "اضغط او اسحب لرفع الشعار",
+        "preview": "معاينة الشعار",
+        "required": "الشعار مطلوب"
       },
       "categories": {
-        "label": "الفئات",
-        "placeholder": "اختر الفئات"
+        "label": "التصنيفات",
+        "placeholder": "اختر التصنيفات",
+        "required": "يرجى اختيار تصنيف واحد على الأقل"
       },
       "subcategories": {
-        "label": "الفئات الفرعية",
-        "placeholder": "اختر الفئات الفرعية"
+        "label": "التصنيفات الفرعية",
+        "placeholder": "اختر التصنيفات الفرعية",
+        "required": "يرجى اختيار تصنيف فرعي واحد على الأقل"
       },
+      "offer": {},
+      "buttons": {
+        "next": "التالي",
+        "previous": "السابق",
+        "submit": "إنشاء الحساب"
+      },
+      "progress": {
+        "step": "الخطوة",
+        "of": "من",
+        "complete": "مكتمل"
+      },
+      "success": "تم انشاء الحساب بنجاح جارى اعادة التوجية الى صفحة تسجيل الدخول .",
+      "error": "حدث خطأ أثناء انشاء الحساب ."
+    },
+
+    "orgValidation": {
       "offer": {
         "title": {
-          "label": "عنوان العرض",
-          "placeholder": "أدخل عنوان يعبر عن العرض المقدم"
+          "required": "العنوان مطلوب",
+          "min": "يجب أن يكون العنوان 3 أحرف على الأقل",
+          "max": "العنوان طويل جدًا"
         },
         "description": {
-          "label": "تفاصيل العرض",
-          "placeholder": "أدخل التفاصيل الخاصة بالعرض المقدم"
+          "required": "تفاصيل العرض مطلوبة",
+          "min": "الوصف يجب أن يكون 8 أحرف على الأقل",
+          "max": "الوصف طويل جدًا"
         },
         "image": {
-          "label": "صورة العرض الرئيسية",
-          "hint": "انقر أو اسحب لتحميل الصورة",
-          "preview": "معاينة الصورة"
+          "invalid": "ملف الصورة غير صالح"
         },
         "discount_type": {
-          "label": "نوع الخصم",
-          "placeholder": "اختر نوع الخصم (نسبة مئوية أو مبلغ ثابت)",
-          "options": {
-            "percentage": "نسبة %",
-            "fixed": "مبلغ ثابت $"
-          }
+          "invalid": "نوع الخصم غير صالح"
         },
         "discount_value": {
-          "label": "قيمة الخصم",
-          "placeholder": "أدخل قيمة الخصم"
+          "required": "قيمة الخصم مطلوبة",
+          "numeric": "قيمة الخصم يجب أن تكون رقمًا",
+          "positive": "قيمة الخصم يجب أن تكون أكبر من صفر",
+          "range": "قيمة الخصم (بالنسبة المئوية) يجب أن تكون بين 1 و 100"
         },
         "start_date": {
-          "label": "تاريخ بدء العرض",
-          "placeholder": "اختر تاريخ بداية العرض"
+          "required": "تاريخ بدء العرض مطلوب",
+          "invalid": "تاريخ البدء غير صالح"
         },
         "end_date": {
-          "label": "تاريخ انتهاء العرض",
-          "placeholder": "اختر تاريخ انتهاء العرض"
+          "required": "تاريخ انتهاء العرض مطلوب",
+          "invalid": "تاريخ الانتهاء غير صالح",
+          "after_start": "تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء"
         },
         "category_id": {
-          "label": "الفئة المستهدفة",
-          "placeholder": "اختر الفئة التي ينتمي إليها العرض"
+          "required": "اختر الفئة",
+          "invalid": "معرّف الفئة غير صالح"
         },
         "code": {
-          "label": "كود العرض",
-          "placeholder": "أدخل الكود المخصص لهذا العرض"
+          "required": "كود العرض مطلوب",
+          "min": "الكود قصير جدًا",
+          "max": "الكود طويل جدًا",
+          "invalid": "الكود يحتوي على أحرف غير مسموح بها"
         }
       }
     },
-    "buttons": {
-      "next": "التالي",
-      "previous": "السابق",
-      "submit": "إنشاء الحساب"
-    },
-    "progress": {
-      "step": "الخطوة",
-      "of": "من",
-      "complete": "مكتمل"
-    },
-    "success": "تم انشاء الحساب بنجاح جارى اعادة التوجية الى صفحة تسجيل الدخول .",
-    "error": "حدث خطأ أثناء انشاء الحساب ."
-  },
 
-  "orgValidation": {
-    "offer": {
+    "ConversationsPage": {
+      "noConversationSelected": "لم يتم تحديد محادثة",
+      "chooseFromSidebar": "اختر محادثة من الشريط الجانبي للبدء في الدردشة"
+    },
+
+    "cartPage": {
+      "emptyTitle": "السلة فارغة",
+      "emptyMessage": "يبدو أنه لم يتم إضافة أي منتجات إلى سلتك بعد.",
+      "startShopping": "ابدأ التسوق",
+      "promoLabel": "هل لديك كود دعائى او كود خصم",
+      "applyCode": "تطبيق الرمز",
+      "promoSuccess": "تم تطبيق الرمز الترويجي بنجاح!",
+      "promoError": "الرمز الترويجي غير صالح!",
+      "orderSummary": "ملخص الطلب",
+      "subTotal": "الإجمالي الفرعي",
+      "discount": "الخصم",
+      "vat": "الضريبة",
+      "total": "الإجمالي",
+      "checkout": "إتمام الدفع",
+      "or": "أو",
+      "continueShopping": "متابعة التسوق",
+      "termsNotice": "عند شرائك للبطاقات، فإنك تقرّ وتوافق على جميع الشروط والأحكام والسياسات المعمول بها، مما يضمن لك تجربة سلسة وآمنة.",
+      "purchase_notice": {
+        "text_before_terms": "عند شرائك للبطاقات، فإنك تقرّ وتوافق على جميع",
+        "terms": "الشروط والأحكام",
+        "and": "و",
+        "policies": "السياسات",
+        "text_after_policies": "المعمول بها، مما يضمن لك تجربة سلسة وآمنة."
+      },
+      "promo": {
+        "label": "هل لديك كود دعائى او كود خصم",
+        "apply_button": "تطبيق",
+        "success": "تم تطبيق الرمز الترويجي بنجاح!",
+        "error": "الرمز الترويجي غير صالح!"
+      }
+    },
+
+    "payment": {
+      "successTitle": "تمت عملية الدفع بنجاح!",
+      "successMessage": "تم إتمام عملية الدفع بنجاح.",
+      "failedTitle": "فشلت عملية الدفع",
+      "failedMessage": "حدث خطأ أثناء عملية الدفع.",
+      "orderId": "رقم الطلب",
+      "invoiceNumber": "رقم الفاتورة",
+      "total": "المجموع",
+      "backHome": "العودة للرئيسية",
+      "retry": "حاول مرة أخرى"
+    },
+
+    "userControl": {
+      "hi": "أهلا",
+      "welcome": "مرحباً بك في لوحة التحكم",
+      "subtitle": "قم بإدارة بطاقاتك، حجوزاتك، رصيدك، وعمليات الدفع والمحادثات بسهولة.",
+      "cards": {
+        "title": "إدارة البطاقات",
+        "desc": "عرض وإدارة جميع بطاقاتك الشخصية والتجارية."
+      },
+      "bookings": {
+        "title": "إدارة الحجوزات",
+        "desc": "تتبع وتحكم في جميع عمليات الحجز الخاصة بك بكفاءة."
+      },
+      "profile": {
+        "title": "إعدادات الحساب",
+        "desc": "قم بإدارة معلوماتك الشخصية وكلمة المرور وبيانات الاتصال."
+      },
+      "coupons": {
+        "title": "الكوبونات والخصومات",
+        "desc": "اطلع على الكوبونات المتاحة واستخدمها لتوفير المزيد على مشترياتك."
+      },
+      "balance": {
+        "title": "رصيدك الحالي",
+        "desc": "تحقق من رصيد محفظتك والعمليات المالية الأخيرة."
+      },
+      "payments": {
+        "title": "عمليات الدفع",
+        "desc": "راقب المدفوعات الصادرة والواردة بأمان."
+      },
+      "chats": {
+        "title": "المحادثات",
+        "desc": "تواصل بسهولة مع العملاء عبر النظام الداخلي."
+      }
+    },
+
+    "userProfile": {
+      "title": "إعدادات الملف الشخصي",
+      "subtitle": "إدارة معلوماتك الشخصية وتفضيلاتك",
+      "emailVerified": "تم التحقق من البريد الإلكتروني",
+      "emailVerifiedMessage": "تم التحقق من عنوان بريدك الإلكتروني بنجاح.",
+      "emailNotVerified": "لم يتم التحقق من البريد الإلكتروني",
+      "emailNotVerifiedMessage": "يرجى التحقق من عنوان بريدك الإلكتروني للوصول إلى جميع الميزات.",
+      "sendVerification": "إرسال بريد التحقق",
+      "sendingVerification": "جاري الإرسال...",
+      "verificationSent": "تم الإرسال!",
+      "emailReadOnly": "لا يمكن تغيير البريد الإلكتروني المحقق",
+      "saveChanges": "حفظ التغييرات",
+      "saving": "جاري الحفظ...",
+      "saved": "تم الحفظ!",
+      "successMessage": "تم تحديث ملفك الشخصي بنجاح",
+      "editlocation": "تعديل الموقع",
+      "fields": {
+        "name": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة السر",
+        "phone": "رقم الهاتف",
+        "location": "الموقع",
+        "gender": "الجنس",
+        "birthDate": "تاريخ الميلاد",
+        "country": "البلد"
+      },
+      "placeholders": {
+        "name": "أدخل اسمك الكامل",
+        "email": "أدخل بريدك الإلكتروني",
+        "password": "أدخل كلمة السر الجديدة الخاصة بك",
+        "location": "قم بتحديد العنوان الخاص بك عن طريق الخريطة",
+        "phone": "أدخل رقم هاتفك"
+      },
+      "gender": {
+        "male": "ذكر",
+        "female": "أنثى"
+      },
+      "countries": {
+        "india": "الهند",
+        "usa": "الولايات المتحدة",
+        "uk": "المملكة المتحدة",
+        "canada": "كندا",
+        "australia": "أستراليا"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      }
+    },
+
+    "card": {
+      "title": "بطاقات آرام الخاصة بك",
+      "subtitle": "إدارة وعرض تفاصيل بطاقة أرام الخاصة بك بشكل آمن",
+      "cardNumber": "رقم البطاقة",
+      "cardHolder": "حامل البطاقة",
+      "validThru": "صالحة حتى",
+      "cvv": "رمز الأمان",
+      "status": "الحالة",
+      "issueDate": "تاريخ الإصدار",
+      "expiryDate": "تاريخ الانتهاء",
+      "usageLimit": "حد الاستخدام",
+      "currentUsage": "الاستخدام الحالي",
+      "viewDetails": "عرض التفاصيل",
+      "cardDetails": "تفاصيل البطاقة",
+      "close": "إغلاق",
+      "copy": "نسخ",
+      "copied": "تم النسخ!",
+      "unlimited": "غير محدود",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "expired": "منتهية"
+    },
+
+    "noCards": {
+      "title": "لم تقم بامتلاك أي بطاقات حتى الآن",
+      "description": "يبدو أنك لم تضف أي بطاقات إلى حسابك بعد. ابدأ الآن لإدارة بطاقاتك بسهولة.",
+      "button": "الذهاب إلى صفحة البطاقات"
+    },
+
+    "myCoupons": {
+      "title": "كوبوناتي",
+      "subtitle": "يمكنك هنا استعراض جميع كوبوناتك المتاحة وتفاصيل استخدامها."
+    },
+    "couponCard": {
+      "active": "نشط",
+      "discountValue": "قيمة الخصم",
+      "off": "خصم",
+      "copy": "نسخ",
+      "freeCard": "بطاقة مجانية",
+      "copied": "تم النسخ!",
+      "from": "من",
+      "to": "إلى",
+      "usage": "الاستخدام",
+      "unlimited": "غير محدود"
+    },
+    "couponPopup": {
+      "discount": "الخصم",
+      "currency": "جنيه",
+      "period": "فترة الصلاحية",
+      "status": "الحالة",
+      "freeCard": "بطاقة مجانية",
+      "usage": "الاستخدام",
+      "unlimited": "غير محدود"
+    },
+
+    "noCoupons": {
+      "title": "لا توجد كوبونات متاحة",
+      "description": "يبدو أنه لا توجد أي كوبونات مرتبطة بهذا الحساب حاليًا. تحقق لاحقًا للحصول على عروض جديدة."
+    },
+
+    "noAppointments": {
+      "title": "لا توجد حجوزات حتى الآن",
+      "description": "لم تقم بحجز أي موعد بعد. تصفح المراكز المتاحة واحجز موعدك الأول بسهولة.",
+      "button": "تصفح المراكز"
+    },
+
+    "appointments": {
+      "title": "المواعيد",
+      "subtitle": "إدارة وتتبع جميع مواعيدك في مكان واحد",
+      "id": "الرقم",
+      "usser": "المستخدم",
+      "organization": "المركز",
+      "dateTime": "التاريخ والوقت",
+      "price": "السعر",
+      "status": "الحالة",
+      "actions": "الإجراءات",
+      "actionsPlaceholder": "—",
+      "noAppointments": "لا توجد مواعيد"
+    },
+
+    "appointmentActions": {
+      "cancel": "إلغاء الحجز",
+      "delete": "حذف",
+      "rateCenter": "تقييم المركز",
+      "goToCenters": "الذهاب إلى المراكز",
+      "noActions": "لا توجد إجراءات متاحة"
+    },
+
+    "UserIdNotFound": {
+      "title": "المستخدم غير موجود",
+      "description": "لم نتمكن من العثور على المستخدم المطلوب. قد يكون المعرف غير صحيح أو تم حذف حساب المستخدم.",
+      "goBack": "الرجوع",
+      "home": "الرئيسية",
+      "hint": "إذا كنت تعتقد أن هناك خطأ، حاول البحث عن المستخدم أو تواصل مع الدعم الفني."
+    },
+
+    "walletOverview": {
+      "title": "محفظتي",
+      "subtitle": "هذه هي محفظة حسابك التي تعرض جميع الأرصدة.",
+      "availableBalance": "الرصيد المتاح",
+      "pendingBalance": "الرصيد المعلق",
+      "totalBalance": "إجمالي الرصيد",
+      "withdrawbtn": "سحب الرصيد"
+    },
+
+    "wallet": {
+      "transactions": {
+        "title": "سجل المعاملات",
+        "type": "النوع",
+        "amount": "المبلغ",
+        "direction": "الاتجاه",
+        "status": "الحالة",
+        "note": "ملاحظة",
+        "date": "التاريخ",
+        "empty": "لا توجد معاملات",
+        "emptyDescription": "سوف تظهر سجل معاملاتك هنا",
+        "in": "داخل",
+        "out": "خارج",
+        "types": {
+          "deposit": "إيداع",
+          "withdrawal": "سحب",
+          "purchase": "شراء",
+          "sale": "بيع",
+          "commission": "عمولة",
+          "refund": "استرداد",
+          "transfer": "تحويل",
+          "book": "حجز"
+        },
+        "statuses": {
+          "pending": "قيد الانتظار",
+          "completed": "مكتمل",
+          "failed": "فشل"
+        }
+      }
+    },
+
+    "withdraw": {
+      "title": "سحب الأموال",
+      "subtitle": "اختر طريقة السحب وأدخل المعلومات المطلوبة.",
+      "amountLabel": "المبلغ",
+      "amountPlaceholder": "أدخل مبلغ السحب",
+      "methodLabel": "طريقة السحب",
+      "methods": {
+        "bank": "تحويل بنكي",
+        "bankDescription": "تحويل إلى حسابك البنكي",
+        "paypal": "باي بال",
+        "paypalDescription": "سحب إلى حساب الباي بال الخاص بك"
+      },
+      "bankNumberLabel": "رقم الحساب البنكي",
+      "bankNumberPlaceholder": "أدخل رقم الحساب البنكي",
+      "paypalEmailLabel": "البريد الإلكتروني للباي بال",
+      "paypalEmailPlaceholder": "أدخل بريدك الإلكتروني للباي بال",
+      "detailsLabel": "تفاصيل إضافية",
+      "detailsPlaceholder": "أي ملاحظات أو تعليمات إضافية...",
+      "optional": "اختياري",
+      "submitButton": "سحب الأموال",
+      "submitting": "جاري معالجة طلب السحب...",
+      "validation": {
+        "amountMin": "يجب أن يكون المبلغ 20 على الأقل",
+        "insufficientBalance": "ليس لديك رصيد متاح كافٍ.",
+        "bankNumberRequired": "رقم الحساب البنكي مطلوب",
+        "paypalEmailRequired": "بريد الباي بال الإلكتروني مطلوب",
+        "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح"
+      },
+      "messages": {
+        "success": "تم تقديم طلب السحب بنجاح!",
+        "submitError": "يرجى التحقق من المدخلات والمحاولة مرة أخرى."
+      }
+    },
+
+    "familyCard": {
+      "memberId": "المعرف",
+      "age": "العمر",
+      "years": "سنة",
+      "birthDate": "تاريخ الميلاد",
+      "phone": "الهاتف",
+      "relationship": "صلة القرابة",
+      "status": {
+        "title": "الحالة",
+        "pending": "معلق",
+        "accepted": "مقبول",
+        "rejected": "مرفوض"
+      },
+      "actions": {
+        "accept": "قبول",
+        "reject": "رفض",
+        "delete": "حذف"
+      }
+    },
+
+    "header": {
+      "welcome": "مرحباً",
+      "profile": "الملف الشخصي",
+      "sendinvitation": "ارسل دعوه",
+      "logout": "تسجيل الخروج",
+      "active": "نشط",
+      "lastLogin": "آخر تسجيل دخول",
+      "memberSince": "عضو منذ",
+      "verified": "موثق",
+      "notVerified": "غير موثق"
+    },
+
+    "SendInvitation": {
+      "title": "إرسال دعوة",
+      "closeButton": "إغلاق",
+      "searchPlaceholder": "البحث بالاسم، البريد الإلكتروني أو الهاتف",
+      "sendButton": "إرسال الدعوة",
+      "cancelButton": "إلغاء",
+      "noResults": "لم يتم العثور على مستخدمين",
+      "loading": "جاري تحميل المستخدمين...",
+      "error": "فشل في تحميل المستخدمين. حاول مرة أخرى",
+      "retry": "إعادة المحاولة",
+      "selected": "{count} مُحدد",
+      "noSelected": "لم يتم تحديد مستخدم",
+      "previewTitle": "المستخدم المحدد",
+      "noSelectedPreview": "لم يتم تحديد مستخدم للمعاينة",
+      "relationship": "صلة القرابة",
+      "relationshipPlaceholder": "اختر صلة القرابة",
+      "relationshipOptions": {
+        "father": "الأب",
+        "mother": "الأم",
+        "son": "الابن",
+        "daughter": "الابنة",
+        "brother": "الأخ",
+        "sister": "الأخت",
+        "husband": "الزوج",
+        "wife": "الزوجة",
+        "grandfather": "الجد",
+        "grandmother": "الجدة",
+        "grandson": "الحفيد",
+        "granddaughter": "الحفيدة",
+        "uncle": "العم",
+        "aunt": "العمة",
+        "nephew": "ابن الأخ/الأخت",
+        "niece": "ابنة الأخ/الأخت",
+        "cousin": "ابن العم/العمة",
+        "other": "أخرى"
+      },
+      "columns": {
+        "name": "الاسم",
+        "email": "البريد الإلكتروني",
+        "phone": "الهاتف",
+        "role": "الدور",
+        "status": "الحالة",
+        "createdAt": "تاريخ الإنشاء"
+      }
+    },
+
+    "selectTime": {
+      "title": "اختر الوقت والتاريخ",
+      "chooseTime": "اختر موعدًا",
+      "chooseDate": "اختر تاريخًا",
+      "proceedPayment": "المتابعة للدفع",
+      "proceedToPayment": "المتابعة للدفع",
+      "selectedTime": "الوقت المختار",
+      "selectedDate": "التاريخ المختار",
+      "bookingNotAvailable": "الحجز غير متاح حاليًا لهذه المؤسسة.",
+      "tryAgain": "حاول مرة أخرى",
+      "back": "رجوع",
+      "continue": "متابعة",
+      "close": "إغلاق",
+      "available": "متاح",
+      "hasBookings": "يوجد حجوزات",
+      "selected": "محدد",
+      "booked": "محجوز",
+      "bookingSummary": "ملخص الحجز",
+      "date": "التاريخ",
+      "time": "الوقت",
+      "price": "السعر",
+      "currency": "ر.س",
+      "paymentDetails": "تفاصيل الدفع",
+      "cardNumber": "رقم البطاقة",
+      "expiryDate": "تاريخ الانتهاء",
+      "cardHolder": "اسم حامل البطاقة",
+      "cvv": "CVV",
+      "totalAmount": "المبلغ الإجمالي",
+      "confirmBooking": "تأكيد الحجز",
+      "confirmationMessage": "يرجى مراجعة معلومات الحجز وتأكيد الحجز",
+      "confirmBookingButton": "تأكيد الحجز",
+      "bookingSuccess": "تم ارسال طلب الحجز بنجاح فى انتظار رد المركز .",
+      "redirectingToPayment": "إعادة التوجية الى صفحة الدفع",
+      "errors": {
+        "fetchData": "فشل في تحميل البيانات. يرجى المحاولة مرة أخرى.",
+        "fetchBookingStatus": "فشل في التحقق من حالة الحجز. يرجى المحاولة مرة أخرى."
+      }
+    },
+
+    "organizationProfile": {
+      "tabs": {
+        "bookingSettings": "إعدادات الحجز",
+        "organizationInfo": "معلومات المركز",
+        "OrganizationSpecializations": "تخصصات المركز"
+      },
+      "bookingSettings": {
+        "title": "إعدادات الحجز",
+        "openTime": "وقت الفتح",
+        "closeTime": "وقت الإغلاق",
+        "confirmationPrice": "سعر التأكيد",
+        "confirmationStatus": "حالة التأكيد",
+        "bookingStatus": "حالة الحجز",
+        "acceptableMessage": "رسالة القبول",
+        "unacceptableMessage": "رسالة الرفض",
+        "messages": {
+          "confirmationStatus_enabled": "تأكيد الحجز مُفعل",
+          "confirmationStatus_disabled": "تأكيد الحجز غير مُفعل",
+          "bookingStatus_enabled": "الحجز مُفعل",
+          "bookingStatus_disabled": "الحجز غير مُفعل"
+        }
+      },
+      "organizationInfo": {
+        "title": "معلومات المنظمة",
+        "organizationTitle": "عنوان المنظمة",
+        "description": "الوصف",
+        "email": "البريد الإلكتروني",
+        "phoneNumber": "رقم الهاتف",
+        "logo": "رابط الشعار",
+        "image": "الصورة",
+        "url": "رابط الموقع",
+        "password": "كلمة السر",
+        "category": "الفئة",
+        "benefits": "الفوائد",
+        "addNewBenefit": "إضافة ميزة جديدة",
+        "addNewBenefitPlaceholder": "إضافة ميزة جديدة ...",
+        "mange": "إدارة",
+        "keywords": "الكلمات المفتاحية",
+        "location": "الموقع",
+        "address": "العنوان",
+        "latitude": "خط العرض",
+        "longitude": "خط الطول"
+      },
+      "organizationSubCategories": {
+        "title": "الفئات الفرعية للمنظمة",
+        "availableSubCategories": "الفئات الفرعية المتاحة",
+        "selectedSubCategories": "الفئات الفرعية المختارة",
+        "addSubCategory": "إضافة فئة فرعية",
+        "removeSubCategory": "إزالة"
+      },
+      "common": {
+        "save": "حفظ التغييرات",
+        "cancel": "إلغاء",
+        "loading": "جاري التحميل...",
+        "error": "حدث خطأ",
+        "success": "تم حفظ التغييرات بنجاح"
+      }
+    },
+
+    "categoriesSelector": {
+      "main_label": "الأقسام الرئيسية",
+      "sub_label": "الأقسام الفرعية",
+      "add_category": "إضافة قسم",
+      "add_subcategory": "إضافة قسم فرعي",
+      "no_categories": "لم يتم اختيار أي أقسام بعد",
+      "no_subcategories": "لم يتم اختيار أي أقسام فرعية بعد",
+      "summary_title": "إجمالي الأقسام المختارة:",
+      "mainCategories": " قسم رئيسي ",
+      "SubCategories": " قسم فرعي"
+    },
+
+    "centerPanal": {
+      "hi": "أهلا",
+      "welcome": "مرحباً بك في لوحة التحكم",
+      "subtitle": "قم بإدارة بطاقاتك، حجوزاتك، رصيدك، وعمليات الدفع والمحادثات بسهولة.",
+      "profile": {
+        "title": "الملف الشخصي",
+        "desc": "إدارة وتحديث المعلومات الشخصية الخاصة بالمركز."
+      },
+      "cards": {
+        "title": "بطاقاتي",
+        "desc": "عرض وإدارة جميع بطاقات الدفع المرتبطة بحسابك."
+      },
+      "reservations": {
+        "title": "قائمة الحجوزات",
+        "desc": "عرض وإدارة سجل حجوزات المركز."
+      },
+      "conversations": {
+        "title": "المحادثات",
+        "desc": "عرض والرد على رسائل واستفسارات العملاء."
+      },
+      "wallet": {
+        "title": "رصيد الحساب",
+        "desc": "تتبع الرصيد والمعاملات والسحوبات الخاصة بحسابك."
+      },
+      "coupons": {
+        "title": "كوبونات الحساب",
+        "desc": "إدارة الكوبونات الترويجية المتاحة والمنتهية."
+      },
+      "offers": {
+        "title": "عروض المركز",
+        "desc": "إنشاء وإدارة العروض الخاصة بعملاء المركز."
+      },
+      "schedule": {
+        "title": "مواعيد المركز",
+        "desc": "إعداد وإدارة جدول المواعيد الخاصة بالمركز."
+      }
+    },
+
+    "orgAppointmentActions": {
+      "confirm": "قبول",
+      "reject": "رفض",
+      "delete": "حذف",
+      "noActions": "لا توجد إجراءات متاحة",
+      "confirmSuccess": "تم تأكيد الموعد بنجاح!",
+      "rejectSuccess": "تم رفض الموعد بنجاح!",
+      "deleteSuccess": "تم حذف الموعد المحدد بنجاح!",
+      "unexpectedError": "حدث خطأ غير متوقع، يرجى المحاولة لاحقاً."
+    },
+
+    "offersHeader": {
+      "title": "عروض المركز",
+      "subtitle": "قم بإدارة عروضك الحالية والقادمة بسهولة من هنا.",
+      "addButton": "أضف عرض جديد"
+    },
+
+    "noOffers": {
+      "title": "لا توجد عروض حتى الآن",
+      "subtitle": "حسابك لا يحتوي على أي عروض حاليًا، قم بإضافة عروض جديدة لجذب المزيد من العملاء!"
+    },
+
+    "addOfferHeader": {
+      "title": "إضافة عرض جديد",
+      "subtitle": "املأ التفاصيل أدناه لإنشاء عرض جديد مميز لمركزك وجذب المزيد من العملاء."
+    },
+
+    "offerValidation": {
       "title": {
         "required": "العنوان مطلوب",
         "min": "يجب أن يكون العنوان 3 أحرف على الأقل",
@@ -909,743 +1496,262 @@
         "max": "الكود طويل جدًا",
         "invalid": "الكود يحتوي على أحرف غير مسموح بها"
       }
-    }
-  },
-
-  "ConversationsPage": {
-    "noConversationSelected": "لم يتم تحديد محادثة",
-    "chooseFromSidebar": "اختر محادثة من الشريط الجانبي للبدء في الدردشة"
-  },
-
-  "cartPage": {
-    "emptyTitle": "السلة فارغة",
-    "emptyMessage": "يبدو أنه لم يتم إضافة أي منتجات إلى سلتك بعد.",
-    "startShopping": "ابدأ التسوق",
-    "promoLabel": "هل لديك كود دعائى او كود خصم",
-    "applyCode": "تطبيق الرمز",
-    "promoSuccess": "تم تطبيق الرمز الترويجي بنجاح!",
-    "promoError": "الرمز الترويجي غير صالح!",
-    "orderSummary": "ملخص الطلب",
-    "subTotal": "الإجمالي الفرعي",
-    "discount": "الخصم",
-    "vat": "الضريبة",
-    "total": "الإجمالي",
-    "checkout": "إتمام الدفع",
-    "or": "أو",
-    "continueShopping": "متابعة التسوق",
-    "termsNotice": "عند شرائك للبطاقات، فإنك تقرّ وتوافق على جميع الشروط والأحكام والسياسات المعمول بها، مما يضمن لك تجربة سلسة وآمنة.",
-    "purchase_notice": {
-      "text_before_terms": "عند شرائك للبطاقات، فإنك تقرّ وتوافق على جميع",
-      "terms": "الشروط والأحكام",
-      "and": "و",
-      "policies": "السياسات",
-      "text_after_policies": "المعمول بها، مما يضمن لك تجربة سلسة وآمنة."
     },
-    "promo": {
-      "label": "هل لديك كود دعائى او كود خصم",
-      "apply_button": "تطبيق",
-      "success": "تم تطبيق الرمز الترويجي بنجاح!",
-      "error": "الرمز الترويجي غير صالح!"
-    }
-  },
 
-  "payment": {
-    "successTitle": "تمت عملية الدفع بنجاح!",
-    "successMessage": "تم إتمام عملية الدفع بنجاح.",
-    "failedTitle": "فشلت عملية الدفع",
-    "failedMessage": "حدث خطأ أثناء عملية الدفع.",
-    "orderId": "رقم الطلب",
-    "invoiceNumber": "رقم الفاتورة",
-    "total": "المجموع",
-    "backHome": "العودة للرئيسية",
-    "retry": "حاول مرة أخرى"
-  },
-
-  "userControl": {
-    "hi": "أهلا",
-    "welcome": "مرحباً بك في لوحة التحكم",
-    "subtitle": "قم بإدارة بطاقاتك، حجوزاتك، رصيدك، وعمليات الدفع والمحادثات بسهولة.",
-    "cards": {
-      "title": "إدارة البطاقات",
-      "desc": "عرض وإدارة جميع بطاقاتك الشخصية والتجارية."
-    },
-    "bookings": {
-      "title": "إدارة الحجوزات",
-      "desc": "تتبع وتحكم في جميع عمليات الحجز الخاصة بك بكفاءة."
-    },
-    "profile": {
-      "title": "إعدادات الحساب",
-      "desc": "قم بإدارة معلوماتك الشخصية وكلمة المرور وبيانات الاتصال."
-    },
-    "coupons": {
-      "title": "الكوبونات والخصومات",
-      "desc": "اطلع على الكوبونات المتاحة واستخدمها لتوفير المزيد على مشترياتك."
-    },
-    "balance": {
-      "title": "رصيدك الحالي",
-      "desc": "تحقق من رصيد محفظتك والعمليات المالية الأخيرة."
-    },
-    "payments": {
-      "title": "عمليات الدفع",
-      "desc": "راقب المدفوعات الصادرة والواردة بأمان."
-    },
-    "chats": {
-      "title": "المحادثات",
-      "desc": "تواصل بسهولة مع العملاء عبر النظام الداخلي."
-    }
-  },
-
-  "userProfile": {
-    "title": "إعدادات الملف الشخصي",
-    "subtitle": "إدارة معلوماتك الشخصية وتفضيلاتك",
-    "emailVerified": "تم التحقق من البريد الإلكتروني",
-    "emailVerifiedMessage": "تم التحقق من عنوان بريدك الإلكتروني بنجاح.",
-    "emailNotVerified": "لم يتم التحقق من البريد الإلكتروني",
-    "emailNotVerifiedMessage": "يرجى التحقق من عنوان بريدك الإلكتروني للوصول إلى جميع الميزات.",
-    "sendVerification": "إرسال بريد التحقق",
-    "sendingVerification": "جاري الإرسال...",
-    "verificationSent": "تم الإرسال!",
-    "emailReadOnly": "لا يمكن تغيير البريد الإلكتروني المحقق",
-    "saveChanges": "حفظ التغييرات",
-    "saving": "جاري الحفظ...",
-    "saved": "تم الحفظ!",
-    "successMessage": "تم تحديث ملفك الشخصي بنجاح",
-    "editlocation": "تعديل الموقع",
-    "fields": {
-      "name": "الاسم الكامل",
-      "email": "البريد الإلكتروني",
-      "password": "كلمة السر",
-      "phone": "رقم الهاتف",
-      "location": "الموقع",
-      "gender": "الجنس",
-      "birthDate": "تاريخ الميلاد",
-      "country": "البلد"
-    },
-    "placeholders": {
-      "name": "أدخل اسمك الكامل",
-      "email": "أدخل بريدك الإلكتروني",
-      "password": "أدخل كلمة السر الجديدة الخاصة بك",
-      "location": "قم بتحديد العنوان الخاص بك عن طريق الخريطة",
-      "phone": "أدخل رقم هاتفك"
-    },
-    "gender": {
-      "male": "ذكر",
-      "female": "أنثى"
-    },
-    "countries": {
-      "india": "الهند",
-      "usa": "الولايات المتحدة",
-      "uk": "المملكة المتحدة",
-      "canada": "كندا",
-      "australia": "أستراليا"
-    },
-    "status": {
-      "active": "نشط",
-      "inactive": "غير نشط"
-    }
-  },
-
-  "card": {
-    "title": "بطاقات آرام الخاصة بك",
-    "subtitle": "إدارة وعرض تفاصيل بطاقة أرام الخاصة بك بشكل آمن",
-    "cardNumber": "رقم البطاقة",
-    "cardHolder": "حامل البطاقة",
-    "validThru": "صالحة حتى",
-    "cvv": "رمز الأمان",
-    "status": "الحالة",
-    "issueDate": "تاريخ الإصدار",
-    "expiryDate": "تاريخ الانتهاء",
-    "usageLimit": "حد الاستخدام",
-    "currentUsage": "الاستخدام الحالي",
-    "viewDetails": "عرض التفاصيل",
-    "cardDetails": "تفاصيل البطاقة",
-    "close": "إغلاق",
-    "copy": "نسخ",
-    "copied": "تم النسخ!",
-    "unlimited": "غير محدود",
-    "active": "نشط",
-    "inactive": "غير نشط",
-    "expired": "منتهية"
-  },
-
-  "noCards": {
-    "title": "لم تقم بامتلاك أي بطاقات حتى الآن",
-    "description": "يبدو أنك لم تضف أي بطاقات إلى حسابك بعد. ابدأ الآن لإدارة بطاقاتك بسهولة.",
-    "button": "الذهاب إلى صفحة البطاقات"
-  },
-
-  "myCoupons": {
-    "title": "كوبوناتي",
-    "subtitle": "يمكنك هنا استعراض جميع كوبوناتك المتاحة وتفاصيل استخدامها."
-  },
-  "couponCard": {
-    "active": "نشط",
-    "discountValue": "قيمة الخصم",
-    "off": "خصم",
-    "copy": "نسخ",
-    "freeCard": "بطاقة مجانية",
-    "copied": "تم النسخ!",
-    "from": "من",
-    "to": "إلى",
-    "usage": "الاستخدام",
-    "unlimited": "غير محدود"
-  },
-  "couponPopup": {
-    "discount": "الخصم",
-    "currency": "جنيه",
-    "period": "فترة الصلاحية",
-    "status": "الحالة",
-    "freeCard": "بطاقة مجانية",
-    "usage": "الاستخدام",
-    "unlimited": "غير محدود"
-  },
-
-  "noCoupons": {
-    "title": "لا توجد كوبونات متاحة",
-    "description": "يبدو أنه لا توجد أي كوبونات مرتبطة بهذا الحساب حاليًا. تحقق لاحقًا للحصول على عروض جديدة."
-  },
-
-  "noAppointments": {
-    "title": "لا توجد حجوزات حتى الآن",
-    "description": "لم تقم بحجز أي موعد بعد. تصفح المراكز المتاحة واحجز موعدك الأول بسهولة.",
-    "button": "تصفح المراكز"
-  },
-
-  "appointments": {
-    "title": "المواعيد",
-    "subtitle": "إدارة وتتبع جميع مواعيدك في مكان واحد",
-    "id": "الرقم",
-    "usser": "المستخدم",
-    "organization": "المركز",
-    "dateTime": "التاريخ والوقت",
-    "price": "السعر",
-    "status": "الحالة",
-    "actions": "الإجراءات",
-    "actionsPlaceholder": "—",
-    "noAppointments": "لا توجد مواعيد"
-  },
-
-  "appointmentActions": {
-    "cancel": "إلغاء الحجز",
-    "delete": "حذف",
-    "rateCenter": "تقييم المركز",
-    "goToCenters": "الذهاب إلى المراكز",
-    "noActions": "لا توجد إجراءات متاحة"
-  },
-
-  "UserIdNotFound": {
-    "title": "المستخدم غير موجود",
-    "description": "لم نتمكن من العثور على المستخدم المطلوب. قد يكون المعرف غير صحيح أو تم حذف حساب المستخدم.",
-    "goBack": "الرجوع",
-    "home": "الرئيسية",
-    "hint": "إذا كنت تعتقد أن هناك خطأ، حاول البحث عن المستخدم أو تواصل مع الدعم الفني."
-  },
-
-  "walletOverview": {
-    "title": "محفظتي",
-    "subtitle": "هذه هي محفظة حسابك التي تعرض جميع الأرصدة.",
-    "availableBalance": "الرصيد المتاح",
-    "pendingBalance": "الرصيد المعلق",
-    "totalBalance": "إجمالي الرصيد",
-    "withdrawbtn": "سحب الرصيد"
-  },
-
-  "wallet": {
-    "transactions": {
-      "title": "سجل المعاملات",
-      "type": "النوع",
-      "amount": "المبلغ",
-      "direction": "الاتجاه",
-      "status": "الحالة",
-      "note": "ملاحظة",
-      "date": "التاريخ",
-      "empty": "لا توجد معاملات",
-      "emptyDescription": "سوف تظهر سجل معاملاتك هنا",
-      "in": "داخل",
-      "out": "خارج",
-      "types": {
-        "deposit": "إيداع",
-        "withdrawal": "سحب",
-        "purchase": "شراء",
-        "sale": "بيع",
-        "commission": "عمولة",
-        "refund": "استرداد",
-        "transfer": "تحويل",
-        "book": "حجز"
+    "offerFildes": {
+      "submit": "إنشاء العرض",
+      "title": {
+        "label": "عنوان العرض",
+        "placeholder": "أدخل عنوان يعبر عن العرض المقدم"
       },
-      "statuses": {
-        "pending": "قيد الانتظار",
-        "completed": "مكتمل",
-        "failed": "فشل"
-      }
-    }
-  },
-
-  "withdraw": {
-    "title": "سحب الأموال",
-    "subtitle": "اختر طريقة السحب وأدخل المعلومات المطلوبة.",
-    "amountLabel": "المبلغ",
-    "amountPlaceholder": "أدخل مبلغ السحب",
-    "methodLabel": "طريقة السحب",
-    "methods": {
-      "bank": "تحويل بنكي",
-      "bankDescription": "تحويل إلى حسابك البنكي",
-      "paypal": "باي بال",
-      "paypalDescription": "سحب إلى حساب الباي بال الخاص بك"
-    },
-    "bankNumberLabel": "رقم الحساب البنكي",
-    "bankNumberPlaceholder": "أدخل رقم الحساب البنكي",
-    "paypalEmailLabel": "البريد الإلكتروني للباي بال",
-    "paypalEmailPlaceholder": "أدخل بريدك الإلكتروني للباي بال",
-    "detailsLabel": "تفاصيل إضافية",
-    "detailsPlaceholder": "أي ملاحظات أو تعليمات إضافية...",
-    "optional": "اختياري",
-    "submitButton": "سحب الأموال",
-    "submitting": "جاري معالجة طلب السحب...",
-    "validation": {
-      "amountMin": "يجب أن يكون المبلغ 20 على الأقل",
-      "insufficientBalance": "ليس لديك رصيد متاح كافٍ.",
-      "bankNumberRequired": "رقم الحساب البنكي مطلوب",
-      "paypalEmailRequired": "بريد الباي بال الإلكتروني مطلوب",
-      "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح"
-    },
-    "messages": {
-      "success": "تم تقديم طلب السحب بنجاح!",
-      "submitError": "يرجى التحقق من المدخلات والمحاولة مرة أخرى."
-    }
-  },
-
-  "familyCard": {
-    "memberId": "المعرف",
-    "age": "العمر",
-    "years": "سنة",
-    "birthDate": "تاريخ الميلاد",
-    "phone": "الهاتف",
-    "relationship": "صلة القرابة",
-    "status": {
-      "title": "الحالة",
-      "pending": "معلق",
-      "accepted": "مقبول",
-      "rejected": "مرفوض"
-    },
-    "actions": {
-      "accept": "قبول",
-      "reject": "رفض",
-      "delete": "حذف"
-    }
-  },
-
-  "header": {
-    "welcome": "مرحباً",
-    "profile": "الملف الشخصي",
-    "sendinvitation": "ارسل دعوه",
-    "logout": "تسجيل الخروج",
-    "active": "نشط",
-    "lastLogin": "آخر تسجيل دخول",
-    "memberSince": "عضو منذ",
-    "verified": "موثق",
-    "notVerified": "غير موثق"
-  },
-
-  "SendInvitation": {
-    "title": "إرسال دعوة",
-    "closeButton": "إغلاق",
-    "searchPlaceholder": "البحث بالاسم، البريد الإلكتروني أو الهاتف",
-    "sendButton": "إرسال الدعوة",
-    "cancelButton": "إلغاء",
-    "noResults": "لم يتم العثور على مستخدمين",
-    "loading": "جاري تحميل المستخدمين...",
-    "error": "فشل في تحميل المستخدمين. حاول مرة أخرى",
-    "retry": "إعادة المحاولة",
-    "selected": "{count} مُحدد",
-    "noSelected": "لم يتم تحديد مستخدم",
-    "previewTitle": "المستخدم المحدد",
-    "noSelectedPreview": "لم يتم تحديد مستخدم للمعاينة",
-    "relationship": "صلة القرابة",
-    "relationshipPlaceholder": "اختر صلة القرابة",
-    "relationshipOptions": {
-      "father": "الأب",
-      "mother": "الأم",
-      "son": "الابن",
-      "daughter": "الابنة",
-      "brother": "الأخ",
-      "sister": "الأخت",
-      "husband": "الزوج",
-      "wife": "الزوجة",
-      "grandfather": "الجد",
-      "grandmother": "الجدة",
-      "grandson": "الحفيد",
-      "granddaughter": "الحفيدة",
-      "uncle": "العم",
-      "aunt": "العمة",
-      "nephew": "ابن الأخ/الأخت",
-      "niece": "ابنة الأخ/الأخت",
-      "cousin": "ابن العم/العمة",
-      "other": "أخرى"
-    },
-    "columns": {
-      "name": "الاسم",
-      "email": "البريد الإلكتروني",
-      "phone": "الهاتف",
-      "role": "الدور",
-      "status": "الحالة",
-      "createdAt": "تاريخ الإنشاء"
-    }
-  },
-
-  "selectTime": {
-    "title": "اختر الوقت والتاريخ",
-    "chooseTime": "اختر موعدًا",
-    "chooseDate": "اختر تاريخًا",
-    "proceedPayment": "المتابعة للدفع",
-    "proceedToPayment": "المتابعة للدفع",
-    "selectedTime": "الوقت المختار",
-    "selectedDate": "التاريخ المختار",
-    "bookingNotAvailable": "الحجز غير متاح حاليًا لهذه المؤسسة.",
-    "tryAgain": "حاول مرة أخرى",
-    "back": "رجوع",
-    "continue": "متابعة",
-    "close": "إغلاق",
-    "available": "متاح",
-    "hasBookings": "يوجد حجوزات",
-    "selected": "محدد",
-    "booked": "محجوز",
-    "bookingSummary": "ملخص الحجز",
-    "date": "التاريخ",
-    "time": "الوقت",
-    "price": "السعر",
-    "currency": "ر.س",
-    "paymentDetails": "تفاصيل الدفع",
-    "cardNumber": "رقم البطاقة",
-    "expiryDate": "تاريخ الانتهاء",
-    "cardHolder": "اسم حامل البطاقة",
-    "cvv": "CVV",
-    "totalAmount": "المبلغ الإجمالي",
-    "confirmBooking": "تأكيد الحجز",
-    "confirmationMessage": "يرجى مراجعة معلومات الحجز وتأكيد الحجز",
-    "confirmBookingButton": "تأكيد الحجز",
-    "bookingSuccess": "تم ارسال طلب الحجز بنجاح فى انتظار رد المركز .",
-    "redirectingToPayment": "إعادة التوجية الى صفحة الدفع",
-    "errors": {
-      "fetchData": "فشل في تحميل البيانات. يرجى المحاولة مرة أخرى.",
-      "fetchBookingStatus": "فشل في التحقق من حالة الحجز. يرجى المحاولة مرة أخرى."
-    }
-  },
-
-  "organizationProfile": {
-    "tabs": {
-      "bookingSettings": "إعدادات الحجز",
-      "organizationInfo": "معلومات المركز",
-      "OrganizationSpecializations": "تخصصات المركز"
-    },
-    "bookingSettings": {
-      "title": "إعدادات الحجز",
-      "openTime": "وقت الفتح",
-      "closeTime": "وقت الإغلاق",
-      "confirmationPrice": "سعر التأكيد",
-      "confirmationStatus": "حالة التأكيد",
-      "bookingStatus": "حالة الحجز",
-      "acceptableMessage": "رسالة القبول",
-      "unacceptableMessage": "رسالة الرفض",
-      "messages": {
-        "confirmationStatus_enabled": "تأكيد الحجز مُفعل",
-        "confirmationStatus_disabled": "تأكيد الحجز غير مُفعل",
-        "bookingStatus_enabled": "الحجز مُفعل",
-        "bookingStatus_disabled": "الحجز غير مُفعل"
-      }
-    },
-    "organizationInfo": {
-      "title": "معلومات المنظمة",
-      "organizationTitle": "عنوان المنظمة",
-      "description": "الوصف",
-      "email": "البريد الإلكتروني",
-      "phoneNumber": "رقم الهاتف",
-      "logo": "رابط الشعار",
-      "image": "الصورة",
-      "url": "رابط الموقع",
-      "password": "كلمة السر",
-      "category": "الفئة",
-      "benefits": "الفوائد",
-      "addNewBenefit": "إضافة ميزة جديدة",
-      "addNewBenefitPlaceholder": "إضافة ميزة جديدة ...",
-      "mange": "إدارة",
-      "keywords": "الكلمات المفتاحية",
-      "location": "الموقع",
-      "address": "العنوان",
-      "latitude": "خط العرض",
-      "longitude": "خط الطول"
-    },
-    "organizationSubCategories": {
-      "title": "الفئات الفرعية للمنظمة",
-      "availableSubCategories": "الفئات الفرعية المتاحة",
-      "selectedSubCategories": "الفئات الفرعية المختارة",
-      "addSubCategory": "إضافة فئة فرعية",
-      "removeSubCategory": "إزالة"
-    },
-    "common": {
-      "save": "حفظ التغييرات",
-      "cancel": "إلغاء",
-      "loading": "جاري التحميل...",
-      "error": "حدث خطأ",
-      "success": "تم حفظ التغييرات بنجاح"
-    }
-  },
-
-  "categoriesSelector": {
-    "main_label": "الأقسام الرئيسية",
-    "sub_label": "الأقسام الفرعية",
-    "add_category": "إضافة قسم",
-    "add_subcategory": "إضافة قسم فرعي",
-    "no_categories": "لم يتم اختيار أي أقسام بعد",
-    "no_subcategories": "لم يتم اختيار أي أقسام فرعية بعد",
-    "summary_title": "إجمالي الأقسام المختارة:",
-    "mainCategories": " قسم رئيسي ",
-    "SubCategories": " قسم فرعي"
-  },
-
-  "centerPanal": {
-    "hi": "أهلا",
-    "welcome": "مرحباً بك في لوحة التحكم",
-    "subtitle": "قم بإدارة بطاقاتك، حجوزاتك، رصيدك، وعمليات الدفع والمحادثات بسهولة.",
-    "profile": {
-      "title": "الملف الشخصي",
-      "desc": "إدارة وتحديث المعلومات الشخصية الخاصة بالمركز."
-    },
-    "cards": {
-      "title": "بطاقاتي",
-      "desc": "عرض وإدارة جميع بطاقات الدفع المرتبطة بحسابك."
-    },
-    "reservations": {
-      "title": "قائمة الحجوزات",
-      "desc": "عرض وإدارة سجل حجوزات المركز."
-    },
-    "conversations": {
-      "title": "المحادثات",
-      "desc": "عرض والرد على رسائل واستفسارات العملاء."
-    },
-    "wallet": {
-      "title": "رصيد الحساب",
-      "desc": "تتبع الرصيد والمعاملات والسحوبات الخاصة بحسابك."
-    },
-    "coupons": {
-      "title": "كوبونات الحساب",
-      "desc": "إدارة الكوبونات الترويجية المتاحة والمنتهية."
-    },
-    "offers": {
-      "title": "عروض المركز",
-      "desc": "إنشاء وإدارة العروض الخاصة بعملاء المركز."
-    },
-    "schedule": {
-      "title": "مواعيد المركز",
-      "desc": "إعداد وإدارة جدول المواعيد الخاصة بالمركز."
-    }
-  },
-
-  "orgAppointmentActions": {
-    "confirm": "قبول",
-    "reject": "رفض",
-    "delete": "حذف",
-    "noActions": "لا توجد إجراءات متاحة",
-    "confirmSuccess": "تم تأكيد الموعد بنجاح!",
-    "rejectSuccess": "تم رفض الموعد بنجاح!",
-    "deleteSuccess": "تم حذف الموعد المحدد بنجاح!",
-    "unexpectedError": "حدث خطأ غير متوقع، يرجى المحاولة لاحقاً."
-  },
-
-  "offersHeader": {
-    "title": "عروض المركز",
-    "subtitle": "قم بإدارة عروضك الحالية والقادمة بسهولة من هنا.",
-    "addButton": "أضف عرض جديد"
-  },
-
-  "noOffers": {
-    "title": "لا توجد عروض حتى الآن",
-    "subtitle": "حسابك لا يحتوي على أي عروض حاليًا، قم بإضافة عروض جديدة لجذب المزيد من العملاء!"
-  },
-
-  "addOfferHeader": {
-    "title": "إضافة عرض جديد",
-    "subtitle": "املأ التفاصيل أدناه لإنشاء عرض جديد مميز لمركزك وجذب المزيد من العملاء."
-  },
-
-  "offerValidation": {
-    "title": {
-      "required": "العنوان مطلوب",
-      "min": "يجب أن يكون العنوان 3 أحرف على الأقل",
-      "max": "العنوان طويل جدًا"
-    },
-    "description": {
-      "required": "تفاصيل العرض مطلوبة",
-      "min": "الوصف يجب أن يكون 8 أحرف على الأقل",
-      "max": "الوصف طويل جدًا"
-    },
-    "image": {
-      "invalid": "ملف الصورة غير صالح"
-    },
-    "discount_type": {
-      "invalid": "نوع الخصم غير صالح"
-    },
-    "discount_value": {
-      "required": "قيمة الخصم مطلوبة",
-      "numeric": "قيمة الخصم يجب أن تكون رقمًا",
-      "positive": "قيمة الخصم يجب أن تكون أكبر من صفر",
-      "range": "قيمة الخصم (بالنسبة المئوية) يجب أن تكون بين 1 و 100"
-    },
-    "start_date": {
-      "required": "تاريخ بدء العرض مطلوب",
-      "invalid": "تاريخ البدء غير صالح"
-    },
-    "end_date": {
-      "required": "تاريخ انتهاء العرض مطلوب",
-      "invalid": "تاريخ الانتهاء غير صالح",
-      "after_start": "تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء"
-    },
-    "category_id": {
-      "required": "اختر الفئة",
-      "invalid": "معرّف الفئة غير صالح"
-    },
-    "code": {
-      "required": "كود العرض مطلوب",
-      "min": "الكود قصير جدًا",
-      "max": "الكود طويل جدًا",
-      "invalid": "الكود يحتوي على أحرف غير مسموح بها"
-    }
-  },
-
-  "offerFildes": {
-    "submit": "إنشاء العرض",
-    "title": {
-      "label": "عنوان العرض",
-      "placeholder": "أدخل عنوان يعبر عن العرض المقدم"
-    },
-    "description": {
-      "label": "تفاصيل العرض",
-      "placeholder": "أدخل التفاصيل الخاصة بالعرض المقدم"
-    },
-    "image": {
-      "label": "صورة العرض الرئيسية",
-      "hint": "انقر أو اسحب لتحميل الصورة",
-      "preview": "معاينة الصورة"
-    },
-    "discount_type": {
-      "label": "نوع الخصم",
-      "placeholder": "اختر نوع الخصم (نسبة مئوية أو مبلغ ثابت)",
-      "options": {
-        "percentage": "نسبة %",
-        "fixed": "مبلغ ثابت $"
-      }
-    },
-    "discount_value": {
-      "label": "قيمة الخصم",
-      "placeholder": "أدخل قيمة الخصم"
-    },
-    "start_date": {
-      "label": "تاريخ بدء العرض",
-      "placeholder": "اختر تاريخ بداية العرض"
-    },
-    "end_date": {
-      "label": "تاريخ انتهاء العرض",
-      "placeholder": "اختر تاريخ انتهاء العرض"
-    },
-    "category_id": {
-      "label": "الفئة المستهدفة",
-      "placeholder": "اختر الفئة التي ينتمي إليها العرض"
-    },
-    "code": {
-      "label": "كود العرض",
-      "placeholder": "أدخل الكود المخصص لهذا العرض"
-    }
-  },
-
-  "promoter": {
-    "yourCode": "رمز الإحالة الخاص بك",
-    "yourLinks": "روابط الإحالة الخاصة بك",
-    "visits": "الزيارات",
-    "signups": "التسجيلات",
-    "purchases": "عمليات الشراء"
-  },
-
-  "promoterTable": {
-    "id": "المعرف",
-    "activityType": "نوع النشاط",
-    "country": "الدولة",
-    "deviceType": "نوع الجهاز",
-    "ipAddress": "عنوان IP",
-    "referralCode": "رمز الإحالة",
-    "commission": "العمولة",
-    "createdDate": "تاريخ الإنشاء",
-    "noData": "لا توجد بيانات نشاط متاحة"
-  },
-
-  "servicesPage": {
-    "hero": {
-      "title": "اكتشف خدماتنا المميزة",
-      "subtitle": "اعثر على الخدمة المثالية لاحتياجاتك من مجموعتنا المختارة من المحترفين الأعلى تقييماً"
-    },
-    "search": {
-      "placeholder": "ابحث عن الخدمات..."
-    },
-    "categories": {
-      "all": "جميع الفئات"
-    },
-    "serviceCard": {
-      "orders": "طلب",
-      "exclusive": "حصري",
-      "off": "خصم",
-      "by": "بواسطة"
-    },
-    "whyChoose": {
-      "title": "لماذا تختار منصتنا",
-      "subtitle": "نوفر أفضل تجربة لكل من مقدمي الخدمات والعملاء",
-      "features": {
-        "quality": {
-          "title": "جودة مضمونة",
-          "description": "يتم فحص ومراجعة جميع الخدمات لضمان أعلى معايير الجودة"
-        },
-        "support": {
-          "title": "دعم على مدار الساعة",
-          "description": "فريق الدعم المخصص لدينا جاهز دائماً لمساعدتك في أي استفسار"
-        },
-        "secure": {
-          "title": "مدفوعات آمنة",
-          "description": "معاملاتك محمية بأفضل إجراءات الأمان في الصناعة"
-        },
-        "fast": {
-          "title": "توصيل سريع",
-          "description": "احصل على خدماتك بسرعة من خلال نظام سير العمل الفعال لدينا"
+      "description": {
+        "label": "تفاصيل العرض",
+        "placeholder": "أدخل التفاصيل الخاصة بالعرض المقدم"
+      },
+      "image": {
+        "label": "صورة العرض الرئيسية",
+        "hint": "انقر أو اسحب لتحميل الصورة",
+        "preview": "معاينة الصورة"
+      },
+      "discount_type": {
+        "label": "نوع الخصم",
+        "placeholder": "اختر نوع الخصم (نسبة مئوية أو مبلغ ثابت)",
+        "options": {
+          "percentage": "نسبة %",
+          "fixed": "مبلغ ثابت $"
         }
+      },
+      "discount_value": {
+        "label": "قيمة الخصم",
+        "placeholder": "أدخل قيمة الخصم"
+      },
+      "start_date": {
+        "label": "تاريخ بدء العرض",
+        "placeholder": "اختر تاريخ بداية العرض"
+      },
+      "end_date": {
+        "label": "تاريخ انتهاء العرض",
+        "placeholder": "اختر تاريخ انتهاء العرض"
+      },
+      "category_id": {
+        "label": "الفئة المستهدفة",
+        "placeholder": "اختر الفئة التي ينتمي إليها العرض"
+      },
+      "code": {
+        "label": "كود العرض",
+        "placeholder": "أدخل الكود المخصص لهذا العرض"
       }
     },
-    "noResults": "لم يتم العثور على خدمات مطابقة لمعاييرك"
-  },
 
-  "service": {
-    "orders": "طلب",
-    "rating": "التقييم",
-    "exclusive": "حصري",
-    "discount": "خصم",
-    "benefits": "المميزات",
-    "keywords": "الكلمات المفتاحية",
-    "organizations": "موثوق من قبل",
-    "gallery": "المعرض",
-    "description": "الوصف",
-    "creator": "مقدم الخدمة",
-    "category": "الفئة",
-    "price": "السعر",
-    "originalPrice": "السعر الأصلي",
-    "addToCart": "أضف إلى السلة",
-    "buyNow": "اشتر الآن"
-  },
+    "promoter": {
+      "yourCode": "رمز الإحالة الخاص بك",
+      "yourLinks": "روابط الإحالة الخاصة بك",
+      "visits": "الزيارات",
+      "signups": "التسجيلات",
+      "purchases": "عمليات الشراء"
+    },
 
-  "chat": {
-    "title": "اسألني",
-    "subtitle": "",
-    "footer": "",
-    "getStarted": "محادثة جديدة",
-    "inputPlaceholder": "...اكتب سؤالك",
-    "initialMessages": [
-      "!مرحباً بك في شركة آرام الخليج للتسويق",
-      "كيف يمكنني مساعدتك اليوم؟"
-    ]
+    "promoterTable": {
+      "id": "المعرف",
+      "activityType": "نوع النشاط",
+      "country": "الدولة",
+      "deviceType": "نوع الجهاز",
+      "ipAddress": "عنوان IP",
+      "referralCode": "رمز الإحالة",
+      "commission": "نقاط العمولة",
+      "createdDate": "تاريخ الإنشاء",
+      "noData": "لا توجد بيانات نشاط متاحة"
+    },
+
+    "servicesPage": {
+      "hero": {
+        "title": "اكتشف خدماتنا المميزة",
+        "subtitle": "اعثر على الخدمة المثالية لاحتياجاتك من مجموعتنا المختارة من المحترفين الأعلى تقييماً"
+      },
+      "search": {
+        "placeholder": "ابحث عن الخدمات..."
+      },
+      "categories": {
+        "all": "جميع الفئات"
+      },
+      "serviceCard": {
+        "orders": "طلب",
+        "exclusive": "حصري",
+        "off": "خصم",
+        "by": "بواسطة"
+      },
+      "whyChoose": {
+        "title": "لماذا تختار منصتنا",
+        "subtitle": "نوفر أفضل تجربة لكل من مقدمي الخدمات والعملاء",
+        "features": {
+          "quality": {
+            "title": "جودة مضمونة",
+            "description": "يتم فحص ومراجعة جميع الخدمات لضمان أعلى معايير الجودة"
+          },
+          "support": {
+            "title": "دعم على مدار الساعة",
+            "description": "فريق الدعم المخصص لدينا جاهز دائماً لمساعدتك في أي استفسار"
+          },
+          "secure": {
+            "title": "مدفوعات آمنة",
+            "description": "معاملاتك محمية بأفضل إجراءات الأمان في الصناعة"
+          },
+          "fast": {
+            "title": "توصيل سريع",
+            "description": "احصل على خدماتك بسرعة من خلال نظام سير العمل الفعال لدينا"
+          }
+        }
+      },
+      "noResults": "لم يتم العثور على خدمات مطابقة لمعاييرك"
+    },
+
+    "service": {
+      "orders": "طلب",
+      "rating": "التقييم",
+      "exclusive": "حصري",
+      "discount": "خصم",
+      "benefits": "المميزات",
+      "keywords": "الكلمات المفتاحية",
+      "organizations": "موثوق من قبل",
+      "gallery": "المعرض",
+      "description": "الوصف",
+      "creator": "مقدم الخدمة",
+      "category": "الفئة",
+      "price": "السعر",
+      "originalPrice": "السعر الأصلي",
+      "addToCart": "أضف إلى السلة",
+      "buyNow": "اشتر الآن"
+    },
+
+    "chat": {
+      "title": "اسألني",
+      "subtitle": "",
+      "footer": "",
+      "getStarted": "محادثة جديدة",
+      "inputPlaceholder": "...اكتب سؤالك",
+      "initialMessages": [
+        "!مرحباً بك في شركة آرام الخليج للتسويق",
+        "كيف يمكنني مساعدتك اليوم؟"
+      ]
+    },
+
+    "membership_card": {
+      "add_to_cart": "أضف إلى السلة",
+      "view_details": "عرض التفاصيل",
+      "member_id": "رقم العضوية",
+      "member_level": "مستوى العضوية",
+      "join_date": "تاريخ الانضمام",
+      "expiry_date": "تاريخ الانتهاء",
+      "per_month": "/شهر",
+      "per_year": "/سنة"
+    },
+
+    "homeCards": {
+      "badge": {
+        "premium": "المجموعة المميزة"
+      },
+      "title": "بطاقات العضوية الحصرية",
+      "subtitle": "افتح فوائد مميزة، وصول حصري، وتجارب مخصصة مع مجموعتنا المختارة من العضويات",
+      "features": {
+        "premium": "جودة مميزة",
+        "secure": "آمن ومضمون",
+        "exclusive": "عروض حصرية",
+        "lifetime": "تحديثات مدى الحياة"
+      },
+      "stats": {
+        "members": "أعضاء نشطين",
+        "satisfaction": "معدل الرضا",
+        "support": "دعم"
+      },
+      "featured": "مميز",
+      "scroll": "اسحب لرؤية المزيد"
+    },
+
+    "membershipCard": {
+      "memberIdLabel": "رقم العضوية",
+      "levelLabel": "المستوى",
+      "joinDateLabel": "تاريخ الانضمام",
+      "validThruLabel": "صالحة حتى",
+      "priceLabel": "السعر",
+      "originalPriceLabel": "كان",
+      "currentPriceLabel": "الآن",
+      "currencySymbol": "$",
+      "skillsLabel": "المهارات والخبرات",
+      "addToCart": "أضف إلى السلة",
+      "removeFromCart": "إزالة",
+      "removededMessage": "تم إزالة البطاقة من السلة بنجاح!",
+      "viewDetails": "عرض التفاصيل",
+      "premiumBadge": "مميز",
+      "exclusiveAccess": "وصول حصري"
+    },
+    "membership": {
+      "platinum": "بلاتيني",
+      "gold": "ذهبي",
+      "silver": "فضي"
+    },
+
+    "Centers": {
+      "explore": "استكشف التميز",
+      "premiumCenters": "المراكز المتميزة",
+      "discoverExcellence": "اكتشف أفضل المراكز التي تقدم خدمات استثنائية عبر أكثر من 25 فئة. ابحث عن ما يناسبك من خلال مجموعتنا المختارة بعناية.",
+      "searchPlaceholder": "ابحث عن مراكز، خدمات، أو فئات...",
+      "search": "بحث",
+      "filterBy": "تصفية حسب"
+    },
+    "Common": {
+      "featured": "مميز",
+      "active_centers": "مراكز نشطة",
+      "categories": "فئة",
+      "monthly_visitors": "زائر شهريًا",
+      "satisfaction_rate": "معدل الرضا"
+    },
+
+    "services_v2": {
+      "badge": "خدماتنا",
+      "title": "اكتشف خدمات",
+      "titleHighlight": "إبداعية متميزة",
+      "subtitle": "اكتشف عالمًا من الخدمات الاحترافية التي صممها مستقلون موهوبون. من التصاميم المذهلة إلى الحلول القوية، اعثر على ما يحتاجه عملك بالضبط.",
+      "stats": {
+        "services": "خدمة",
+        "clients": "عميل سعيد",
+        "rating": "متوسط التقييم"
+      },
+      "viewAll": "عرض جميع الخدمات",
+      "orders": "طلب",
+      "discount": "خصم",
+      "exclusive": "حصري",
+      "viewDetails": "عرض التفاصيل"
+    },
+
+    "stats": {
+      "title": "إنجازاتنا",
+      "subtitle": "أرقام تتحدث عن نفسها",
+      "items": {
+        "clients": "عملاء سعداء",
+        "projects": "مشاريع مكتملة",
+        "experience": "سنوات خبرة",
+        "awards": "جوائز محققة"
+      }
+    },
+
+    "articles_section": {
+      "title": "مدونتنا",
+      "subtitle": "اكتشف أحدث المقالات والرؤى من خبرائنا",
+      "viewAll": "عرض جميع المقالات"
+    },
+    "heroCategories": {
+      "title": "اكتشف حسب الفئة",
+      "description": "استكشف مجموعتنا المختارة من المنظمات والخدمات، المنظمة بعناية لمساعدتك في العثور على ما تحتاجه بالضبط.",
+      "subDescription": "تم اختيار كل فئة بعناية لتقديم النتائج الأكثر صلة لبحثك.",
+      "badge": "{{count}} فئة رئيسية",
+      "exploreButton": "استكشف الفئات",
+      "viewAllButton": "عرض الكل",
+      "scrollHint": "قم بالتمرير لاكتشاف المزيد",
+      "stats": {
+        "categories": "فئة",
+        "organizations": "منظمة",
+        "support": "دعم"
+      }
+    }
   }
 }

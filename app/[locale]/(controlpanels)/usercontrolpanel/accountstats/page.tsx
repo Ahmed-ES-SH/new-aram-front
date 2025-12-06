@@ -2,7 +2,6 @@ import PromoterActivitiesTable from "@/app/_components/_website/_controlpanals/_
 import PromoterNumbers from "@/app/_components/_website/_controlpanals/_centerorg/_accountStats/PromoterNumbers";
 import FetchData from "@/app/_helpers/FetchData";
 import { getBaseUrl } from "@/app/_helpers/GetBaseUrl";
-import React from "react";
 
 export default async function AccountStats() {
   const baseUrl = await getBaseUrl();

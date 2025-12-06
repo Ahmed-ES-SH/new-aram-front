@@ -19,7 +19,10 @@ export interface Card {
   number_of_promotional_purchases: number;
   duration: string;
   image: string;
+  validThru?: string;
+  memberName?: string;
   active: number;
+  memberId?: string;
   category_id: number;
   created_at: string;
   updated_at: string;

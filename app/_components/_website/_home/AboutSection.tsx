@@ -5,6 +5,7 @@ import Img from "../_global/Img";
 import { directionMap } from "@/app/constants/_website/global";
 import { getIconComponent } from "@/app/_helpers/helpers";
 import { useLocale } from "next-intl";
+import LocaleLink from "../_global/LocaleLink";
 
 interface text {
   en: string;
@@ -77,7 +78,7 @@ export default function AboutSection({ data }: AboutSectionProps) {
                       viewport={{ once: true }}
                       className="flex items-center gap-3"
                     >
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <div className="shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                         <Icon className="w-4 h-4 text-blue-600" />
                       </div>
                       <span className="text-gray-700 font-medium">
@@ -87,6 +88,12 @@ export default function AboutSection({ data }: AboutSectionProps) {
                   );
                 })}
             </div>
+
+            <LocaleLink href="/about">
+              <button className="hover:bg-primary bg-primary/80 duration-300 ease-in-out text-white px-6 py-2 rounded-lg shadow-lg mt-6">
+                {locale == "ar" ? "المزيد" : "Learn More"}
+              </button>
+            </LocaleLink>
           </motion.div>
 
           <motion.div
@@ -98,12 +105,12 @@ export default function AboutSection({ data }: AboutSectionProps) {
           >
             <div className="relative h-full w-full overflow-hidden rounded-2xl shadow-2xl">
               <Img
-                src={image ?? "/about.jpg"}
-                errorSrc="/about.jpg"
+                src={image ?? "/about.png"}
+                errorSrc="/about.png"
                 alt="About us"
-                className="w-full h-96 object-cover"
+                className="w-full  object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
             </div>
           </motion.div>
         </div>

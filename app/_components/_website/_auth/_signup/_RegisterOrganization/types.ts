@@ -2,6 +2,7 @@ export interface RegistrationFormData {
   // Step 1: Account Details
   email: string;
   password: string;
+  phone_number: string;
 
   // Step 2: Basic Information
   title: string;

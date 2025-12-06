@@ -8,6 +8,7 @@ import {
   FaLock,
   FaArrowRight,
   FaMapMarkerAlt,
+  FaPhone,
 } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 import { Location } from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
@@ -26,15 +27,21 @@ const DynamicMapSelector = dynamic(
 interface AccountStepProps {
   email: string;
   password: string;
+  phone_number: string;
   location: Location | null;
   setLocation: Dispatch<SetStateAction<Location | null>>;
-  onUpdate: (data: { email?: string; password?: string }) => void;
+  onUpdate: (data: {
+    email?: string;
+    password?: string;
+    phone_number?: string;
+  }) => void;
   onNext: () => void;
 }
 
 export function AccountStep({
   email,
   password,
+  phone_number,
   location,
   setLocation,
   onUpdate,
@@ -153,6 +160,36 @@ export function AccountStep({
                 placeholder={t("fields.password.placeholder")}
                 required
                 minLength={8}
+                className="
+                  w-full pl-12 pr-4 py-3 rounded-lg border border-input
+                  bg-background text-foreground
+                  focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
+                  transition-all duration-200
+                  placeholder:text-muted-foreground
+                "
+              />
+            </div>
+          </div>
+
+          {/* Phone Number Field */}
+          <div className="space-y-2">
+            <label
+              htmlFor="phone_number"
+              className="block text-sm font-medium text-foreground"
+            >
+              {t("fields.phone_number.label")}
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <FaPhone className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <input
+                type="tel"
+                id="phone_number"
+                value={phone_number}
+                onChange={(e) => onUpdate({ phone_number: e.target.value })}
+                placeholder={t("fields.phone_number.placeholder")}
+                required
                 className="
                   w-full pl-12 pr-4 py-3 rounded-lg border border-input
                   bg-background text-foreground

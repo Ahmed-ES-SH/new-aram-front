@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { FiStar, FiMapPin, FiCalendar } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { Organization } from "../../_dashboard/_organizations/types/organization";
 import Img from "../_global/Img";
 import { useLocale, useTranslations } from "next-intl";
 import { BiSolidMessageRoundedDots } from "react-icons/bi";
@@ -16,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { VscLoading } from "react-icons/vsc";
 import CheckCurrentUserPopup from "../_global/CheckCurrentUserPopup";
 import SelectTimePopup from "../../_popups/_bookAppointment/SelectTimePopup";
+import { Organization } from "../../_dashboard/_organizations/types/organization";
 
 interface props {
   organization: Organization;
@@ -108,7 +108,7 @@ export default function OrganizationCard({
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.1 }}
-        className="bg-white min-h-[530px] relative rounded-xl pb-4 group shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-3 duration-300"
+        className="bg-white h-full relative rounded-xl pb-4 group shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-3 duration-300"
       >
         <div className="relative">
           <Img
@@ -192,7 +192,7 @@ export default function OrganizationCard({
           </div>
 
           {isAble && (
-            <div className="flex gap-2 absolute bottom-2  w-[90%] left-1/2 -translate-x-1/2  cursor-pointer">
+            <div className="flex gap-2 mt-4 cursor-pointer">
               <div
                 onClick={() => handleStartConversation()}
                 className="flex-1  bg-primary hover:bg-orange-500 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"

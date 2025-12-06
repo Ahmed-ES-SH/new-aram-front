@@ -24,7 +24,7 @@ export default function RedirectClient({ targetUrl }: Props) {
   return (
     <motion.div
       dir={directionMap[locale]}
-      className="fixed inset-0 z-[99] flex items-center justify-center bg-white"
+      className="fixed inset-0 z-99999 flex items-center justify-center bg-white"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >

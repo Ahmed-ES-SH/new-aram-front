@@ -75,7 +75,7 @@ export function ImageUploader({
   };
 
   return (
-    <div className="space-y-2 flex-1 max-md:w-full">
+    <div className="space-y-2 w-full">
       <label className="block text-sm font-medium text-foreground">
         {label}
       </label>
