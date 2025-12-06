@@ -10,6 +10,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Card } from "../../_dashboard/_cards/types";
 import CreditCard from "./CreditCard";
+import { MembershipCard } from "./_memberShipCard-v2";
 
 interface CardsSliderProps {
   cards: Card[];
@@ -39,7 +40,7 @@ export default function CardsSlider({ cards }: CardsSliderProps) {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
             {t("subtitle")}
           </p>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
+          <div className="w-24 h-1 bg-linear-to-r from-blue-400 to-purple-500 mx-auto rounded-full"></div>
         </div>
 
         {/* Slider Container */}
@@ -81,7 +82,7 @@ export default function CardsSlider({ cards }: CardsSliderProps) {
           >
             {cards.map((card) => (
               <SwiperSlide key={card.id}>
-                <CreditCard card={card} brand="Aram" type="Platinum" />
+                <MembershipCard data={card} />
               </SwiperSlide>
             ))}
           </Swiper>

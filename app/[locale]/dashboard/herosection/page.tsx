@@ -86,30 +86,31 @@ const SectionToggle: React.FC<SectionToggleProps> = ({
 const SectionsContainer = () => {
   const router = useRouter();
 
-  const { data: isActive, loading } = useFetchData<boolean>(
+  const { data: isActive, loading } = useFetchData<"video" | "swiper">(
     `/active-hero-section`,
     false
   );
-  const [active, setIsActive] = useState<string | null>(null);
+  const [active, setIsActive] = useState<"video" | "swiper" | "">("video");
   const [updateLoading, setUpdateLoading] = useState(false);
 
   useEffect(() => {
     if (isActive !== undefined && isActive !== null) {
-      setIsActive(isActive ? "video" : "swiper");
+      setIsActive(isActive);
     }
   }, [isActive]);
 
   const handleChangeSection = async () => {
-    if (active === null) return;
+    if (active === "") return;
     try {
+      const activeState = active === "video" ? "swiper" : "video";
       setUpdateLoading(true);
       const response = await instance.post(`/update-section/1`, {
-        column_30: active == "swiper" ? 1 : 0,
+        column_30: activeState,
       });
       if (response.status == 200) {
         const data = response.data.data;
         toast.success("تم تحديث قسم الواجهة الفعال بنجاح . ");
-        setIsActive(data?.column_30 == 1 ? "video" : "swiper");
+        setIsActive(activeState);
       }
     } catch (error: any) {
       console.log(error);
