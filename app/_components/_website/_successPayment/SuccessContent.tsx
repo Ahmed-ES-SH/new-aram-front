@@ -67,7 +67,7 @@ export function SuccessContent() {
     activity_id,
   });
 
-  const url = `/payments/callback?` + query;
+  const url = `/payment/webhook?` + query;
 
   // Effect to handle referral tracking based on location permission status
   useEffect(() => {
