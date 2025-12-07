@@ -7,11 +7,18 @@ import { useEffect, useState } from "react";
 import { instance } from "@/app/_helpers/axios";
 import { useDispatch } from "react-redux";
 import { clearCart } from "@/app/Store/cartSlice";
+import { useUserCountry } from "@/app/_hooks/useUserCountry";
+import { getDeviceType } from "@/app/_helpers/getDeviceType";
+import { getBrowser } from "@/app/_helpers/getBrowser";
+import { toast } from "sonner";
+import PaymentFailedPage from "../_faildpayment/PaymentFailedPage";
 import LoadingPage from "../_global/LoadingPage";
 import PaymentStatusCard from "./PaymentStatusCard";
 
 export function SuccessContent() {
   const dispatch = useDispatch();
+  // Fetch user's country and location data with permission status
+  const { country } = useUserCountry();
 
   const t = useTranslations("payment");
   const locale = useLocale();
@@ -29,17 +36,59 @@ export function SuccessContent() {
   const session_id = searchParams.get(`session_id`);
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
+  function buildQuery(params: Record<string, any>) {
+    const query = new URLSearchParams();
+
+    for (const key in params) {
+      const value = params[key];
+      if (value !== undefined && value !== null && value !== "") {
+        query.append(key, value.toString());
+      }
+    }
+
+    return query.toString();
+  }
+
+  const deviceType = getDeviceType(); // Detect device type (mobile/desktop/tablet)
+  const browser = getBrowser(); // Detect browser type
+
+  const query = buildQuery({
+    order_id: orderId,
+    device_type: deviceType,
+    browser,
+    country,
+    payment_id,
+    provisionalData_id,
+    payment_type,
+    invoice_number,
+    session_id,
+    activity_id,
+  });
+
+  const url = `/payments/callback?` + query;
+
+  // Effect to handle referral tracking based on location permission status
   useEffect(() => {
     const check = async () => {
-      const response = await instance.post(
-        `/payments/callback?order_id=${orderId}&payment_id=${payment_id}&provisionalData_id=${provisionalData_id}&payment_type=${payment_type}&invoice_number=${invoice_number}&session_id=${session_id}&activity_id=${activity_id}`
-      );
-      if (response.status == 200) {
-        dispatch(clearCart());
+      try {
+        const response = await instance.post(url);
+        if (response.status == 200) {
+          dispatch(clearCart());
+        }
+      } catch (error: any) {
+        console.log(error);
+        setError(true);
+        const message =
+          error?.response?.data?.message ??
+          "حدث خطا غير متوقع اثناء عملية الدفع الرجاء المحالة لاحقا";
+        toast.error(message);
+      } finally {
         setLoading(false);
       }
     };
+
     if (orderId) check();
   }, [
     dispatch,
@@ -58,6 +107,8 @@ export function SuccessContent() {
   ];
 
   if (loading) return <LoadingPage />;
+
+  if (error) return <PaymentFailedPage />;
 
   return (
     <PaymentStatusCard

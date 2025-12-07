@@ -153,11 +153,11 @@ export const pages = [
         icon: <IoAddSharp className={iconStyle} />,
         to: "/dashboard/addorganization",
       },
-      {
-        title: "تقارير المراكز",
-        icon: <IoStatsChartSharp className={iconStyle} />,
-        to: "/dashboard/organizationsummary",
-      },
+      // {
+      //   title: "تقارير المراكز",
+      //   icon: <IoStatsChartSharp className={iconStyle} />,
+      //   to: "/dashboard/organizationsummary",
+      // },
     ],
   },
   {

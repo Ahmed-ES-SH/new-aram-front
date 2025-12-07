@@ -1,193 +1,106 @@
 "use client";
-import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/DynamicElementPage";
-import { useAppSelector } from "@/app/Store/hooks";
-import { useParams } from "next/navigation";
 import React from "react";
+import LoadingSpin from "@/app/_components/LoadingSpin";
+import { useOrganizationForm } from "./_hooks/useOrganizationForm";
+import ImagesSection from "./_components/sections/ImagesSection";
+import BasicInfoSection from "./_components/sections/BasicInfoSection";
+import LocationSection from "./_components/sections/LocationSection";
+import SettingsSection from "./_components/sections/SettingsSection";
+import CategoriesSection from "./_components/sections/CategoriesSection";
+import ExtraDataSection from "./_components/sections/ExtraDataSection";
+import MessagesSection from "./_components/sections/MessagesSection";
 
 export default function OrganizationPage() {
-  const params = useParams();
-  const organizationId = params.organizationId;
-  const { categories } = useAppSelector((state) => state.categories);
+  const {
+    formData,
+    setFormData,
+    isLoading,
+    isSubmitting,
+    errors,
+    allCategories,
+    allSubCategories,
+    logoPreview,
+    coverPreview,
+    handleLogoChange,
+    handleCoverChange,
+    showMap,
+    setShowMap,
+    handleChange,
+    toggleCategory,
+    toggleSubCategory,
+    handleBenefitChange,
+    addBenefit,
+    removeBenefit,
+    onSubmit,
+  } = useOrganizationForm();
 
-  const organizationInputs = [
-    {
-      name: "logo",
-      type: "file",
-      fildType: "logo-image",
-      label: { ar: "شعار المركز", en: "" },
-    },
-    {
-      name: "image",
-      type: "file",
-      fildType: "full-image",
-      label: { ar: "صورة الغلاف", en: "" },
-    },
-    {
-      name: "status",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "حالة المركز", en: "" },
-      selectItems: [
-        { name: "عام", value: "published" },
-        { name: "ممنوع من الظهور", value: "not_published" },
-        { name: "تحت المراجعة", value: "under_review" },
-      ],
-    },
-    {
-      name: "email",
-      type: "text",
-      fildType: "short-text",
-      label: { ar: "البريد الإلكترونى المركز", en: "" },
-      placeholder: "أدخل عنوان المركز",
-      readOnly: true,
-    },
-    {
-      name: "title",
-      type: "text",
-      fildType: "short-text",
-      label: { ar: "إسم المركز", en: "" },
-      placeholder: "أدخل إسم المركز",
-    },
-    {
-      name: "description",
-      type: "text",
-      fildType: "long-text",
-      label: { ar: "وصف المركز", en: "" },
-      placeholder: "أدخل وصف المركز",
-    },
-    {
-      name: "phone_number",
-      type: "tel",
-      fildType: "phone-input",
-      label: { ar: "رقم الهاتف", en: "" },
-      placeholder: "أدخل رقم الهاتف الخاص  بالمركز",
-    },
-    {
-      name: "location",
-      type: "",
-      readOnly: true,
-      fildType: "location",
-      label: { ar: "عنوان المركز", en: "" },
-      placeholder: "أدخل وصف المركز",
-    },
-    {
-      name: "accaptable_message",
-      type: "text",
-      fildType: "long-text",
-      label: { ar: "رسالة قبول الحجز", en: "" },
-      placeholder: "أدخل رسالة قبول الحجز",
-    },
-    {
-      name: "unaccaptable_message",
-      type: "text",
-      fildType: "long-text",
-      label: { ar: "رسالة رفض طلب الحجز", en: "" },
-      placeholder: "أدخل رسالة رفض طلب الحجز",
-    },
-    {
-      name: "url",
-      type: "text",
-      fildType: "short-text",
-      label: { ar: "الرابط الخاص بالمركز", en: "" },
-      placeholder: "أدخل الرابط الخاص بالمركز",
-    },
-    {
-      name: "open_at",
-      type: "text",
-      fildType: "time-input",
-      label: { ar: "وقت بداية العمل للمركز", en: "" },
-      placeholder: "أدخل وقت بداية العمل للمركز",
-    },
-    {
-      name: "close_at",
-      type: "text",
-      fildType: "time-input",
-      label: { ar: "وقت نهاية العمل للمركز", en: "" },
-      placeholder: "أدخل وقت نهاية العمل للمركز",
-    },
-    {
-      name: "confirmation_price",
-      type: "number",
-      fildType: "number-input",
-      label: { ar: "سعر تأكيد الحجز المحدد من قبل المركز", en: "" },
-      placeholder: "أدخل سعر تأكيد الحجز المحدد من قبل المركز",
-    },
-
-    {
-      name: "active",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "حالة ظهور المركز فى الرئيسية", en: "" },
-      placeholder: "",
-      selectItems: [
-        { name: "مسموح", value: 1 },
-        { name: "ممنوع", value: 0 },
-      ],
-    },
-    {
-      name: "booking_status",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "هل الحجز متاح من قبل المركز", en: "" },
-      placeholder: "",
-      selectItems: [
-        { name: "متاح الحجز", value: 1 },
-        { name: "الحجز مغلق من المركز", value: 0 },
-      ],
-    },
-    {
-      name: "confirmation_status",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "هل يطلب المركز تأكيد للحجز", en: "" },
-      placeholder: "",
-      selectItems: [
-        { name: "نعم , تأكيد الحجز مفعل من قبل المركز", value: 1 },
-        { name: "لا , تأكيد الحجز غير مفعل من قبل المركز", value: 0 },
-      ],
-    },
-    {
-      name: "category_id",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "القسم الرئيسى للمركز", en: "" },
-      placeholder: "",
-      selectItems: categories,
-    },
-    {
-      name: "sub_categories",
-      type: "",
-      fildType: "sub-category",
-      label: { ar: "الاقسام الفرعية للمركز", en: "" },
-      placeholder: "",
-    },
-    {
-      name: "", // المفتاح الأساسي
-      type: "",
-      fildType: "keywords", // النوع العام
-      displayKey: "title", // المفتاح المستخدم للعرض
-      label: { ar: "الكلمات المفتاحية", en: "" },
-      placeholder: "",
-    },
-    {
-      name: "benefits", // المفتاح الأساسي
-      type: "",
-      fildType: "array", // النوع العام
-      displayKey: "title", // المفتاح المستخدم للعرض
-      label: { ar: "المميزات", en: "" },
-      placeholder: "أدخل ميزة جديدة",
-    },
-  ];
+  if (isLoading) return <LoadingSpin />;
 
   return (
-    <>
-      <DynamicElementPage
-        api={"/organizations"}
-        updateEndPoint={"/update-organization"}
-        id={organizationId as string}
-        inputsData={organizationInputs}
-        direct={"/ar/dashboard/organizations"}
-      />
-    </>
+    <div className="p-4 md:p-8 w-[99%] lg:w-[90%] mx-auto" dir="rtl">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">
+            تعديل المركز : {formData.title || "بدون اسم"}
+          </h1>
+          <p className="text-gray-500 mt-2">
+            قم بتحديث بيانات المركز والتحكم في إعداداته من هنا
+          </p>
+        </div>
+      </div>
+
+      <form onSubmit={onSubmit} className="space-y-8">
+        <ImagesSection
+          logoPreview={logoPreview}
+          coverPreview={coverPreview}
+          handleLogoChange={handleLogoChange}
+          handleCoverChange={handleCoverChange}
+        />
+
+        <BasicInfoSection
+          formData={formData}
+          errors={errors}
+          handleChange={handleChange}
+        />
+
+        <LocationSection
+          formData={formData}
+          setFormData={setFormData}
+          showMap={showMap}
+          setShowMap={setShowMap}
+        />
+
+        <SettingsSection formData={formData} handleChange={handleChange} />
+
+        <CategoriesSection
+          formData={formData}
+          allCategories={allCategories}
+          allSubCategories={allSubCategories}
+          toggleCategory={toggleCategory}
+          toggleSubCategory={toggleSubCategory}
+          errors={errors}
+        />
+
+        <ExtraDataSection
+          formData={formData}
+          setFormData={setFormData}
+          handleBenefitChange={handleBenefitChange}
+          addBenefit={addBenefit}
+          removeBenefit={removeBenefit}
+        />
+
+        <MessagesSection formData={formData} handleChange={handleChange} />
+
+        <div className="pt-4 border-t border-gray-100 flex justify-end">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full md:w-auto px-12 py-4 bg-sky-600 text-white font-bold rounded-xl shadow-lg hover:bg-sky-700 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+          >
+            {isSubmitting ? "جاري الحفظ..." : "حفظ التغييرات"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

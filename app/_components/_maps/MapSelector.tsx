@@ -187,7 +187,7 @@ export default function MapSelector({
               className="flex items-center w-fit cursor-pointer gap-1 bg-red-400 text-white px-3 py-2 rounded-md shadow mt-4 hover:bg-red-500 hover:scale-110  duration-200"
             >
               <p>{locale == "ar" ? "إغلاق" : "Close"}</p>
-              <IoMdClose className=" cursor-pointer ml-auto  block  size-6" />
+              <IoMdClose className="cursor-pointer ml-auto  block  size-6" />
             </div>
           </div>
         </motion.div>
