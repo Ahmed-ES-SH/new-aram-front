@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { AppointmentStatusBadge } from "./AppointmentStatusBadge";
 import { Appointment } from "./types";
-import Img from "../../../_global/Img";
-import AppointmentActions from "./AppointmentActions";
 import { useEffect, useRef, useState } from "react";
-import Pagination from "@/app/_components/PaginationComponent";
 import { instance } from "@/app/_helpers/axios";
 import { useAppSelector } from "@/app/Store/hooks";
 import { GiNotebook } from "react-icons/gi";
+import Img from "../../../_global/Img";
+import Pagination from "@/app/_components/PaginationComponent";
+import AppointmentActions from "./AppointmentActions";
 import SpinLoading from "../../../_global/SpinLoading";
 
 type pagination = {
@@ -23,7 +23,7 @@ interface AppointmentTableProps {
   pagination: pagination;
 }
 
-export function AppointmentTable({
+export default function AppointmentTable({
   appointments: data,
   pagination,
 }: AppointmentTableProps) {
@@ -174,7 +174,7 @@ export function AppointmentTable({
                   </td>
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-3">
-                      <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
+                      <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0">
                         <Img
                           src={appointment.organization.logo ?? "/logo.png"}
                           errorSrc="/logo.png"

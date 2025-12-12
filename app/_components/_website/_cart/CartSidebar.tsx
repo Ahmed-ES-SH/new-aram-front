@@ -1,14 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LocaleLink from "../_global/LocaleLink";
 import { useAppSelector } from "@/app/Store/hooks";
 import { instance } from "@/app/_helpers/axios";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import PromoCodeBox from "./PromoCodeBox";
 import CheckCurrentUserPopup from "../_global/CheckCurrentUserPopup";
 import { VscLoading } from "react-icons/vsc";
+import { toast } from "sonner";
 
 export default function CartSidebar() {
+  const locale = useLocale();
   const t = useTranslations("cartPage");
 
   const { user } = useAppSelector((state) => state.user);
@@ -41,7 +43,7 @@ export default function CartSidebar() {
 
   const [cardsDetailes, setCardsDetailes] = useState<any>([]);
   const [checkCurrentuser, setCheckCurrentuser] = useState(false);
-  const [promoter, setPromoter] = useState(null);
+  // const [promoter, setPromoter] = useState(null);
   const [checkLoading, setCheckLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -50,6 +52,11 @@ export default function CartSidebar() {
   const [isDiscount, setIsDiscount] = useState(false);
   const [mainDiscount, setMainDiscount] = useState(0);
   const [mainTotal, setMainTotal] = useState<number>(Number(total) ?? 0);
+
+  const redirectMessage =
+    locale == "ar"
+      ? "جارى تحويلك الى صفحة الدفع ..."
+      : "Redirecting to payment page ...";
 
   const handleSubmit = async () => {
     if (!user) {
@@ -66,10 +73,12 @@ export default function CartSidebar() {
       formdata.append("before_discount", total.toString());
       formdata.append("discount", mainDiscount.toString());
       formdata.append("invoice_type", "cards");
+      formdata.append("data_type", "cards");
       formdata.append("payment_method", "thawani");
-      formdata.append("cardsDetailes", JSON.stringify(cardsDetailes));
+      formdata.append("cardsDetails", JSON.stringify(cardsDetailes));
       const response = await instance.post("/payment/create-session", formdata);
       if (response.status == 200) {
+        toast.loading(redirectMessage);
         const sessionId = response.data.data.session_id;
         const checkoutUrl = `https://uatcheckout.thawani.om/pay/${sessionId}?key=${process.env.NEXT_PUBLIC_THAWANI_PUBLISHABLE_KEY}`;
         window.location.href = checkoutUrl;
@@ -89,12 +98,11 @@ export default function CartSidebar() {
         `/check-promoter-code?ref_code=${refCode}`
       );
       if (response.status == 200) {
-        const data = response.data.data;
         const discountPersantage = response.data.data.discount_percentage;
 
         const discountAmount = (mainTotal * discountPersantage) / 100;
         const finalTotal = mainTotal - discountAmount;
-        setPromoter(data);
+        // setPromoter(data);
         setMainDiscount(Number(discountAmount.toFixed(2)));
         setMainTotal(Number(finalTotal.toFixed(2)));
         setIsDiscount(true);

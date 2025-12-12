@@ -1,6 +1,6 @@
 import NoAppointmentsFound from "@/app/_components/_website/_controlpanals/_usercontrol/_listofreservations/NoAppointmentsFound";
 import FetchData from "@/app/_helpers/FetchData";
-import { AppointmentTable } from "@/app/_components/_website/_controlpanals/_usercontrol/_listofreservations/AppointmentsTable";
+import AppointmentTable from "@/app/_components/_website/_controlpanals/_usercontrol/_listofreservations/AppointmentsTable";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
 import { getTranslations } from "next-intl/server";
 

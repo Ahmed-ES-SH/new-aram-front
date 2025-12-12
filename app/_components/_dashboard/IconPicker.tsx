@@ -1,4 +1,3 @@
-// components/IconPicker.tsx
 "use client";
 import * as FaIcons from "react-icons/fa";
 import { useMemo, useState } from "react";

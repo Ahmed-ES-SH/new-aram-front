@@ -26,7 +26,6 @@ import {
   IoLayers,
   IoLayersOutline,
   IoShareSocialSharp,
-  IoStatsChartSharp,
 } from "react-icons/io5";
 import { ImMakeGroup, ImStatsDots } from "react-icons/im";
 import {
@@ -69,6 +68,11 @@ export const pages = [
         title: "قسم عن المنصة",
         icon: <BsInfoSquareFill className={iconStyle} />,
         to: "/dashboard/aboutsection",
+      },
+      {
+        title: "باقى مكونات الصفحة",
+        icon: <MdCategory className={iconStyle} />,
+        to: "/dashboard/statictexts",
       },
     ],
   },

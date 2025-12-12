@@ -1,7 +1,10 @@
 "use client";
 
+import { servicesHeaderType } from "@/app/_components/_dashboard/_statictexts/ServicesEditSection";
+import { getIconComponent } from "@/app/_helpers/helpers";
 import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
 import {
   FaRocket,
   FaStar,
@@ -10,31 +13,39 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 
-export function ServicesHeader() {
+interface props {
+  data: servicesHeaderType;
+}
+
+export function ServicesHeader({ data }: props) {
   const locale = useLocale();
   const translations = useTranslations("services_v2");
   const isRTL = locale === "ar";
 
-  const stats = [
-    {
-      icon: FaLayerGroup,
-      value: "500+",
-      label: translations("stats.services"),
-      color: "from-indigo-500 to-indigo-600",
-    },
-    {
-      icon: FaUsers,
-      value: "10K+",
-      label: translations("stats.clients"),
-      color: "from-emerald-500 to-teal-500",
-    },
-    {
-      icon: FaStar,
-      value: "4.9",
-      label: translations("stats.rating"),
-      color: "from-amber-500 to-orange-500",
-    },
-  ];
+  const [badge] = useState<TextType>({
+    en: data.column_1.en,
+    ar: data.column_1.ar,
+  });
+  const [title] = useState<TextType>({
+    en: data.column_2.en,
+    ar: data.column_2.ar,
+  });
+  const [titleHighlight] = useState<TextType>({
+    en: data.column_3.en,
+    ar: data.column_3.ar,
+  });
+  const [subtitle] = useState<TextType>({
+    en: data.column_4.en,
+    ar: data.column_4.ar,
+  });
+
+  const [stats] = useState<ServicesStat[]>(data.column_5 ?? []);
+
+  const statsColors = {
+    0: "from-indigo-500 to-indigo-600",
+    1: "from-emerald-500 to-teal-500",
+    2: "from-amber-500 to-orange-500",
+  };
 
   return (
     <div className="relative overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
@@ -58,7 +69,7 @@ export function ServicesHeader() {
             >
               <FaRocket className="w-4 h-4 text-primary" />
               <span className="text-sm font-semibold text-primary">
-                {translations("badge")}
+                {badge[locale]}
               </span>
             </motion.div>
 
@@ -70,10 +81,10 @@ export function ServicesHeader() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6"
             >
-              {translations("title")}
+              {title[locale]}
               <span className="relative">
                 <span className="relative z-10 bg-linear-to-r from-primary via-orange-400 to-primary bg-clip-text text-transparent">
-                  {translations("titleHighlight")}
+                  {titleHighlight[locale]}
                 </span>
                 <motion.span
                   initial={{ scaleX: 0 }}
@@ -93,7 +104,7 @@ export function ServicesHeader() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg text-gray-600 leading-relaxed mb-8 text-pretty"
             >
-              {translations("subtitle")}
+              {subtitle[locale]}
             </motion.p>
 
             {/* Stats Row */}
@@ -104,31 +115,35 @@ export function ServicesHeader() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap gap-6"
             >
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-md border border-gray-100"
-                >
-                  <div
-                    className={`w-10 h-10 rounded-xl bg-linear-to-br ${stat.color} flex items-center justify-center shadow-lg`}
+              {stats.map((stat, index) => {
+                const Icon = getIconComponent(stat.icon_name);
+                console.log(statsColors[index]);
+                return (
+                  <motion.div
+                    key={stat.icon_name}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-md border border-gray-100"
                   >
-                    <stat.icon className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-gray-900">
-                      {stat.value}
+                    <div
+                      className={`w-10 h-10 rounded-xl bg-linear-to-br ${statsColors[index]} flex items-center justify-center shadow-lg`}
+                    >
+                      <Icon className="w-5 h-5 text-white" />
                     </div>
-                    <div className="text-xs text-gray-500 font-medium">
-                      {stat.label}
+                    <div>
+                      <div className="text-xl font-bold text-gray-900">
+                        {stat.value}
+                      </div>
+                      <div className="text-xs text-gray-500 font-medium">
+                        {stat.label[locale]}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </motion.div>
           </div>
         </div>

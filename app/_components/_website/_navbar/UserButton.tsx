@@ -77,7 +77,7 @@ export default function UserButton({ user, logout, notifications }) {
             <button
               ref={dropdownRef}
               onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center justify-center outline-none gap-2 w-[150px] max-md:w-[40px] max-md:h-[40px] overflow-hidden max-md:p-0 max-md:rounded-full max-md:border-2 max-md:border-primary  rounded-md  bg-primary  px-3 py-2 shadow-md hover:bg-gray-300  duration-200"
+              className="flex items-center justify-center outline-none gap-2 w-[150px] max-md:w-10 max-md:h-10 overflow-hidden max-md:p-0 max-md:rounded-full max-md:border-2 max-md:border-primary  rounded-md  bg-primary  px-3 py-2 shadow-md hover:bg-gray-300  duration-200"
             >
               {unreadMessagesCount > 0 && (
                 <div className="absolute animate-pulse -top-1 ltr:-left-1 rtl:-right-1 rounded-full text-xs  flex items-center justify-center text-red-500">

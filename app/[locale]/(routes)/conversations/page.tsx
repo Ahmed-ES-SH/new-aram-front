@@ -45,10 +45,11 @@ export default async function ConversationsPage({ searchParams, params }) {
   const { locale } = await params;
 
   const { data } = await FetchData(`/user/${userId}/conversations`, true);
+
   return (
     <div
       dir={directionMap[locale ?? "en"]}
-      className="flex items-start justify-between pt-[93px] h-[93vh]"
+      className="flex items-start justify-between pt-[86px] h-[93vh]"
     >
       {/* conversations sidebar */}
       <ConversationsSidebar data={data} />

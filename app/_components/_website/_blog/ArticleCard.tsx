@@ -39,8 +39,7 @@ export default function ArticleCard({ article }: props) {
   return (
     <article
       key={article.id}
-      className="bg-white rounded-xl shadow-lg h-full overflow-hidden border border-gray-100 
-                 hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1"
+      className="bg-white rounded-xl shadow-lg h-full lg:min-h-[490px] pb-4 overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1"
     >
       {/* Article Image & Category */}
       <div className="relative">
@@ -64,7 +63,7 @@ export default function ArticleCard({ article }: props) {
           {getTitle(article)}
         </h3>
 
-        <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+        <p className="text-gray-600 min-h-[70px] text-sm mb-4 leading-relaxed">
           {getExcerpt(article)}
         </p>
 
@@ -105,7 +104,7 @@ export default function ArticleCard({ article }: props) {
             article?.title_en || "title not found"
           )}?articleId=${article?.id}`}
           className="w-full bg-gray-100 hover:bg-primary hover:text-white text-gray-700 font-medium py-3 
-                     duration-300 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 group"
+                     duration-300 pt-auto px-4 rounded-lg transition-colors flex items-center justify-center gap-2 group"
         >
           {t("readMore")}
           <FiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

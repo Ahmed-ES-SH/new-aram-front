@@ -1,7 +1,6 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/app/Store/hooks";
 import { setIsCartOpen } from "@/app/Store/variablesSlice";
-import React from "react";
 import { FaCartShopping } from "react-icons/fa6";
 
 export default function CartButton() {
@@ -15,6 +14,7 @@ export default function CartButton() {
   return (
     <>
       <div
+        onMouseDown={(e) => e.stopPropagation()}
         onClick={hadnleCartToggle}
         className="flex flex-col items-center justify-center  cursor-pointer  duration-200 relative gap-2 text-primary  rounded-sm"
       >

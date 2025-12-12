@@ -108,7 +108,6 @@ const SectionsContainer = () => {
         column_30: activeState,
       });
       if (response.status == 200) {
-        const data = response.data.data;
         toast.success("تم تحديث قسم الواجهة الفعال بنجاح . ");
         setIsActive(activeState);
       }
@@ -122,6 +121,8 @@ const SectionsContainer = () => {
       setUpdateLoading(false);
     }
   };
+
+  console.log(isActive);
 
   if (loading || active === null) return <LoadingSpin />;
 

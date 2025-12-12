@@ -80,9 +80,7 @@ export default function OrganizationCard({
             `conversationwith ${organization.title}`
           )}?conversationId=${conversation.id}&userId=${user?.id}&userType=${
             user?.account_type
-          }&receiverId=${organization?.id}&receiverType=${
-            organization.account_type
-          }`
+          }&receiverId=${organization?.id}&receiverType=organization`
         );
       }
     } catch (error) {

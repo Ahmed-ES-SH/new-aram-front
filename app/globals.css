@@ -47,6 +47,14 @@
   --sidebar-accent-foreground: oklch(1 0 0); /* #ffffff */
   --sidebar-border: oklch(0.9 0 0); /* #e5e7eb */
   --sidebar-ring: oklch(0.55 0.15 200 / 0.5); /* rgba(8, 145, 178, 0.5) */
+  --text-gradient: linear-gradient(
+    to right,
+    /* الأزرق/السماوي */ #feb803,
+    /* الأرجواني */ #a800ff,
+    /* الوردي/الأحمر الفاتح */ #ff006e,
+    /* البرتقالي */ #0080df,
+    /* الأصفر */ #ffff00
+  );
 }
 
 @theme inline {
@@ -143,6 +151,10 @@ textarea {
     @apply px-4 py-2 cursor-pointer  max-md:px-2 max-md:py-1 flex items-center gap-3 bg-red-400 rounded-md text-white  border border-transparent hover:scale-110 hover:bg-white hover:text-black hover:border-red-400 duration-200;
   }
 
+  .main-gradient {
+    @apply bg-linear-to-r from-primary via-primary-red to-primary-blue;
+  }
+
   .cancle-btn {
     @apply px-4 py-2 cursor-pointer  max-md:px-2 max-md:py-1 flex items-center gap-3 bg-gray-400 rounded-md text-white  border border-transparent hover:scale-110 hover:bg-white hover:text-black hover:border-gray-400 duration-200;
   }
@@ -196,6 +208,23 @@ button:disabled {
   /* لجميع المتصفحات */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.gradient-text {
+  /* نستخدم المتغير الذي عرفناه */
+  background-image: var(--text-gradient);
+
+  /* قص خلفية النص (التدرج) ليظهر فقط داخل حدود الأحرف */
+  -webkit-background-clip: text; /* مطلوب لمتصفحات WebKit (Chrome, Safari) */
+  background-clip: text;
+
+  /* جعل النص شفافاً لإظهار الخلفية (التدرج) من خلاله */
+  color: transparent;
+
+  /* مثال لخصائص النص، يمكنك تعديلها حسب الحاجة:
+    font-size: 6rem;
+    font-weight: 900;
+  */
 }
 
 /* main loading */

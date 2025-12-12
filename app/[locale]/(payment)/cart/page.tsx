@@ -1,7 +1,6 @@
 import CartPageComponent from "@/app/_components/_website/_cart/CartPageComponent";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
 import { getTranslations } from "next-intl/server";
-import React from "react";
 
 export async function generateMetadata() {
   const t = await getTranslations("metaCartPage");
@@ -13,6 +12,7 @@ export async function generateMetadata() {
   };
 }
 
-export default function CartPage() {
-  return <CartPageComponent />;
+export default async function CartPage({ params }: any) {
+  const { locale } = await params;
+  return <CartPageComponent locale={locale} />;
 }

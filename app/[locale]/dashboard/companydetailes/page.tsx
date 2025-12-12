@@ -1,12 +1,14 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPen, FaPlusCircle } from "react-icons/fa";
 import { instance } from "@/app/_helpers/axios";
 import LoadingSpin from "@/app/_components/LoadingSpin";
 import Img from "@/app/_components/_website/_global/Img";
-import EditVideo from "@/app/_components/_dashboard/_editherovideosection/EditVideo";
 import { VscLoading } from "react-icons/vsc";
 import { toast } from "sonner";
+import EditVideoPopup from "@/app/_components/_dashboard/_editherovideosection/EditVideoPopup";
+import useFetchData from "@/app/_helpers/FetchDataWithAxios";
+import CooperationPdfViewer from "@/app/_components/_dashboard/_companydetails/CooperationPdfComponent";
 
 interface SectionData {
   id: string;
@@ -21,11 +23,17 @@ interface SectionData {
 }
 
 export default function CompanyDetails() {
+  const { data: videoData } = useFetchData(
+    `/get-video?video_id=about_video`,
+    false
+  );
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(true);
   const [generalError, setGeneralError] = useState<string>("");
   const [mainVideo, setMainVideo] = useState<any>(null);
+  const [mainVideoData, setMainVideoData] = useState<any>(null);
   const [updateLoading, setUpdateLoading] = useState(false);
   const initialSections: SectionData[] = [
     {
@@ -75,6 +83,7 @@ export default function CompanyDetails() {
   ];
 
   const [sections, setSections] = useState(initialSections);
+  const [popupOpen, setPopupOpen] = useState(false);
   const [cooperationPdf, setCooperationPdf] = useState<string | null | File>(
     null
   );
@@ -185,6 +194,12 @@ export default function CompanyDetails() {
     }
   };
 
+  useEffect(() => {
+    if (videoData) {
+      setMainVideoData(videoData);
+    }
+  }, [videoData]);
+
   if (loading) return <LoadingSpin />;
 
   return (
@@ -194,8 +209,12 @@ export default function CompanyDetails() {
           المحتوى الخاص بصفحة عن الشركة
         </h1>
         <form onSubmit={handleSubmit} className="w-[90%] mx-auto">
-          {/* video section */}
+          <CooperationPdfViewer
+            fileUrl={cooperationPdf as any}
+            onUpload={(file) => setCooperationPdf(file)}
+          />
 
+          {/* video section */}
           <div className="pb-4 border-b-2 border-sky-500 my-2 w-full">
             <div className="w-full">
               <label className="block text-gray-600 font-medium mb-2">
@@ -206,66 +225,18 @@ export default function CompanyDetails() {
               <div className="flex flex-col gap-3 w-full">
                 <input
                   type="text"
-                  value={
-                    mainVideo instanceof File
-                      ? mainVideo.name
-                      : (mainVideo as string)
-                  }
+                  value={mainVideoData?.video_url ?? ""}
                   readOnly={true}
                   className="p-2 bg-gray-100 w-full rounded-md"
                 />
+                <div
+                  onClick={() => setPopupOpen(true)}
+                  className="w-7 h-7 self-end text-white cursor-pointer flex items-center justify-center bg-sky-400 rounded-md shadow"
+                >
+                  <FaPen />
+                </div>
               </div>
             </div>
-            <EditVideo mainVideo={mainVideo} setMainVideo={setMainVideo} />
-          </div>
-
-          <div className="w-full my-4 pb-3 border-b-2 border-sky-500">
-            <h1 className="text-xl w-fit mx-auto font-semibold text-center pb-4">
-              التحكم فى ملف اتفاقية التعاون للمنصة
-            </h1>
-
-            {/* Container */}
-            <div className="flex justify-center">
-              {cooperationPdf ? (
-                // Show existing PDF
-                <div
-                  className="relative w-64 h-80 border border-gray-300 rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition"
-                  onClick={handleUploadClick}
-                >
-                  <iframe
-                    src={
-                      cooperationPdf instanceof File
-                        ? URL.createObjectURL(cooperationPdf)
-                        : cooperationPdf
-                    }
-                    className="w-full h-full"
-                    title="Cooperation PDF"
-                  />
-                  <div className="absolute bottom-2 left-2 right-2 bg-white bg-opacity-80 p-1 text-center text-sm rounded">
-                    اضغط لتغيير الملف
-                  </div>
-                </div>
-              ) : (
-                // Show placeholder if no file
-                <div
-                  onClick={handleUploadClick}
-                  className="w-64 h-80 border-2 border-dashed border-sky-500 flex flex-col justify-center items-center rounded-lg cursor-pointer hover:bg-sky-50 transition"
-                >
-                  <p className="text-sky-500 font-medium text-center">
-                    اضغط لإضافة ملف PDF
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Hidden File Input */}
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              accept="application/pdf"
-              onChange={handleFileChange}
-            />
           </div>
 
           {sections.map((section) => (
@@ -351,6 +322,15 @@ export default function CompanyDetails() {
           {generalError && <p className="text-red-500">{generalError}</p>}
         </form>
       </div>
+
+      <EditVideoPopup
+        isOpen={popupOpen}
+        onClose={() => setPopupOpen(false)}
+        setMainVideo={setMainVideoData}
+        video_id="about_video"
+        title="تعديل فيديو صفحة عن الشركة"
+        key={`editvideo-about`}
+      />
     </>
   );
 }

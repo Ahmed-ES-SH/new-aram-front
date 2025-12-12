@@ -86,14 +86,15 @@ export default function AboutMainSections({ data }: Props) {
             >
               {/* Image Side */}
               <div className="w-full lg:w-1/2 relative group">
-                <div className="relative h-[400px] lg:h-[500px] w-full rounded-2xl overflow-hidden shadow-2xl transform transition-transform duration-500 group-hover:scale-[1.02]">
+                <div className="relative h-[400px] lg:h-[500px] w-full rounded-2xl  shadow-2xl transform transition-transform duration-500 group-hover:scale-[1.02]">
                   <Img
                     src={section.image}
                     alt={isRTL ? section.titleAr : section.titleEn}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full rounded-2xl object-cover z-20 relative"
                   />
                   {/* Overlay Gradient */}
-                  <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-60" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/50 rounded-2xl to-transparent opacity-60" />
+                  <div className="w-full h-full rounded-2xl bg-primary/70 absolute lg:-top-12 lg:-left-12 -top-4 -left-2 z-10"></div>
                 </div>
 
                 {/* Decorative Elements */}

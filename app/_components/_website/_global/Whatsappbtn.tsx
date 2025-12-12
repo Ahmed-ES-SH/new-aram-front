@@ -30,7 +30,7 @@ export default function Whatsappbtn() {
   return (
     <button
       onClick={handleWhatsAppClick}
-      className="flex items-center justify-center p-3 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all duration-300"
+      className="flex items-center justify-center opacity-50 hover:opacity-100  p-3 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all duration-300"
     >
       <FaWhatsapp size={24} />
     </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, EffectCoverflow } from "swiper/modules";
 import { ArticleType } from "@/app/types/_dashboard/GlobalTypes";
@@ -121,9 +121,6 @@ export default function SwiperComponent({ articles }: SwiperComponentProps) {
         className="pb-12"
         // Ensure Swiper uses the button refs created above
         onBeforeInit={(swiper) => {
-          // assign refs to swiper params before init
-          // (some typings require 'any' here)
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           if (swiper.params.navigation) {
             // @ts-ignore
@@ -135,9 +132,7 @@ export default function SwiperComponent({ articles }: SwiperComponentProps) {
       >
         {articles.map((article) => (
           <SwiperSlide key={`${article.id}+${article.title_en}`}>
-            <div className="h-full py-4">
-              <ArticleCard article={article} />
-            </div>
+            <ArticleCard article={article} />
           </SwiperSlide>
         ))}
       </Swiper>

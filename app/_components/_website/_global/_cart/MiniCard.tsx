@@ -3,7 +3,7 @@ import Img from "../Img";
 
 export default function Minicard({ bg_img }: { bg_img: string }) {
   return (
-    <div className="w-14 h-10 overflow-hidden m-auto rounded-sm relative text-white transition-transform transform hover:scale-110">
+    <div className="w-20 h-10 overflow-hidden m-auto rounded-sm relative text-white transition-transform transform hover:scale-110">
       <Img
         className="relative object-cover w-full h-full rounded-sm"
         src={bg_img}
@@ -15,7 +15,7 @@ export default function Minicard({ bg_img }: { bg_img: string }) {
             <p className="font-light text-[3px]">Name</p>
             <p className="font-medium tracking-widest text-[8px]">------</p>
           </div>
-          <Img className="w-4 h-4" src="/logo.ico" />
+          <Img className="size-2" src="/logo.png" />
         </div>
         <div className="pt-1">
           <p className="font-light text-[3px]">Card Number</p>

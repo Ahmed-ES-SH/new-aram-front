@@ -59,6 +59,8 @@ export interface errorType {
   [key: string]: { ar: string; en: string };
 }
 
+export type LocaleType = "en" | "ar";
+
 export interface ArticleType {
   id: number;
   title_en: string;
@@ -76,5 +78,12 @@ export interface ArticleType {
     name: string;
     image: string;
   };
-  category: category;
+  category: {
+    id: number;
+    title_en: string;
+    title_ar: string;
+    image: string;
+    bg_color: string;
+    icon_name: string;
+  };
 }

@@ -95,44 +95,6 @@ const BlogHeader: React.FC = () => {
           </div>
         </div>
 
-        {/* العنوان الفرعي مع زر مميز */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="flex flex-col lg:flex-row items-center justify-center gap-6"
-        >
-          <p className="text-xl lg:text-2xl text-gray-700 text-center max-w-3xl">
-            {t("subtitle")}
-          </p>
-
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative"
-          >
-            <div className="absolute inset-0 rounded-lg bg-linear-to-r from-yellow-400 to-yellow-500 opacity-0 group-hover:opacity-100 blur transition-opacity duration-300" />
-            <button
-              className="relative flex items-center gap-3 px-6 py-3 rounded-lg bg-linear-to-r from-yellow-400 to-yellow-500 text-white font-semibold shadow-lg hover:shadow-xl transition-shadow duration-300"
-              onClick={() => {
-                // إضافة وظيفة التنقل هنا
-                const blogSection = document.getElementById("articles-slider");
-                blogSection?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              <span>{t("viewAll") || "عرض الكل"}</span>
-              <motion.div
-                animate={{ x: isRTL ? [-3, 3, -3] : [3, -3, 3] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <FaArrowRight
-                  className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`}
-                />
-              </motion.div>
-            </button>
-          </motion.div>
-        </motion.div>
-
         {/* خط فاصل متحرك */}
         <motion.div
           initial={{ width: 0 }}

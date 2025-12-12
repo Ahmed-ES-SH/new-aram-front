@@ -1,78 +1,38 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { HeaderSection } from "./header-section";
-import { CreatorCard } from "./creator-card";
-import { GallerySlider, serviceImage } from "./gallery-slider";
-import { BenefitsList } from "./benefits-list";
-import { KeywordsSection } from "./keywords-section";
-import { OrganizationsSection } from "./organizations-section";
-import { DescriptionSection } from "./description-section";
-import { PriceArea } from "./price-area";
-import { staggerContainer } from "./animation-variants";
-import { Service } from "../../_dashboard/_services/types";
+import { ServiceDetails } from "../../_dashboard/_services/types";
 import { useLocale } from "next-intl";
 import { directionMap } from "@/app/constants/_website/global";
+import { LocaleType } from "@/app/types/_dashboard/GlobalTypes";
+import HeroServiceSection from "./HeroServiceSection";
+import ServiceFeaturesSection from "./ServiceFeaturesSection";
+import TestimonialsCTASection from "./TestimonialsCTASection";
+import ServiceOptions from "./ServiceOptions";
+import ServiceGallery from "./ServiceGallery";
 
 interface ServiceDetailsPageProps {
-  service: Service;
+  service: ServiceDetails;
 }
-
-export type LocaleType = "en" | "ar";
 
 export default function ServiceDetailsPage({
   service,
 }: ServiceDetailsPageProps) {
   const locale = useLocale() as LocaleType;
 
+  const serviceImages = [
+    { id: "1", src: "/services/service-1.png", alt: "تنظيف الواجهات الزجاجية" },
+    { id: "2", src: "/services/service-2.png", alt: "فريق عمل محترف" },
+    { id: "3", src: "/services/service-3.png", alt: "أدوات حديثة" },
+    { id: "4", src: "/services/service-man.png", alt: "نتيجة العمل" },
+  ];
+
   return (
-    <div dir={directionMap[locale]} className="min-h-screen mt-24">
-      {/* Main Content */}
-      <motion.main
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="c-container space-y-8"
-      >
-        {/* Header Section */}
-        <HeaderSection service={service} locale={locale} />
-
-        {/* Two Column Layout for Desktop */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Main Content Column */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Gallery Slider */}
-            <GallerySlider images={service.images as serviceImage[]} />
-
-            {/* Description */}
-            <DescriptionSection description={service.description} />
-
-            {/* Benefits */}
-            <BenefitsList benefits={service.benefits} />
-
-            {/* Keywords */}
-            <KeywordsSection keywords={service.keywords} />
-
-            {/* Organizations */}
-            <OrganizationsSection organizations={service.organizations} />
-          </div>
-
-          {/* Sidebar Column */}
-          <div className="space-y-6">
-            {/* Sticky Sidebar for Desktop */}
-            <div className="lg:sticky lg:top-24 space-y-6">
-              {/* Creator Card */}
-              <CreatorCard creator={service.creater} />
-
-              {/* Price Area */}
-              <PriceArea service={service} />
-            </div>
-          </div>
-        </div>
-      </motion.main>
-
-      {/* Footer Spacer */}
-      <div className="h-8" />
+    <div dir={directionMap[locale]} className="min-h-screen mt-20">
+      <HeroServiceSection />
+      <ServiceGallery images={serviceImages} />
+      <ServiceOptions />
+      <ServiceFeaturesSection />
+      <TestimonialsCTASection />
     </div>
   );
 }

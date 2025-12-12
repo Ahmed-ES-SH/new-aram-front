@@ -1,25 +1,33 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiUsers, FiBriefcase, FiClock, FiAward } from "react-icons/fi";
-import { LocaleType } from "../../_servicePage/service-details-page";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { StatCard } from "./StateCard";
+import { statsHeaderType } from "@/app/_components/_dashboard/_statictexts/StatsSectionEdit";
+import { useState } from "react";
 
 interface StatsSectionProps {
-  locale?: LocaleType;
+  staticData: statsHeaderType;
 }
 
-const statsData = [
-  { icon: FiUsers, value: 2500, suffix: "+", key: "clients" },
-  { icon: FiBriefcase, value: 850, suffix: "+", key: "projects" },
-  { icon: FiClock, value: 15, suffix: "+", key: "experience" },
-  { icon: FiAward, value: 45, suffix: "", key: "awards" },
-];
-
-export function StatsSection({ locale = "en" }: StatsSectionProps) {
+export function StatsSection({ staticData }: StatsSectionProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const rtl = locale === "ar";
+
+  const [badge] = useState<TextType>({
+    en: staticData.column_1.en,
+    ar: staticData.column_1.ar,
+  });
+  const [title] = useState<TextType>({
+    en: staticData.column_2.en,
+    ar: staticData.column_2.ar,
+  });
+  const [subtitle] = useState<TextType>({
+    en: staticData.column_3.en,
+    ar: staticData.column_3.ar,
+  });
+  const [items] = useState<StatsItem[]>(staticData.column_4 ?? []);
 
   return (
     <section
@@ -75,15 +83,15 @@ export function StatsSection({ locale = "en" }: StatsSectionProps) {
             transition={{ duration: 0.5 }}
             className="mb-4 inline-block rounded-full bg-[#feb803]/10 px-6 py-2 text-sm font-semibold text-[#feb803]"
           >
-            {rtl ? "إحصائياتنا" : "Our Statistics"}
+            {badge[locale]}
           </motion.span>
 
           <h2 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">
-            {t("stats.title")}
+            {title[locale]}
           </h2>
 
           <p className="mx-auto max-w-2xl text-lg text-gray-600">
-            {t("stats.subtitle")}
+            {subtitle[locale]}
           </p>
 
           {/* Decorative line */}
@@ -98,10 +106,10 @@ export function StatsSection({ locale = "en" }: StatsSectionProps) {
 
         {/* Stats Grid */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {statsData.map((stat, index) => (
+          {items.map((stat, index) => (
             <StatCard
               key={stat.key}
-              icon={stat.icon}
+              icon={stat.icon_name}
               value={stat.value}
               suffix={stat.suffix}
               label={t(`stats.items.${stat.key}`)}

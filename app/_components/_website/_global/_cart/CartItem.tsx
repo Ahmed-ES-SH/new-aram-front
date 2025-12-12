@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import Minicard from "./MiniCard";
@@ -30,7 +29,7 @@ export default function CartItem({ item }: any) {
 
   return (
     <>
-      <li className="flex items-center gap-4 pb-4 border-b last:border-b-0">
+      <div className="flex items-center gap-4 pb-4 border-b last:border-b-0">
         <Minicard bg_img={item.image ? item.image : "/cards/card_1.jpg"} />
 
         <div>
@@ -86,7 +85,7 @@ export default function CartItem({ item }: any) {
             <FaTrash className="h-4 w-4" />
           </button>
         </div>
-      </li>
+      </div>
     </>
   );
 }

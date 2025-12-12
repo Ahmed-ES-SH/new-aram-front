@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiSend } from "react-icons/fi";
 import { GoDependabot } from "react-icons/go";
-
-import Image from "next/image"; // استخدام Image من Next.js للأداء الأفضل
 
 // --- بيانات افتراضية للمحادثة ---
 const DUMMY_MESSAGES = [
@@ -58,7 +56,7 @@ export default function N8nChat({ webhookUrl }: N8nChatProps) {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className=" bg-primary hover:bg-orange-600  text-white p-3 rounded-full shadow-lg z-50 flex items-center justify-center transition-colors"
+          className="bg-primary opacity-50 hover:opacity-100 duration-300  text-white p-3 rounded-full shadow-lg z-50 flex items-center justify-center transition-colors"
         >
           <GoDependabot className="size-6 z-50" />
         </button>

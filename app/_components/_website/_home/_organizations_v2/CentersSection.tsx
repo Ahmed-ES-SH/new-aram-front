@@ -10,12 +10,17 @@ import OrganizationCard from "../../_organizations/OrganizationCard";
 import { Organization } from "@/app/_components/_dashboard/_organizations/types/organization";
 import { useRouter } from "next/navigation";
 import { VscLoading } from "react-icons/vsc";
+import { OrganizationsHeaderType } from "@/app/_components/_dashboard/_statictexts/OrganizationsEditSection";
 
 interface CentersSectionProps {
   organizations: Organization[];
+  staticData: OrganizationsHeaderType;
 }
 
-const CentersSection: React.FC<CentersSectionProps> = ({ organizations }) => {
+const CentersSection: React.FC<CentersSectionProps> = ({
+  organizations,
+  staticData,
+}) => {
   const router = useRouter();
   const locale = useLocale();
 
@@ -45,9 +50,7 @@ const CentersSection: React.FC<CentersSectionProps> = ({ organizations }) => {
 
   return (
     <SectionContainer
-      subtitle={t("explore")}
-      title={t("premiumCenters")}
-      description={t("discoverExcellence")}
+      data={staticData}
       showFeaturedBadge={true}
       className="relative overflow-hidden"
     >

@@ -4,12 +4,13 @@ import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
-import { FaPen } from "react-icons/fa";
+import { FaEdit, FaPen } from "react-icons/fa";
 import EditTextPopup from "@/app/_components/_popups/EditTextPopup";
 import EditVideo from "@/app/_components/_dashboard/_editherovideosection/EditVideo";
 import { VscLoading } from "react-icons/vsc";
 import { toast } from "sonner";
 import { instance } from "@/app/_helpers/axios";
+import EditVideoPopup from "@/app/_components/_dashboard/_editherovideosection/EditVideoPopup";
 
 interface state {
   en: string;
@@ -19,10 +20,20 @@ interface state {
 
 export default function Editherovideosection() {
   const { data, loading } = useFetchData<any>(`/get-section/1`, false);
-
-  const videoRef = useRef<HTMLInputElement>(null);
+  const { data: videoResponse } = useFetchData<any>(
+    `/get-main-page-videos`,
+    false
+  );
 
   const [updateloading, setUpdateLoading] = useState(false);
+  const [mainVideoData, setMainVideoData] = useState<any>(null);
+  const [demoVideoData, setDemoVideoData] = useState<any>(null);
+  const [mainVideo, setMainVideo] = useState<File | string | null>(null);
+  const [demoVideo, setDemoVideo] = useState<File | string | null>(null);
+  const [videoPopupOpen, setVideoPopupOpen] = useState<"main" | "demo" | null>(
+    null
+  );
+
   const [selectedText, setSelectedText] = useState({ en: "", ar: "" });
   const [form, setForm] = useState({
     title: { en: "", ar: "" },
@@ -31,7 +42,6 @@ export default function Editherovideosection() {
 
   const [stats, setStats] = useState<state[]>([]);
   const [filedType, setFiledType] = useState<"title" | "description" | "">("");
-  const [mainVideo, setMainVideo] = useState<string | File>("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // handle stats change
@@ -91,13 +101,6 @@ export default function Editherovideosection() {
     }));
   }, [filedType, selectedText]);
 
-  // Handle image input
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      setMainVideo(files[0]);
-    }
-  };
   // Handle text input change inside popup
   const handleInputChange = (name: string, value: string | number) => {
     const lang = name.endsWith("_en") ? "en" : "ar";
@@ -171,10 +174,18 @@ export default function Editherovideosection() {
       });
 
       setStats(data.column_3);
-
-      setMainVideo(data.video);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (videoResponse) {
+      setMainVideoData(videoResponse?.main_video);
+      setDemoVideoData(videoResponse?.demo_video);
+    }
+  }, [videoResponse]);
+
+  console.log(mainVideoData);
+  console.log(mainVideo);
 
   if (loading) return <LoadingSpin />;
 
@@ -187,14 +198,6 @@ export default function Editherovideosection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <input
-          type="file"
-          hidden
-          name="video"
-          onChange={handleVideoChange}
-          ref={videoRef}
-        />
-
         <div className="h-fit bg-white border border-gray-300 shadow-lg rounded-2xl w-[98%] lg:w-[90%] mx-auto space-y-6 p-6">
           <h2 className="text-xl font-bold text-gray-800 w-fit mx-auto pb-3 border-b border-primary">
             تعديل محتوى قسم الفيديو
@@ -202,25 +205,43 @@ export default function Editherovideosection() {
 
           <div className="w-full">
             <label className="block text-gray-600 font-medium mb-2">
-              {mainVideo instanceof File
-                ? `اسم الملف الخاص بالفديو :`
-                : " رابط الفيديو الحالى"}
-            </label>{" "}
-            <div className="flex flex-col gap-3 w-full">
+              رابط الفيديو الرئيسى
+            </label>
+            <div className="relative flex flex-col gap-3 w-full">
               <input
                 type="text"
-                value={
-                  mainVideo instanceof File
-                    ? mainVideo.name
-                    : (mainVideo as string)
-                }
+                value={mainVideoData?.video_url ?? ""}
                 readOnly={true}
                 className="p-2 bg-gray-100 w-full rounded-md"
               />
+              <div
+                onClick={() => setVideoPopupOpen("main")}
+                className="w-7 h-7 self-end text-white cursor-pointer flex items-center justify-center bg-sky-400 rounded-md shadow"
+              >
+                <FaPen />
+              </div>
             </div>
           </div>
 
-          <EditVideo mainVideo={mainVideo} setMainVideo={setMainVideo} />
+          <div className="w-full">
+            <label className="block text-gray-600 font-medium mb-2">
+              رابط الفيديو الدعائى
+            </label>
+            <div className="relative flex flex-col gap-3 w-full">
+              <input
+                type="text"
+                value={demoVideoData?.video_url ?? ""}
+                readOnly={true}
+                className="p-2 bg-gray-100 w-full rounded-md"
+              />
+              <div
+                onClick={() => setVideoPopupOpen("demo")}
+                className="w-7 h-7 self-end text-white cursor-pointer flex items-center justify-center bg-sky-400 rounded-md shadow"
+              >
+                <FaPen />
+              </div>
+            </div>
+          </div>
 
           {/* Title */}
           <div className="pt-3 border-t border-gray-300">
@@ -353,6 +374,20 @@ export default function Editherovideosection() {
         onClose={() => setIsPopupOpen(false)}
         inputs={inputs}
         onChange={handleInputChange}
+      />
+
+      <EditVideoPopup
+        isOpen={videoPopupOpen === "main" || videoPopupOpen === "demo"}
+        onClose={() => setVideoPopupOpen(null)}
+        setMainVideo={
+          videoPopupOpen === "main" ? setMainVideoData : setDemoVideoData
+        }
+        video_id={videoPopupOpen === "main" ? "main_page" : "demo_video"}
+        title={
+          videoPopupOpen === "main"
+            ? "تحرير الفيديو الرئيسي"
+            : "تحرير الفيديو الدعائي"
+        }
       />
     </>
   );

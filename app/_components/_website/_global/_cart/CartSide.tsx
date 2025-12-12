@@ -75,6 +75,12 @@ export default function CartSide() {
   return (
     <>
       <section ref={sideRef}>
+        {isCartOpen && (
+          <div
+            onClick={handlToggle}
+            className="w-full h-screen fixed top-0 left-0 z-99999 bg-black opacity-50"
+          />
+        )}
         <AnimatePresence>
           {isCartOpen && (
             <motion.div
@@ -83,9 +89,9 @@ export default function CartSide() {
               animate={{ x: "0" }}
               exit={{ x: "-100%" }}
               transition={{ duration: 0.3 }}
-              className=" max-w-screen-xl max-md:w-[90%] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 h-screen overflow-y-auto shadow-xl border border-gray-300 fixed top-0 left-0 z-[9999999] bg-white"
+              className="max-w-7xl max-md:w-[90%] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 h-screen overflow-y-auto shadow-xl border border-gray-300 fixed top-0 left-0 z-[9999999] bg-white"
             >
-              <div className="mx-auto max-w-3xl">
+              <div className="mx-auto max-w-3xl relative z-99999999">
                 <header className="text-center">
                   <h1 className="text-xl font-bold text-gray-900  sm:text-3xl pb-2 border-b border-primary w-fit mx-auto">
                     {t("title")}

@@ -108,7 +108,7 @@ export default function AboutSection({ data }: AboutSectionProps) {
                 src={image ?? "/about.png"}
                 errorSrc="/about.png"
                 alt="About us"
-                className="w-full  object-cover"
+                className="w-full max-h-[500px] object-cover"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
             </div>

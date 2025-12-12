@@ -1,28 +1,39 @@
 // components/layouts/SectionContainer.tsx
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
+import { OrganizationsHeaderType } from "@/app/_components/_dashboard/_statictexts/OrganizationsEditSection";
 
 interface SectionContainerProps {
   children: React.ReactNode;
-  title?: string;
-  subtitle?: string;
-  description?: string;
+  data: OrganizationsHeaderType;
   className?: string;
   showFeaturedBadge?: boolean;
 }
 
 const SectionContainer: React.FC<SectionContainerProps> = ({
   children,
-  title,
-  subtitle,
-  description,
+  data,
   className = "",
   showFeaturedBadge = false,
 }) => {
   const locale = useLocale();
   const isRTL = locale === "ar";
+
+  const [badge] = useState<TextType>({
+    en: data.column_2.en,
+    ar: data.column_2.ar,
+  });
+  const [title] = useState<TextType>({
+    en: data.column_3.en,
+    ar: data.column_3.ar,
+  });
+  const [subtitle] = useState<TextType>({
+    en: data.column_4.en,
+    ar: data.column_4.ar,
+  });
+  const [stats] = useState<StatItem[]>(data.column_1 ?? []);
 
   return (
     <section
@@ -57,7 +68,7 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
 
       <div className="c-container">
         {/* Header Section */}
-        {(title || subtitle || description) && (
+        {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -86,7 +97,7 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
             )}
 
             {/* Subtitle with decorative line */}
-            {subtitle && (
+            {badge && (
               <motion.div
                 initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -98,7 +109,7 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
               >
                 <div className="flex-1 h-px bg-primary opacity-50" />
                 <span className="text-primary font-medium tracking-wider uppercase text-sm">
-                  {subtitle}
+                  {badge[locale]}
                 </span>
                 <div className="flex-1 h-px bg-primary opacity-50" />
               </motion.div>
@@ -115,7 +126,7 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
               >
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
                   <span className="bg-primary bg-clip-text text-transparent">
-                    {title}
+                    {title[locale]}
                   </span>
                 </h2>
 
@@ -131,7 +142,7 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
             )}
 
             {/* Description with decorative icons */}
-            {description && (
+            {subtitle && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -161,7 +172,7 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
                   </motion.div>
 
                   <p className="text-lg text-gray-600 leading-relaxed flex-1">
-                    {description}
+                    {subtitle[locale]}
                   </p>
 
                   {/* Decorative end icon */}
@@ -219,7 +230,7 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
               ))}
             </motion.div>
           </motion.div>
-        )}
+        }
 
         {/* Content Section */}
         <motion.div

@@ -3,7 +3,6 @@ import VideoSection from "@/app/_components/_website/_about/VideoSection";
 import FetchData from "@/app/_helpers/FetchData";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
 import { getTranslations } from "next-intl/server";
-import React from "react";
 
 export async function generateMetadata() {
   const t = await getTranslations("metaAboutPage");
@@ -17,11 +16,10 @@ export async function generateMetadata() {
 
 export default async function AboutPage() {
   const data = await FetchData(`/details`, false);
-  console.log(data);
   return (
-    <>
+    <div className="overflow-hidden mt-14">
       <VideoSection mainVideo={data.main_video} />
       <AboutMainSections data={data} />
-    </>
+    </div>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { IconType } from "react-icons";
 import { useCounter } from "./useCounter";
+import { getIconComponent } from "@/app/_helpers/helpers";
 
 interface StatCardProps {
-  icon: IconType;
+  icon: string;
   value: number;
   label: string;
   suffix?: string;
@@ -14,7 +14,7 @@ interface StatCardProps {
 }
 
 export function StatCard({
-  icon: Icon,
+  icon,
   value,
   label,
   suffix = "",
@@ -22,6 +22,8 @@ export function StatCard({
   isRTL = false,
 }: StatCardProps) {
   const { count, ref } = useCounter({ end: value, duration: 2500 });
+
+  const Icon = getIconComponent(icon);
 
   return (
     <motion.div

@@ -1,4 +1,4 @@
-import ServicesPageComponent from "@/app/_components/_website/_servicesPage/ServicesPageComponent";
+import ServicePagesListComponent from "@/app/_components/_website/_servicesPage/ServicePagesListComponent";
 import FetchData from "@/app/_helpers/FetchData";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
 import { getTranslations } from "next-intl/server";
@@ -14,16 +14,20 @@ export async function generateMetadata() {
 }
 
 export default async function ServicesPage() {
-  const servicesResponse = await FetchData(`/public-services`, true);
+  // Fetch service pages from the new endpoint
+  const servicesResponse = await FetchData(
+    `/service-pages?is_active=true&sort_by=order&sort_order=asc`,
+    true
+  );
   const categories = await FetchData(`/all-public-categories`, false);
 
   const { data, pagination } = servicesResponse;
 
   return (
-    <ServicesPageComponent
-      servicesData={data}
+    <ServicePagesListComponent
+      initialServices={data}
       categories={categories}
-      last_page={pagination.last_page}
+      initialLastPage={pagination?.last_page || 1}
     />
   );
 }

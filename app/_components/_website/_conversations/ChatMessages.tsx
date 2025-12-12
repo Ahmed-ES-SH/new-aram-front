@@ -1,7 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageType } from "./ChatPage";
-import { FiDownload } from "react-icons/fi";
+import { FiDownload, FiCheck, FiCheckCircle } from "react-icons/fi";
 import { useEffect, useRef, useState } from "react";
 import Pusher from "pusher-js";
 import { useSearchParams } from "next/navigation";
@@ -48,7 +48,7 @@ export default function ChatMessages({ messages: initialMessages }: props) {
         return (
           <p
             style={{ overflowWrap: "anywhere" }}
-            className="block max-w-[380px] text-sm"
+            className="block max-w-[380px] text-sm leading-relaxed"
           >
             {content}
           </p>
@@ -56,32 +56,45 @@ export default function ChatMessages({ messages: initialMessages }: props) {
 
       case "image":
         return file ? (
-          <Img
-            src={file}
-            alt="Image message"
-            className="2xl:w-80 xl:w-72 w-56 max-md:w-full rounded-lg shadow"
-          />
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="overflow-hidden rounded-2xl shadow-lg"
+          >
+            <Img
+              src={file}
+              alt="Image message"
+              className="2xl:w-80 xl:w-72 w-56 max-md:w-full object-cover"
+            />
+          </motion.div>
         ) : (
-          <div className="text-red-500 text-sm">Image not found</div>
+          <div className="text-red-400 text-sm bg-red-50 px-3 py-2 rounded-lg">
+            Image not found
+          </div>
         );
 
       case "audio":
         return file ? (
-          <audio controls className="w-96 max-lg:w-full">
-            <source src={file} />
-            Your browser does not support the audio element.
-          </audio>
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 shadow-sm">
+            <audio controls className="w-80 max-lg:w-full">
+              <source src={file} />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
         ) : (
-          <div className="text-red-500 text-sm">Audio not found</div>
+          <div className="text-red-400 text-sm bg-red-50 px-3 py-2 rounded-lg">
+            Audio not found
+          </div>
         );
 
       case "pdf":
         return file ? (
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+            className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-gray-100 shadow-md min-w-[200px]"
           >
-            <FaFilePdf className="text-red-500 text-2xl flex-shrink-0" />
+            <div className="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center">
+              <FaFilePdf className="text-red-500 text-xl" />
+            </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-800 truncate">
                 {file.split("/").pop()}
@@ -91,19 +104,21 @@ export default function ChatMessages({ messages: initialMessages }: props) {
             <a
               href={file}
               download
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className="p-2.5 rounded-xl bg-gray-50 hover:bg-primary/10 hover:text-primary transition-all duration-200"
               title="Download"
             >
-              <FiDownload className="text-gray-600" />
+              <FiDownload className="text-gray-600 size-5" />
             </a>
           </motion.div>
         ) : (
-          <div className="text-red-500 text-sm">PDF not found</div>
+          <div className="text-red-400 text-sm bg-red-50 px-3 py-2 rounded-lg">
+            PDF not found
+          </div>
         );
 
       default:
         return (
-          <p className="text-sm italic text-gray-500">Unsupported message</p>
+          <p className="text-sm italic text-gray-400">Unsupported message</p>
         );
     }
   };
@@ -117,49 +132,95 @@ export default function ChatMessages({ messages: initialMessages }: props) {
   return (
     <div
       ref={containerRef}
-      className="flex-1 overflow-y-auto hidden-scrollbar p-4 space-y-4"
+      className="flex-1 overflow-y-auto hidden-scrollbar px-4 py-6 space-y-4"
     >
       {userId && (
         <AnimatePresence>
-          {messages.map((message) => {
+          {messages.map((message, index) => {
             const sender =
               message.sender_id == Number(userId) ? "user" : "other";
+            const isUser = sender === "user";
+            const showAvatar =
+              index === 0 ||
+              messages[index - 1]?.sender_id !== message.sender_id;
+
             return (
               <motion.div
                 key={message.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className={`flex  ${
-                  sender === "user" ? "justify-end" : "justify-start"
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className={`flex gap-3 ${
+                  isUser ? "justify-end" : "justify-start"
                 }`}
               >
+                {/* Message bubble */}
                 <div
-                  className={`min-w-[140px] flex flex-col gap-3 px-4 py-2 rounded-2xl ${
+                  className={`relative max-w-[70%] ${
                     message.message_type === "text"
-                      ? sender === "user"
-                        ? "bg-primary text-white"
-                        : "bg-secondary/20 text-black"
-                      : "bg-transparent text-black"
+                      ? `px-4 py-3 shadow-md ${
+                          isUser
+                            ? "bg-gradient-to-br from-primary to-primary/90 text-white rounded-2xl rounded-br-md"
+                            : "bg-white text-gray-800 rounded-2xl rounded-bl-md border border-gray-100"
+                        }`
+                      : "bg-transparent"
                   }`}
                 >
+                  {/* Message content */}
                   {renderMessage(
                     message.message_type,
                     message.message,
                     message.attachment
                   )}
-                  <p
-                    className={`text-xs self-end w-fit ${
-                      message.message_type === "text"
-                        ? sender === "user"
-                          ? "text-orange-100"
-                          : "text-gray-500"
-                        : "text-black/60"
+
+                  {/* Timestamp and read status */}
+                  <div
+                    className={`flex items-center gap-1.5 mt-2 ${
+                      isUser ? "justify-end" : "justify-start"
                     }`}
                   >
-                    {message.created_at && formatTime(message.created_at)}
-                  </p>
+                    <span
+                      className={`text-[10px] ${
+                        message.message_type === "text"
+                          ? isUser
+                            ? "text-white/70"
+                            : "text-gray-400"
+                          : "text-gray-400"
+                      }`}
+                    >
+                      {message.created_at && formatTime(message.created_at)}
+                    </span>
+                    {isUser && (
+                      <span
+                        className={`${
+                          message.is_read ? "text-white" : "text-white/50"
+                        }`}
+                      >
+                        {message.is_read ? (
+                          <FiCheckCircle className="size-3" />
+                        ) : (
+                          <FiCheck className="size-3" />
+                        )}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Bubble tail for text messages */}
+                  {message.message_type === "text" && (
+                    <div
+                      className={`absolute bottom-0 w-4 h-4 ${
+                        isUser
+                          ? "right-0 translate-x-1/2 bg-gradient-to-br from-primary to-primary/90"
+                          : "left-0 -translate-x-1/2 bg-white border-l border-b border-gray-100"
+                      }`}
+                      style={{
+                        clipPath: isUser
+                          ? "polygon(0 0, 0% 100%, 100% 100%)"
+                          : "polygon(100% 0, 0% 100%, 100% 100%)",
+                      }}
+                    />
+                  )}
                 </div>
               </motion.div>
             );

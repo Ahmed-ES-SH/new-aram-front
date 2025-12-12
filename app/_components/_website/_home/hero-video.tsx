@@ -3,6 +3,7 @@ import { directionMap } from "@/app/constants/_website/global";
 import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { LuArrowLeft, LuArrowRight, LuPlay } from "react-icons/lu";
+import VideoBackground from "../_global/_VideoPlayer/VideoBackground";
 
 interface props {
   data: any;
@@ -19,55 +20,16 @@ export default function HeroVideo({ data }: props) {
     video,
   } = data;
 
-  const isYoutubeURL = video && video.includes("www.youtube.com");
-  const videoId =
-    (video &&
-      video.match(
-        /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
-      )) ||
-    "Not Find The VideoId";
-
   return (
     <section
       dir={directionMap[locale]}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Video Background */}
-      <div className="absolute inset-0 w-full h-full">
-        {isYoutubeURL ? (
-          // YouTube Video
-          <iframe
-            width="100%"
-            height="240"
-            src={`https://www.youtube.com/embed/${videoId[1]}`}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="rounded-md h-full"
-          ></iframe>
-        ) : (
-          // Normal Video
-          <video
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster="/placeholder.png?height=1080&width=1920"
-          >
-            <source src={video || "/videos/background.mp4"} type="video/mp4" />
-            {/* Fallback for browsers that don't support video */}
-            <div className="w-full h-full bg-gradient-to-br from-yellow-500 to-purple-600" />
-          </video>
-        )}
-
-        {/* Dark Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-black/50" />
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
-      </div>
+      <VideoBackground
+        src={video ?? "/videos/background.mp4"}
+        overlayOpacity={0.7}
+      />
 
       {/* Content Overlay */}
       <div className="relative z-10 container mx-auto px-4 py-12 lg:py-20">

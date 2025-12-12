@@ -39,35 +39,89 @@ export type creater = {
   image: string;
 };
 
-export type Service = {
+export interface ServiceDetails {
   id: number;
+  slug: string;
+  hero: HeroSection;
+  gallery: GallerySection;
+  problemSection: ProblemSection;
+  solutionSection: SolutionSection;
+  stats: StatItem[];
+  testimonials: TestimonialsSection;
+  cta: CTASection;
+}
+
+export interface HeroSection {
+  badge: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  watchBtn: string;
+  exploreBtn: string;
+  heroImage: string;
+  backgroundImage: string;
+}
+
+export interface GallerySection {
+  translations: {
+    galleryTitle: string;
+    viewDetails: string;
+    close: string;
+    next: string;
+    [key: string]: string; // Future-proof for extra translations
+  };
+  images: GalleryImage[];
+}
+
+export interface GalleryImage {
+  id: string;
+  src: string;
+  alt: string;
+}
+
+export interface ProblemSection {
+  title: string;
+  subtitle: string;
+  items: ProblemItem[];
+}
+
+export interface ProblemItem {
+  icon: string;
   title: string;
   description: string;
-  image: string;
+}
+
+export interface SolutionSection {
+  title: string;
+  subtitle: string;
+  cta: string;
+  // Add more fields if backend sends more
+  [key: string]: any;
+}
+
+export interface StatItem {
+  number: string;
+  label: string;
+}
+
+export interface TestimonialsSection {
+  title: string;
+  items: Testimonial[];
+}
+
+export interface Testimonial {
+  name: string;
+  text: string;
   rating: number;
-  price: number;
-  orders_count: number;
-  status: "approved" | "pending" | "rejected" | "suspended";
-  benefit_type: "percentage" | "fixed" | "none";
-  is_exclusive: 0 | 1 | boolean;
-  discount_percentage: number | null;
-  discount_price: number | null;
-  exclusive_start_date: string | null;
-  exclusive_end_date: string | null;
-  user_id: number;
-  category_id: number;
-  active: boolean | number;
-  order: number;
-  created_at: string;
-  updated_at: string;
-  organizations: miniOrg[];
-  category: Category;
-  creater: creater;
-  images: ImageLike[];
-  deletedImages?: any;
-  keywords: Keyword[];
-  benefits: benfit[];
-};
+  avatar: string;
+}
+
+export interface CTASection {
+  ctaTitle: string;
+  ctaSubtitle: string;
+  ctaButton1: string;
+  ctaButton2: string;
+}
 
 type benfit = {
   id: number;

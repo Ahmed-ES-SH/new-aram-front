@@ -8,8 +8,6 @@ import { instance } from "@/app/_helpers/axios";
 import { useDispatch } from "react-redux";
 import { clearCart } from "@/app/Store/cartSlice";
 import { useUserCountry } from "@/app/_hooks/useUserCountry";
-import { getDeviceType } from "@/app/_helpers/getDeviceType";
-import { getBrowser } from "@/app/_helpers/getBrowser";
 import { toast } from "sonner";
 import PaymentFailedPage from "../_faildpayment/PaymentFailedPage";
 import LoadingPage from "../_global/LoadingPage";
@@ -27,13 +25,11 @@ export function SuccessContent() {
 
   // params
   const total_invoice = searchParams.get(`total_invoice`);
-  const payment_id = searchParams.get(`payment_id`);
-  const activity_id = searchParams.get(`activity_id`);
+  const payment_id = searchParams.get(`payment_id`) ?? null;
   const provisionalData_id = searchParams.get(`provisionalData_id`);
-  const orderId = searchParams.get(`orderId`);
   const payment_type = searchParams.get(`payment_type`);
   const invoice_number = searchParams.get(`invoice_number`);
-  const session_id = searchParams.get(`session_id`);
+  const session_id = searchParams.get(`session_id`) ?? null;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -51,23 +47,15 @@ export function SuccessContent() {
     return query.toString();
   }
 
-  const deviceType = getDeviceType(); // Detect device type (mobile/desktop/tablet)
-  const browser = getBrowser(); // Detect browser type
-
   const query = buildQuery({
-    order_id: orderId,
-    device_type: deviceType,
-    browser,
-    country,
     payment_id,
     provisionalData_id,
     payment_type,
     invoice_number,
     session_id,
-    activity_id,
   });
 
-  const url = `/payment/webhook?` + query;
+  const url = `/payment/callback?` + query;
 
   // Effect to handle referral tracking based on location permission status
   useEffect(() => {
@@ -89,16 +77,14 @@ export function SuccessContent() {
       }
     };
 
-    if (orderId) check();
+    if (provisionalData_id) check();
   }, [
     dispatch,
     invoice_number,
-    orderId,
     payment_id,
     payment_type,
     provisionalData_id,
     session_id,
-    activity_id,
   ]);
 
   const details: any = [

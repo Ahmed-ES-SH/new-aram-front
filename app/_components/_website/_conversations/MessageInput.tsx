@@ -2,7 +2,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import FilePreview from "./FilePreview";
-import { FiMic, FiPaperclip, FiSend } from "react-icons/fi";
+import { FiMic, FiPaperclip, FiSend, FiSmile } from "react-icons/fi";
 import { MdErrorOutline } from "react-icons/md";
 import { useSearchParams } from "next/navigation";
 import { instance } from "@/app/_helpers/axios";
@@ -18,6 +18,7 @@ export default function MessageInput() {
 
   const recordedChunksRef = useRef<Blob[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [message, setMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState<any>(null);
@@ -26,6 +27,8 @@ export default function MessageInput() {
     null
   );
   const [error, setError] = useState<string | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -66,6 +69,7 @@ export default function MessageInput() {
     if (isRecording && mediaRecorder) {
       mediaRecorder.stop();
       setIsRecording(false);
+      setRecordingTime(0);
       return;
     }
 
@@ -186,6 +190,17 @@ export default function MessageInput() {
     }
   };
 
+  // Recording timer
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRecording) {
+      interval = setInterval(() => {
+        setRecordingTime((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
+
   useEffect(() => {
     if (error) {
       setTimeout(() => {
@@ -194,14 +209,22 @@ export default function MessageInput() {
     }
   }, [error]);
 
+  const formatRecordingTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
   return (
-    <div className="backdrop-blur bg-white/70 border-t border-gray-200 p-3">
+    <div className="relative bg-white/80 backdrop-blur-xl border-t border-gray-100 p-4 z-10">
       <AnimatePresence>
         {selectedFile && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className="mb-4"
           >
             <FilePreview
@@ -212,22 +235,55 @@ export default function MessageInput() {
         )}
       </AnimatePresence>
 
-      <div className="flex items-center gap-2">
+      {/* Recording indicator */}
+      <AnimatePresence>
+        {isRecording && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-4 flex items-center justify-center gap-3 py-3 bg-red-50 rounded-2xl border border-red-100"
+          >
+            <div className="flex items-center gap-2">
+              <motion.div
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+                className="w-3 h-3 bg-red-500 rounded-full"
+              />
+              <span className="text-red-600 font-medium text-sm">
+                Recording...
+              </span>
+            </div>
+            <span className="text-red-500 font-mono text-lg">
+              {formatRecordingTime(recordingTime)}
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div
+        className={`flex items-end gap-3 p-2 rounded-2xl transition-all duration-300 ${
+          isFocused ? "bg-white shadow-lg ring-2 ring-primary/20" : "bg-gray-50"
+        }`}
+      >
         {/* Input Area */}
         <div className="flex-1">
           <textarea
+            ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             placeholder="Type a message..."
-            className="w-full outline-none px-4 py-2 pr-12 bg-white/60 backdrop-blur border border-gray-200 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-sm transition-colors"
+            className="w-full px-4 py-3 bg-transparent border-none outline-none resize-none text-sm text-gray-700 placeholder-gray-400"
             rows={1}
-            style={{ maxHeight: "100px" }}
+            style={{ maxHeight: "120px" }}
           />
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-1 pb-1">
           <input
             type="file"
             ref={fileInputRef}
@@ -238,21 +294,25 @@ export default function MessageInput() {
 
           {/* Attach File */}
           <motion.button
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => fileInputRef.current?.click()}
-            className="p-2 text-gray-600 hover:text-blue-600 rounded-full hover:bg-gray-100 transition-colors"
+            type="button"
+            className="p-2.5 text-gray-400 hover:text-primary rounded-xl hover:bg-primary/10 transition-all duration-200"
           >
             <FiPaperclip size={20} />
           </motion.button>
 
           {/* Record */}
           <motion.button
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleRecord}
-            className={`p-2 rounded-full transition-colors ${
+            type="button"
+            className={`p-2.5 rounded-xl transition-all duration-200 ${
               isRecording
-                ? "bg-red-500 text-white animate-pulse"
-                : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                ? "bg-red-500 text-white shadow-lg shadow-red-500/30"
+                : "text-gray-400 hover:text-primary hover:bg-primary/10"
             }`}
           >
             <FiMic size={20} />
@@ -260,12 +320,14 @@ export default function MessageInput() {
 
           {/* Send */}
           <motion.button
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={handleSendMessage}
             disabled={!message.trim() && !selectedFile}
-            className={`p-2 rounded-full transition-colors ${
+            type="button"
+            className={`p-3 rounded-xl transition-all duration-300 ${
               message.trim() || selectedFile
-                ? "bg-blue-500 text-white hover:bg-blue-600"
+                ? "bg-linear-to-r from-primary to-primary/80 text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40"
                 : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
           >
@@ -273,18 +335,20 @@ export default function MessageInput() {
           </motion.button>
         </div>
       </div>
+
+      {/* Error toast */}
       <AnimatePresence>
         {error && (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm"
+            className="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-5 py-3 rounded-2xl shadow-xl z-50 text-sm"
           >
-            <div className="flex items-center gap-1 max-md:flex-col">
-              <MdErrorOutline className="size-6" />
-              {error}
+            <div className="flex items-center gap-2">
+              <MdErrorOutline className="size-5" />
+              <span>{error}</span>
             </div>
           </motion.div>
         )}

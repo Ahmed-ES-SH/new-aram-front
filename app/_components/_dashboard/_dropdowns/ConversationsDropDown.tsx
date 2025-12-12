@@ -1,4 +1,5 @@
 "use client";
+import { Message } from "@/app/[locale]/(routes)/conversations/page";
 import type { RootState } from "@/app/Store/store";
 import {
   setShowMessagesDrop,
@@ -6,76 +7,41 @@ import {
   setShowUserButton,
 } from "@/app/Store/variablesSlice";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BiSolidMessageRounded } from "react-icons/bi";
+import { FiMessageSquare, FiSearch, FiUsers } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import ConversationItem from "./ConversationItem";
+import LocaleLink from "../../_website/_global/LocaleLink";
+import { useAppSelector } from "@/app/Store/hooks";
 
 // أنواع البيانات للمحادثات
-interface Conversation {
+export interface Conversation {
   id: number;
-  userName: string;
-  lastMessage: string;
-  time: string;
-  unread: number;
-  avatar: string;
-  online: boolean;
+  last_message: Message;
+  participant: {
+    id: number;
+    name: string;
+    image: string;
+    type: string;
+  };
+  updated_at: string;
+  unread_count: number;
 }
 
-export default function ConversationsDropDown() {
+interface Props {
+  conversations: Conversation[];
+}
+
+export default function ConversationsDropDown({ conversations }: Props) {
   const dispatch = useDispatch();
+
+  const { user } = useAppSelector((state) => state.user);
   const { showMessagesDrop } = useSelector(
     (state: RootState) => state.variables
   );
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // بيانات وهمية للمحادثات
-  const mockConversations: Conversation[] = [
-    {
-      id: 1,
-      userName: "محمد أحمد",
-      lastMessage: "مرحباً، كيف يمكنني مساعدتك؟",
-      time: "10:30",
-      unread: 2,
-      avatar: "/defaults/default-male.png",
-      online: true,
-    },
-    {
-      id: 2,
-      userName: "سارة عبدالله",
-      lastMessage: "شكراً على المساعدة",
-      time: "أمس",
-      unread: 0,
-      avatar: "/defaults/default-female.png",
-      online: false,
-    },
-    {
-      id: 3,
-      userName: "أحمد خالد",
-      lastMessage: "هل يمكنك إرسال الملفات؟",
-      time: "أمس",
-      unread: 1,
-      avatar: "/defaults/default-male.png",
-      online: true,
-    },
-    {
-      id: 4,
-      userName: "فاطمة محمد",
-      lastMessage: "سأكون في الاجتماع الساعة 3",
-      time: "25/12",
-      unread: 0,
-      avatar: "/defaults/default-female.png",
-      online: false,
-    },
-    {
-      id: 5,
-      userName: "علي حسن",
-      lastMessage: "تم استلام الطلب بنجاح",
-      time: "24/12",
-      unread: 0,
-      avatar: "/defaults/default-male.png",
-      online: true,
-    },
-  ];
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleDropdown = () => {
     dispatch(setShowMessagesDrop(!showMessagesDrop));
@@ -100,97 +66,167 @@ export default function ConversationsDropDown() {
     };
   }, [dispatch]);
 
-  // معالجة النقر على محادثة
-  const handleConversationClick = (conversationId: number) => {
-    console.log(`فتح المحادثة: ${conversationId}`);
-    // هنا يمكنك إضافة منطق فتح المحادثة
-    dispatch(setShowMessagesDrop(false));
-  };
+  // تصفية المحادثات بناء على البحث
+  const filteredConversations =
+    (conversations &&
+      Array.isArray(conversations) &&
+      conversations?.filter(
+        (conversation) =>
+          conversation.participant.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          conversation.last_message?.message
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase())
+      )) ||
+    [];
+
+  // حساب إجمالي الرسائل غير المقروءة
+  const totalUnread =
+    conversations?.reduce((sum, conv) => sum + conv.unread_count, 0) || 0;
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <div onClick={toggleDropdown} className="relative w-fit cursor-pointer">
-        <BiSolidMessageRounded className="text-white size-6 max-md:size-5" />
-        <span className="absolute -top-2 -right-1 w-3 h-3 rounded-full bg-red-500 flex items-center justify-center text-white text-xs">
-          3
-        </span>
+      <div
+        onClick={toggleDropdown}
+        className="relative w-fit cursor-pointer group"
+      >
+        <div className="relative p-2 rounded-full bg-linear-to-br from-indigo-500/20 to-blue-500/20 group-hover:from-indigo-500/30 group-hover:to-blue-500/30 transition-all duration-300">
+          <BiSolidMessageRounded className="text-white size-6 max-md:size-5" />
+
+          {/* مؤشر الرسائل غير المقروءة */}
+          {totalUnread > 0 && (
+            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-linear-to-br from-red-500 to-pink-500 flex items-center justify-center text-white text-xs font-bold shadow-lg animate-pulse">
+              {totalUnread > 9 ? "9+" : totalUnread}
+            </span>
+          )}
+        </div>
       </div>
 
       <AnimatePresence>
         {showMessagesDrop && (
           <motion.div
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 40, opacity: 1 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="w-[350px] h-[400px] absolute right-0 shadow-lg rounded-lg bg-white border border-gray-200 z-50 overflow-hidden"
+            initial={{ y: -10, opacity: 0, scale: 0.95 }}
+            animate={{ y: 40, opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.2, type: "spring", stiffness: 300 }}
+            className="w-[420px] h-[520px] absolute -right-2 shadow-2xl rounded-2xl bg-white border border-gray-200 z-50 overflow-hidden"
           >
-            {/* السهم أعلى القائمة */}
-            <div className="absolute -top-2 right-4 w-4 h-4 bg-white border-t border-l border-gray-200 transform rotate-45"></div>
-
-            {/* رأس القائمة */}
-            <div className="p-4 border-b border-gray-200 bg-gray-50">
-              <h3 className="text-lg font-semibold text-gray-800 text-center">
-                المحادثات الأخيرة
-              </h3>
-              <p className="text-sm text-gray-600 text-center mt-1">
-                {mockConversations.length} محادثة
-              </p>
+            {/* السهم أعلى القائمة مع تأثير ظل */}
+            <div className="absolute -top-3 right-8">
+              <div className="w-6 h-6 bg-white border-t border-l border-gray-200 transform rotate-45 shadow-sm"></div>
             </div>
 
-            {/* قائمة المحادثات */}
-            <div className="h-[320px] overflow-y-auto">
-              {mockConversations.map((conversation) => (
-                <div
-                  key={conversation.id}
-                  onClick={() => handleConversationClick(conversation.id)}
-                  className="flex items-center gap-3 p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
-                >
-                  {/* صورة المستخدم مع مؤشر الحالة */}
-                  <div className="relative">
-                    <img
-                      src={conversation.avatar}
-                      alt={conversation.userName}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    {conversation.online && (
-                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                    )}
+            {/* رأس القائمة */}
+            <div className="p-6 bg-primary text-wihte">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <FiMessageSquare className="text-white size-6" />
                   </div>
-
-                  {/* محتوى المحادثة */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-gray-800 text-sm">
-                        {conversation.userName}
-                      </h4>
-                      <span className="text-xs text-gray-500">
-                        {conversation.time}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 truncate">
-                      {conversation.lastMessage}
+                  <div>
+                    <h3 className="text-xl font-bold text-white">المحادثات</h3>
+                    <p className="text-sm text-blue-100">
+                      {conversations?.length || 0} محادثة نشطة
                     </p>
                   </div>
+                </div>
 
-                  {/* عدد الرسائل غير المقروءة */}
-                  {conversation.unread > 0 && (
-                    <div className="flex-shrink-0">
-                      <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        {conversation.unread}
+                {/* أيقونة المشاركين */}
+                <div className="flex items-center gap-1 text-white/80">
+                  <FiUsers className="size-5" />
+                  <span className="text-sm font-medium">
+                    {conversations?.length || 0}
+                  </span>
+                </div>
+              </div>
+
+              {/* شريط البحث */}
+              <div className="relative">
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <FiSearch className="text-gray-400 size-5" />
+                </div>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="ابحث في المحادثات..."
+                  className="w-full pr-12 pl-4 py-3 bg-white/90 backdrop-blur-sm rounded-xl border-none text-gray-700 placeholder-gray-500 focus:ring-2 focus:ring-white/30 focus:outline-none transition-all duration-300"
+                />
+              </div>
+            </div>
+
+            {/* حالة عدم وجود محادثات */}
+            {!conversations || conversations.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-[calc(100%-180px)] p-8">
+                <div className="relative mb-6">
+                  <div className="w-32 h-32 rounded-full bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                    <FiMessageSquare className="text-gray-400 size-16" />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-linear-to-br from-indigo-500 to-blue-500 flex items-center justify-center shadow-lg">
+                    <span className="text-white text-2xl">+</span>
+                  </div>
+                </div>
+
+                <h4 className="text-xl font-bold text-gray-800 mb-3">
+                  لا توجد محادثات
+                </h4>
+                <p className="text-gray-600 text-center mb-6 max-w-sm">
+                  ابدأ محادثة جديدة مع العملاء أو الموردين للحفاظ على التواصل
+                  الفعال
+                </p>
+
+                <button className="px-6 py-3 bg-linear-to-r from-indigo-500 to-blue-500 text-white rounded-xl hover:from-indigo-600 hover:to-blue-600 transition-all duration-300 font-medium shadow-lg hover:shadow-xl">
+                  بدء محادثة جديدة
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* قائمة المحادثات */}
+                <div className="h-[calc(100%-180px)] overflow-y-auto">
+                  {filteredConversations &&
+                    filteredConversations.map((conversation) => (
+                      <ConversationItem
+                        key={`${conversation.id}-${conversation.updated_at}`}
+                        conversation={conversation}
+                      />
+                    ))}
+                </div>
+
+                {/* تذييل القائمة */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-white via-white to-transparent">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      <span className="text-sm font-medium">
+                        {conversations?.length || 0} محادثة نشطة
                       </span>
+                    </div>
+
+                    <LocaleLink
+                      href={`/conversations?userId=${user?.id}&account_type=${user?.account_type}`}
+                      className="px-6 py-2 bg-linear-to-r from-gray-800 to-gray-900 text-white rounded-xl hover:from-gray-900 hover:to-black transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg"
+                    >
+                      عرض الكل
+                    </LocaleLink>
+                  </div>
+
+                  {/* موجز الإحصائيات */}
+                  {totalUnread > 0 && (
+                    <div className="mt-3 pt-3 border-t border-gray-200">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">
+                          الرسائل غير المقروءة:
+                        </span>
+                        <span className="font-bold text-blue-600">
+                          {totalUnread} رسالة
+                        </span>
+                      </div>
                     </div>
                   )}
                 </div>
-              ))}
-            </div>
-
-            {/* زر عرض الكل */}
-            <div className="p-3 border-t border-gray-200 bg-gray-50">
-              <button className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium">
-                عرض جميع المحادثات
-              </button>
-            </div>
+              </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
