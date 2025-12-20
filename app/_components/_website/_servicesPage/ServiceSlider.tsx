@@ -3,13 +3,20 @@ import { useRef, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import ServiceCard from "./service-card";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { Service } from "./service";
 import "swiper/css";
 import "swiper/css/navigation";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import ServiceSliderHeader from "./ServiceSliderHeader";
 
-const ServicesSlider = ({ services, title, subtitle }) => {
+interface props {
+  services: Service[];
+}
+
+const ServicesSlider = ({ services }: props) => {
   const locale = useLocale();
+  const t = useTranslations("servicesSlider");
 
   const swiperRef: any = useRef(null);
   const prevRef: any = useRef(null);
@@ -30,13 +37,7 @@ const ServicesSlider = ({ services, title, subtitle }) => {
   return (
     <div className="relative c-container mb-4 mt-12" dir="ltr">
       {/* العناوين */}
-      <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          {title}
-        </h2>
-
-        <p className="text-gray-600 text-base md:text-lg">{subtitle}</p>
-      </div>
+      <ServiceSliderHeader />
 
       {/* السلايدر */}
       <Swiper
@@ -58,7 +59,7 @@ const ServicesSlider = ({ services, title, subtitle }) => {
             slidesPerView: 2,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
         }}
         onInit={(swiper: any) => {
@@ -68,7 +69,7 @@ const ServicesSlider = ({ services, title, subtitle }) => {
           swiper.navigation.update();
         }}
       >
-        {services.map((service, index) => (
+        {services.map((service, index: number) => (
           <SwiperSlide key={service.id}>
             <ServiceCard service={service} locale={locale} index={index} />
           </SwiperSlide>

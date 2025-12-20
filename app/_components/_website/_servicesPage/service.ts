@@ -4,6 +4,7 @@ export interface Category {
   title_en: string;
   title_ar: string;
   image: string;
+  bg_color: string;
 }
 
 export interface User {
@@ -22,6 +23,9 @@ export interface Keyword {
 export interface Service {
   id: number;
   title: string;
+  slug: string;
+  price: number | string;
+  price_before_discount: number | string;
   description: string;
   image: string;
   rating: number;

@@ -12,14 +12,17 @@ import {
   FaSnapchat,
   FaShareAlt,
 } from "react-icons/fa";
+import Img from "../_global/Img";
 
 interface PreviewCardProps {
   activeFeatureId: string;
+  previewImage: any;
   ctaText: string;
 }
 
 export default function PreviewCard({
   activeFeatureId,
+  previewImage,
   ctaText,
 }: PreviewCardProps) {
   const locale = useLocale() as LocaleType;
@@ -159,13 +162,11 @@ export default function PreviewCard({
         transition={{ duration: 0.4 }}
         className="relative z-10 w-64 h-[450px] bg-white rounded-[2.5rem] shadow-2xl border-[6px] border-slate-900 overflow-hidden"
       >
-        {/* Notch */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-slate-900 rounded-b-xl z-50"></div>
-
-        {/* Dynamic Screen Content */}
-        <div className="w-full h-full bg-slate-50 pt-8">
-          {renderPhoneContent()}
-        </div>
+        <Img
+          src={previewImage}
+          alt="Preview"
+          className="w-full h-full object-cover"
+        />
       </motion.div>
     </div>
   );

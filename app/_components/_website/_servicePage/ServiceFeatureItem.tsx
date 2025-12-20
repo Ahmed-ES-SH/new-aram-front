@@ -4,6 +4,7 @@ import { LocaleType } from "@/app/types/_dashboard/GlobalTypes";
 import { motion } from "framer-motion";
 import { useLocale } from "next-intl";
 import { FeatureData } from "./types";
+import { getIconComponent } from "@/app/_helpers/helpers";
 
 interface FeatureItemProps {
   item: FeatureData;
@@ -17,6 +18,7 @@ export default function ServiceFeatureItem({
   onClick,
 }: FeatureItemProps) {
   const locale = useLocale() as LocaleType;
+  const Icon = getIconComponent(item.icon);
 
   return (
     <motion.div
@@ -51,7 +53,7 @@ export default function ServiceFeatureItem({
           ${locale === "ar" ? "order-2" : "order-1"}
         `}
         >
-          <item.icon className="text-xl" />
+          <Icon className="text-xl" />
         </div>
 
         {/* Text Content */}

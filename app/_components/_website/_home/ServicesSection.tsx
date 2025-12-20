@@ -9,19 +9,17 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 import { useLocale } from "next-intl";
-
 import { directionMap } from "@/app/constants/_website/global";
 import { instance } from "@/app/_helpers/axios";
-import ServicePageUserCard, {
-  ServicePageData,
-} from "../_services/ServicePageUserCard";
+import { Service } from "../_servicesPage/service";
 import { ServicesHeader } from "./_services_v2/ServicesHeader";
 import { servicesHeaderType } from "../../_dashboard/_statictexts/ServicesEditSection";
 import LocaleLink from "../_global/LocaleLink";
+import PublicServiceCard from "../_servicesPage/service-card";
 
 interface ServicesSectionProps {
   staticData: servicesHeaderType;
-  initialServices?: ServicePageData[];
+  initialServices?: Service[];
 }
 
 export default function ServicesSection({
@@ -32,9 +30,7 @@ export default function ServicesSection({
   const isRTL = locale === "ar";
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const [services, setServices] = useState<ServicePageData[]>(
-    initialServices || []
-  );
+  const [services, setServices] = useState<Service[]>(initialServices || []);
   const [loading, setLoading] = useState(!initialServices);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -190,9 +186,10 @@ export default function ServicesSection({
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="min-w-[300px] md:min-w-[340px] snap-start"
               >
-                <ServicePageUserCard
+                <PublicServiceCard
                   service={service}
-                  variant={index === 0 ? "featured" : "default"}
+                  locale={locale}
+                  index={index}
                 />
               </motion.div>
             ))}

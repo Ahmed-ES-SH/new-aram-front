@@ -20,12 +20,14 @@ interface VariablesState {
   userPanalSidebar: boolean;
   withdrawOpen: boolean;
   showSendPopup: boolean;
+  isServiceSidebarOpen: boolean;
 }
 
 const initialState: VariablesState = {
   locale: "en",
   width: 0,
   isMenuOpen: false,
+  isServiceSidebarOpen: true,
   conversationsSidebar: false,
   servicesFilterSidebar: true,
   isCartOpen: false,
@@ -94,6 +96,9 @@ const variablesSlice = createSlice({
     setWithdrawOpen: (state, action: PayloadAction<boolean>) => {
       state.withdrawOpen = action.payload;
     },
+    setIsServiceSidebarOpen: (state, action: PayloadAction<boolean>) => {
+      state.isServiceSidebarOpen = action.payload;
+    },
     setShowSendPopup: (state, action: PayloadAction<boolean>) => {
       state.showSendPopup = action.payload;
     },
@@ -117,6 +122,7 @@ export const {
   setOrgsSidebar,
   setUserPanalSidebar,
   setWithdrawOpen,
+  setIsServiceSidebarOpen,
   setShowSendPopup,
 } = variablesSlice.actions;
 

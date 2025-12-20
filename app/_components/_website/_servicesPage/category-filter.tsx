@@ -27,7 +27,7 @@ export default function CategoryFilter({
 
   return (
     <section className="py-8 px-4">
-      <div className="max-w-6xl mx-auto relative">
+      <div className="max-w-6xl mx-auto relative pb-12">
         {/* Swiper Slider */}
         <Swiper
           modules={[Autoplay, Navigation, FreeMode]}
@@ -100,33 +100,15 @@ export default function CategoryFilter({
         </Swiper>
 
         {/* Navigation Arrows */}
-        <div className="swiper-button-prev !h-8 w-8! !bg-white !shadow-lg !rounded-full !text-teal-500 after:!text-xs"></div>
-        <div className="swiper-button-next !h-8 !w-8 !bg-white !shadow-lg !rounded-full !text-teal-500 after:!text-xs"></div>
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-4 z-10">
+          <div className="swiper-button-prev !static !m-0 !flex !items-center !justify-center !h-8 w-8! !bg-white !shadow-lg !rounded-full !text-teal-500 after:!text-xs"></div>
+          <div className="swiper-button-next !static !m-0 !flex !items-center !justify-center !h-8 !w-8 !bg-white !shadow-lg !rounded-full !text-teal-500 after:!text-xs"></div>
+        </div>
       </div>
 
       <style jsx global>{`
         .category-swiper {
-          padding: 8px 40px;
-        }
-
-        .swiper-button-prev,
-        .swiper-button-next {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          z-index: 10;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-
-        .swiper-button-prev {
-          left: 0;
-        }
-
-        .swiper-button-next {
-          right: 0;
+          padding: 8px 10px;
         }
 
         .swiper-button-disabled {

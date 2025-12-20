@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface ProblemSectionEditorProps {
   data: ProblemSection;
-  onChange: (data: ProblemSection) => void;
+  onChange: (data: ProblemSection, field: string) => void;
 }
 
 export default function ProblemSectionEditor({
@@ -15,7 +15,7 @@ export default function ProblemSectionEditor({
   onChange,
 }: ProblemSectionEditorProps) {
   const updateField = (field: keyof ProblemSection, value: string) => {
-    onChange({ ...data, [field]: value });
+    onChange({ ...data, [field]: value }, "problem_section");
   };
 
   const updateItem = (
@@ -23,24 +23,32 @@ export default function ProblemSectionEditor({
     field: keyof ProblemItem,
     value: string
   ) => {
-    const newItems = [...data.items];
+    const newItems = [...(data.items || [])];
     newItems[index] = { ...newItems[index], [field]: value };
-    onChange({ ...data, items: newItems });
+    onChange({ ...data, items: newItems }, "problem_section");
   };
 
   const addItem = () => {
     const newItem: ProblemItem = {
+      id: Date.now(),
       icon: "star",
-      title: "",
-      description: "",
+      title_ar: "",
+      title_en: "",
+      description_ar: "",
+      description_en: "",
     };
-    onChange({ ...data, items: [...data.items, newItem] });
+    onChange(
+      { ...data, items: [...(data.items || []), newItem] },
+      "problem_section"
+    );
   };
 
   const removeItem = (index: number) => {
-    const newItems = data.items.filter((_, i) => i !== index);
-    onChange({ ...data, items: newItems });
+    const newItems = (data.items || []).filter((_, i) => i !== index);
+    onChange({ ...data, items: newItems }, "problem_section");
   };
+
+  const items = data.items || [];
 
   return (
     <div className="space-y-6">
@@ -57,19 +65,35 @@ export default function ProblemSectionEditor({
         </div>
       </div>
 
-      {/* Section Titles */}
+      {/* Section Titles - Arabic */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <EditableField
-          label="العنوان الرئيسي"
-          value={data.title}
-          onChange={(v) => updateField("title", v)}
+          label="العنوان الرئيسي (عربي)"
+          value={data.title_ar || ""}
+          onChange={(v) => updateField("title_ar", v)}
           placeholder="مثال: المشكلة التي نحلها"
         />
         <EditableField
-          label="العنوان الفرعي"
-          value={data.subtitle}
-          onChange={(v) => updateField("subtitle", v)}
+          label="العنوان الفرعي (عربي)"
+          value={data.subtitle_ar || ""}
+          onChange={(v) => updateField("subtitle_ar", v)}
           placeholder="مثال: البطاقات الورقية لها عيوب كثيرة"
+        />
+      </div>
+
+      {/* Section Titles - English */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <EditableField
+          label="العنوان الرئيسي (إنجليزي)"
+          value={data.title_en || ""}
+          onChange={(v) => updateField("title_en", v)}
+          placeholder="Example: The Problem We Solve"
+        />
+        <EditableField
+          label="العنوان الفرعي (إنجليزي)"
+          value={data.subtitle_en || ""}
+          onChange={(v) => updateField("subtitle_en", v)}
+          placeholder="Example: Paper cards have many drawbacks"
         />
       </div>
 
@@ -77,7 +101,7 @@ export default function ProblemSectionEditor({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h4 className="font-medium text-gray-700">
-            المشاكل ({data.items.length})
+            المشاكل ({items.length})
           </h4>
           <button
             type="button"
@@ -91,9 +115,9 @@ export default function ProblemSectionEditor({
 
         <div className="space-y-4">
           <AnimatePresence>
-            {data.items.map((item, index) => (
+            {items.map((item, index) => (
               <motion.div
-                key={index}
+                key={item.id || index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
@@ -115,26 +139,39 @@ export default function ProblemSectionEditor({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <IconSelector
                     label="الأيقونة"
-                    value={item.icon}
+                    value={item.icon || ""}
                     onChange={(v) => updateItem(index, "icon", v)}
                   />
-                  <div className="md:col-span-2">
+                  <div className="md:col-span-2 space-y-3">
                     <EditableField
-                      label="العنوان"
-                      value={item.title}
-                      onChange={(v) => updateItem(index, "title", v)}
-                      placeholder="عنوان المشكلة..."
+                      label="العنوان (عربي)"
+                      value={item.title_ar || ""}
+                      onChange={(v) => updateItem(index, "title_ar", v)}
+                      placeholder="عنوان المشكلة بالعربي..."
+                    />
+                    <EditableField
+                      label="العنوان (إنجليزي)"
+                      value={item.title_en || ""}
+                      onChange={(v) => updateItem(index, "title_en", v)}
+                      placeholder="Problem title in English..."
                     />
                   </div>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <EditableField
-                    label="الوصف"
-                    value={item.description}
-                    onChange={(v) => updateItem(index, "description", v)}
+                    label="الوصف (عربي)"
+                    value={item.description_ar || ""}
+                    onChange={(v) => updateItem(index, "description_ar", v)}
                     type="textarea"
-                    placeholder="وصف تفصيلي للمشكلة..."
+                    placeholder="وصف تفصيلي للمشكلة بالعربي..."
+                  />
+                  <EditableField
+                    label="الوصف (إنجليزي)"
+                    value={item.description_en || ""}
+                    onChange={(v) => updateItem(index, "description_en", v)}
+                    type="textarea"
+                    placeholder="Detailed problem description in English..."
                   />
                 </div>
               </motion.div>
@@ -142,7 +179,7 @@ export default function ProblemSectionEditor({
           </AnimatePresence>
         </div>
 
-        {data.items.length === 0 && (
+        {items.length === 0 && (
           <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
             <FiAlertCircle className="mx-auto text-gray-300" size={48} />
             <p className="mt-4 text-gray-500">لا توجد مشاكل مضافة</p>

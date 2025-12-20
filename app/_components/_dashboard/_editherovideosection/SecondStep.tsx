@@ -35,6 +35,7 @@ export default function SecondStep({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
+      className="w-[90%] mx-auto py-12"
     >
       <h3 className="text-lg font-semibold text-gray-700 mb-4">
         {selectedMethod === "url"

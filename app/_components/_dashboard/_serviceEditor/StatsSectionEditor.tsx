@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface StatsSectionEditorProps {
   data: StatItem[];
-  onChange: (data: StatItem[]) => void;
+  onChange: (data: StatItem[], field: string) => void;
 }
 
 export default function StatsSectionEditor({
@@ -16,16 +16,19 @@ export default function StatsSectionEditor({
   const updateStat = (index: number, field: keyof StatItem, value: string) => {
     const newStats = [...data];
     newStats[index] = { ...newStats[index], [field]: value };
-    onChange(newStats);
+    onChange(newStats, "stats");
   };
 
   const addStat = () => {
-    onChange([...data, { number: "", label: "" }]);
+    onChange(
+      [...data, { id: Date.now(), number: "", label_ar: "", label_en: "" }],
+      "stats"
+    );
   };
 
   const removeStat = (index: number) => {
     const newStats = data.filter((_, i) => i !== index);
-    onChange(newStats);
+    onChange(newStats, "stats");
   };
 
   return (
@@ -52,7 +55,7 @@ export default function StatsSectionEditor({
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2   gap-4">
         <AnimatePresence>
           {data.map((stat, index) => (
             <motion.div
@@ -60,7 +63,7 @@ export default function StatsSectionEditor({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="relative p-4 bg-gradient-to-br from-purple-50 to-white rounded-xl border border-purple-100"
+              className="relative p-4 bg-linear-to-br from-purple-50 to-white rounded-xl border border-purple-100"
             >
               <button
                 type="button"
@@ -75,12 +78,18 @@ export default function StatsSectionEditor({
                   label="الرقم"
                   value={stat.number}
                   onChange={(v) => updateStat(index, "number", v)}
-                  placeholder="مثال: 100+"
+                  placeholder="Example: 100+"
                 />
                 <EditableField
-                  label="الوصف"
-                  value={stat.label}
-                  onChange={(v) => updateStat(index, "label", v)}
+                  label="الوصف (إنجليزي)"
+                  value={stat.label_en || ""}
+                  onChange={(v) => updateStat(index, "label_en", v)}
+                  placeholder="Example: Happy Customer"
+                />
+                <EditableField
+                  label="الوصف (عربي)"
+                  value={stat.label_ar || ""}
+                  onChange={(v) => updateStat(index, "label_ar", v)}
                   placeholder="مثال: عميل سعيد"
                 />
               </div>

@@ -1613,6 +1613,9 @@
       "orders": "orders",
       "exclusive": "Exclusive",
       "off": "OFF",
+      "price": "Price",
+      "save": "Save",
+      "noDiscount": "No Discount",
       "by": "by"
     },
     "whyChoose": {
@@ -1788,5 +1791,38 @@
       "organizations": "Organizations",
       "support": "Support"
     }
+  },
+
+  "servicePage": {
+    "hero_section": {
+      "badge": "The New Smart Marketing Solution",
+      "title": "One Touch..",
+      "subtitle": "World of Opportunities",
+      "description": "Replace old paper cards with smart NFC cards from Tarannum Al Khaleej. Share your data, display your menu, and multiply your Google reviews with just a phone touch.",
+      "watchBtn": "Watch How It Works",
+      "exploreBtn": "Explore Products",
+      "orderNow": "Order Now"
+    },
+    "dynamicServiceForm": {
+      "submittedSuccessfully": "Submitted Successfully",
+      "submitAnother": "Submit Another",
+      "next": "Next",
+      "orderSummary": "Order Summary",
+      "servicePrice": "Service Price",
+      "back": "Back",
+      "checkout": "Checkout"
+    }
+  },
+
+  "serviceSlider": {
+    "title": "Explore Premium",
+    "titleHighlight": "Creative Services",
+    "subtitle": "Discover a world of professional services crafted by talented freelancers. From stunning designs to powerful solutions, find exactly what your business needs.",
+    "stats": {
+      "services": "Services",
+      "clients": "Happy Clients",
+      "rating": "Avg. Rating"
+    },
+    "viewAll": "View All Services"
   }
 }

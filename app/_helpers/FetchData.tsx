@@ -8,11 +8,12 @@ export default async function FetchData<T = any>(
   try {
     const cookieStore = cookies();
 
-    const tokenvalue = await (await cookieStore).get("aram_token");
-    const token = tokenvalue ? decryptToken(tokenvalue.value) : undefined;
-
+    const localeValue = await (await cookieStore).get("aram_locale");
+    const tokenValue = await (await cookieStore).get("aram_token");
+    const token = tokenValue ? decryptToken(tokenValue.value) : undefined;
     const headers: HeadersInit = {
       "Content-Type": "application/json",
+      "Accept-Language": localeValue?.value || "en",
     };
 
     if (token) {

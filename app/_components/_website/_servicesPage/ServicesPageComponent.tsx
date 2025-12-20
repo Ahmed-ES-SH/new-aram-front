@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { directionMap } from "@/app/constants/_website/global";
 import HeroSection from "@/app/_components/_website/_servicesPage/hero-section";
 import SearchBar from "@/app/_components/_website/_servicesPage/search-bar";

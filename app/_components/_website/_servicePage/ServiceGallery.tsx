@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, spring } from "framer-motion";
 import {
   IoClose,
@@ -7,8 +7,14 @@ import {
   IoChevronBack,
   IoExpand,
 } from "react-icons/io5";
-import { LocaleType } from "@/app/types/_dashboard/GlobalTypes";
-import { useLocale } from "next-intl";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Keyboard } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 // --- Types ---
 interface ServiceImage {
@@ -28,6 +34,7 @@ interface LocalizationContent {
 interface ServiceGalleryProps {
   images: ServiceImage[];
   translations?: LocalizationContent;
+  locale?: "ar" | "en";
 }
 
 // --- Default Translations (Fallback) ---
@@ -51,10 +58,13 @@ const defaultTranslations: Record<"ar" | "en", LocalizationContent> = {
 export default function ServiceGallery({
   images,
   translations,
+  locale = "en",
 }: ServiceGalleryProps) {
-  const locale = useLocale() as LocaleType;
-
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
+  const swiperRef = useRef<SwiperType | null>(null);
+
   const t = translations || defaultTranslations[locale];
   const isRTL = locale === "ar";
 
@@ -72,7 +82,7 @@ export default function ServiceGallery({
     setSelectedIndex((prev) => (prev! - 1 + images.length) % images.length);
   }, [selectedIndex, images.length]);
 
-  // Keyboard Navigation
+  // Keyboard Navigation for Modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedIndex === null) return;
@@ -105,38 +115,94 @@ export default function ServiceGallery({
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold text-primary inline-block mb-2">
+          <h2 className="text-3xl font-bold text-blue-600 inline-block mb-2">
             {t.galleryTitle}
           </h2>
-          <div className="h-1 w-20 mx-auto rounded-full main-gradient" />
+          <div className="h-1 w-20 mx-auto rounded-full bg-linear-to-r from-blue-500 to-purple-600" />
         </div>
 
-        {/* Image Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {images.map((img, index) => (
-            <motion.div
-              key={img.id}
-              layoutId={`img-${img.id}`}
-              whileHover={{ scale: 1.02, y: -5 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative cursor-pointer overflow-hidden rounded-xl bg-gray-100 aspect-square shadow-sm"
-              onClick={() => openModal(index)}
-            >
-              <img
-                src={img.src}
-                alt={img.alt}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                loading="lazy"
-              />
+        {/* Swiper Slider */}
+        <div className="relative">
+          <Swiper
+            modules={[Navigation, Pagination, Keyboard]}
+            spaceBetween={16}
+            slidesPerView={1}
+            keyboard={{ enabled: true }}
+            dir={isRTL ? "rtl" : "ltr"}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              768: { slidesPerView: 3 },
+              1024: { slidesPerView: 4 },
+            }}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+              setIsBeginning(swiper.isBeginning);
+              setIsEnd(swiper.isEnd);
+            }}
+            onSlideChange={(swiper) => {
+              setIsBeginning(swiper.isBeginning);
+              setIsEnd(swiper.isEnd);
+            }}
+            className="!pb-12"
+          >
+            {images.map((img, index) => (
+              <SwiperSlide key={img.id}>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group relative cursor-pointer overflow-hidden rounded-xl bg-gray-100 aspect-square shadow-sm"
+                  onClick={() => openModal(index)}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                  />
 
-              {/* Overlay on Hover */}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <div className="main-gradient p-3 rounded-full text-white shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <IoExpand size={24} />
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                  {/* Overlay on Hover */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="bg-linear-to-r from-blue-500 to-purple-600 p-3 rounded-full text-white shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                      <IoExpand size={24} />
+                    </div>
+                  </div>
+                </motion.div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+          {/* Navigation Buttons - Show based on position */}
+          {!isBeginning && (
+            <button
+              onClick={() => swiperRef.current?.slidePrev()}
+              className={`absolute top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white shadow-lg hover:bg-linear-to-r hover:from-blue-500 hover:to-purple-600 hover:text-white transition-all hover:scale-110 ${
+                isRTL ? "right-2" : "left-2"
+              }`}
+              aria-label={t.prev}
+            >
+              {isRTL ? (
+                <IoChevronForward size={24} />
+              ) : (
+                <IoChevronBack size={24} />
+              )}
+            </button>
+          )}
+
+          {!isEnd && (
+            <button
+              onClick={() => swiperRef.current?.slideNext()}
+              className={`absolute top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white shadow-lg hover:bg-linear-to-r hover:from-blue-500 hover:to-purple-600 hover:text-white transition-all hover:scale-110 ${
+                isRTL ? "left-2" : "right-2"
+              }`}
+              aria-label={t.next}
+            >
+              {isRTL ? (
+                <IoChevronBack size={24} />
+              ) : (
+                <IoChevronForward size={24} />
+              )}
+            </button>
+          )}
         </div>
       </div>
 
@@ -166,8 +232,7 @@ export default function ServiceGallery({
             >
               {/* Image */}
               <motion.img
-                key={selectedIndex} // Key triggers animation on change
-                layoutId={`img-${images[selectedIndex].id}`}
+                key={selectedIndex}
                 src={images[selectedIndex].src}
                 alt={images[selectedIndex].alt}
                 className="max-h-[80vh] w-auto max-w-full rounded-lg shadow-2xl object-contain"
@@ -176,12 +241,12 @@ export default function ServiceGallery({
                 transition={{ duration: 0.3 }}
               />
 
-              {/* Caption (Optional) */}
+              {/* Caption */}
               <div className="absolute -bottom-12 left-0 right-0 text-center text-white/90">
                 <p className="text-lg font-medium">
                   {images[selectedIndex].alt}
                 </p>
-                <span className="text-sm opacity-75 dir-ltr block">
+                <span className="text-sm opacity-75 block">
                   {selectedIndex + 1} / {images.length}
                 </span>
               </div>
@@ -194,7 +259,7 @@ export default function ServiceGallery({
                   e.stopPropagation();
                   showPrev();
                 }}
-                className="pointer-events-auto p-3 rounded-full bg-white/10 hover:main-gradient text-white backdrop-blur-md transition-all hover:scale-110"
+                className="pointer-events-auto p-3 rounded-full bg-white/10 hover:bg-linear-to-r hover:from-blue-500 hover:to-purple-600 text-white backdrop-blur-md transition-all hover:scale-110"
                 aria-label={t.prev}
               >
                 {isRTL ? (
@@ -209,7 +274,7 @@ export default function ServiceGallery({
                   e.stopPropagation();
                   showNext();
                 }}
-                className="pointer-events-auto p-3 rounded-full bg-white/10 hover:main-gradient text-white backdrop-blur-md transition-all hover:scale-110"
+                className="pointer-events-auto p-3 rounded-full bg-white/10 hover:bg-linear-to-r hover:from-blue-500 hover:to-purple-600 text-white backdrop-blur-md transition-all hover:scale-110"
                 aria-label={t.next}
               >
                 {isRTL ? (

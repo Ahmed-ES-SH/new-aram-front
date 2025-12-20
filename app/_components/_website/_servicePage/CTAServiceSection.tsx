@@ -1,10 +1,27 @@
 "use client";
-import React from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { FiMessageSquare } from "react-icons/fi";
 import { BiSupport } from "react-icons/bi";
+import ContactPopup from "./ContactPopup";
+import { useLocale } from "next-intl";
+import { FaWhatsapp } from "react-icons/fa";
 
-export default function CTAServiceSection({ t }: { t: any }) {
+export default function CTAServiceSection({
+  t,
+  whatsappNumber,
+  serviceId,
+}: {
+  t: any;
+  whatsappNumber: string | number;
+  serviceId: string | number;
+}) {
+  const locale = useLocale();
+  const [isContactOpen, setIsContactOpen] = useState(false);
+
+  const handleRouteToWhatsApp = () => {
+    window.open(`https://wa.me/${whatsappNumber}`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -52,14 +69,16 @@ export default function CTAServiceSection({ t }: { t: any }) {
                 scale: 1.05,
                 boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)",
               }}
+              onClick={handleRouteToWhatsApp}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all"
+              className="flex items-center gap-2 px-8 py-4 bg-green-400 border-2 border-green-400 text-white rounded-full font-bold shadow-xl hover:shadow-2xl transition-all"
             >
-              <FiMessageSquare className="text-xl" />
-              <span>{t.ctaButton1}</span>
+              <FaWhatsapp className="text-xl" />
+              <span>{locale == "ar" ? "واتساب" : "WhatsApp"}</span>
             </motion.button>
 
             <motion.button
+              onClick={() => setIsContactOpen(true)}
               whileHover={{
                 scale: 1.05,
                 boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)",
@@ -68,11 +87,16 @@ export default function CTAServiceSection({ t }: { t: any }) {
               className="flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-lg text-white rounded-full font-bold border-2 border-white/30 shadow-xl hover:bg-white/20 transition-all"
             >
               <BiSupport className="text-xl" />
-              <span>{t.ctaButton2}</span>
+              <span>{locale == "ar" ? "تواصل معنا" : "Contact Us"}</span>
             </motion.button>
           </motion.div>
         </div>
       </div>
+      <ContactPopup
+        isOpen={isContactOpen}
+        serviceId={serviceId}
+        onClose={() => setIsContactOpen(false)}
+      />
     </motion.div>
   );
 }

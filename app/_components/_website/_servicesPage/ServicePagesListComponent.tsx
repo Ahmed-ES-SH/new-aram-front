@@ -227,8 +227,8 @@ export default function ServicePagesListComponent({
               <div className="hidden md:flex items-center gap-2 bg-gray-100 rounded-xl p-1">
                 {[
                   { value: "", label: "الكل" },
-                  { value: "service", label: "خدمات" },
-                  { value: "product", label: "منتجات" },
+                  { value: "one_time", label: "الخدمات" },
+                  { value: "subscription", label: "الاشتراكات" },
                 ].map((option) => (
                   <button
                     key={option.value}

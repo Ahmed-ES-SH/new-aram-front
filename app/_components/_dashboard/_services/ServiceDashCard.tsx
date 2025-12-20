@@ -1,7 +1,6 @@
 "use client";
 import Img from "../../_website/_global/Img";
 import { motion } from "framer-motion";
-import { Service } from "./types";
 import { FiEdit2, FiStar, FiToggleLeft, FiTrash2 } from "react-icons/fi";
 import { formatDate } from "@/app/_helpers/dateHelper";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
@@ -13,6 +12,7 @@ import { formatTitle } from "@/app/_helpers/helpers";
 import { VscLoading } from "react-icons/vsc";
 import { LiaToggleOffSolid, LiaToggleOnSolid } from "react-icons/lia";
 import { FaCheck, FaPen, FaTimes } from "react-icons/fa";
+import { Service } from "../../_website/_servicesPage/service";
 
 interface props {
   setServices: Dispatch<SetStateAction<Service[]>>;

@@ -1,20 +1,35 @@
 "use client";
-import { HeroSection } from "./types";
+
+import React from "react";
+import { FiLayout } from "react-icons/fi";
 import EditableField from "./EditableField";
 import ImageUploader from "./ImageUploader";
-import { FiLayout } from "react-icons/fi";
+import { HeroSection } from "./types";
+
+/**
+ * Editor for a hero/service page section with multilingual fields.
+ */
 
 interface HeroSectionEditorProps {
   data: HeroSection;
-  onChange: (data: HeroSection) => void;
+  onChange: (data: HeroSection, field: string) => void;
 }
 
 export default function HeroSectionEditor({
   data,
   onChange,
 }: HeroSectionEditorProps) {
+  // Generic field updater for text fields
   const updateField = (field: keyof HeroSection, value: string) => {
-    onChange({ ...data, [field]: value });
+    onChange({ ...data, [field]: value }, "hero_section");
+  };
+
+  // Image field updater - can receive File, string URL, or null
+  const updateImage = (
+    field: keyof HeroSection,
+    value: string | File | null
+  ) => {
+    onChange({ ...data, [field]: value }, "hero_section");
   };
 
   return (
@@ -29,73 +44,109 @@ export default function HeroSectionEditor({
             القسم الرئيسي (Hero)
           </h3>
           <p className="text-sm text-gray-500">
-            تعديل المحتوى الظاهر في أعلى الصفحة
+            تعديل المحتوى الظاهر في أعلى الصفحة (multilingual)
           </p>
         </div>
       </div>
 
-      {/* Badge & Titles */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <EditableField
-          label="الشارة (Badge)"
-          value={data.badge}
-          onChange={(v) => updateField("badge", v)}
-          placeholder="مثال: الحل الجديد من التسويق الذكي"
-        />
-        <EditableField
-          label="العنوان الرئيسي"
-          value={data.title}
-          onChange={(v) => updateField("title", v)}
-          placeholder="مثال: لمسة واحدة.."
-        />
+      {/* Badge (2 locales) */}
+      <div>
+        <h4 className="mb-2 text-sm font-semibold text-gray-700">
+          الشارة (Badge)
+        </h4>
+        <div className="grid grid-cols-1  gap-4">
+          <EditableField
+            label="Badge — العربية (ar)"
+            value={data.badge_ar ?? ""}
+            onChange={(v) => updateField("badge_ar", v)}
+            placeholder="مثال: الحل الجديد من التسويق الذكي"
+          />
+          <EditableField
+            label="Badge — English (en)"
+            value={data.badge_en ?? ""}
+            onChange={(v) => updateField("badge_en", v)}
+            placeholder="Example: New Smart Marketing Solution"
+          />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <EditableField
-          label="العنوان الفرعي"
-          value={data.subtitle}
-          onChange={(v) => updateField("subtitle", v)}
-          placeholder="مثال: عالم من الفرص"
-        />
+      {/* Titles (2 locales) */}
+      <div>
+        <h4 className="mb-2 text-sm font-semibold text-gray-700">
+          العنوان الرئيسي (Title)
+        </h4>
+        <div className="grid grid-cols-1  gap-4">
+          <EditableField
+            label="Title — العربية (ar)"
+            value={data.title_ar ?? ""}
+            onChange={(v) => updateField("title_ar", v)}
+            placeholder="مثال: لمسة واحدة.."
+          />
+          <EditableField
+            label="Title — English (en)"
+            value={data.title_en ?? ""}
+            onChange={(v) => updateField("title_en", v)}
+            placeholder="Example: One Touch.."
+          />
+        </div>
       </div>
 
-      {/* Description */}
-      <EditableField
-        label="الوصف"
-        value={data.description}
-        onChange={(v) => updateField("description", v)}
-        type="textarea"
-        placeholder="وصف تفصيلي للخدمة..."
-      />
+      {/* Subtitles (2 locales) */}
+      <div>
+        <h4 className="mb-2 text-sm font-semibold text-gray-700">
+          العنوان الفرعي (Subtitle)
+        </h4>
+        <div className="grid grid-cols-1  gap-4">
+          <EditableField
+            label="Subtitle — العربية (ar)"
+            value={data.subtitle_ar ?? ""}
+            onChange={(v) => updateField("subtitle_ar", v)}
+            placeholder="مثال: عالم من الفرص"
+          />
+          <EditableField
+            label="Subtitle — English (en)"
+            value={data.subtitle_en ?? ""}
+            onChange={(v) => updateField("subtitle_en", v)}
+            placeholder="Example: A World of Opportunities"
+          />
+        </div>
+      </div>
 
-      {/* Buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <EditableField
-          label="نص زر المشاهدة"
-          value={data.watchBtn}
-          onChange={(v) => updateField("watchBtn", v)}
-          placeholder="مثال: شاهد كيف تعمل"
-        />
-        <EditableField
-          label="نص زر الاستكشاف"
-          value={data.exploreBtn}
-          onChange={(v) => updateField("exploreBtn", v)}
-          placeholder="مثال: اكتشف المنتجات"
-        />
+      {/* Descriptions (2 locales) */}
+      <div>
+        <h4 className="mb-2 text-sm font-semibold text-gray-700">
+          الوصف (Description)
+        </h4>
+        <div className="grid grid-cols-1 gap-4">
+          <EditableField
+            label="Description — العربية (ar)"
+            value={data.description_ar ?? ""}
+            onChange={(v) => updateField("description_ar", v)}
+            type="textarea"
+            placeholder="مثال: استبدل البطاقات الورقية ببطاقات NFC الذكية..."
+          />
+          <EditableField
+            label="Description — English (en)"
+            value={data.description_en ?? ""}
+            onChange={(v) => updateField("description_en", v)}
+            type="textarea"
+            placeholder="Example: Replace paper cards with smart NFC cards..."
+          />
+        </div>
       </div>
 
       {/* Images */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ImageUploader
-          label="صورة البطل"
-          value={data.heroImage}
-          onChange={(v) => updateField("heroImage", v)}
-        />
-        <ImageUploader
-          label="صورة الخلفية"
-          value={data.backgroundImage}
-          onChange={(v) => updateField("backgroundImage", v)}
-        />
+      <div>
+        <h4 className="mb-2 text-sm font-semibold text-gray-700">
+          الصور (Images)
+        </h4>
+        <div className="grid grid-cols-1  gap-6">
+          <ImageUploader
+            label="صورة الرئيسية (Hero Image)"
+            value={data.hero_image ?? ""}
+            onChange={(v) => updateImage("hero_image", v)}
+          />
+        </div>
       </div>
     </div>
   );

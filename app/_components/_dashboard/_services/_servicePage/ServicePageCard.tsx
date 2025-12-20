@@ -142,7 +142,7 @@ export default function ServicePageCard({
         <div className="p-5">
           {/* Title */}
           <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 text-lg leading-tight">
-            {servicePage.title}
+            {servicePage.slug ?? servicePage.title}
           </h3>
 
           {/* Category Badge */}

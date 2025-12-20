@@ -185,13 +185,13 @@ export const AVAILABLE_FORM_FIELDS: Partial<FormField>[] = [
     width: "half",
   },
   {
-    id: "address",
-    name: "address",
+    id: "longText",
+    name: "longText",
     type: "textarea",
-    label: { ar: "العنوان", en: "Address" },
+    label: { ar: "نص طويل", en: "Long Text" },
     placeholder: {
-      ar: "أدخل عنوانك بالتفصيل",
-      en: "Enter your detailed address",
+      ar: "أدخل النص الطويل",
+      en: "Enter your detailed longText",
     },
     rows: 3,
     width: "full",

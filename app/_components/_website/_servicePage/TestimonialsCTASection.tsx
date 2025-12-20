@@ -5,7 +5,40 @@ import { LocaleType } from "@/app/types/_dashboard/GlobalTypes";
 import CTAServiceSection from "./CTAServiceSection";
 import ServiceTestimonialsSection from "./ServiceTestimonialsSection";
 
-const translations = {
+interface StatItem {
+  number: string;
+  label: string;
+}
+
+interface TestimonialItem {
+  name: string;
+  text: string;
+  rating: number;
+  avatar?: string;
+}
+
+interface TestimonialsData {
+  title: string;
+  items: TestimonialItem[];
+}
+
+interface CTAData {
+  ctaTitle: string;
+  ctaSubtitle: string;
+  ctaButton1: string;
+  ctaButton2: string;
+}
+
+interface TestimonialsCTASectionProps {
+  stats?: StatItem[];
+  testimonials?: TestimonialsData;
+  cta?: CTAData;
+  whatsappNumber: string | number;
+  serviceId: string | number;
+}
+
+// Default translations fallback
+const defaultTranslations = {
   ar: {
     stats: [
       { number: "24/7", label: "دعم فني" },
@@ -70,10 +103,40 @@ const translations = {
   },
 };
 
-export default function TestimonialsCTASection() {
+export default function TestimonialsCTASection({
+  stats,
+  testimonials,
+  cta,
+  whatsappNumber,
+  serviceId,
+}: TestimonialsCTASectionProps) {
   const locale = useLocale() as LocaleType;
+  const defaults = defaultTranslations[locale];
 
-  const t = translations[locale];
+  // Use backend data if available, otherwise fall back to defaults
+  const statsData = stats && stats.length > 0 ? stats : defaults.stats;
+
+  const testimonialsData = {
+    testimonialTitle: testimonials?.title || defaults.testimonialTitle,
+    testimonials:
+      testimonials?.items && testimonials.items.length > 0
+        ? testimonials.items
+        : defaults.testimonials,
+  };
+
+  const ctaData = {
+    ctaTitle: cta?.ctaTitle || defaults.ctaTitle,
+    ctaSubtitle: cta?.ctaSubtitle || defaults.ctaSubtitle,
+    ctaButton1: cta?.ctaButton1 || defaults.ctaButton1,
+    ctaButton2: cta?.ctaButton2 || defaults.ctaButton2,
+  };
+
+  // Combined object for child components
+  const t = {
+    stats: statsData,
+    ...testimonialsData,
+    ...ctaData,
+  };
 
   return (
     <div
@@ -88,7 +151,7 @@ export default function TestimonialsCTASection() {
           transition={{ duration: 0.6 }}
           className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20"
         >
-          {t.stats.map((stat, index) => (
+          {statsData.map((stat, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, scale: 0.8 }}
@@ -119,7 +182,11 @@ export default function TestimonialsCTASection() {
         {/* Testimonials Section */}
         <ServiceTestimonialsSection t={t} />
 
-        <CTAServiceSection t={t} />
+        <CTAServiceSection
+          t={t}
+          whatsappNumber={whatsappNumber}
+          serviceId={serviceId}
+        />
       </div>
     </div>
   );

@@ -25,18 +25,18 @@ export default function VideoMethodCard({
       transition-all duration-200
       ${
         isSelected
-          ? "border-sky-500 bg-sky-50 shadow-md"
-          : "border-gray-200 hover:border-sky-300 hover:bg-sky-50"
+          ? "border-primary bg-primary/10 shadow-md"
+          : "border-gray-200 hover:border-primary hover:bg-primary/10"
       }
     `}
       onClick={onClick}
     >
-      <div className={`mb-3 ${isSelected ? "text-sky-600" : "text-gray-500"}`}>
+      <div className={`mb-3 ${isSelected ? "text-primary" : "text-gray-500"}`}>
         {icon}
       </div>
       <h4
         className={`font-semibold mb-2 ${
-          isSelected ? "text-sky-700" : "text-gray-800"
+          isSelected ? "text-primary" : "text-gray-800"
         }`}
       >
         {title}

@@ -2,7 +2,7 @@ export interface FeatureData {
   id: string;
   title: string;
   description: string;
-  icon: React.ElementType;
+  icon: string;
   color: string;
 }
 

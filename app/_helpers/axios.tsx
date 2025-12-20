@@ -7,6 +7,8 @@ const cookie = Cookie();
 
 export const main_api = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+const locale = cookie.get("aram_locale");
+
 export const instance = axios.create({
   baseURL: main_api,
 });
@@ -16,6 +18,7 @@ instance.interceptors.request.use(
   (config) => {
     const tokenValue = cookie.get(`aram_token`);
     const token = tokenValue ? decryptToken(tokenValue) : null;
+    config.headers["Accept-Language"] = locale || "en";
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

@@ -12,6 +12,7 @@ import { setLocale, setWidth } from "@/app/Store/variablesSlice";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
+import Cookie from "cookie-universal";
 
 type ClientLayoutProps = {
   children: React.ReactNode;
@@ -21,6 +22,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const dispatch = useAppDispatch(); // Get Redux dispatch function
   const params = useParams();
   const searchParams = useSearchParams();
+  const cookie = Cookie();
 
   // Fetch user's country and location data with permission status
   const { country, fullAddress, coordinates, loading, error, permission } =
@@ -72,6 +74,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   useEffect(() => {
     if (locale) {
       dispatch(setLocale(locale as "en" | "ar")); // Update locale in Redux store
+      cookie.set("aram_locale", locale);
     }
   }, [dispatch, locale, params]);
 

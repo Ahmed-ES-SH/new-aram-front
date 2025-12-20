@@ -7,12 +7,19 @@ export const getIconComponent = (iconName: string) => {
   return FaIcons[iconName as keyof typeof FaIcons] || FaIcons.FaQuestionCircle;
 };
 
-export const formatTitle = (title?: string) => {
+export const formatTitle = (title?: string): string => {
   if (!title || title.trim() === "") {
-    return "no-title"; // fallback slug if no title is provided
+    return `no-title-${Date.now()}`;
   }
 
-  return title.toLowerCase().replace(/\s+/g, "-");
+  return title
+    .toLowerCase()
+    .normalize("NFD") // split accented characters
+    .replace(/[\u0300-\u036f]/g, "") // remove accents
+    .replace(/[^a-z0-9\s-]/g, "") // remove special chars
+    .trim()
+    .replace(/\s+/g, "-") // spaces to dashes
+    .replace(/-+/g, "-"); // collapse multiple dashes
 };
 
 export const truncateContent = (text: string, maxLength = 120) => {

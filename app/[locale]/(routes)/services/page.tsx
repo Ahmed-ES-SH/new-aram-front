@@ -1,4 +1,4 @@
-import ServicePagesListComponent from "@/app/_components/_website/_servicesPage/ServicePagesListComponent";
+import ServicesPageComponent from "@/app/_components/_website/_servicesPage/ServicesPageComponent";
 import FetchData from "@/app/_helpers/FetchData";
 import { getSharedMetadata } from "@/app/_helpers/helpers";
 import { getTranslations } from "next-intl/server";
@@ -24,10 +24,10 @@ export default async function ServicesPage() {
   const { data, pagination } = servicesResponse;
 
   return (
-    <ServicePagesListComponent
-      initialServices={data}
+    <ServicesPageComponent
       categories={categories}
-      initialLastPage={pagination?.last_page || 1}
+      last_page={pagination?.last_page || 1}
+      servicesData={data}
     />
   );
 }

@@ -4,12 +4,26 @@ import { easeOut, motion } from "framer-motion";
 import { FiStar, FiBook, FiDollarSign } from "react-icons/fi";
 import { LocaleType } from "@/app/types/_dashboard/GlobalTypes";
 import { useLocale } from "next-intl";
+import { getIconComponent } from "@/app/_helpers/helpers";
 
-interface FeaturesProps {
-  language?: "ar" | "en";
+interface ProblemItem {
+  icon: string;
+  title: string;
+  description: string;
 }
 
-const translations = {
+interface ProblemSectionData {
+  title: string;
+  subtitle: string;
+  items: ProblemItem[];
+}
+
+interface FeaturesProps {
+  data?: ProblemSectionData;
+}
+
+// Default translations fallback
+const defaultTranslations = {
   ar: {
     title: "هل تعاني من هذه المشاكل؟",
     subtitle: "الطرق التقليدية تكلفك الوقت والمال والفعالية",
@@ -60,17 +74,31 @@ const translations = {
   },
 };
 
-const iconComponents = {
+const iconComponents: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   star: FiStar,
   book: FiBook,
   dollar: FiDollarSign,
 };
 
-export default function ServiceFeaturesSection() {
+export default function ServiceFeaturesSection({ data }: FeaturesProps) {
   const locale = useLocale() as LocaleType;
-
-  const t = translations[locale];
   const isRTL = locale === "ar";
+
+  // Use backend data if available, otherwise fall back to defaults
+  const content = data
+    ? {
+        title: data.title,
+        subtitle: data.subtitle,
+        features: data.items.map((item) => ({
+          icon: item.icon,
+          title: item.title,
+          description: item.description,
+        })),
+      }
+    : defaultTranslations[locale];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -111,10 +139,10 @@ export default function ServiceFeaturesSection() {
           } lg:text-center`}
         >
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-            {t.title}
+            {content.title}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            {t.subtitle}
+            {content.subtitle}
           </p>
         </motion.div>
 
@@ -125,9 +153,8 @@ export default function ServiceFeaturesSection() {
           viewport={{ once: true }}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {t.features.map((feature, index) => {
-            const IconComponent =
-              iconComponents[feature.icon as keyof typeof iconComponents];
+          {content.features.map((feature, index) => {
+            const IconComponent = getIconComponent(feature.icon);
 
             return (
               <motion.div

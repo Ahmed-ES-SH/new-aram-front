@@ -10,10 +10,10 @@ export default function StepIndicator({
   steps,
 }: StepIndicatorProps) {
   return (
-    <div className="relative mb-8">
+    <div className="relative mb-8 w-[90%] mx-auto">
       <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 transform -translate-y-1/2 -z-10" />
       <motion.div
-        className="absolute top-1/2 left-0 h-1 bg-sky-500 transform -translate-y-1/2 -z-10"
+        className="absolute top-1/2 left-0 h-1 bg-primary transform -translate-y-1/2 -z-10"
         initial={{ width: "0%" }}
         animate={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
         transition={{ duration: 0.3 }}
@@ -28,7 +28,7 @@ export default function StepIndicator({
               border-2 text-sm font-medium
               ${
                 currentStep >= index
-                  ? "bg-sky-500 border-sky-500 text-white"
+                  ? "bg-primary border-primary text-white"
                   : "bg-white border-gray-300 text-gray-400"
               }
             `}

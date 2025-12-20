@@ -12,7 +12,7 @@ import { instance } from "@/app/_helpers/axios";
 interface EditVideoPopupProps {
   isOpen: boolean;
   onClose: () => void;
-  setMainVideo: (video: string | File | null | any) => void;
+  setMainVideo: (video: any) => void;
   video_id: string;
   title?: string;
 }
@@ -178,7 +178,7 @@ export default function EditVideoPopup({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-9999999 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-9999999 flex items-center justify-center p-4 overflow-hidden">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -193,7 +193,7 @@ export default function EditVideoPopup({
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-5xl max-h-[90vh] bg-white rounded-2xl shadow-xl"
+            className="relative w-full max-w-6xl overflow-hidden max-h-[90vh] bg-white rounded-2xl shadow-xl"
           >
             <div className="p-6">
               <PopupHeader title={title} onClose={onClose} />

@@ -1,14 +1,13 @@
 "use client";
 import React, { ChangeEvent, Dispatch, SetStateAction, useRef } from "react";
-import { Service } from "./types";
 import Img from "../../_website/_global/Img";
 import { IoMdClose } from "react-icons/io";
 
 interface props {
-  images: Service["images"];
+  images: any;
   errors: any;
-  form: Service;
-  setForm: Dispatch<SetStateAction<Service>>;
+  form: any;
+  setForm: Dispatch<SetStateAction<any>>;
 }
 
 export default function ServiceImages({
