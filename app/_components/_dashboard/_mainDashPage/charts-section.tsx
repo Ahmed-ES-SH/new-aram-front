@@ -49,7 +49,7 @@ export function ChartsSection({ chartsData }: props) {
           transition={{ duration: 0.5 }}
           className="lg:col-span-2"
         >
-          {/* <UsersChart usersData={users} /> */}
+          <UsersChart usersData={users} />
         </motion.div>
 
         {/* Services Bar Chart */}
@@ -58,7 +58,7 @@ export function ChartsSection({ chartsData }: props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {/* <ServicesChart servicesData={services} /> */}
+          <ServicesChart servicesData={services} />
         </motion.div>
 
         {/* Centers Distribution Pie Chart */}
@@ -67,7 +67,7 @@ export function ChartsSection({ chartsData }: props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          {/* <CentersDistributionChart centersData={organizations} /> */}
+          <CentersDistributionChart centersData={organizations} />
         </motion.div>
       </div>
     </section>

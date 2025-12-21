@@ -1,14 +1,12 @@
 "use client";
 import NotificationPopup from "../../_website/_notifications/NotificationPopup";
 import Pusher from "pusher-js";
-import Img from "../../_website/_global/Img";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { FaBell } from "react-icons/fa";
 import { TbBellRingingFilled } from "react-icons/tb";
 import { useDispatch } from "react-redux";
 import { FiCheck } from "react-icons/fi";
-import { truncateContent } from "@/app/_helpers/helpers";
 import { toast } from "sonner";
 import { instance } from "@/app/_helpers/axios";
 import { setUnreadNotificationsCount } from "@/app/Store/userSlice";

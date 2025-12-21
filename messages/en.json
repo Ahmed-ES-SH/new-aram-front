@@ -992,6 +992,10 @@
       "title": "Profile Settings",
       "desc": "Manage your personal information, password, and contact details."
     },
+    "orders": {
+      "title": "My Orders",
+      "desc": "View and manage all your orders."
+    },
     "coupons": {
       "title": "Coupons & Discounts",
       "desc": "View and redeem available coupons to save on your purchases."
@@ -1011,6 +1015,25 @@
     "chats": {
       "title": "Messages",
       "desc": "Stay connected and communicate with clients easily."
+    }
+  },
+
+  "noOrders": {
+    "title": "No Orders Yet",
+    "message": "It looks like you haven't placed any orders yet. Explore our services and find what you need.",
+    "button": "Browse Services"
+  },
+
+  "NoServiceOrder": {
+    "title": "Order Not Found",
+    "description": "Sorry, we couldn't find the order you're looking for. The order number might be incorrect or the order has been deleted.",
+    "backButton": "Back to Orders List",
+    "errorCode": "Error Code: 404",
+    "suggestions": {
+      "title": "Helpful Suggestions:",
+      "checkNumber": "Double-check the order number",
+      "contactSupport": "Contact technical support",
+      "refreshPage": "Refresh the page and try again"
     }
   },
 

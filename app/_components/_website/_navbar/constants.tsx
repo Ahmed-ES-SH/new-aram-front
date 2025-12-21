@@ -1,4 +1,8 @@
-import { MdFamilyRestroom, MdLocalOffer } from "react-icons/md";
+import {
+  MdFamilyRestroom,
+  MdLocalOffer,
+  MdOutlineSettingsInputComponent,
+} from "react-icons/md";
 import { FaCcMastercard, FaRegCalendarAlt, FaWallet } from "react-icons/fa";
 import {
   // HiOutlineGlobe,
@@ -9,6 +13,7 @@ import { formatTitle } from "@/app/_helpers/helpers";
 import { BiSolidConversation, BiSolidOffer } from "react-icons/bi";
 import { FaCircleUser } from "react-icons/fa6";
 import { PiListChecksFill } from "react-icons/pi";
+import { IoIosListBox } from "react-icons/io";
 
 export function getLinks(user: any) {
   if (!user) return [];
@@ -27,6 +32,13 @@ export function getLinks(user: any) {
       )}&acouunt_type=${user?.account_type}&userId=${user.id}`,
       icon: <FaCcMastercard className="w-5 h-5" />,
       label: { en: "My Cards", ar: "بطاقاتى" },
+    },
+    {
+      href: `/usercontrolpanel/myorders?account_name=${formatTitle(
+        user?.name
+      )}&acouunt_type=${user?.account_type}&userId=${user.id}`,
+      icon: <MdOutlineSettingsInputComponent className="w-5 h-5" />,
+      label: { en: "My Orders", ar: "طلباتى" },
     },
     {
       href: `/usercontrolpanel/listofreservations?account_name=${formatTitle(
@@ -106,6 +118,13 @@ export function getOrganizationLinks(user: any) {
       )}&acouunt_type=${user?.account_type}&userId=${user.id}`,
       icon: <FaCcMastercard className="w-5 h-5" />,
       label: { en: "My Cards", ar: "بطاقاتى" },
+    },
+    {
+      href: `/centercontrolpanel/myorders?account_name=${formatTitle(
+        user?.title
+      )}&acouunt_type=${user?.account_type}&userId=${user.id}`,
+      icon: <MdOutlineSettingsInputComponent className="w-5 h-5" />,
+      label: { en: "My Orders", ar: "طلباتى" },
     },
     {
       href: `/centercontrolpanel/orgreservations?account_name=${formatTitle(

@@ -119,6 +119,7 @@ export default function CardPageComponent({ card }: CardDetailsProps) {
 
       {/* Coupon Popup */}
       <FreeCardPopup
+        card={card}
         isOpen={couponPopup}
         onClose={() => setCouponPopup(false)}
       />

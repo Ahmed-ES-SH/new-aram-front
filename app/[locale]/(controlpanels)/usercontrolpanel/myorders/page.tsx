@@ -1,6 +1,5 @@
 import AcountOrders from "@/app/_components/_website/_controlpanals/AcountOrders";
 import FetchData from "@/app/_helpers/FetchData";
-import React from "react";
 import NoOrders from "@/app/_components/_website/_controlpanals/NoOrders";
 
 export default async function MyOrdersPage() {

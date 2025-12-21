@@ -179,6 +179,11 @@ export const pages = [
         icon: <IoAddSharp className={iconStyle} />,
         to: "/dashboard/addservice",
       },
+      {
+        title: "طلبات الخدمات",
+        icon: <MdOutlineSyncProblem className={iconStyle} />,
+        to: "/dashboard/serviceorders",
+      },
     ],
   },
   {

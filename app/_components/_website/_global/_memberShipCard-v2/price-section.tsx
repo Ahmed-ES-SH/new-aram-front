@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppSelector } from "@/app/Store/hooks";
 import type { MembershipCardData } from "./types";
 
 interface PriceSectionProps {
@@ -8,6 +9,8 @@ interface PriceSectionProps {
 }
 
 export function PriceSection({ data, t }: PriceSectionProps) {
+  const { activeCurrency } = useAppSelector((state) => state.currency);
+
   const price = Number(data.price);
   const priceBeforeDiscount = Number(data.price_before_discount);
   const discount = Math.round(
@@ -23,8 +26,11 @@ export function PriceSection({ data, t }: PriceSectionProps) {
             {t("membershipCard.originalPriceLabel")}
           </span>
           <span className="text-sm text-white line-through decoration-red-400/60">
-            {t("membershipCard.currencySymbol")}
-            {priceBeforeDiscount}
+            {activeCurrency?.symbol}
+            {Number(
+              Number(activeCurrency?.exchange_rate) *
+                Number(data.price_before_discount)
+            ).toFixed(2)}
           </span>
         </div>
 
@@ -39,8 +45,10 @@ export function PriceSection({ data, t }: PriceSectionProps) {
               textShadow: "0 2px 4px rgba(218, 165, 32, 0.3)",
             }}
           >
-            {t("membershipCard.currencySymbol")}
-            {price}
+            {activeCurrency?.symbol}
+            {Number(
+              Number(activeCurrency?.exchange_rate) * Number(data.price)
+            ).toFixed(2)}
           </span>
         </div>
       </div>

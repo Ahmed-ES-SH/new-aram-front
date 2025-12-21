@@ -1,9 +1,11 @@
 "use client";
-import React from "react";
 import { ServiceOrder } from "./orderTypes";
 import { motion } from "framer-motion";
+import { useLocale } from "next-intl";
 import Image from "next/image";
-import { FiCalendar, FiBox, FiCreditCard, FiClock } from "react-icons/fi";
+import { FiCalendar, FiBox, FiClock } from "react-icons/fi";
+import LocaleLink from "../_global/LocaleLink";
+import { formatTitle } from "@/app/_helpers/helpers";
 
 interface AcountOrdersProps {
   data: ServiceOrder[];
@@ -41,6 +43,8 @@ const getStatusStyles = (status: string) => {
 };
 
 export default function AcountOrders({ data, last_page }: AcountOrdersProps) {
+  const locale = useLocale();
+
   return (
     <motion.div
       variants={container}
@@ -50,13 +54,12 @@ export default function AcountOrders({ data, last_page }: AcountOrdersProps) {
     >
       {data.map((order) => (
         <motion.div
-          key={order.id}
           variants={item}
           className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow group"
         >
           <div className="flex flex-col md:flex-row gap-6">
             {/* Service Image */}
-            <div className="w-full md:w-32 h-32 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0 relative">
+            <div className="w-full md:w-32 h-32 rounded-xl overflow-hidden bg-gray-50 shrink-0 relative">
               {order.service?.gallery_images?.[0]?.path ? (
                 <Image
                   src={order.service.gallery_images[0].path}
@@ -72,7 +75,7 @@ export default function AcountOrders({ data, last_page }: AcountOrdersProps) {
             </div>
 
             {/* Content */}
-            <div className="flex-grow flex flex-col justify-between py-1">
+            <div className="grow flex flex-col justify-between py-1">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
@@ -119,25 +122,43 @@ export default function AcountOrders({ data, last_page }: AcountOrdersProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-6 mt-4 pt-4 border-t border-gray-50 text-sm text-gray-500">
-                <div className="flex items-center gap-2">
-                  <FiCalendar className="text-gray-400" />
-                  <span>
-                    {new Date(order.created_at).toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </span>
+              <div className="flex items-center justify-between max-lg:flex-col gap-4 max-md:items-start">
+                <div className="flex items-center gap-6 mt-4 pt-4 border-t border-gray-50 text-sm text-gray-500 max-md:self-end">
+                  <div className="flex items-center gap-2 ">
+                    <FiCalendar className="text-gray-400" />
+                    <span>
+                      {new Date(order.created_at).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FiClock className="text-gray-400" />
+                    <span>
+                      {new Date(order.created_at).toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <FiClock className="text-gray-400" />
-                  <span>
-                    {new Date(order.created_at).toLocaleTimeString("en-US", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
+
+                <div className="flex items-center gap-3">
+                  <LocaleLink
+                    href={`/usercontrolpanel/myorders/${formatTitle(
+                      order.service.slug
+                    )}?orderId=${order.id}`}
+                    key={`service-order-${order.id}`}
+                  >
+                    <button className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/80 transition-colors">
+                      {locale == "ar" ? "تتبع الطلب" : "View Order"}
+                    </button>
+                  </LocaleLink>
+                  <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors">
+                    {locale == "ar" ? "ملخص الطلب" : "Order Summary"}
+                  </button>
                 </div>
               </div>
             </div>

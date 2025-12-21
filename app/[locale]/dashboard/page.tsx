@@ -3,7 +3,6 @@ import { ChartsSection } from "@/app/_components/_dashboard/_mainDashPage/charts
 import { DashboardHeader } from "@/app/_components/_dashboard/_mainDashPage/dashboard-header";
 import { PromotersOverview } from "@/app/_components/_dashboard/_mainDashPage/promoters-overview";
 import QuickActions from "@/app/_components/_dashboard/_mainDashPage/QuickActions";
-import { RecentActivity } from "@/app/_components/_dashboard/_mainDashPage/recent-activity";
 import { StatsCards } from "@/app/_components/_dashboard/_mainDashPage/stats-cards";
 import { TasksSection } from "@/app/_components/_dashboard/_mainDashPage/tasks-section";
 import FetchData from "@/app/_helpers/FetchData";

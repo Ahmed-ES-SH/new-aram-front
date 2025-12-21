@@ -12,6 +12,8 @@ import {
 } from "react-icons/hi";
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/app/Store/hooks";
+import { IoIosListBox } from "react-icons/io";
+import { MdOutlineSettingsInputComponent } from "react-icons/md";
 
 export default function DashboardPage() {
   const { user } = useAppSelector((state) => state.user);
@@ -28,6 +30,13 @@ export default function DashboardPage() {
       icon: <HiOutlineUser className="w-10 h-10 text-blue-600" />,
       title: t("profile.title"),
       desc: t("profile.desc"),
+    },
+    {
+      icon: (
+        <MdOutlineSettingsInputComponent className="w-10 h-10 text-shadow-teal-700" />
+      ),
+      title: t("orders.title"),
+      desc: t("orders.desc"),
     },
     {
       icon: <HiOutlineTicket className="w-10 h-10 text-purple-600" />,

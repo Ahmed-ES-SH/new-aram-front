@@ -5,13 +5,7 @@ import { getIconComponent } from "@/app/_helpers/helpers";
 import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import {
-  FaRocket,
-  FaStar,
-  FaUsers,
-  FaLayerGroup,
-  FaArrowRight,
-} from "react-icons/fa";
+import { FaRocket } from "react-icons/fa";
 
 interface props {
   data: servicesHeaderType;
@@ -19,7 +13,6 @@ interface props {
 
 export function ServicesHeader({ data }: props) {
   const locale = useLocale();
-  const translations = useTranslations("services_v2");
   const isRTL = locale === "ar";
 
   const [badge] = useState<TextType>({
@@ -117,7 +110,6 @@ export function ServicesHeader({ data }: props) {
             >
               {stats.map((stat, index) => {
                 const Icon = getIconComponent(stat.icon_name);
-                console.log(statsColors[index]);
                 return (
                   <motion.div
                     key={stat.icon_name}
