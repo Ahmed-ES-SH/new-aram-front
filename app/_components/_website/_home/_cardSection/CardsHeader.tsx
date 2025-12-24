@@ -1,13 +1,6 @@
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
-import {
-  FaClock,
-  FaCrown,
-  FaGem,
-  FaPercent,
-  FaShieldAlt,
-  FaStar,
-} from "react-icons/fa";
+import { FaGem, FaStar } from "react-icons/fa";
 import { useLocale, useTranslations } from "next-intl";
 import { cardsHeaderType } from "@/app/_components/_dashboard/_statictexts/CardsHeaderSection";
 import { useState } from "react";
@@ -83,14 +76,14 @@ export default function CardsHeader({ containerRef, staticData }: props) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-16">
         {features.map((feature, index) => {
           const Icon = getIconComponent(feature.icon_name);
-          console.log(feature);
           return (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * index }}
-              className={`group hover:scale-105 duration-300 relative p-6 rounded-2xl bg-linear-to-br ${feature.color} backdrop-blur-sm border border-gray-200/50 /50`}
+              style={{ backgroundColor: `${feature.color}20` }}
+              className={`group hover:scale-105 duration-300 relative p-6 rounded-2xl  backdrop-blur-sm border border-gray-200/50`}
             >
               {/* Hover effect */}
               <div className="absolute inset-0 bg-linear-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
@@ -99,7 +92,7 @@ export default function CardsHeader({ containerRef, staticData }: props) {
                 <div className="text-3xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
                   <Icon className={` text-primary`} />
                 </div>
-                <p className="font-semibold text-gray-800 ">
+                <p style={{ color: feature.color }} className="font-semibold">
                   {feature.text[locale]}
                 </p>
               </div>

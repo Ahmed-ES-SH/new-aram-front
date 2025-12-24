@@ -8,22 +8,22 @@ import InputField from "./InputField";
 
 interface PointsData {
   id: number;
-  visit_points: number;
-  signup_points: number;
-  purchase_points: number;
-  created_at: string;
-  updated_at: string;
+  visit_ratio: number;
+  signup_ratio: number;
+  purchase_ratio: number;
+  service_ratio: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 const PointsEditForm = ({ initialData }: { initialData?: PointsData }) => {
   const [formData, setFormData] = useState<PointsData>(
     initialData || {
       id: 1,
-      visit_points: 1,
-      signup_points: 1,
-      purchase_points: 1,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      visit_ratio: 1,
+      signup_ratio: 1,
+      purchase_ratio: 1,
+      service_ratio: 1,
     }
   );
 
@@ -40,7 +40,7 @@ const PointsEditForm = ({ initialData }: { initialData?: PointsData }) => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: parseFloat(value) || 0, // ← أهم إصلاح يمنع فقدان التركيز
+      [name]: value || 0, // ← أهم إصلاح يمنع فقدان التركيز
     }));
   };
 
@@ -99,28 +99,37 @@ const PointsEditForm = ({ initialData }: { initialData?: PointsData }) => {
           {/* Inputs */}
           <InputField
             label="نقاط الزيارة"
-            name="visit_points"
-            value={formData.visit_points}
+            name="visit_ratio"
+            value={formData.visit_ratio}
             disabled={!isEditing || isLoading}
-            error={errors.visit_points}
+            error={errors.visit_ratio}
             onChange={handleInputChange}
           />
 
           <InputField
             label="نقاط التسجيل"
-            name="signup_points"
-            value={formData.signup_points}
+            name="signup_ratio"
+            value={formData.signup_ratio}
             disabled={!isEditing || isLoading}
-            error={errors.signup_points}
+            error={errors.signup_ratio}
             onChange={handleInputChange}
           />
 
           <InputField
-            label="نقاط عملية الشراء"
-            name="purchase_points"
-            value={formData.purchase_points}
+            label="النسبة من عملية الشراء"
+            name="purchase_ratio"
+            value={formData.purchase_ratio}
             disabled={!isEditing || isLoading}
-            error={errors.purchase_points}
+            error={errors.purchase_ratio}
+            onChange={handleInputChange}
+          />
+
+          <InputField
+            label="النسبة من عملية شراء الخدمه"
+            name="service_ratio"
+            value={formData.service_ratio}
+            disabled={!isEditing || isLoading}
+            error={errors.service_ratio}
             onChange={handleInputChange}
           />
 
@@ -128,7 +137,8 @@ const PointsEditForm = ({ initialData }: { initialData?: PointsData }) => {
           {!isEditing && (
             <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100 text-right text-sm text-blue-700">
               آخر تحديث:
-              {" " + new Date(formData.updated_at).toLocaleDateString("ar-SA")}
+              {" " +
+                new Date(formData.updated_at ?? "").toLocaleDateString("ar-SA")}
             </div>
           )}
 

@@ -192,7 +192,8 @@ export default function UsersSelector({ form, setForm }: Props) {
                 )}
 
                 <Img
-                  src={user.image}
+                  src={user.image ?? "/defaults/male-noimage.jpg"}
+                  errorSrc="/defaults/male-noimage.jpg"
                   alt={user.name}
                   className="w-16 h-16 object-cover mb-2 rounded-full"
                 />
@@ -201,10 +202,10 @@ export default function UsersSelector({ form, setForm }: Props) {
                     isSelected ? "text-green-600" : "text-gray-700"
                   }`}
                 >
-                  {user.name}
+                  {user.name ?? "غير موجود"}
                 </p>
                 <p className="text-xs text-gray-500 text-center">
-                  {user.email}
+                  {user.email ?? "غير موجود"}
                 </p>
               </div>
             );

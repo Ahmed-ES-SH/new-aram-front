@@ -10,6 +10,8 @@ interface props {
 export default function CouponDisplaySection({ form }: props) {
   const type = form && form?.type;
 
+  console.log(type);
+
   if (type == "organization") {
     return (
       <div className="h-fit w-full flex flex-col gap-3 mt-4 px-2 py-4 shadow-lg rounded-lg border border-gray-300">
@@ -25,10 +27,29 @@ export default function CouponDisplaySection({ form }: props) {
     return (
       <div className="h-fit w-full flex flex-col gap-3 mt-4 px-2 py-4 shadow-lg rounded-lg border border-gray-300">
         <label className="input-label">
-          المستخدمين التى تريد إرسال الكوبون اليهم
+          المستخدمين الذى تم إرسال الكوبون اليهم
         </label>
         <UsersDisplay form={form} />
       </div>
+    );
+  }
+
+  if (type == "general") {
+    return (
+      <>
+        <div className="h-fit w-full flex flex-col gap-3 mt-4 px-2 py-4 shadow-lg rounded-lg border border-gray-300">
+          <label className="input-label">
+            المستخدمين الذى تم إرسال الكوبون اليهم
+          </label>
+          <UsersDisplay form={form} />
+        </div>
+        <div className="h-fit w-full flex flex-col gap-3 mt-4 px-2 py-4 shadow-lg rounded-lg border border-gray-300">
+          <label className="input-label">
+            المراكز التى تم إرسال الكوبون اليها
+          </label>
+          <SelectedOrganizations form={form} />
+        </div>
+      </>
     );
   }
 

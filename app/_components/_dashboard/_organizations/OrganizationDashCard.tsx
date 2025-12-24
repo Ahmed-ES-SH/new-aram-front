@@ -176,7 +176,7 @@ export default function OrganizationDashCard({
 
         {/* Location */}
         <div className="flex items-center gap-2 mb-3">
-          <FaMapMarkerAlt className="text-gray-400 text-sm flex-shrink-0" />
+          <FaMapMarkerAlt className="text-gray-400 text-sm shrink-0" />
           <span className="text-sm text-gray-600 line-clamp-1">
             {organization?.location?.address}
           </span>
@@ -184,7 +184,7 @@ export default function OrganizationDashCard({
 
         {/* Phone */}
         <div className="flex items-center gap-2 mb-4">
-          <FaPhone className="text-gray-400 text-sm flex-shrink-0" />
+          <FaPhone className="text-gray-400 text-sm shrink-0" />
           <span className="text-sm text-gray-600">
             {organization.phone_number}
           </span>

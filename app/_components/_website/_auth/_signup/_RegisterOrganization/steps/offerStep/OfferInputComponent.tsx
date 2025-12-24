@@ -16,7 +16,7 @@ interface InputComponentProps {
   type?: string; // text | select | number | date
   value: string;
   label: string;
-  error: string;
+  error: any;
   placeholder?: string;
   icon?: IconType;
   textarea?: boolean;

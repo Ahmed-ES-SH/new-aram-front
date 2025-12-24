@@ -122,8 +122,6 @@ const SectionsContainer = () => {
     }
   };
 
-  console.log(isActive);
-
   if (loading || active === null) return <LoadingSpin />;
 
   return (

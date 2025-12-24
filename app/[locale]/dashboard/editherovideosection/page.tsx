@@ -1,12 +1,11 @@
 "use client";
 import LoadingSpin from "@/app/_components/LoadingSpin";
 import useFetchData from "@/app/_helpers/FetchDataWithAxios";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
-import { FaEdit, FaPen } from "react-icons/fa";
+import { FaPen } from "react-icons/fa";
 import EditTextPopup from "@/app/_components/_popups/EditTextPopup";
-import EditVideo from "@/app/_components/_dashboard/_editherovideosection/EditVideo";
 import { VscLoading } from "react-icons/vsc";
 import { toast } from "sonner";
 import { instance } from "@/app/_helpers/axios";
@@ -29,7 +28,6 @@ export default function Editherovideosection() {
   const [mainVideoData, setMainVideoData] = useState<any>(null);
   const [demoVideoData, setDemoVideoData] = useState<any>(null);
   const [mainVideo, setMainVideo] = useState<File | string | null>(null);
-  const [demoVideo, setDemoVideo] = useState<File | string | null>(null);
   const [videoPopupOpen, setVideoPopupOpen] = useState<"main" | "demo" | null>(
     null
   );

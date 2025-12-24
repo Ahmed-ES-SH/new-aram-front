@@ -882,7 +882,27 @@
       "complete": "complete"
     },
     "success": "Account created successfully. Redirected to login page.",
-    "error": "An error occurred while creating your account. Please try again later."
+    "error": "An error occurred while creating your account. Please try again later.",
+    "validation": {
+      "required": "Required",
+      "invalid_email": "Invalid email address",
+      "min_8": "At least 8 characters required",
+      "invalid_phone": "Invalid phone number",
+      "min_3": "At least 3 characters",
+      "max_100": "Max 100 characters",
+      "min_10": "At least 10 characters",
+      "max_1000": "Max 1000 characters",
+      "min_0": "Must be 0 or more",
+      "max_150": "Max 150",
+      "max_2000": "Max 2000",
+      "invalid_option": "Invalid option selected",
+      "numeric": "Must be a number",
+      "positive": "Must be a positive number",
+      "invalid_date": "Invalid date",
+      "invalid_code": "Invalid code",
+      "end_date_after_start": "End date must be after start date",
+      "percentage_max_100": "Percentage cannot exceed 100%"
+    }
   },
 
   "orgValidation": {

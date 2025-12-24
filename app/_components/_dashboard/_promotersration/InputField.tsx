@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 interface Props {
   label: string;
   name: string;
-  value: number;
+  value: number | string;
   disabled: boolean;
   error?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -27,7 +27,7 @@ const InputField: React.FC<Props> = ({
 
       <div>
         <input
-          type="number"
+          type="string"
           name={name}
           value={value}
           onChange={onChange}

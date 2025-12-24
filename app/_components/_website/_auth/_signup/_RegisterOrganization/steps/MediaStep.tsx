@@ -11,6 +11,8 @@ import { CategoriesSelector } from "../CategoriesSelector";
 import { SubCategoriesSelector } from "../SubCategoriesSelector";
 import { category } from "@/app/types/_dashboard/GlobalTypes";
 import { MdErrorOutline } from "react-icons/md";
+import { useValidation } from "../hooks/useValidation";
+import { mediaSchema } from "../validation/schemas";
 
 interface MediaStepProps {
   image: File | null;
@@ -42,31 +44,11 @@ export function MediaStep({
 
   const locale = useLocale() as "en" | "ar";
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!image) {
-      newErrors.image = t("fields.image.required");
-    }
-    if (!logo) {
-      newErrors.logo = t("fields.logo.required");
-    }
-    if (categories.length === 0) {
-      newErrors.categories = t("fields.categories.required");
-    }
-    if (subcategories.length === 0) {
-      newErrors.subcategories = t("fields.subcategories.required");
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const { validate, errors, clearError } = useValidation(mediaSchema);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
+    if (validate({ image, logo, categories, subcategories } as any)) {
       onNext();
     }
   };
@@ -95,7 +77,7 @@ export function MediaStep({
                 value={image}
                 onChange={(file) => {
                   onUpdate({ image: file });
-                  if (file) setErrors((prev) => ({ ...prev, image: "" }));
+                  clearError("image");
                 }}
               />
               {errors.image && (
@@ -112,7 +94,7 @@ export function MediaStep({
                 value={logo}
                 onChange={(file) => {
                   onUpdate({ logo: file });
-                  if (file) setErrors((prev) => ({ ...prev, logo: "" }));
+                  clearError("logo");
                 }}
               />
               {errors.logo && (
@@ -133,8 +115,7 @@ export function MediaStep({
               selectedCategories={categories}
               onChange={(cats: any) => {
                 onUpdate({ categories: cats });
-                if (cats.length > 0)
-                  setErrors((prev) => ({ ...prev, categories: "" }));
+                clearError("categories");
               }}
             />
             {errors.categories && (
@@ -155,8 +136,7 @@ export function MediaStep({
               selectedSubcategories={subcategories}
               onChange={(subs: any) => {
                 onUpdate({ subcategories: subs });
-                if (subs.length > 0)
-                  setErrors((prev) => ({ ...prev, subcategories: "" }));
+                clearError("subcategories");
               }}
             />
             {errors.subcategories && (

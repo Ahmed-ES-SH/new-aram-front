@@ -14,12 +14,13 @@ import { BsCalendar2DateFill } from "react-icons/bs";
 import { category } from "@/app/types/_dashboard/GlobalTypes";
 import OfferInputComponent from "./offerStep/OfferInputComponent";
 import { ImageUploader } from "../ImageUploader";
-import { getOfferSchema } from "../validation/offerSchema";
 import { instance } from "@/app/_helpers/axios";
 import { toast } from "sonner";
 import { VscLoading } from "react-icons/vsc";
 import { appendFormData } from "../helpers";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useValidation } from "../hooks/useValidation";
+import { offerSchema } from "../validation/schemas";
 
 interface Props {
   offer: RegistrationFormData["offer"];
@@ -42,40 +43,35 @@ export default function OfferStep({
 }: Props) {
   const t = useTranslations("registration");
   const t_2 = useTranslations("registerUserPage");
-  const t_3 = useTranslations("orgValidation");
   const locale = useLocale() as "en" | "ar";
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const ref_code = searchParams.get("ref");
 
-  const schema = getOfferSchema(t_3);
-
-  const [errors, setErrors] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [cooperationPdf, setCooperationPdf] = useState<null | string>(null);
 
+  const { validate, errors, setErrors, clearError } =
+    useValidation(offerSchema);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const parsed = schema.safeParse(offer);
-      if (!parsed.success) {
-        const formattedErrors: Record<string, string> = {};
 
-        // هنا TypeScript يعرف إن parsed.error هو ZodError
-        parsed.error.issues.forEach((err) => {
-          if (err.path.length > 0) {
-            formattedErrors[err.path[0] as string] = err.message;
-          }
-        });
-        setErrors(formattedErrors);
-        setLoading(false);
-        return;
-      }
+    // Validate offer data
+    // Cast offer properties if necessary to match schema expected types if needed
+    // But schema uses coerce so usually it is fine for primitives.
+    if (!validate(offer as any)) {
+      return;
+    }
+
+    try {
       setLoading(true);
       const formData = new FormData();
       appendFormData(formData, orgForm);
-      formData.append("category_id", categories[0].id.toString());
+      if (categories[0]?.id) {
+        formData.append("category_id", categories[0].id.toString());
+      }
       if (ref_code) formData.append("ref_code", ref_code);
 
       // Debug logging
@@ -136,6 +132,7 @@ export default function OfferStep({
       .substring(2, 10)
       .toUpperCase();
     onUpdate({ code: randomCode });
+    clearError("code"); // Clear error when generated
   };
 
   useEffect(() => {
@@ -171,34 +168,43 @@ export default function OfferStep({
         <OfferInputComponent
           id="title"
           name="title"
-          value={offer.title}
+          value={offer.title || ""}
           label={t("fields.offer.title.label")}
           placeholder={t("fields.offer.title.placeholder")}
           icon={CiText}
-          onChange={(e) => onUpdate({ [e.target.name]: e.target.value })}
-          error={errors && errors["title"] && errors["title"]}
+          onChange={(e) => {
+            onUpdate({ [e.target.name]: e.target.value });
+            clearError("title");
+          }}
+          error={errors.title}
         />
 
         <OfferInputComponent
           id="description"
           name="description"
-          value={offer.description}
+          value={offer.description || ""}
           label={t("fields.offer.description.label")}
           placeholder={t("fields.offer.description.placeholder")}
           icon={LuFileText}
           textarea
-          onChange={(e) => onUpdate({ [e.target.name]: e.target.value })}
-          error={errors && errors["description"] && errors["description"]}
+          onChange={(e) => {
+            onUpdate({ [e.target.name]: e.target.value });
+            clearError("description");
+          }}
+          error={errors.description}
         />
 
         <OfferInputComponent
           id="discount_type"
           name="discount_type"
           type="select"
-          value={offer.discount_type}
+          value={offer.discount_type || ""}
           label={t("fields.offer.discount_type.label")}
           placeholder={t("fields.offer.discount_type.placeholder")}
-          onChange={(e) => onUpdate({ [e.target.name]: e.target.value })}
+          onChange={(e) => {
+            onUpdate({ [e.target.name]: e.target.value });
+            clearError("discount_type");
+          }}
           icon={MdDiscount}
           options={[
             {
@@ -210,50 +216,62 @@ export default function OfferStep({
               label: t("fields.offer.discount_type.options.fixed"),
             },
           ]}
-          error={errors && errors["discount_type"] && errors["discount_type"]}
+          error={errors.discount_type}
         />
 
         <OfferInputComponent
           id="discount_value"
           name="discount_value"
-          value={offer.discount_value}
+          value={offer.discount_value || ""}
           label={t("fields.offer.discount_value.label")}
           placeholder={t("fields.offer.discount_value.placeholder")}
-          onChange={(e) => onUpdate({ [e.target.name]: e.target.value })}
+          onChange={(e) => {
+            onUpdate({ [e.target.name]: e.target.value });
+            clearError("discount_value");
+          }}
           icon={AiFillDollarCircle}
-          error={errors && errors["discount_value"] && errors["discount_value"]}
+          error={errors.discount_value}
         />
 
         <OfferInputComponent
           id="start_date"
           name="start_date"
           type="date"
-          value={offer.start_date}
+          value={offer.start_date || ""}
           label={t("fields.offer.start_date.label")}
           placeholder={t("fields.offer.start_date.placeholder")}
-          onChange={(e) => onUpdate({ [e.target.name]: e.target.value })}
+          onChange={(e) => {
+            onUpdate({ [e.target.name]: e.target.value });
+            clearError("start_date");
+          }}
           icon={BsCalendar2DateFill}
-          error={errors && errors["start_date"] && errors["start_date"]}
+          error={errors.start_date}
         />
 
         <OfferInputComponent
           id="end_date"
           name="end_date"
           type="date"
-          value={offer.end_date}
+          value={offer.end_date || ""}
           label={t("fields.offer.end_date.label")}
           placeholder={t("fields.offer.end_date.placeholder")}
-          onChange={(e) => onUpdate({ [e.target.name]: e.target.value })}
+          onChange={(e) => {
+            onUpdate({ [e.target.name]: e.target.value });
+            clearError("end_date");
+          }}
           icon={BsCalendar2DateFill}
-          error={errors && errors["end_date"] && errors["end_date"]}
+          error={errors.end_date}
         />
 
         <MainCategorySelector
           categories={categories}
           selectedCategory={offer.category_id}
-          onChange={(id: any) => onUpdate({ category_id: id })}
+          onChange={(id: any) => {
+            onUpdate({ category_id: id });
+            clearError("category_id");
+          }}
           locale={locale}
-          error={errors && errors["category_id"] && errors["category_id"]}
+          error={errors.category_id as any}
         />
 
         {/* Code Generator */}
@@ -266,14 +284,17 @@ export default function OfferStep({
               type="text"
               id="code"
               name="code"
-              onChange={(e) => onUpdate({ [e.target.name]: e.target.value })}
-              value={offer.code}
+              onChange={(e) => {
+                onUpdate({ [e.target.name]: e.target.value });
+                clearError("code");
+              }}
+              value={offer.code || ""}
               placeholder={t("fields.offer.code.placeholder")}
               className={`flex-1 px-4 py-3 rounded-lg border border-input
                 bg-background text-foreground focus:outline-none focus:ring-2
                 focus:ring-ring focus:border-transparent transition-all duration-200
                 placeholder:text-muted-foreground ${
-                  errors["code"]
+                  errors.code
                     ? "border-red-400 focus:outline-red-400"
                     : "border-gray-200 focus:outline-main_orange"
                 }`}
@@ -290,7 +311,7 @@ export default function OfferStep({
           </div>
           {/* Error Message */}
           <AnimatePresence>
-            {errors && errors["code"] && (
+            {errors.code && (
               <motion.div
                 className="flex items-center gap-1 text-red-500 text-sm mt-2"
                 initial={{ opacity: 0, y: -5 }}
@@ -299,7 +320,7 @@ export default function OfferStep({
                 transition={{ duration: 0.3 }}
               >
                 <MdErrorOutline className="size-4" />
-                <span>{errors["code"]}</span>
+                <span>{errors.code}</span>
               </motion.div>
             )}
           </AnimatePresence>

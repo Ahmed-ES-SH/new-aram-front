@@ -1,8 +1,9 @@
 import DynamicForm from "@/app/_components/_dashboard/_dynamicComponents/DynamicForm";
 import FetchData from "@/app/_helpers/FetchData";
-import React from "react";
 
-export default async function page() {
+export default async function page({ searchParams }: any) {
+  const { parentId } = await searchParams;
+
   const categories = await FetchData(`/all-public-categories`, false);
 
   const addCategoryinputs = [
@@ -34,11 +35,12 @@ export default async function page() {
     },
 
     {
-      name: "gender",
+      name: "parent_id",
       type: "",
       fildType: "select-type",
       label: { ar: "القسم الرئيسى", en: "" },
       placeholder: "",
+      value: parentId ? parentId : null,
       selectItems: categories,
     },
 
@@ -57,8 +59,8 @@ export default async function page() {
       subtitle="املأ البيانات المطلوبة بدقة"
       submitValue="إنشاء"
       inputs={addCategoryinputs}
-      api="/add-category"
-      direct="/en/dashboard/categories"
+      api="/add-sub-category"
+      direct="/ar/dashboard/subcategories"
       successMessage="تم إنشاء قسم جديد بنجاح "
     />
   );

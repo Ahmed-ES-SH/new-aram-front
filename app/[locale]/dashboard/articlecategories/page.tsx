@@ -7,6 +7,8 @@ export default function page() {
     "صورة القسم",
     "العنوان بالعربية",
     "العنوان بالإنجليزية",
+    "لون الخلفية",
+    "ايقونة القسم",
     "تاريخ الانشاء",
   ];
   const keys = [
@@ -14,6 +16,9 @@ export default function page() {
     { key: "image", cellType: "image" },
     { key: "title_en", cellType: "text" },
     { key: "title_ar", cellType: "text" },
+    { key: "bg_color", cellType: "color" },
+    { key: "icon_name", cellType: "icon" },
+
     {
       key: "created_at",
       cellType: "date",

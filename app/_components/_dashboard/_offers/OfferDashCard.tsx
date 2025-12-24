@@ -111,7 +111,8 @@ export default function OfferDashCard({
         {/* Offer Image */}
         <div className="relative h-60 overflow-hidden">
           <Img
-            src={offer.image || "/placeholder.png"}
+            src={offer.image ?? "/defaults/noImage.png"}
+            errorSrc="/defaults/noImage.png"
             alt={offer.title}
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           />
@@ -180,7 +181,8 @@ export default function OfferDashCard({
           {/* Organization Info */}
           <div className="mb-4 flex items-center gap-3">
             <Img
-              src={offer.organization.image || "/placeholder.png"}
+              src={offer.organization.image ?? "/defaults/noImage.png"}
+              errorSrc="/defaults/noImage.png"
               alt={offer.organization.title}
               className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
             />

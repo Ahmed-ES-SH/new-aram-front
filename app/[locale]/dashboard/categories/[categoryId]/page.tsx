@@ -24,7 +24,7 @@ export default async function CategoryPage({ params }: any) {
           <span className="font-bold">({subCategoriesLength})</span>
         </LocaleLink>
         <LocaleLink
-          href="/dashboard/addsubcategory"
+          href={`/dashboard/addsubcategory?parentId=${categoryId}`}
           className="flex items-center justify-between gap-2 mt-3 w-fit mx-auto rounded-md p-3 bg-sky-300 text-white hover:bg-white hover:text-black duration-200 cursor-pointer hover:border-sky-300 border border-transparent"
         >
           أضف قسم فرعى

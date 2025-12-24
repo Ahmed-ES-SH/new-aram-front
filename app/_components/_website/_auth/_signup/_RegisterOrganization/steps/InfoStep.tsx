@@ -9,7 +9,10 @@ import {
   FaBuilding,
   FaAlignLeft,
 } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useValidation } from "../hooks/useValidation";
+import { infoSchema } from "../validation/schemas";
+import { MdErrorOutline } from "react-icons/md";
 
 interface InfoStepProps {
   title: string;
@@ -28,9 +31,13 @@ export function InfoStep({
 }: InfoStepProps) {
   const t = useTranslations("registration");
 
+  const { validate, errors, clearError } = useValidation(infoSchema);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onNext();
+    if (validate({ title, description })) {
+      onNext();
+    }
   };
 
   return (
@@ -64,18 +71,41 @@ export function InfoStep({
                 type="text"
                 id="title"
                 value={title}
-                onChange={(e) => onUpdate({ title: e.target.value })}
+                onChange={(e) => {
+                  onUpdate({ title: e.target.value });
+                  clearError("title");
+                }}
                 placeholder={t("fields.title.placeholder")}
-                required
-                className="
+                // required
+                className={`
                   w-full pl-12 pr-4 py-3 rounded-lg border border-input
                   bg-background text-foreground
                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                   transition-all duration-200
                   placeholder:text-muted-foreground
-                "
+                  ${
+                    errors.title
+                      ? "border-red-400 focus:outline-red-400"
+                      : "border-gray-200 focus:outline-main_orange"
+                  }
+                `}
               />
             </div>
+            {/* Error Message */}
+            <AnimatePresence>
+              {errors.title && (
+                <motion.div
+                  className="flex items-center gap-1 text-red-500 text-sm mt-2"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <MdErrorOutline className="size-4" />
+                  <span>{errors.title}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Description Field */}
@@ -93,20 +123,43 @@ export function InfoStep({
               <textarea
                 id="description"
                 value={description}
-                onChange={(e) => onUpdate({ description: e.target.value })}
+                onChange={(e) => {
+                  onUpdate({ description: e.target.value });
+                  clearError("description");
+                }}
                 placeholder={t("fields.description.placeholder")}
-                required
+                // required
                 rows={5}
-                className="
+                className={`
                   w-full pl-12 pr-4 py-3 rounded-lg border border-input
                   bg-background text-foreground
                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                   transition-all duration-200
                   placeholder:text-muted-foreground
                   resize-none
-                "
+                  ${
+                    errors.description
+                      ? "border-red-400 focus:outline-red-400"
+                      : "border-gray-200 focus:outline-main_orange"
+                  }
+                `}
               />
             </div>
+            {/* Error Message */}
+            <AnimatePresence>
+              {errors.description && (
+                <motion.div
+                  className="flex items-center gap-1 text-red-500 text-sm mt-2"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <MdErrorOutline className="size-4" />
+                  <span>{errors.description}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Navigation Buttons */}

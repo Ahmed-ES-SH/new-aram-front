@@ -37,7 +37,7 @@ export default function page() {
 
   return (
     <DynamicTable<CategoryType>
-      itemDirect="categories"
+      itemDirect="subcategories"
       headers={headers}
       keys={keys}
       api="/sub-categories"

@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import Img from "../../_website/_global/Img";
 import { LuCheck } from "react-icons/lu";
 
@@ -42,7 +41,8 @@ export default function UsersDisplay({ form }: Props) {
               </div>
 
               <Img
-                src={user.image}
+                src={user.image ?? "/defaults/male-noimage.jpg"}
+                errorSrc="/defaults/male-noimage.jpg"
                 alt={user.name}
                 className="w-16 h-16 object-cover mb-2 rounded-full"
               />

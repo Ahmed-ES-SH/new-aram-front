@@ -106,15 +106,22 @@ export default function OrganizationCard({
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.1 }}
-        className="bg-white h-full relative rounded-xl pb-4 group shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-3 duration-300"
+        className="bg-white h-full  relative rounded-xl group shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-3 duration-300"
       >
         <div className="relative">
           <Img
             src={organization.image ?? "/defaults/noImage.png"}
             errorSrc="/defaults/noImage.png"
             alt={organization.title}
-            className="w-full h-[230px] object-cover"
+            className="w-full h-64 object-cover"
           />
+
+          <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full absolute top-2 right-2">
+            <FiStar className="w-3 h-3 text-yellow-500 fill-current" />
+            <span className="text-xs font-medium text-yellow-700">
+              {organization.rating}
+            </span>
+          </div>
 
           <div className="absolute bottom-4 left-4">
             <Img
@@ -127,21 +134,15 @@ export default function OrganizationCard({
         </div>
 
         <div className="lg:p-6 p-3 h-1/2 flex flex-col">
-          <div className="flex items-start justify-between mb-3">
+          <div className="mb-3">
             <LocaleLink
               href={`/organizations/${formatTitle(organization.title)}?orgId=${
                 organization.id
               }`}
-              className="text-xl font-bold text-gray-900 text-balance group-hover:text-sky-500  group-hover:underline duration-200"
+              className="text-lg font-bold text-gray-900 text-balance group-hover:text-sky-500  group-hover:underline duration-200"
             >
               {organization.title}
             </LocaleLink>
-            <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
-              <FiStar className="w-3 h-3 text-yellow-500 fill-current" />
-              <span className="text-sm font-medium text-yellow-700">
-                {organization.rating}
-              </span>
-            </div>
           </div>
 
           <p className="text-gray-600 text-sm mb-4 leading-relaxed">
@@ -178,7 +179,7 @@ export default function OrganizationCard({
             </div>
           )}
 
-          <div className="flex flex-wrap gap-1 mb-4">
+          <div className="flex flex-wrap gap-1 mb-2">
             {organization.keywords.slice(0, 2).map((keyword) => (
               <span
                 key={keyword.id}
@@ -190,28 +191,31 @@ export default function OrganizationCard({
           </div>
 
           {isAble && (
-            <div className="flex gap-2 mt-4 cursor-pointer">
-              <div
-                onClick={() => handleStartConversation()}
-                className="flex-1  bg-primary hover:bg-orange-500 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
-              >
-                {loadingConversation ? (
-                  <VscLoading className="animate-spin" />
-                ) : (
-                  <div className="flex items-center gap-1">
-                    <BiSolidMessageRoundedDots className="w-3 h-3" />
-                    {t("contact")}
-                  </div>
-                )}
+            <>
+              <div className="h-8" />
+              <div className="flex absolute bottom-2 left-1/2 -translate-x-1/2 w-full px-4 gap-2 mt-4 cursor-pointer">
+                <div
+                  onClick={() => handleStartConversation()}
+                  className="flex-1  bg-primary hover:bg-orange-500 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
+                >
+                  {loadingConversation ? (
+                    <VscLoading className="animate-spin" />
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      <BiSolidMessageRoundedDots className="w-3 h-3" />
+                      {t("contact")}
+                    </div>
+                  )}
+                </div>
+                <div
+                  onClick={handleShowBookPoupe}
+                  className="flex-1 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
+                >
+                  <LuClock7 className="w-3 h-3" />
+                  {t("book")}
+                </div>
               </div>
-              <div
-                onClick={handleShowBookPoupe}
-                className="flex-1 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
-              >
-                <LuClock7 className="w-3 h-3" />
-                {t("book")}
-              </div>
-            </div>
+            </>
           )}
         </div>
       </motion.div>

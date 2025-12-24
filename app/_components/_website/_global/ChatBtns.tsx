@@ -13,9 +13,9 @@ export default function ChatBtns() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-2 z-9999 fixed bottom-5 left-5">
+    <div className="flex flex-col items-center gap-2 z-9999 fixed bottom-[70px] right-5">
       <Whatsappbtn />
-      <N8nChat webhookUrl="https://n8nwithhelal.shop/webhook/c4a09c88-96fa-40d4-899a-c52faceb466f/chat" />
+      <N8nChat />
     </div>
   );
 }

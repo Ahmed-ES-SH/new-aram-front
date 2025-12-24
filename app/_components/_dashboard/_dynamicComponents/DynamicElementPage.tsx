@@ -20,6 +20,7 @@ import OrganizationsSelector from "../_services/OrganizationsSelector";
 import CouponDisplaySection from "../_coupons/CouponDisplaySection";
 import LocaleLink from "../../_website/_global/LocaleLink";
 import IconPicker from "../IconPicker";
+import CustomSelect from "./CustomSelect";
 
 interface props {
   api: string;
@@ -52,6 +53,7 @@ export default function DynamicElementPage({
   // Get The Data For The Item .
 
   const { data, loading } = useFetchItem<any>(api, id, false);
+  console.log(data);
 
   // States Lines For This Component.
   const [form, setForm] = useState<any>({});
@@ -151,15 +153,11 @@ export default function DynamicElementPage({
         }
       }
 
-      // Check if inputsData has a field with fildType = "location"
-      const hasLocationField = inputsData?.some(
-        (input: InputField) => input.fildType === "location"
-      );
-
-      // Append location only if the field exists
-      if (hasLocationField && location) {
-        formData.append("location", JSON.stringify(location));
-      }
+      /*
+       * Removed manual location appending.
+       * Location changes are now handled via handleLocationChange
+       * and stored in updatedData, so the main loop handles it.
+       */
 
       const response = await instance.post(
         `${updateEndPoint}/${id}`,
@@ -373,6 +371,42 @@ export default function DynamicElementPage({
     return path.split(".").reduce((acc, key) => acc && acc[key], obj);
   };
 
+  // Handle location change from MapSelector
+  const handleLocationChange = (newLocation: Location | null) => {
+    setLocation(newLocation);
+
+    // Update main form state
+    setForm((prevForm: any) => ({
+      ...prevForm,
+      location: newLocation,
+    }));
+
+    // Update updatedData state
+    // Check if location actually changed from initial data
+    let initialLocation = data?.location;
+    if (typeof initialLocation === "string") {
+      try {
+        initialLocation = JSON.parse(initialLocation);
+      } catch (e) {
+        // ignore error
+      }
+    }
+
+    // Simple comparison (can be improved if needed)
+    if (JSON.stringify(newLocation) !== JSON.stringify(initialLocation)) {
+      setUpdatedData((prevData) => ({
+        ...prevData,
+        location: newLocation ? JSON.stringify(newLocation) : "",
+      }));
+    } else {
+      setUpdatedData((prevData) => {
+        const newData = { ...prevData };
+        delete newData.location;
+        return newData;
+      });
+    }
+  };
+
   //  End Functions Lines
 
   // Add The Data To The Form Object .
@@ -398,15 +432,17 @@ export default function DynamicElementPage({
     }
   }, [data]);
 
+  console.log(data);
+
   if (loading || updateLoading) return <LoadingSpin />;
 
   return (
     <>
-      <div className="w-full relative mt-10">
+      <div className="w-full relative mt-4">
         <form
           onSubmit={handleSaveChanges}
           style={{ direction: "rtl" }}
-          className="w-[98%] h-fit  mx-auto max-md:w-[96%] mt-2 flex flex-col gap-3"
+          className="w-full lg:w-[90%] w-full mx-auto px-6 py-8 mb-8 mt-4 flex flex-col gap-6 bg-white rounded-2xl shadow-sm border border-gray-100"
         >
           {inputsData.map((input, index) => {
             //////////////////////
@@ -416,11 +452,11 @@ export default function DynamicElementPage({
             if (input.fildType == "short-text") {
               const value = getNestedValue(form, input.name);
               return (
-                <div
-                  className="flex flex-col gap-3 border border-gray-300 rounded-lg shadow-lg py-4 px-2"
-                  key={index}
-                >
-                  <label htmlFor={input.name} className="input-label">
+                <div key={index} className="w-full group">
+                  <label
+                    htmlFor={input.name}
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                  >
                     {input.label["ar"]}
                   </label>
                   <input
@@ -429,11 +465,49 @@ export default function DynamicElementPage({
                     type={input.type}
                     value={(value as string) || ""}
                     onChange={handleChange}
-                    className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100 read-only:cursor-not-allowed"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 sm:py-3.5 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 read-only:bg-gray-100 read-only:cursor-not-allowed"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                      {errors[input.name]?.ar ??
+                        errors[input.name]?.[0]?.ar ??
+                        (typeof errors[input.name] === "string"
+                          ? errors[input.name]
+                          : "خطأ فى هذا الحقل")}
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
+            //////////////////////
+            // email input (independent case)
+            //////////////////////
+
+            if (input.fildType == "email") {
+              const value = getNestedValue(form, input.name);
+              return (
+                <div key={index} className="w-full group">
+                  <label
+                    htmlFor={input.name}
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                  >
+                    {input.label["ar"]}
+                  </label>
+                  <input
+                    name={input.name}
+                    placeholder={input.placeholder}
+                    type={input.type}
+                    value={(value as string) || ""}
+                    onChange={handleChange}
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 sm:py-3.5 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 read-only:bg-gray-100 read-only:cursor-not-allowed"
+                    readOnly={data?.email_verified_at !== null}
+                  />
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -451,22 +525,22 @@ export default function DynamicElementPage({
 
             if (input.fildType === "number-input") {
               return (
-                <div
-                  key={index}
-                  className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                >
-                  <label className="input-label">{input.label.ar}</label>
+                <div key={index} className="w-full group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                    {input.label.ar}
+                  </label>
                   <input
                     name={input.name || ""}
                     type="number"
                     value={form[input.name] || 0}
                     onChange={handleChange}
                     placeholder={input.placeholder || ""}
-                    className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300  p-2 outline-none"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -484,23 +558,24 @@ export default function DynamicElementPage({
 
             if (input.fildType === "phone-input") {
               return (
-                <div
-                  key={index}
-                  className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                >
-                  <label className="input-label">{input.label.ar}</label>
+                <div key={index} className="w-full group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                    {input.label.ar}
+                  </label>
                   <input
                     name={input.name || ""}
                     type="tel"
-                    inputMode="numeric" // يظهر لوحة أرقام على الموبايل
+                    inputMode="numeric"
+                    dir="ltr"
                     value={form[input.name] || ""}
                     onChange={handleChange}
                     placeholder={input.placeholder || "أدخل رقم الهاتف"}
-                    className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 text-right"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -517,22 +592,22 @@ export default function DynamicElementPage({
             //////////////////////
             if (input.fildType === "time-input") {
               return (
-                <div
-                  key={index}
-                  className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                >
-                  <label className="input-label">{input.label.ar}</label>
+                <div key={index} className="w-full group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                    {input.label.ar}
+                  </label>
                   <input
                     name={input.name || ""}
                     type="time"
                     value={form[input.name] || ""}
                     onChange={handleChange}
                     placeholder={input.placeholder || ""}
-                    className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -549,26 +624,24 @@ export default function DynamicElementPage({
             //////////////////////
             if (input.fildType === "date-input") {
               return (
-                <div
-                  key={index}
-                  className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                >
-                  <label className="input-label">{input.label.ar}</label>
+                <div key={index} className="w-full group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                    {input.label.ar}
+                  </label>
                   <input
                     name={input.name || ""}
                     type="date"
                     value={
-                      form[input.name]
-                        ? form[input.name].split(" ")[0] // خذ الجزء الأول قبل الـ space
-                        : ""
+                      form[input.name] ? form[input.name].split(" ")[0] : ""
                     }
                     onChange={handleChange}
                     placeholder={input.placeholder || ""}
-                    className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -585,11 +658,11 @@ export default function DynamicElementPage({
             //////////////////////
             if (input.fildType == "long-text") {
               return (
-                <div
-                  className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                  key={index}
-                >
-                  <label htmlFor={input.name} className="input-label">
+                <div key={index} className="w-full group">
+                  <label
+                    htmlFor={input.name}
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                  >
                     {input.label["ar"]}
                   </label>
                   <textarea
@@ -597,11 +670,12 @@ export default function DynamicElementPage({
                     placeholder={input.placeholder}
                     value={(form[input.name] as string) || ""}
                     onChange={handleChange}
-                    className="input-style h-52"
+                    className="w-full min-h-[160px] rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 resize-y"
                     readOnly={input.readOnly}
                   />
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -632,11 +706,11 @@ export default function DynamicElementPage({
               };
 
               return (
-                <div
-                  className="flex flex-col gap-3 border border-gray-300 rounded-lg shadow-lg py-4 px-2"
-                  key={index}
-                >
-                  <label htmlFor={input.name} className="input-label">
+                <div key={index} className="w-full group">
+                  <label
+                    htmlFor={input.name}
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                  >
                     {input.label["ar"]}
                   </label>
                   <div className="flex items-center gap-2">
@@ -646,19 +720,20 @@ export default function DynamicElementPage({
                       type="text"
                       value={(form[input.name] as string) || ""}
                       onChange={handleChange}
-                      className="input-style flex-1 read-only:bg-gray-100 read-only:focus:outline-gray-100"
+                      className="flex-1 rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 read-only:bg-gray-100/50"
                       readOnly={input.readOnly}
                     />
                     <button
                       type="button"
                       onClick={generateCode}
-                      className="px-3 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+                      className="px-6 py-3 bg-primary text-white rounded-xl shadow-sm hover:bg-primary/90 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 font-medium whitespace-nowrap"
                     >
-                      توليد
+                      توليد كود
                     </button>
                   </div>
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -676,24 +751,38 @@ export default function DynamicElementPage({
 
             if (input.fildType == "user-image") {
               return (
-                <div key={index} className="h-80">
+                <div
+                  key={index}
+                  className="flex flex-col items-center justify-center my-6 group"
+                >
                   <div
                     onClick={() => openImageinput.current?.click()}
-                    className="w-60 h-60 rounded-full  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border-2  border-second_text flex items-center justify-center "
+                    className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full border-4 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:border-primary hover:bg-primary/5 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10"
                   >
                     {form[input.name] instanceof File ? (
                       <Img
                         src={URL.createObjectURL(form[input.name] as Blob)}
-                        className="w-full h-full object-cover  rounded-full"
+                        className="w-full h-full object-cover"
                       />
                     ) : form[input.name] ? (
                       <Img
                         src={form[input.name] as string}
-                        className="w-full h-full object-cover rounded-full"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <FaImage className="size-24 " />
+                      <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-primary transition-colors duration-300">
+                        <FaImage className="w-12 h-12 mb-2" />
+                        <span className="text-xs font-medium px-2 text-center">
+                          {input.label["ar"]}
+                        </span>
+                      </div>
                     )}
+
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <FaImage className="text-white w-8 h-8 drop-shadow-md" />
+                    </div>
+
                     <input
                       type="file"
                       name="image"
@@ -701,15 +790,15 @@ export default function DynamicElementPage({
                       onChange={handleFileChange}
                       ref={openImageinput}
                     />
-                    {errors[input.name] && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors[input.name] ??
-                          errors[input.name]["ar"] ??
-                          errors[input.name][0]["ar"] ??
-                          "خطأ فى هذا الحقل"}
-                      </p>
-                    )}
                   </div>
+                  {errors[input.name] && (
+                    <p className="text-red-500 text-sm mt-2 text-center">
+                      {errors[input.name] ??
+                        errors[input.name]["ar"] ??
+                        errors[input.name][0]["ar"] ??
+                        "خطأ فى هذا الحقل"}
+                    </p>
+                  )}
                 </div>
               );
             }
@@ -720,20 +809,34 @@ export default function DynamicElementPage({
 
             if (input.fildType === "color-fild") {
               return (
-                <div className="flex flex-col gap-3" key={index}>
-                  <label htmlFor={input.name} className="input-label">
+                <div key={index} className="w-full group">
+                  <label
+                    htmlFor={input.name}
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                  >
                     {input.label["ar"]}
                   </label>
-                  <input
-                    name={input.name}
-                    type="color"
-                    value={(form[input.name] as string) || "#000000"}
-                    onChange={handleChange}
-                    className="w-16 h-10 p-0 border-0 cursor-pointer"
-                  />
+                  <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-xl bg-gray-50/50">
+                    <input
+                      name={input.name}
+                      type="color"
+                      value={(form[input.name] as string) || "#000000"}
+                      onChange={handleChange}
+                      className="w-16 h-16 rounded-full border-4 border-white shadow-md cursor-pointer hover:scale-105 transition-transform duration-200 p-0 overflow-hidden"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-500">
+                        اللون المختار
+                      </span>
+                      <span className="font-mono text-gray-800 dir-ltr text-left uppercase">
+                        {(form[input.name] as string) || "#000000"}
+                      </span>
+                    </div>
+                  </div>
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name]["ar"]}
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                      {errors[input.name]?.ar ?? errors[input.name]}
                     </p>
                   )}
                 </div>
@@ -746,16 +849,13 @@ export default function DynamicElementPage({
 
             if (input.fildType == "normal-image") {
               return (
-                <div
-                  key={index}
-                  className="flex flex-col gap-2 items-start w-fit ml-auto"
-                >
-                  <label htmlFor={input.name} className="input-label">
+                <div key={index} className="w-full group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
                     {input.label["ar"]}
                   </label>
                   <div
                     onClick={() => openImageinput.current?.click()}
-                    className="w-72 h-60 p-4 overflow-hidden rounded-lg shadow  border-gray-300  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
+                    className="w-full h-64 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:border-primary hover:bg-primary/5 transition-all duration-300 relative group-hover:shadow-md"
                   >
                     {form?.image instanceof File ? (
                       <Img
@@ -772,8 +872,14 @@ export default function DynamicElementPage({
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <FaImage className="size-24 " />
+                      <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-primary transition-colors duration-300">
+                        <FaImage className="w-12 h-12 mb-3" />
+                        <span className="text-sm font-medium">
+                          اضغط لرفع الصورة
+                        </span>
+                      </div>
                     )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
                     <input
                       type="file"
                       name="image"
@@ -783,7 +889,8 @@ export default function DynamicElementPage({
                     />
                   </div>
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -800,32 +907,38 @@ export default function DynamicElementPage({
 
             if (input.fildType == "logo-image") {
               return (
-                <div
-                  key={index}
-                  className="flex flex-col gap-2 items-start w-fit ml-auto"
-                >
-                  <label htmlFor={input.name} className="input-label">
+                <div key={index} className="w-full group">
+                  <label
+                    htmlFor={input.name}
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                  >
                     {input.label["ar"]}
                   </label>
                   <div
                     onClick={() => openLogoinput.current?.click()}
-                    className="w-72 h-60 p-4 overflow-hidden rounded-lg shadow  border-gray-300  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
+                    className="w-40 h-40 sm:w-56 sm:h-56 mx-auto rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:border-primary hover:bg-primary/5 transition-all duration-300 relative group-hover:shadow-md"
                   >
                     {form?.logo instanceof File ? (
                       <Img
                         src={URL.createObjectURL(form?.logo)}
-                        className="w-full h-full  object-cover"
+                        className="w-full h-full  object-contain p-2"
                       />
                     ) : form["logo"] ? (
                       <Img
                         src={
                           form["logo"] ? form["logo"] : "/defaults/noImage.png"
                         }
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain p-2"
                       />
                     ) : (
-                      <FaImage className="size-24 " />
+                      <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-primary transition-colors duration-300">
+                        <FaImage className="w-10 h-10 mb-2" />
+                        <span className="text-xs font-medium text-center px-2">
+                          رفع الشعار
+                        </span>
+                      </div>
                     )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
                     <input
                       type="file"
                       name="logo"
@@ -835,7 +948,8 @@ export default function DynamicElementPage({
                     />
                   </div>
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center justify-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -853,11 +967,13 @@ export default function DynamicElementPage({
 
             if (input.fildType == "full-image") {
               return (
-                <div key={index} className="h-fit w-full flex flex-col gap-3">
-                  <label className="input-label">{input.label.ar}</label>
+                <div key={index} className="w-full group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                    {input.label.ar}
+                  </label>
                   <div
                     onClick={() => openImageinput.current?.click()}
-                    className="w-full h-96  shadow-md border-dashed overflow-hidden rounded-sm  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
+                    className="w-full h-64 sm:h-96 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:border-primary hover:bg-primary/5 transition-all duration-300 relative group-hover:shadow-md"
                   >
                     {form?.image instanceof File ? (
                       <Image
@@ -873,8 +989,14 @@ export default function DynamicElementPage({
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <FaImage className="size-24 " />
+                      <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-primary transition-colors duration-300">
+                        <FaImage className="w-16 h-16 mb-4" />
+                        <span className="text-lg font-medium">
+                          اضغط لرفع الصورة الكاملة
+                        </span>
+                      </div>
                     )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
                     <input
                       type="file"
                       name="image"
@@ -884,7 +1006,8 @@ export default function DynamicElementPage({
                     />
                   </div>
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -903,18 +1026,31 @@ export default function DynamicElementPage({
             if (input.fildType == "icon-fild") {
               const Icon = getIconComponent(form[input.name]);
               return (
-                <div className="flex flex-col gap-3 w-fit ml-auto" key={index}>
-                  <label htmlFor={input.name} className="input-label">
+                <div key={index} className="w-full group">
+                  <label
+                    htmlFor={input.name}
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                  >
                     {input.label["ar"]}
                   </label>
-                  <div
-                    onClick={() => setShowIconPicker(true)}
-                    className="shadow w-72 h-60 flex items-center justify-center rounded-lg border border-gray-300 p-2 text-primary hover:bg-primary hover:text-white duration-300"
-                  >
-                    <Icon className="size-32 cursor-pointer select-effect" />
+                  <div className="flex justify-center my-4">
+                    <div
+                      onClick={() => setShowIconPicker(true)}
+                      className="w-40 h-40 sm:w-48 sm:h-48 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 text-gray-400 hover:text-primary"
+                    >
+                      {Icon ? (
+                        <Icon className="w-20 h-20" />
+                      ) : (
+                        <div className="flex flex-col items-center">
+                          <span className="text-4xl mb-2">+</span>
+                          <span className="text-sm">اختر أيقونة</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center justify-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -932,14 +1068,16 @@ export default function DynamicElementPage({
 
             if (input.fildType === "select-organizations") {
               return (
-                <div
-                  key={index}
-                  className="w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                >
-                  <label htmlFor={input.name} className="input-label">
+                <div key={index} className="w-full group">
+                  <label
+                    htmlFor={input.name}
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                  >
                     {input.label["ar"]}
                   </label>
-                  <OrganizationsSelector form={form} setForm={setForm} />
+                  <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-1 hover:bg-gray-50 transition-colors duration-200">
+                    <OrganizationsSelector form={form} setForm={setForm} />
+                  </div>
                 </div>
               );
             }
@@ -950,14 +1088,13 @@ export default function DynamicElementPage({
 
             if (input.fildType === "keywords") {
               return (
-                <div
-                  key={index}
-                  className="w-full px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                >
-                  <KeywordSelector
-                    selectedKeywords={form.keywords || []}
-                    setSelectedKeywords={handleKeywordsChange}
-                  />
+                <div key={index} className="w-full group mt-4">
+                  <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-4 hover:bg-gray-50 transition-colors duration-200">
+                    <KeywordSelector
+                      selectedKeywords={form.keywords || []}
+                      setSelectedKeywords={handleKeywordsChange}
+                    />
+                  </div>
                 </div>
               );
             }
@@ -968,16 +1105,18 @@ export default function DynamicElementPage({
 
             if (input.fildType == "images-section") {
               return (
-                <div
-                  className="w-full border border-gray-300 shadow-lg rounded-lg px-2 py-4"
-                  key={index}
-                >
-                  <ServiceImages
-                    form={form}
-                    setForm={setForm}
-                    images={form?.images ? form?.images : null}
-                    errors={errors}
-                  />
+                <div key={index} className="w-full group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                    {input.label["ar"]}
+                  </label>
+                  <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-4 hover:bg-gray-50 transition-colors duration-200">
+                    <ServiceImages
+                      form={form}
+                      setForm={setForm}
+                      images={form?.images ? form?.images : null}
+                      errors={errors}
+                    />
+                  </div>
                 </div>
               );
             }
@@ -987,17 +1126,16 @@ export default function DynamicElementPage({
 
             if (input.fildType == "sub-category") {
               return (
-                <div
-                  className="w-full border border-gray-300 shadow-lg rounded-lg px-2 py-4"
-                  key={index}
-                >
-                  <SubCategoryMultiSelect
-                    setUpdatedData={setUpdatedData}
-                    currentSubCategories={
-                      form.sub_categories ? form.sub_categories : []
-                    }
-                    mode="update"
-                  />
+                <div key={index} className="w-full group">
+                  <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-1 hover:bg-gray-50 transition-colors duration-200">
+                    <SubCategoryMultiSelect
+                      setUpdatedData={setUpdatedData}
+                      currentSubCategories={
+                        form.sub_categories ? form.sub_categories : []
+                      }
+                      mode="update"
+                    />
+                  </div>
                 </div>
               );
             }
@@ -1008,11 +1146,11 @@ export default function DynamicElementPage({
 
             if (input.fildType == "location") {
               return (
-                <div
-                  className="flex flex-col gap-3 w-full relative px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                  key={index}
-                >
-                  <label htmlFor={input.name} className="input-label">
+                <div key={index} className="w-full group relative">
+                  <label
+                    htmlFor={input.name}
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                  >
                     {input.label["ar"]}
                   </label>
                   <div className="relative">
@@ -1022,18 +1160,41 @@ export default function DynamicElementPage({
                       type={input.type}
                       value={(location && (location.address as string)) || ""}
                       onChange={handleChange}
-                      className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100"
+                      className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 pl-32"
                       readOnly={input.readOnly}
                     />
-                    <span
-                      onClick={() => setShowMap(true)}
-                      className="underline text-red-400 mt-2 w-fit mr-auto block cursor-pointer hover:text-red-600 duration-150"
-                    >
-                      إستعراض العنوان على الخريطة
-                    </span>
+                    <div className="absolute left-2 top-1.5 bottom-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setShowMap(true)}
+                        className="h-full px-4 rounded-lg bg-primary/10 text-primary text-sm font-medium hover:bg-primary hover:text-white transition-colors duration-200 flex items-center gap-2"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          ></path>
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          ></path>
+                        </svg>
+                        الخريطة
+                      </button>
+                    </div>
                   </div>
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name][0]["ar"] ??
                         errors[input.name][0] ??
                         ""}
@@ -1049,46 +1210,23 @@ export default function DynamicElementPage({
 
             if (input.fildType == "select-type") {
               return (
-                <div
-                  key={index}
-                  className="w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                >
-                  <label htmlFor={input.name} className="input-label">
-                    {input.label["ar"]}
-                  </label>
-                  <select
-                    onChange={handleChange}
+                <div key={index} className="w-full group">
+                  <CustomSelect
                     name={input.name}
-                    className="select-style"
-                    value={
-                      form[input.name] ??
-                      (form[input.name] as string) ??
-                      form[input.name]?.title_ar ??
-                      ""
+                    label={input.label["ar"]}
+                    placeholder="حدد أحد الإختيارات التالية : -"
+                    value={form[input.name] ?? form[input.name]?.title_ar ?? ""}
+                    onChange={(e) => handleChange(e as any)}
+                    options={input.selectItems || []}
+                    error={
+                      errors[input.name]?.ar ??
+                      errors[input.name]?.[0]?.ar ??
+                      (typeof errors[input.name] === "string"
+                        ? errors[input.name]
+                        : undefined)
                     }
-                  >
-                    <option value="" disabled>
-                      {"حدد أحد الإختيارات التالية : -"}
-                    </option>
-                    {input.selectItems &&
-                      input.selectItems.map((item) => (
-                        <option
-                          key={item.value ?? item.name ?? item.id}
-                          value={item.value ?? item.name ?? item.id}
-                        >
-                          {item.name ? item.name : item?.title_ar}
-                        </option>
-                      ))}
-                  </select>
-                  {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name]?.ar ??
-                        errors[input.name]?.[0]?.ar ??
-                        (typeof errors[input.name] === "string"
-                          ? errors[input.name]
-                          : "خطأ فى هذا الحقل")}
-                    </p>
-                  )}
+                    readOnly={input.readOnly}
+                  />
                 </div>
               );
             }
@@ -1099,19 +1237,18 @@ export default function DynamicElementPage({
 
             if (input.fildType === "array") {
               return (
-                <div
-                  key={index}
-                  className="h-fit w-full flex flex-col gap-3 mt-4 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                >
-                  <label className="input-label">{input.label.ar}</label>
+                <div key={index} className="w-full group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                    {input.label.ar}
+                  </label>
 
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-3 p-4 bg-gray-50/50 rounded-xl border border-gray-200">
                     {Array.isArray(form[input.name]) &&
                     form[input.name].length > 0 ? (
                       form[input.name].map((item: any, idx: number) => (
                         <div
                           key={item.id || idx}
-                          className="flex items-center shadow gap-2 p-2 rounded-md"
+                          className="flex items-center gap-3 p-2 bg-white rounded-lg shadow-sm border border-gray-100"
                         >
                           {/* Dynamic input field based on displayKey */}
                           <input
@@ -1131,7 +1268,7 @@ export default function DynamicElementPage({
                                 setForm
                               )
                             }
-                            className="flex-1 border border-gray-300 focus:border-sky-300 duration-300 rounded p-2 outline-none"
+                            className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/10"
                             placeholder={input.placeholder || ""}
                           />
 
@@ -1141,15 +1278,16 @@ export default function DynamicElementPage({
                             onClick={() =>
                               handleArrayRemove(input.name, idx, form, setForm)
                             }
-                            className="text-red-500 hover:text-red-700"
+                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200"
+                            title="حذف"
                           >
-                            <FaTrash />
+                            <FaTrash className="w-4 h-4" />
                           </button>
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-500 text-sm mt-2">
-                        ⚠️ القائمة لا تحتوي على بيانات
+                      <p className="text-gray-500 text-sm italic text-center py-2">
+                        لا توجد بيانات مضافة حالياً
                       </p>
                     )}
 
@@ -1164,15 +1302,16 @@ export default function DynamicElementPage({
                           setForm
                         )
                       }
-                      className="flex items-center gap-2 w-fit hover:scale-105 duration-300 hover:underline mt-3 p-2 rounded-2xl bg-primary text-white"
+                      className="flex items-center justify-center gap-2 w-full py-2.5 mt-2 rounded-xl border-2 border-dashed border-primary/30 text-primary hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 font-medium"
                     >
-                      <FaPlus /> إضافة عنصر جديد
+                      <FaPlus className="w-4 h-4" /> إضافة عنصر جديد
                     </button>
                   </div>
 
                   {/* Error message */}
                   {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                       {errors[input.name]?.ar ??
                         errors[input.name]?.[0]?.ar ??
                         (typeof errors[input.name] === "string"
@@ -1189,7 +1328,13 @@ export default function DynamicElementPage({
             //////////////////////
 
             if (input.fildType == "special-section") {
-              return <CouponDisplaySection key={index} form={form} />;
+              return (
+                <div key={index} className="w-full group mt-4">
+                  <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-4 hover:bg-gray-50 transition-colors duration-200">
+                    <CouponDisplaySection key={index} form={form} />
+                  </div>
+                </div>
+              );
             }
 
             //////////////////////
@@ -1250,7 +1395,13 @@ export default function DynamicElementPage({
 
             return null;
           })}
-          <input type="submit" value={"حفظ"} className="submit-btn" />
+          <div className="mt-8">
+            <input
+              type="submit"
+              value={"حفظ"}
+              className="w-full sm:w-auto px-10 py-3 bg-primary text-white font-bold rounded-xl shadow-md hover:bg-white hover:text-primary hover:shadow-lg hover:-translate-y-1 active:translate-y-0 border-2 border-transparent hover:border-primary transition-all duration-300 cursor-pointer text-lg"
+            />
+          </div>
         </form>
       </div>
 
@@ -1269,7 +1420,7 @@ export default function DynamicElementPage({
 
       <MapSelector
         locale="ar"
-        setLocation={setLocation}
+        setLocation={handleLocationChange}
         initialLocation={location}
         showMap={showMap}
         onClose={() => setShowMap(false)}

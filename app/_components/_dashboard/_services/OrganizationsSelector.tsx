@@ -27,7 +27,6 @@ export default function OrganizationsSelector({ form, setForm }: Props) {
   // Debounce effect (انتظار 5 ثواني بعد آخر كتابة)
   useEffect(() => {
     const handler = setTimeout(() => {
-      setOrganizations([]);
       setDebouncedQuery(query);
     }, 500);
 
@@ -187,7 +186,8 @@ export default function OrganizationsSelector({ form, setForm }: Props) {
                   )}
 
                   <Img
-                    src={org.logo}
+                    src={org.logo ?? "/logo.png"}
+                    errorSrc="/logo.png"
                     alt={org.title}
                     className="w-16 h-16 object-contain mb-2 rounded-full"
                   />

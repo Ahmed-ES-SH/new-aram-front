@@ -26,9 +26,6 @@ export default function CardsSection({ cards, staticData }: CardsSectionProps) {
       ref={containerRef}
       className="relative py-24 px-4  overflow-hidden"
     >
-      {/* Decorative corner accents */}
-      <div className="absolute top-0 right-0 w-32 h-32 border-t-2 border-r-2 border-purple-400/20 rounded-tr-lg" />
-
       <div className="relative z-10 c-container mx-auto">
         {/* Premium Header */}
         <CardsHeader containerRef={containerRef} staticData={staticData} />

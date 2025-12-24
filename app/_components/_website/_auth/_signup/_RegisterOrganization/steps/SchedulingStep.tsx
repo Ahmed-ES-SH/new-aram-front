@@ -9,7 +9,10 @@ import {
   FaClock,
   FaDollarSign,
 } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useValidation } from "../hooks/useValidation";
+import { schedulingSchema } from "../validation/schemas";
+import { MdErrorOutline } from "react-icons/md";
 
 interface SchedulingStepProps {
   open_at: string;
@@ -40,9 +43,21 @@ export function SchedulingStep({
 }: SchedulingStepProps) {
   const t = useTranslations("registration");
 
+  const { validate, errors, clearError } = useValidation(schedulingSchema);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onNext();
+    if (
+      validate({
+        open_at,
+        close_at,
+        confirmation_price,
+        confirmation_status,
+        booking_status,
+      })
+    ) {
+      onNext();
+    }
   };
 
   return (
@@ -78,16 +93,39 @@ export function SchedulingStep({
                   type="time"
                   id="open_at"
                   value={open_at}
-                  onChange={(e) => onUpdate({ open_at: e.target.value })}
-                  required
-                  className="
+                  onChange={(e) => {
+                    onUpdate({ open_at: e.target.value });
+                    clearError("open_at");
+                  }}
+                  // required
+                  className={`
                     w-full pl-12 pr-4 py-3 rounded-lg border border-input
                     bg-background text-foreground
                     focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                     transition-all duration-200
-                  "
+                    ${
+                      errors.open_at
+                        ? "border-red-400 focus:outline-red-400"
+                        : "border-gray-200 focus:outline-main_orange"
+                    }
+                  `}
                 />
               </div>
+              {/* Error Message */}
+              <AnimatePresence>
+                {errors.open_at && (
+                  <motion.div
+                    className="flex items-center gap-1 text-red-500 text-sm mt-2"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <MdErrorOutline className="size-4" />
+                    <span>{errors.open_at}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Closing Time */}
@@ -106,16 +144,39 @@ export function SchedulingStep({
                   type="time"
                   id="close_at"
                   value={close_at}
-                  onChange={(e) => onUpdate({ close_at: e.target.value })}
-                  required
-                  className="
+                  onChange={(e) => {
+                    onUpdate({ close_at: e.target.value });
+                    clearError("close_at");
+                  }}
+                  // required
+                  className={`
                     w-full pl-12 pr-4 py-3 rounded-lg border border-input
                     bg-background text-foreground
                     focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                     transition-all duration-200
-                  "
+                    ${
+                      errors.close_at
+                        ? "border-red-400 focus:outline-red-400"
+                        : "border-gray-200 focus:outline-main_orange"
+                    }
+                  `}
                 />
               </div>
+              {/* Error Message */}
+              <AnimatePresence>
+                {errors.close_at && (
+                  <motion.div
+                    className="flex items-center gap-1 text-red-500 text-sm mt-2"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <MdErrorOutline className="size-4" />
+                    <span>{errors.close_at}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
@@ -135,22 +196,43 @@ export function SchedulingStep({
                 type="number"
                 id="confirmation_price"
                 value={confirmation_price}
-                onChange={(e) =>
-                  onUpdate({ confirmation_price: Number(e.target.value) })
-                }
+                onChange={(e) => {
+                  onUpdate({ confirmation_price: Number(e.target.value) });
+                  clearError("confirmation_price");
+                }}
                 placeholder={t("fields.confirmation_price.placeholder")}
-                required
+                // required
                 min="0"
                 step="0.01"
-                className="
+                className={`
                   w-full pl-12 pr-4 py-3 rounded-lg border border-input
                   bg-background text-foreground
                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                   transition-all duration-200
                   placeholder:text-muted-foreground
-                "
+                  ${
+                    errors.confirmation_price
+                      ? "border-red-400 focus:outline-red-400"
+                      : "border-gray-200 focus:outline-main_orange"
+                  }
+                `}
               />
             </div>
+            {/* Error Message */}
+            <AnimatePresence>
+              {errors.confirmation_price && (
+                <motion.div
+                  className="flex items-center gap-1 text-red-500 text-sm mt-2"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <MdErrorOutline className="size-4" />
+                  <span>{errors.confirmation_price}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Status Toggles */}

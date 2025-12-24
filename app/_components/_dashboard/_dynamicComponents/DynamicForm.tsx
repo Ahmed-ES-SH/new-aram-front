@@ -6,7 +6,14 @@ import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import SuccessAlart from "../../_popups/SuccessAlart";
 import LoadingSpin from "../../LoadingSpin";
-import { FaEye, FaEyeSlash, FaImage, FaPlus, FaTrash } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaImage,
+  FaMapMarkerAlt,
+  FaPlus,
+  FaTrash,
+} from "react-icons/fa";
 import { errorType, InputField } from "@/app/types/_dashboard/GlobalTypes";
 import { getIconComponent } from "@/app/_helpers/helpers";
 import Img from "../../_website/_global/Img";
@@ -14,7 +21,6 @@ import { toast } from "sonner";
 import KeywordSelector, {
   Keyword,
 } from "../../_website/_global/KeywordSelector";
-import MapSelector from "../../_maps/MapSelector";
 import { Location } from "./DynamicElementPage";
 import SubCategoryMultiSelect from "../_organizations/SubCategoryMultiSelect";
 import OrganizationsSelector from "../_services/OrganizationsSelector";
@@ -22,6 +28,15 @@ import ServiceImages from "../_services/ServiceImages";
 import SpecialCouponSection from "../_coupons/SpecialCouponSection";
 import SelectOrg from "../_offers/SelectOrg";
 import IconPicker from "../IconPicker";
+import { useAppSelector } from "@/app/Store/hooks";
+import dynamic from "next/dynamic";
+
+import { generateZodSchema } from "@/app/_helpers/zodValidation"; // Import validation helper
+
+const MapSelector = dynamic(() => import("../../_maps/MapSelector"), {
+  ssr: false,
+});
+import CustomSelect from "./CustomSelect";
 
 interface Props {
   inputs: InputField[];
@@ -30,6 +45,7 @@ interface Props {
   submitValue: string;
   successMessage: string;
   title: string;
+
   subtitle?: string;
 }
 
@@ -42,6 +58,8 @@ export default function DynamicForm({
   title,
   subtitle,
 }: Props) {
+  const { user } = useAppSelector((state) => state.user);
+
   const router = useRouter();
   const openImageinput = useRef<HTMLInputElement | null>(null);
   const openLogoinput = useRef<HTMLInputElement | null>(null);
@@ -63,7 +81,7 @@ export default function DynamicForm({
   useEffect(() => {
     const initialFormState = inputs.reduce<Record<string, string>>(
       (acc, input) => {
-        acc[input.name] = "";
+        acc[input.name] = (input.value || "") as string;
         return acc;
       },
       {}
@@ -79,6 +97,20 @@ export default function DynamicForm({
   ///////////////////////////////////
   // start Functions Lines
   ///////////////////////////////////
+
+  const getErrorMessage = (error: any) => {
+    if (!error) return null;
+    if (typeof error === "string") return error;
+    if (Array.isArray(error) && error.length > 0)
+      return getErrorMessage(error[0]);
+    // Fallback if object still appears (e.g. from backend before full refactor)
+    if (typeof error === "object") {
+      if (error.ar) return error.ar; // Legacy support
+      const values = Object.values(error);
+      if (values.length > 0) return getErrorMessage(values[0]);
+    }
+    return "خطأ غير معروف";
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -125,6 +157,29 @@ export default function DynamicForm({
     scrollTo(0, 0);
     try {
       setLoading(true);
+
+      // --- Zod Validation Start ---
+      const schema = generateZodSchema(inputs);
+      const validationResult = schema.safeParse(form);
+
+      if (!validationResult.success) {
+        const fieldErrors = validationResult.error.flatten().fieldErrors;
+        // Map Zod errors to your errorType structure
+        const formattedErrors: errorType = {};
+        Object.entries(fieldErrors).forEach(([key, messages]) => {
+          // Assuming we want the first message if multiple
+          if (messages && messages.length > 0) {
+            formattedErrors[key] = messages[0];
+          }
+        });
+
+        setErrors(formattedErrors);
+        toast.error("يرجى التأكد من البيانات المدخلة");
+        setLoading(false);
+        return;
+      }
+      // --- Zod Validation End ---
+
       const formData = new FormData();
 
       Object.entries(form).forEach(([key, value]) => {
@@ -192,7 +247,8 @@ export default function DynamicForm({
         );
       }
 
-      formData.append("user_id", "4");
+      if (user) formData.append("user_id", user?.id.toString());
+      if (user) formData.append("author_id", user?.id.toString());
       const response = await instance.post(api, formData);
 
       if (response.status === 201) {
@@ -216,20 +272,23 @@ export default function DynamicForm({
         const formattedErrors: errorType = Object.entries(
           error.response.data.errors
         ).reduce((acc, [key, value]) => {
-          acc[key] = Array.isArray(value) ? value[0] : value;
+          const message = Array.isArray(value) ? value[0] : value;
+          acc[key] = message; // Standardize to errorType structure (simple string)
           return acc;
         }, {} as errorType);
 
         setErrors(formattedErrors);
       }
 
-      if (error?.response?.data?.message) {
-        toast.error(error?.response?.data?.message);
-      }
+      const message =
+        error?.response?.data?.message ?? "حدث خطأ أثناء إحراء العملية";
+      if (typeof message === "string") toast.error(message);
     } finally {
       setLoading(false);
     }
   };
+
+  console.log(form);
 
   const handleCloseAlart = () => {
     setSuccessPopup(false);
@@ -302,7 +361,10 @@ export default function DynamicForm({
     }));
   };
 
-  console.log(form);
+  const handleShowMap = () => {
+    console.log("show map");
+    setShowMap(!showMap);
+  };
 
   ///////////////////////////////////
   // End Functions Lines
@@ -315,18 +377,18 @@ export default function DynamicForm({
       <form
         onSubmit={handleSubmit}
         style={{ direction: "rtl" }}
-        className="w-[90%] border border-gray-300 shadow-lg rounded-xl px-4 pt-4 pb-2 mb-4 mt-12 h-fit overflow-y-auto mx-auto max-md:w-[96%]  flex flex-col gap-3"
+        className="w-full lg:w-[90%] mx-auto border border-gray-200 shadow-lg rounded-lg px-6 py-8 mb-8 mt-4 flex flex-col gap-6"
       >
-        <div className="text-center mb-6">
-          <h1 className="text-3xl sm:text-4xl font-bold text-primary tracking-tight drop-shadow-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-2 text-sm sm:text-base text-gray-600 italic">
+            <p className="mt-3 text-base text-gray-500 max-w-2xl mx-auto">
               {subtitle}
             </p>
           )}
-          <div className="mt-3 w-24 h-1 mx-auto bg-gradient-to-r from-primary via-blue-500 to-primary rounded-full animate-pulse" />
+          <div className="mt-4 w-20 h-1.5 mx-auto bg-primary rounded-full" />
         </div>
         {inputs.map((input, index) => {
           //////////////////////
@@ -335,11 +397,11 @@ export default function DynamicForm({
 
           if (input.fildType == "short-text") {
             return (
-              <div
-                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                key={index}
-              >
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group">
+                <label
+                  htmlFor={input.name}
+                  className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                >
                   {input.label["ar"]}
                 </label>
                 <input
@@ -348,14 +410,12 @@ export default function DynamicForm({
                   type={input.type}
                   value={(form[input.name] as string) || ""}
                   onChange={handleChange}
-                  className="input-style"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 sm:py-3.5 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
                 />
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -367,11 +427,11 @@ export default function DynamicForm({
           //////////////////////
           if (input.fildType == "long-text") {
             return (
-              <div
-                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                key={index}
-              >
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group">
+                <label
+                  htmlFor={input.name}
+                  className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                >
                   {input.label["ar"]}
                 </label>
                 <textarea
@@ -379,14 +439,12 @@ export default function DynamicForm({
                   placeholder={input.placeholder}
                   value={(form[input.name] as string) || ""}
                   onChange={handleChange}
-                  className="input-style min-h-40"
+                  className="w-full min-h-[160px] rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 resize-y"
                 />
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -399,11 +457,11 @@ export default function DynamicForm({
 
           if (input.fildType == "fild-password") {
             return (
-              <div
-                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300 relative"
-                key={index}
-              >
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group">
+                <label
+                  htmlFor={input.name}
+                  className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                >
                   {input.label["ar"]}
                 </label>
 
@@ -414,24 +472,26 @@ export default function DynamicForm({
                     type={showPassword ? "text" : "password"}
                     value={(form[input.name] as string) || ""}
                     onChange={handleChange}
-                    className="input-style pr-10" // padding-right عشان مكان الأيقونة
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 sm:py-3.5 pr-12 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
                   />
 
                   {/* Eye Icon */}
                   <span
-                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
+                    className="absolute inset-y-0 right-0 flex items-center pr-4 cursor-pointer text-gray-400 hover:text-primary transition-colors"
                     onClick={() => setShowPassword((prev) => !prev)}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? (
+                      <FaEyeSlash className="w-5 h-5" />
+                    ) : (
+                      <FaEye className="w-5 h-5" />
+                    )}
                   </span>
                 </div>
 
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -444,20 +504,20 @@ export default function DynamicForm({
 
           if (input.fildType === "select-organizations") {
             return (
-              <div
-                key={index}
-                className="w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-              >
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group">
+                <label
+                  htmlFor={input.name}
+                  className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                >
                   {input.label["ar"]}
                 </label>
-                <OrganizationsSelector form={form} setForm={setForm} />
+                <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-1 hover:bg-gray-50 transition-colors duration-200">
+                  <OrganizationsSelector form={form} setForm={setForm} />
+                </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -470,25 +530,22 @@ export default function DynamicForm({
 
           if (input.fildType == "images-section") {
             return (
-              <div
-                className="w-full flex flex-col gap-3 border border-gray-300 shadow-lg rounded-lg px-2 py-4"
-                key={index}
-              >
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
                   {input.label["ar"]}
                 </label>
-                <ServiceImages
-                  form={form}
-                  setForm={setForm}
-                  images={form?.images ? form?.images : null}
-                  errors={errors}
-                />
+                <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-4 hover:bg-gray-50 transition-colors duration-200">
+                  <ServiceImages
+                    form={form}
+                    setForm={setForm}
+                    images={form?.images ? form?.images : null}
+                    errors={errors}
+                  />
+                </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -501,27 +558,25 @@ export default function DynamicForm({
 
           if (input.fildType === "phone-input") {
             return (
-              <div
-                key={index}
-                className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-              >
-                <label className="input-label">{input.label.ar}</label>
+              <div key={index} className="w-full group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                  {input.label.ar}
+                </label>
                 <input
                   name={input.name || ""}
                   type="tel"
-                  inputMode="numeric" // يظهر لوحة أرقام على الموبايل
+                  inputMode="numeric"
                   value={form[input.name] || ""}
                   onChange={handleChange}
                   placeholder={input.placeholder || "أدخل رقم الهاتف"}
-                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 text-left"
+                  style={{ direction: "ltr" }} // Phone numbers usually look better LTR
                   readOnly={input.readOnly}
                 />
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -534,26 +589,23 @@ export default function DynamicForm({
 
           if (input.fildType === "number-input") {
             return (
-              <div
-                key={index}
-                className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-              >
-                <label className="input-label">{input.label.ar}</label>
+              <div key={index} className="w-full group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                  {input.label.ar}
+                </label>
                 <input
                   name={input.name || ""}
                   type="number"
                   value={form[input.name] || ""}
                   onChange={handleChange}
                   placeholder={input.placeholder || ""}
-                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300  p-2 outline-none"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
                   readOnly={input.readOnly}
                 />
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -565,30 +617,23 @@ export default function DynamicForm({
           //////////////////////
           if (input.fildType === "date-input") {
             return (
-              <div
-                key={index}
-                className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-              >
-                <label className="input-label">{input.label.ar}</label>
+              <div key={index} className="w-full group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                  {input.label.ar}
+                </label>
                 <input
                   name={input.name || ""}
                   type="date"
-                  value={
-                    form[input.name]
-                      ? form[input.name].split(" ")[0] // خذ الجزء الأول قبل الـ space
-                      : ""
-                  }
+                  value={form[input.name] ? form[input.name].split(" ")[0] : ""}
                   onChange={handleChange}
                   placeholder={input.placeholder || ""}
-                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
                   readOnly={input.readOnly}
                 />
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -612,11 +657,11 @@ export default function DynamicForm({
             };
 
             return (
-              <div
-                className="flex flex-col gap-3 border border-gray-300 rounded-lg shadow-lg py-4 px-2"
-                key={index}
-              >
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group">
+                <label
+                  htmlFor={input.name}
+                  className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                >
                   {input.label["ar"]}
                 </label>
                 <div className="flex items-center gap-2">
@@ -626,23 +671,21 @@ export default function DynamicForm({
                     type="text"
                     value={(form[input.name] as string) || ""}
                     onChange={handleChange}
-                    className="input-style flex-1 read-only:bg-gray-100 read-only:focus:outline-gray-100"
+                    className="flex-1 rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 read-only:bg-gray-100/50"
                     readOnly={input.readOnly}
                   />
                   <button
                     type="button"
                     onClick={generateCode}
-                    className="px-3 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+                    className="px-6 py-3 bg-primary text-white rounded-xl shadow-sm hover:bg-primary/90 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 font-medium whitespace-nowrap"
                   >
-                    توليد
+                    توليد كود
                   </button>
                 </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -654,26 +697,23 @@ export default function DynamicForm({
           //////////////////////
           if (input.fildType === "time-input") {
             return (
-              <div
-                key={index}
-                className="h-fit w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-              >
-                <label className="input-label">{input.label.ar}</label>
+              <div key={index} className="w-full group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                  {input.label.ar}
+                </label>
                 <input
                   name={input.name || ""}
                   type="time"
                   value={form[input.name] || ""}
                   onChange={handleChange}
                   placeholder={input.placeholder || ""}
-                  className="border-2 border-gray-300 rounded-lg focus:border-sky-300 duration-300 p-2 outline-none"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
                   readOnly={input.readOnly}
                 />
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -686,11 +726,11 @@ export default function DynamicForm({
 
           if (input.fildType == "location") {
             return (
-              <div
-                className="flex flex-col gap-3 w-full relative px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                key={index}
-              >
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group relative">
+                <label
+                  htmlFor={input.name}
+                  className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                >
                   {input.label["ar"]}
                 </label>
                 <div className="relative">
@@ -700,22 +740,24 @@ export default function DynamicForm({
                     type={input.type}
                     value={(location && (location.address as string)) || ""}
                     onChange={handleChange}
-                    className="input-style read-only:bg-gray-100 read-only:focus:outline-gray-100"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50/30 px-4 py-3 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 hover:bg-gray-50 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10 pl-32" // Added padding-left for the button
                     readOnly={input.readOnly}
                   />
-                  <span
-                    onClick={() => setShowMap(true)}
-                    className="underline text-red-400 mt-2 w-fit mr-auto block cursor-pointer hover:text-red-600 duration-150"
-                  >
-                    حدد العنوان على الخريطة
-                  </span>
+                  <div className="absolute left-2 top-1.5 bottom-1.5">
+                    <button
+                      type="button"
+                      onClick={handleShowMap}
+                      className="h-full px-4 rounded-lg bg-primary/10 text-primary text-sm font-medium hover:bg-primary hover:text-white transition-colors duration-200 flex items-center gap-2"
+                    >
+                      <FaMapMarkerAlt />
+                      الخريطة
+                    </button>
+                  </div>
                 </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -728,21 +770,18 @@ export default function DynamicForm({
 
           if (input.fildType == "sub-category") {
             return (
-              <div
-                className="w-full border border-gray-300 shadow-lg rounded-lg px-2 py-4"
-                key={index}
-              >
-                <SubCategoryMultiSelect
-                  setUpdatedData={setForm}
-                  currentSubCategories={[]}
-                  mode="add"
-                />
+              <div key={index} className="w-full group">
+                <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-4 hover:bg-gray-50 transition-colors duration-200">
+                  <SubCategoryMultiSelect
+                    setUpdatedData={setForm}
+                    currentSubCategories={[]}
+                    mode="add"
+                  />
+                </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -755,26 +794,32 @@ export default function DynamicForm({
 
           if (input.fildType === "color-fild") {
             return (
-              <div
-                className="flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-                key={index}
-              >
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group">
+                <label
+                  htmlFor={input.name}
+                  className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                >
                   {input.label["ar"]}
                 </label>
-                <input
-                  name={input.name}
-                  type="color"
-                  value={(form[input.name] as string) || "#000000"}
-                  onChange={handleChange}
-                  className="w-32 h-32  select-effect p-0 border-0 cursor-pointer"
-                />
+                <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-xl bg-gray-50/50">
+                  <input
+                    name={input.name}
+                    type="color"
+                    value={(form[input.name] as string) || "#000000"}
+                    onChange={handleChange}
+                    className="w-16 h-16 rounded-full border-4 border-white shadow-md cursor-pointer hover:scale-105 transition-transform duration-200 p-0 overflow-hidden"
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-500">اللون المختار</span>
+                    <span className="font-mono text-gray-800 dir-ltr text-left uppercase">
+                      {(form[input.name] as string) || "#000000"}
+                    </span>
+                  </div>
+                </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -787,19 +832,33 @@ export default function DynamicForm({
 
           if (input.fildType == "user-image") {
             return (
-              <div key={index} className="h-80">
+              <div
+                key={index}
+                className="flex flex-col items-center justify-center my-6 group"
+              >
                 <div
                   onClick={() => openImageinput.current?.click()}
-                  className="w-60 h-60 rounded-full  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border-2  border-second_text flex items-center justify-center "
+                  className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full border-4 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:border-primary hover:bg-primary/5 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10"
                 >
                   {form[input.name] instanceof File ? (
                     <Img
                       src={URL.createObjectURL(form[input.name] as Blob)}
-                      className="w-60 h-60  rounded-full"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <LuUserPen className="size-24 " />
+                    <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-primary transition-colors duration-300">
+                      <LuUserPen className="w-12 h-12 mb-2" />
+                      <span className="text-xs font-medium px-2 text-center">
+                        {input.label["ar"]}
+                      </span>
+                    </div>
                   )}
+
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <FaImage className="text-white w-8 h-8 drop-shadow-md" />
+                  </div>
+
                   <input
                     type="file"
                     name="image"
@@ -807,15 +866,15 @@ export default function DynamicForm({
                     onChange={handleFileChange}
                     ref={openImageinput}
                   />
-                  {errors[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors[input.name] ??
-                        errors[input.name]["ar"] ??
-                        errors[input.name][0]["ar"] ??
-                        "خطأ فى هذا الحقل"}
-                    </p>
-                  )}
                 </div>
+                {errors[input.name] && (
+                  <p className="text-red-500 text-sm mt-2 text-center">
+                    {errors[input.name] ??
+                      errors[input.name]["ar"] ??
+                      errors[input.name][0]["ar"] ??
+                      "خطأ فى هذا الحقل"}
+                  </p>
+                )}
               </div>
             );
           }
@@ -826,22 +885,31 @@ export default function DynamicForm({
 
           if (input.fildType == "normal-image") {
             return (
-              <div key={index} className="my-4 flex flex-col gap-4">
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
                   {input.label["ar"]}
                 </label>
                 <div
                   onClick={() => openImageinput.current?.click()}
-                  className="lg:w-96 w-[90%] hover:shadow-sky-400 hover:shadow-2xl h-60 overflow-hidden rounded-lg border border-gray-300 shadow-md hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto  flex items-center justify-center "
+                  className="w-full h-64 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:border-primary hover:bg-primary/5 transition-all duration-300 relative group-hover:shadow-md"
                 >
                   {form[input.name] instanceof File ? (
                     <Img
                       src={URL.createObjectURL(form[input.name] as Blob)}
-                      className="w-full h-full  rounded-lg object-cover"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <FaImage className="size-24 " />
+                    <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-primary transition-colors duration-300">
+                      <FaImage className="w-12 h-12 mb-3" />
+                      <span className="text-sm font-medium">
+                        اضغط لرفع الصورة
+                      </span>
+                    </div>
                   )}
+
+                  {/* Overlay for feedback */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+
                   <input
                     type="file"
                     name="image"
@@ -851,11 +919,9 @@ export default function DynamicForm({
                   />
                 </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -869,18 +935,34 @@ export default function DynamicForm({
           if (input.fildType == "icon-fild") {
             const Icon = getIconComponent(form[input.name]);
             return (
-              <div className="flex flex-col gap-3 " key={index}>
-                <label htmlFor={input.name} className="input-label">
+              <div
+                key={index}
+                className="w-full flex flex-col items-start group"
+              >
+                <label
+                  htmlFor={input.name}
+                  className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                >
                   {input.label["ar"]}
                 </label>
-                <div
-                  onClick={() => setShowIconPicker(true)}
-                  className="shadow  w-72 flex items-center justify-center h-52 rounded-xl mx-auto border border-gray-300 cursor-pointer duration-300 hover:bg-primary hover:text-white text-primary hover:border-primary"
-                >
-                  <Icon className="size-32  cursor-pointer select-effect" />
+                <div className="flex justify-center my-4">
+                  <div
+                    onClick={() => setShowIconPicker(true)}
+                    className="w-40 h-40 sm:w-48 sm:h-48 ml-auto rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 text-gray-400 hover:text-primary"
+                  >
+                    {Icon ? (
+                      <Icon className="w-20 h-20" />
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <span className="text-4xl mb-2">+</span>
+                        <span className="text-sm">اختر أيقونة</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-red-500  text-sm mt-1.5 flex items-center justify-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                     {errors[input.name] ??
                       errors[input.name]["ar"] ??
                       errors[input.name][0]["ar"] ??
@@ -897,32 +979,38 @@ export default function DynamicForm({
 
           if (input.fildType == "logo-image") {
             return (
-              <div
-                key={index}
-                className="flex flex-col gap-2 items-start w-fit ml-auto"
-              >
-                <label htmlFor={input.name} className="input-label">
+              <div key={index} className="w-full group">
+                <label
+                  htmlFor={input.name}
+                  className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
+                >
                   {input.label["ar"]}
                 </label>
                 <div
                   onClick={() => openLogoinput.current?.click()}
-                  className="w-72 h-60 p-4 overflow-hidden rounded-lg shadow  border-gray-300  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
+                  className="w-40 h-40 sm:w-56 sm:h-56 mx-auto rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:border-primary hover:bg-primary/5 transition-all duration-300 relative group-hover:shadow-md"
                 >
                   {form?.logo instanceof File ? (
                     <Img
                       src={URL.createObjectURL(form?.logo)}
-                      className="w-full h-full  object-cover"
+                      className="w-full h-full object-contain p-2"
                     />
                   ) : form["logo"] ? (
                     <Img
-                      src={
-                        form["logo"] ? form["logo"] : "/defaults/noImage.png"
-                      }
-                      className="w-full h-full object-cover"
+                      src={form["logo"]}
+                      className="w-full h-full object-contain p-2"
                     />
                   ) : (
-                    <FaImage className="size-24 " />
+                    <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-primary transition-colors duration-300">
+                      <FaImage className="w-10 h-10 mb-2" />
+                      <span className="text-xs font-medium text-center px-2">
+                        رفع الشعار
+                      </span>
+                    </div>
                   )}
+
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+
                   <input
                     type="file"
                     name="logo"
@@ -932,7 +1020,8 @@ export default function DynamicForm({
                   />
                 </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center justify-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                     {errors[input.name] ??
                       errors[input.name]["ar"] ??
                       errors[input.name][0]["ar"] ??
@@ -945,20 +1034,30 @@ export default function DynamicForm({
 
           if (input.fildType == "full-image") {
             return (
-              <div key={index} className="h-fit w-full flex flex-col gap-3">
-                <label className="input-label">{input.label.ar}</label>
+              <div key={index} className="w-full group my-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                  {input.label.ar}
+                </label>
                 <div
                   onClick={() => openImageinput.current?.click()}
-                  className="w-full h-96  shadow-md border-dashed overflow-hidden rounded-sm  hover:-translate-y-2 hover:bg-primary text-second_text hover:text-white hover:border-white duration-200 cursor-pointer  mx-auto border  border-second_text flex items-center justify-center "
+                  className="w-full h-80 sm:h-96 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:border-primary hover:bg-primary/5 transition-all duration-300 relative group-hover:shadow-md"
                 >
                   {form.image && form.image instanceof File ? (
                     <Img
                       src={URL.createObjectURL(form.image) || "/public"}
-                      className="w-full h-full  object-cover"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <FaImage className="size-24 " />
+                    <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-primary transition-colors duration-300">
+                      <FaImage className="w-16 h-16 mb-4" />
+                      <span className="text-base font-medium">
+                        اضغط لرفع الصورة (كاملة)
+                      </span>
+                    </div>
                   )}
+
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+
                   <input
                     type="file"
                     name="image"
@@ -968,11 +1067,9 @@ export default function DynamicForm({
                   />
                 </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -983,47 +1080,22 @@ export default function DynamicForm({
           //Select Eelement
           //////////////////////
 
+          // Replace the entire select block with CustomSelect
           if (input.fildType == "select-type") {
             return (
-              <div
-                key={index}
-                className="w-full flex flex-col gap-3 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-              >
-                <label htmlFor={input.name} className="input-label">
-                  {input.label["ar"]}
-                </label>
-                <select
-                  onChange={handleChange}
+              <div key={index} className="w-full">
+                <CustomSelect
                   name={input.name}
-                  className="select-style"
-                  value={
-                    form[input.name] ??
-                    (form[input.name] as string) ??
-                    form[input.name]?.title_en ??
-                    ""
+                  label={input.label["ar"]}
+                  placeholder="حدد أحد الإختيارات التالية : -"
+                  value={form[input.name] ?? form[input.name]?.title_en ?? ""}
+                  onChange={(e) => handleChange(e as any)}
+                  options={input.selectItems || []}
+                  error={
+                    errors[input.name] && getErrorMessage(errors[input.name])
                   }
-                >
-                  <option value="" disabled>
-                    {"حدد أحد الإختيارات التالية : -"}
-                  </option>
-                  {input.selectItems &&
-                    input.selectItems.map((item) => (
-                      <option
-                        key={item.value ?? item.name ?? item.id}
-                        value={item.value ?? item.name ?? item.id}
-                      >
-                        {item.name ? item.name : item?.title_ar}
-                      </option>
-                    ))}
-                </select>
-                {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
-                  </p>
-                )}
+                  readOnly={input.readOnly}
+                />
               </div>
             );
           }
@@ -1033,20 +1105,17 @@ export default function DynamicForm({
           //////////////////////
           if (input.fildType === "keywords") {
             return (
-              <div
-                key={index}
-                className="h-fit w-full flex flex-col gap-3 mt-4 px-2 py-4 shadow-lg rounded-lg border border-gray-300"
-              >
-                <KeywordSelector
-                  selectedKeywords={form.keywords || []}
-                  setSelectedKeywords={handleKeywordsChange}
-                />
+              <div key={index} className="w-full group mt-4">
+                <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-4 hover:bg-gray-50 transition-colors duration-200">
+                  <KeywordSelector
+                    selectedKeywords={form.keywords || []}
+                    setSelectedKeywords={handleKeywordsChange}
+                  />
+                </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -1059,19 +1128,18 @@ export default function DynamicForm({
 
           if (input.fildType === "array") {
             return (
-              <div
-                key={index}
-                className="h-fit w-full border border-gray-300 shadow px-2 py-4 rounded-lg flex flex-col gap-3"
-              >
-                <label className="input-label">{input.label.ar}</label>
+              <div key={index} className="w-full group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                  {input.label.ar}
+                </label>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-3 p-4 bg-gray-50/50 rounded-xl border border-gray-200">
                   {Array.isArray(form[input.name]) &&
                   form[input.name].length > 0 ? (
                     form[input.name].map((item: any, idx: number) => (
                       <div
                         key={item.id || idx}
-                        className="flex items-center shadow gap-2 p-2 rounded-md"
+                        className="flex items-center gap-3 p-2 bg-white rounded-lg shadow-sm border border-gray-100"
                       >
                         {/* Dynamic input field based on displayKey */}
                         <input
@@ -1089,7 +1157,7 @@ export default function DynamicForm({
                               setForm
                             )
                           }
-                          className="flex-1 border border-gray-300 focus:border-sky-300 duration-300 rounded p-2 outline-none"
+                          className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-gray-800 placeholder-gray-400 outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/10"
                           placeholder={input.placeholder || ""}
                         />
 
@@ -1099,15 +1167,16 @@ export default function DynamicForm({
                           onClick={() =>
                             handleArrayRemove(input.name, idx, form, setForm)
                           }
-                          className="text-red-500 hover:text-red-700"
+                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200"
+                          title="حذف"
                         >
-                          <FaTrash />
+                          <FaTrash className="w-4 h-4" />
                         </button>
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-sm mt-2">
-                      ⚠️ القائمة لا تحتوي على بيانات
+                    <p className="text-gray-500 text-sm italic text-center py-2">
+                      لا توجد بيانات مضافة حالياً
                     </p>
                   )}
 
@@ -1122,19 +1191,17 @@ export default function DynamicForm({
                         setForm
                       )
                     }
-                    className="flex items-center gap-2 w-fit hover:scale-105 duration-300 hover:underline mt-3 p-2 rounded-2xl bg-primary text-white"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 mt-2 rounded-xl border-2 border-dashed border-primary/30 text-primary hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 font-medium"
                   >
-                    <FaPlus /> إضافة عنصر جديد
+                    <FaPlus className="w-4 h-4" /> إضافة عنصر جديد
                   </button>
                 </div>
 
                 {/* Error message */}
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -1143,18 +1210,17 @@ export default function DynamicForm({
 
           if (input.fildType == "select-org") {
             return (
-              <div
-                key={index}
-                className="h-fit w-full border border-gray-300 shadow px-2 py-4 rounded-lg flex flex-col gap-3"
-              >
-                <label className="input-label">{input.label.ar}</label>
-                <SelectOrg form={form} setForm={setForm} key={index} />
+              <div key={index} className="w-full group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200">
+                  {input.label.ar}
+                </label>
+                <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-1 hover:bg-gray-50 transition-colors duration-200">
+                  <SelectOrg form={form} setForm={setForm} key={index} />
+                </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[input.name] ??
-                      errors[input.name]["ar"] ??
-                      errors[input.name][0]["ar"] ??
-                      "خطأ فى هذا الحقل"}
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
+                    {getErrorMessage(errors[input.name])}
                   </p>
                 )}
               </div>
@@ -1167,11 +1233,13 @@ export default function DynamicForm({
 
           if (input.fildType == "special-section") {
             return (
-              <div key={index}>
-                <div className="w-full"></div>
-                <SpecialCouponSection form={form} setForm={setForm} />
+              <div key={index} className="w-full group mt-4">
+                <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-4 hover:bg-gray-50 transition-colors duration-200">
+                  <SpecialCouponSection form={form} setForm={setForm} />
+                </div>
                 {errors[input.name] && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />
                     {errors[input.name] ??
                       errors[input.name]["ar"] ??
                       errors[input.name][0]["ar"] ??
@@ -1184,7 +1252,13 @@ export default function DynamicForm({
 
           return null;
         })}
-        <input type="submit" value={submitValue} className="submit-btn" />
+        <div className="mt-8">
+          <input
+            type="submit"
+            value={submitValue}
+            className="w-full sm:w-auto px-10 py-3 bg-primary text-white font-bold rounded-xl shadow-md hover:bg-white hover:text-primary hover:shadow-lg hover:-translate-y-1 active:translate-y-0 border-2 border-transparent hover:border-primary transition-all duration-300 cursor-pointer text-lg"
+          />
+        </div>
       </form>
 
       <SuccessAlart

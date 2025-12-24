@@ -15,6 +15,7 @@ import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import Img from "../_global/Img";
 
 // --- Types ---
 interface ServiceImage {
@@ -150,11 +151,12 @@ export default function ServiceGallery({
                 <motion.div
                   whileHover={{ scale: 1.02, y: -5 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative cursor-pointer overflow-hidden rounded-xl bg-gray-100 aspect-square shadow-sm"
+                  className="group max-h-[300px] relative cursor-pointer overflow-hidden rounded-xl bg-gray-100 aspect-square shadow-sm"
                   onClick={() => openModal(index)}
                 >
-                  <img
-                    src={img.src}
+                  <Img
+                    src={img.src ?? "/defaults/no-image.png"}
+                    errorSrc="/defaults/no-image.png"
                     alt={img.alt}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     loading="lazy"

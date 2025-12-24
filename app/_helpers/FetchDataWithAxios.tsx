@@ -42,10 +42,16 @@ export default function useFetchData<T>(
             setLastPage(pagination.last_page);
             setTotal(pagination.total);
           }
+        } else if (response.status === 204) {
+          setData([] as any); // Clear data on No Content
+          setCurrentPage(1);
+          setLastPage(1);
+          setTotal(0);
         }
       } catch (err) {
         if (err) {
           setError(err);
+          setData([] as any); // Clear data on error to avoid showing old results
         }
       } finally {
         setLoading(false);

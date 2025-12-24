@@ -6,7 +6,10 @@ import HeroSlider from "./HeroSwiper";
 export default async function HeroSection() {
   const activeSection = await FetchData(`/active-hero-section`, false);
 
-  const videoData = await FetchData(`/get-section/1?limit_number=3`, false);
+  const videoData = await FetchData(
+    `/get-section/1?limit_number=3&main_page=1`,
+    false
+  );
 
   const slides = await FetchData("/active-slides", false);
 

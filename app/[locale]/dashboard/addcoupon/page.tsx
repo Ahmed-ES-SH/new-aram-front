@@ -24,6 +24,17 @@ export default function AddCoupon() {
       ],
     },
     {
+      name: "type",
+      type: "",
+      fildType: "select-type",
+      label: { ar: "الفئة المستهدفة من الكوبون", en: "" },
+      selectItems: [
+        { name: "مستخدمين", value: "user" },
+        { name: "مراكز", value: "organization" },
+        { name: "عام", value: "general" },
+      ],
+    },
+    {
       name: "code",
       type: "text",
       fildType: "coupon-code",
@@ -34,8 +45,8 @@ export default function AddCoupon() {
       name: "title",
       type: "text",
       fildType: "short-text",
-      label: { ar: "إسم الكوبون", en: "" },
-      placeholder: "أدخل إسم الكوبون",
+      label: { ar: "عنوان الكوبون", en: "" },
+      placeholder: "أدخل عنوان الكوبون",
     },
     {
       name: "description",
@@ -70,17 +81,7 @@ export default function AddCoupon() {
         { name: "بطاقة مجانية", value: "free_card" },
       ],
     },
-    {
-      name: "type",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "الفئة المستهدفة من الكوبون", en: "" },
-      selectItems: [
-        { name: "مستخدمين", value: "user" },
-        { name: "مراكز", value: "organization" },
-        { name: "عام", value: "general" },
-      ],
-    },
+
     {
       name: "usage_limit",
       type: "number",

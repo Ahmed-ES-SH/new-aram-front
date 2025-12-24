@@ -18,6 +18,8 @@ import dynamic from "next/dynamic";
 import { instance } from "@/app/_helpers/axios";
 import { VscLoading } from "react-icons/vsc";
 import { MdErrorOutline } from "react-icons/md";
+import { useValidation } from "../hooks/useValidation";
+import { accountSchema } from "../validation/schemas";
 
 const DynamicMapSelector = dynamic(
   () => import("@/app/_components/_maps/MapSelector"),
@@ -52,10 +54,19 @@ export function AccountStep({
 
   const [showMap, setShowMap] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [emailError, setEmailError] = useState<any>(null);
+
+  // Use custom validation hook
+  const { validate, errors, setErrors, clearError } =
+    useValidation(accountSchema);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate form data
+    if (!validate({ email, password, phone_number })) {
+      return;
+    }
+
     try {
       setLoading(true);
       const response = await instance.post(`/validate-org-email`, { email });
@@ -65,10 +76,14 @@ export function AccountStep({
     } catch (error: any) {
       console.log(error);
       if (error?.response?.status == 422) {
-        setEmailError({
-          ar: "البريد الالكترونى مستخدم بالفعل حاول استخدام بريد أخر .",
-          en: "The email address is already in use. Try using another one.",
-        });
+        // Set manual error for email if API fails
+        setErrors((prev) => ({
+          ...prev,
+          email:
+            locale === "ar"
+              ? "البريد الالكترونى مستخدم بالفعل حاول استخدام بريد أخر ."
+              : "The email address is already in use. Try using another one.",
+        }));
       }
     } finally {
       setLoading(false);
@@ -106,9 +121,12 @@ export function AccountStep({
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => onUpdate({ email: e.target.value })}
+                onChange={(e) => {
+                  onUpdate({ email: e.target.value });
+                  clearError("email");
+                }}
                 placeholder={t("fields.email.placeholder")}
-                required
+                // required
                 className={`
                   w-full pl-12 pr-4 py-3 rounded-lg border border-input
                   bg-background text-foreground
@@ -116,7 +134,7 @@ export function AccountStep({
                   transition-all duration-200
                   placeholder:text-muted-foreground
                   ${
-                    emailError
+                    errors.email
                       ? "border-red-400 focus:outline-red-400"
                       : "border-gray-200 focus:outline-main_orange"
                   }
@@ -125,7 +143,7 @@ export function AccountStep({
             </div>
             {/* Error Message */}
             <AnimatePresence>
-              {emailError && (
+              {errors.email && (
                 <motion.div
                   className="flex items-center gap-1 text-red-500 text-sm mt-2"
                   initial={{ opacity: 0, y: -5 }}
@@ -134,7 +152,7 @@ export function AccountStep({
                   transition={{ duration: 0.3 }}
                 >
                   <MdErrorOutline className="size-4" />
-                  <span>{emailError[locale]}</span>
+                  <span>{errors.email}</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -156,19 +174,42 @@ export function AccountStep({
                 type="password"
                 id="password"
                 value={password}
-                onChange={(e) => onUpdate({ password: e.target.value })}
+                onChange={(e) => {
+                  onUpdate({ password: e.target.value });
+                  clearError("password");
+                }}
                 placeholder={t("fields.password.placeholder")}
-                required
-                minLength={8}
-                className="
+                // required
+                // minLength={8}
+                className={`
                   w-full pl-12 pr-4 py-3 rounded-lg border border-input
                   bg-background text-foreground
                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                   transition-all duration-200
                   placeholder:text-muted-foreground
-                "
+                  ${
+                    errors.password
+                      ? "border-red-400 focus:outline-red-400"
+                      : "border-gray-200 focus:outline-main_orange"
+                  }
+                `}
               />
             </div>
+            {/* Error Message */}
+            <AnimatePresence>
+              {errors.password && (
+                <motion.div
+                  className="flex items-center gap-1 text-red-500 text-sm mt-2"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <MdErrorOutline className="size-4" />
+                  <span>{errors.password}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Phone Number Field */}
@@ -187,18 +228,41 @@ export function AccountStep({
                 type="tel"
                 id="phone_number"
                 value={phone_number}
-                onChange={(e) => onUpdate({ phone_number: e.target.value })}
+                onChange={(e) => {
+                  onUpdate({ phone_number: e.target.value });
+                  clearError("phone_number");
+                }}
                 placeholder={t("fields.phone_number.placeholder")}
-                required
-                className="
+                // required
+                className={`
                   w-full pl-12 pr-4 py-3 rounded-lg border border-input
                   bg-background text-foreground
                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                   transition-all duration-200
                   placeholder:text-muted-foreground
-                "
+                  ${
+                    errors.phone_number
+                      ? "border-red-400 focus:outline-red-400"
+                      : "border-gray-200 focus:outline-main_orange"
+                  }
+                `}
               />
             </div>
+            {/* Error Message */}
+            <AnimatePresence>
+              {errors.phone_number && (
+                <motion.div
+                  className="flex items-center gap-1 text-red-500 text-sm mt-2"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <MdErrorOutline className="size-4" />
+                  <span>{errors.phone_number}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* location Field */}
@@ -217,7 +281,7 @@ export function AccountStep({
                 type="text"
                 id="location"
                 value={location && (location.address as any)}
-                onChange={(e) => onUpdate({ email: e.target.value })}
+                // onChange={(e) => onUpdate({ email: e.target.value })}
                 placeholder={t("fields.location.placeholder")}
                 readOnly
                 className="

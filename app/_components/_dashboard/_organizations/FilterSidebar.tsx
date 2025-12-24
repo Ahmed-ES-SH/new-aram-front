@@ -101,7 +101,7 @@ export default function OrganizationsFilterSidebar({
       variants={sidebarVariants}
       initial="closed"
       animate={sidebardashOrgs ? "open" : "closed"}
-      className="fixed lg:sticky top-0 left-0 h-screen lg:h-fit w-96 bg-white shadow-lg lg:shadow-none z-50 overflow-y-auto max-lg:z-[99999]"
+      className="fixed lg:sticky top-0 left-0 h-screen lg:h-fit w-96 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-y-auto max-lg:z-99999"
     >
       <div className="p-6">
         {/* Header */}

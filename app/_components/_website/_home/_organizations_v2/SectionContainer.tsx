@@ -202,32 +202,27 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
               transition={{ duration: 0.6, delay: 0.3 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-2xl mx-auto"
             >
-              {[
-                { label: "Active Centers", value: "150+" },
-                { label: "Categories", value: "25+" },
-                { label: "Monthly Visitors", value: "10K+" },
-                { label: "Satisfaction Rate", value: "98%" },
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  className="text-center p-4 bg-white/80 backdrop-blur-sm rounded-2xl 
+              {stats &&
+                Array.isArray(stats) &&
+                stats.map((stat, index) => (
+                  <motion.div
+                    key={stat.label[locale]}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                    className="text-center overflow-hidden p-4 bg-white/80 backdrop-blur-sm rounded-2xl 
                            border border-gray-200 shadow-sm hover:shadow-md transition-all"
-                >
-                  <div className="text-2xl md:text-3xl font-bold bg-primary bg-clip-text text-transparent mb-1">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-gray-500 font-medium">
-                    {useTranslations("Common")(
-                      stat.label.toLowerCase().replace(" ", "_")
-                    )}
-                  </div>
-                </motion.div>
-              ))}
+                  >
+                    <div className="text-2xl md:text-3xl font-bold bg-primary bg-clip-text text-transparent mb-1">
+                      {stat.value}
+                    </div>
+                    <div className="text-xs text-gray-500 font-medium">
+                      {stat.label[locale]}
+                    </div>
+                  </motion.div>
+                ))}
             </motion.div>
           </motion.div>
         }

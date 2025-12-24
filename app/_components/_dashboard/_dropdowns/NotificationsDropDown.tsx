@@ -113,9 +113,10 @@ export default function NotificationsDropDown({ notifications: data }: Props) {
   };
 
   // حساب عدد الإشعارات غير المقروءة
-  const unreadCount = notifications.filter(
-    (notification) => !notification.is_read
-  ).length;
+  const unreadCount =
+    notifications && Array.isArray(notifications)
+      ? notifications.filter((notification) => !notification.is_read).length
+      : 0;
 
   // Subscribe to Pusher channel
   useEffect(() => {

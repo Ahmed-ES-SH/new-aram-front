@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { LiaToggleOffSolid, LiaToggleOnSolid } from "react-icons/lia";
 import { VscLoading } from "react-icons/vsc";
@@ -13,6 +13,7 @@ import ConfirmDeletePopup from "@/app/_components/_popups/ConfirmDeletePopup";
 import { instance } from "@/app/_helpers/axios";
 import { formatDate } from "@/app/_helpers/dateHelper";
 import { ServicePageMiniature } from "./types";
+import { FaCheck, FaPen, FaTimes } from "react-icons/fa";
 
 interface ServicePageCardProps {
   servicePage: ServicePageMiniature;
@@ -26,6 +27,9 @@ export default function ServicePageCard({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [toggleLoading, setToggleLoading] = useState(false);
+  const [editOrder, setEditOrder] = useState(false);
+  const [order, setOrder] = useState(servicePage.order);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   // Calculate discount percentage
   const hasDiscount =
@@ -48,7 +52,7 @@ export default function ServicePageCard({
       setToggleLoading(true);
       const newStatus = !servicePage.is_active;
 
-      await instance.patch(`/dashboard/service-pages/${servicePage.id}`, {
+      await instance.post(`/dashboard/service-pages/${servicePage.id}`, {
         is_active: newStatus,
       });
 
@@ -86,6 +90,33 @@ export default function ServicePageCard({
     }
   };
 
+  const updateServiceOrder = async () => {
+    try {
+      setUpdateLoading(true);
+      const response = await instance.post(
+        `/dashboard/service-pages/${servicePage.id}`,
+        {
+          order,
+        }
+      );
+
+      if (response.status == 200) {
+        toast.success("تم تحديث الترتيب");
+        setServicePages((prev) =>
+          prev.map((sp) => (sp.id === servicePage.id ? { ...sp, order } : sp))
+        );
+        setEditOrder(false);
+      }
+    } catch (error: any) {
+      console.error(error);
+      const message =
+        error?.response?.data?.message ?? "حدث خطأ أثناء تحديث الترتيب";
+      toast.error(message);
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
+
   return (
     <>
       <motion.div
@@ -98,7 +129,8 @@ export default function ServicePageCard({
         {/* Image Section */}
         <div className="relative aspect-video overflow-hidden">
           <Img
-            src={servicePage.image || "/placeholder.png"}
+            src={servicePage.image ?? "/defaults/noImage.png"}
+            errorSrc="/defaults/noImage.png"
             alt={servicePage.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
@@ -169,22 +201,7 @@ export default function ServicePageCard({
 
           {/* Status & Toggle */}
           <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-            {/* Status Badge */}
-            <span
-              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                servicePage.is_active
-                  ? "bg-green-100 text-green-700"
-                  : "bg-gray-100 text-gray-600"
-              }`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                  servicePage.is_active ? "bg-green-500" : "bg-gray-400"
-                }`}
-              />
-              {servicePage.is_active ? "مفعّل" : "غير مفعّل"}
-            </span>
-
+            {/* order control */}
             {/* Toggle Button */}
             {toggleLoading ? (
               <VscLoading className="text-sky-500 animate-spin w-6 h-6" />
@@ -199,6 +216,51 @@ export default function ServicePageCard({
                 onClick={handleToggleActive}
               />
             )}
+            <div className="flex items-center justify-between gap-2 pt-4 pb-2 border-t border-gray-100">
+              {/* Input with confirm & cancel */}
+              {updateLoading ? (
+                <VscLoading className="text-sky-400 animate-spin" />
+              ) : (
+                <div className="flex items-center gap-2">
+                  <div className="flex rounded-md shadow-sm border border-gray-300 overflow-hidden">
+                    <input
+                      disabled={!editOrder}
+                      type="number"
+                      name="order"
+                      value={order}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setOrder(e.target.value)
+                      }
+                      className="px-2 py-1 w-20 disabled:bg-gray-100 outline-none border-0 focus:ring-0"
+                    />
+                    <button
+                      type="button"
+                      disabled={!editOrder}
+                      className="px-2 bg-sky-500 text-white disabled:bg-gray-300"
+                      onClick={() => updateServiceOrder()}
+                    >
+                      <FaCheck />
+                    </button>
+                    {editOrder && (
+                      <button
+                        type="button"
+                        className="px-2 bg-red-500 text-white"
+                        onClick={() => setEditOrder(false)}
+                      >
+                        <FaTimes />
+                      </button>
+                    )}
+                  </div>
+
+                  {!editOrder && (
+                    <FaPen
+                      onClick={() => setEditOrder(true)}
+                      className="text-sky-500 cursor-pointer"
+                    />
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Footer - Date */}

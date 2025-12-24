@@ -124,7 +124,8 @@ export default function CouponDashCard({
         {/* Coupon Image */}
         <div className="relative h-48 overflow-hidden">
           <Img
-            src={coupon.image || "/placeholder.png"}
+            src={coupon.image ?? "/defaults/noImage.png"}
+            errorSrc="/defaults/noImage.png"
             alt={coupon.title}
             className="w-full h-full object-cover"
           />

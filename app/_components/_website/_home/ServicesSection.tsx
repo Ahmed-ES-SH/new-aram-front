@@ -45,7 +45,7 @@ export default function ServicesSection({
         const response = await instance.get("/service-pages", {
           params: {
             per_page: 8,
-            is_active: true,
+            is_active: 1,
             sort_by: "order",
             sort_order: "asc",
           },
@@ -101,7 +101,7 @@ export default function ServicesSection({
     return (
       <section
         dir={directionMap[locale]}
-        className="py-20 px-4 c-container bg-linear-to-b from-gray-50 to-white"
+        className="lg:py-20 py-12 px-4 c-container bg-linear-to-b from-gray-50 to-white"
       >
         <div className="animate-pulse space-y-8">
           <div className="h-8 bg-gray-200 rounded-lg w-1/3 mx-auto" />
@@ -118,7 +118,7 @@ export default function ServicesSection({
   return (
     <section
       dir={directionMap[locale]}
-      className="py-20 px-4 c-container bg-linear-to-b from-gray-50/50 to-white relative overflow-hidden"
+      className="py-2 px-4 c-container bg-linear-to-b from-gray-50/50 to-white relative overflow-hidden"
     >
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />

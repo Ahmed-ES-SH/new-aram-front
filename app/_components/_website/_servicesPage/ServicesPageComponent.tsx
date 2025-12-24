@@ -54,11 +54,14 @@ export default function ServicesPageComponent({
     try {
       setLoading(true);
 
-      const response = await instance.get("/public-services", {
+      const response = await instance.get("/service-pages", {
         params: {
           page: currentPage,
+          status: "active",
+          sort_by: "order",
+          sort_order: "asc",
           ...(searchQuery ? { query: searchQuery } : {}),
-          ...(selectedCategory?.id ? { category: selectedCategory.id } : {}),
+          ...(selectedCategory?.id ? { category_id: selectedCategory.id } : {}),
         },
       });
 

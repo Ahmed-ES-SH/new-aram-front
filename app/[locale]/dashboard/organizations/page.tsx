@@ -1,4 +1,3 @@
-import React from "react";
 import OrganizationsBody from "@/app/_components/_dashboard/_organizations/OrganizationsBody";
 import FetchData from "@/app/_helpers/FetchData";
 
@@ -36,7 +35,7 @@ export default async function OrganizationsDashPage({ searchParams }: any) {
   const { data, pagination } = await response;
 
   return (
-    <div dir="rtl" className="min-h-screen w-[90%] mx-auto bg-gray-50">
+    <div dir="rtl" className="min-h-screen w-[90%] mx-auto">
       <OrganizationsBody
         data={data}
         last_page={pagination.last_page}

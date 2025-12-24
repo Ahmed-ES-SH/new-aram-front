@@ -6,11 +6,13 @@ interface SettingsSectionProps {
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
+  errors: Record<string, string>;
 }
 
 export default function SettingsSection({
   formData,
   handleChange,
+  errors,
 }: SettingsSectionProps) {
   return (
     <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
@@ -94,9 +96,18 @@ export default function SettingsSection({
             name="confirmation_price"
             value={formData.confirmation_price}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-sky-400 focus:ring-2 focus:ring-sky-100 outline-none"
+            className={`w-full px-4 py-3 rounded-xl border bg-gray-50 focus:bg-white focus:ring-2 focus:ring-sky-100 outline-none ${
+              errors.confirmation_price
+                ? "border-red-300"
+                : "border-gray-200 focus:border-sky-400"
+            }`}
             min="0"
           />
+          {errors.confirmation_price && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.confirmation_price}
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -109,8 +120,15 @@ export default function SettingsSection({
               name="open_at"
               value={formData.open_at}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-sky-400 focus:ring-2 focus:ring-sky-100 outline-none"
+              className={`w-full px-4 py-3 rounded-xl border bg-gray-50 focus:bg-white focus:ring-2 focus:ring-sky-100 outline-none ${
+                errors.open_at
+                  ? "border-red-300"
+                  : "border-gray-200 focus:border-sky-400"
+              }`}
             />
+            {errors.open_at && (
+              <p className="text-red-500 text-xs mt-1">{errors.open_at}</p>
+            )}
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">
@@ -121,8 +139,15 @@ export default function SettingsSection({
               name="close_at"
               value={formData.close_at}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-sky-400 focus:ring-2 focus:ring-sky-100 outline-none"
+              className={`w-full px-4 py-3 rounded-xl border bg-gray-50 focus:bg-white focus:ring-2 focus:ring-sky-100 outline-none ${
+                errors.close_at
+                  ? "border-red-300"
+                  : "border-gray-200 focus:border-sky-400"
+              }`}
             />
+            {errors.close_at && (
+              <p className="text-red-500 text-xs mt-1">{errors.close_at}</p>
+            )}
           </div>
         </div>
       </div>

@@ -15,6 +15,7 @@ export interface ServicePageMiniature {
   title: string;
   image: string;
   price: string;
+  order: number | string;
   price_before_discount: string | null;
   type: "service" | "product";
   category: ServicePageCategory;

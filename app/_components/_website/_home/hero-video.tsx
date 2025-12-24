@@ -2,8 +2,10 @@
 import { directionMap } from "@/app/constants/_website/global";
 import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
 import { LuArrowLeft, LuArrowRight, LuPlay } from "react-icons/lu";
 import VideoBackground from "../_global/_VideoPlayer/VideoBackground";
+import VideoModal from "../_global/VideoModal";
 
 interface props {
   data: any;
@@ -12,13 +14,17 @@ interface props {
 export default function HeroVideo({ data }: props) {
   const locale = useLocale();
   const t = useTranslations("hero.video");
+  const [showDemo, setShowDemo] = useState(false);
 
   const {
     column_1: title,
     column_2: description,
     column_3: stats,
-    video,
+    main_video,
+    demo_video,
   } = data;
+
+  const backgroundVideoUrl = main_video?.video_url ?? "/videos/background.mp4";
 
   return (
     <section
@@ -26,10 +32,7 @@ export default function HeroVideo({ data }: props) {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Video Background */}
-      <VideoBackground
-        src={video ?? "/videos/background.mp4"}
-        overlayOpacity={0.7}
-      />
+      <VideoBackground src={backgroundVideoUrl} overlayOpacity={0.7} />
 
       {/* Content Overlay */}
       <div className="relative z-10 container mx-auto px-4 py-12 lg:py-20">
@@ -46,9 +49,9 @@ export default function HeroVideo({ data }: props) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight"
             >
-              {title[locale]}
+              {title?.[locale]}
             </motion.h1>
 
             {/* Subheading */}
@@ -56,9 +59,9 @@ export default function HeroVideo({ data }: props) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4 }}
-              className="text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed max-w-3xl"
+              className="text-lg md:text-xl lg:text-xl text-gray-200 leading-relaxed max-w-3xl"
             >
-              {description[locale]}
+              {description?.[locale]}
             </motion.p>
 
             {/* Buttons */}
@@ -84,6 +87,7 @@ export default function HeroVideo({ data }: props) {
               <motion.button
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setShowDemo(true)}
                 className="flex items-center justify-center rtl:flex-row-reverse px-8 py-4 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold rounded-xl border border-white/20 hover:border-white/40 shadow-2xl transition-all duration-300 group"
               >
                 <LuPlay className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform rtl:rotate-180" />
@@ -101,9 +105,9 @@ export default function HeroVideo({ data }: props) {
           >
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 lg:gap-12">
               {stats &&
-                stats.map((stat, index) => (
+                stats.map((stat: any, index: number) => (
                   <motion.div
-                    key={stat[locale]}
+                    key={stat?.[locale] || index}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 1 + index * 0.1 }}
@@ -113,7 +117,7 @@ export default function HeroVideo({ data }: props) {
                       {stat.number}
                     </div>
                     <div className="text-gray-300 text-sm lg:text-base font-medium">
-                      {stat[locale] ?? ""}
+                      {stat?.[locale] ?? ""}
                     </div>
                   </motion.div>
                 ))}
@@ -162,6 +166,12 @@ export default function HeroVideo({ data }: props) {
           delay: 2,
         }}
         className="absolute top-1/3 left-10 w-12 h-12 bg-blue-500/20 backdrop-blur-sm rounded-full border border-blue-500/30 hidden lg:block"
+      />
+
+      <VideoModal
+        isOpen={showDemo}
+        onClose={() => setShowDemo(false)}
+        videoUrl={demo_video?.video_url}
       />
     </section>
   );

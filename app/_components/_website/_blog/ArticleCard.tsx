@@ -44,7 +44,8 @@ export default function ArticleCard({ article }: props) {
       {/* Article Image & Category */}
       <div className="relative">
         <Img
-          src={article.image || "/placeholder.png"}
+          src={article.image ?? "/defaults/noImage.png"}
+          errorSrc="/defaults/noImage.png"
           alt={getTitle(article)}
           className="w-full h-48 object-cover"
         />
@@ -85,7 +86,8 @@ export default function ArticleCard({ article }: props) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Img
-              src={article.author.image || "/placeholder.png"}
+              src={article.author.image ?? "/defaults/male-noimage.jpg"}
+              errorSrc="/defaults/male-noimage.jpg"
               alt={article.author.name}
               className="w-8 h-8 rounded-full"
             />

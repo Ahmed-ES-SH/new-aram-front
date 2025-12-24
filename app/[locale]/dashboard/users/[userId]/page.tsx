@@ -15,7 +15,7 @@ export default async function UserPage({ params }: any) {
         updateEndPoint={"/update-user"}
         id={userId}
         inputsData={UpdateUserinputs}
-        direct={""}
+        direct={"/en/dashboard/users"}
       />
     </>
   );

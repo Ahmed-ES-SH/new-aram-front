@@ -25,13 +25,13 @@ export function PriceSection({ data, t }: PriceSectionProps) {
           <span className="text-[10px] text-gray-300 uppercase">
             {t("membershipCard.originalPriceLabel")}
           </span>
-          <span className="text-sm text-white line-through decoration-red-400/60">
-            {activeCurrency?.symbol}
+          <div className="text-sm flex items-center  text-white line-through decoration-red-400/60">
+            <span className="text-sm">{activeCurrency?.symbol}</span>
             {Number(
               Number(activeCurrency?.exchange_rate) *
                 Number(data.price_before_discount)
             ).toFixed(2)}
-          </span>
+          </div>
         </div>
 
         {/* Current Price */}
@@ -39,17 +39,17 @@ export function PriceSection({ data, t }: PriceSectionProps) {
           <span className="text-[10px] text-primary uppercase font-semibold">
             {t("membershipCard.currentPriceLabel")}
           </span>
-          <span
-            className="text-2xl font-bold text-primary"
+          <div
+            className="text-2xl flex items-center  font-bold text-primary"
             style={{
               textShadow: "0 2px 4px rgba(218, 165, 32, 0.3)",
             }}
           >
-            {activeCurrency?.symbol}
+            <span className="text-sm">{activeCurrency?.symbol}</span>
             {Number(
               Number(activeCurrency?.exchange_rate) * Number(data.price)
             ).toFixed(2)}
-          </span>
+          </div>
         </div>
       </div>
 

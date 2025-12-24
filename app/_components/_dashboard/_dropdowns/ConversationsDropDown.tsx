@@ -83,7 +83,9 @@ export default function ConversationsDropDown({ conversations }: Props) {
 
   // حساب إجمالي الرسائل غير المقروءة
   const totalUnread =
-    conversations?.reduce((sum, conv) => sum + conv.unread_count, 0) || 0;
+    conversations && Array.isArray(conversations)
+      ? conversations?.reduce((sum, conv) => sum + conv.unread_count, 0) || 0
+      : 0;
 
   return (
     <div className="relative" ref={dropdownRef}>

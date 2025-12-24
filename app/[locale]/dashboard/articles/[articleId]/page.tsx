@@ -3,7 +3,7 @@ import DynamicElementPage from "@/app/_components/_dashboard/_dynamicComponents/
 import { fetchCategories } from "@/app/Store/dataSlice";
 import { AppDispatch, RootState } from "@/app/Store/store";
 import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ArticlePage() {
@@ -62,9 +62,9 @@ export default function ArticlePage() {
       fildType: "select-type",
       label: { ar: "حالة المقال ", en: "" },
       selectItems: [
-        { name: "draft" },
-        { name: "published" },
-        { name: "archived" },
+        { name: "مسودة", value: "draft" },
+        { name: "نشر", value: "published" },
+        { name: "مؤرشف", value: "archived" },
       ],
     },
   ];
@@ -76,10 +76,10 @@ export default function ArticlePage() {
     <>
       <DynamicElementPage
         id={articleId}
-        api="/article"
+        api="/articles"
         updateEndPoint="/update-article"
         inputsData={inputsArticleData as any}
-        direct=""
+        direct="/ar/dashboard/articles"
       />
     </>
   );

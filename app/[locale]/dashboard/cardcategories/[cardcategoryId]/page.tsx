@@ -7,8 +7,11 @@ import React from "react";
 
 export default async function CardCategoryPage({ params }: any) {
   const { cardcategoryId } = await params;
-  const cardcategory = await FetchData(`/category/${cardcategoryId}`, false);
-  const cardsLength = cardcategory?.sub_categories?.length || 0;
+  const cardcategory = await FetchData(
+    `/card-category/${cardcategoryId}`,
+    false
+  );
+  const cardsLength = cardcategory?.cards?.length ?? 0;
 
   if (!cardcategoryId) return <NotFoundItem />;
 

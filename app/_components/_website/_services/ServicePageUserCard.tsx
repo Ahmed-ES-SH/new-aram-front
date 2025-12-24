@@ -74,7 +74,8 @@ export default function ServicePageUserCard({
           <div className="relative h-[400px] rounded-3xl overflow-hidden">
             {/* Background Image */}
             <Img
-              src={service.image || "/placeholder.png"}
+              src={service.image ?? "/defaults/noImage.png"}
+              errorSrc="/defaults/noImage.png"
               alt={service.title}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
@@ -160,7 +161,8 @@ export default function ServicePageUserCard({
             {/* Image */}
             <div className="relative h-40 overflow-hidden">
               <Img
-                src={service.image || "/placeholder.png"}
+                src={service.image ?? "/defaults/noImage.png"}
+                errorSrc="/defaults/noImage.png"
                 alt={service.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -211,7 +213,8 @@ export default function ServicePageUserCard({
           {/* Image Container */}
           <div className="relative h-56 overflow-hidden">
             <Img
-              src={service.image || "/placeholder.png"}
+              src={service.image ?? "/defaults/noImage.png"}
+              errorSrc="/defaults/noImage.png"
               alt={service.title}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />

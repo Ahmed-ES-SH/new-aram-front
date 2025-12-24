@@ -33,8 +33,11 @@ export default function SendCoupon() {
   const [selectedItems, setSelectedItems] = useState<any>({});
   const [sendLoading, setSendLoading] = useState(false);
 
-  const totalSteps = 3;
-  const stepLabels = ["نوع المستلم", "اختيار الكوبون", "اختيار المستلمين"];
+  const totalSteps = selectedType === "general" ? 4 : 3;
+  const stepLabels =
+    selectedType === "general"
+      ? ["نوع المستلم", "اختيار الكوبون", "اختيار المستخدمين", "اختيار المراكز"]
+      : ["نوع المستلم", "اختيار الكوبون", "اختيار المستلمين"];
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, totalSteps));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -46,9 +49,12 @@ export default function SendCoupon() {
       case 2:
         return "اختر الكوبون";
       case 3:
+        if (selectedType === "general") return "اختر المستخدمين";
         return selectedType === "organization"
           ? "اختر المنظمات"
           : "اختر المستخدمين";
+      case 4:
+        return "اختر المنظمات"; // Only for general type
       default:
         return "";
     }
@@ -61,7 +67,11 @@ export default function SendCoupon() {
       case 2:
         return "اختر الكوبون الذي تريد إرساله";
       case 3:
+        if (selectedType === "general")
+          return "حدد المستخدمين الذين تريد إرسال الكوبون إليهم";
         return "حدد المستلمين الذين تريد إرسال الكوبون إليهم";
+      case 4:
+        return "حدد المراكز التي تريد إرسال الكوبون إليها"; // Only for general type
       default:
         return "";
     }
@@ -91,13 +101,26 @@ export default function SendCoupon() {
           </div>
         );
       case 3:
-        return selectedType === "organization" ? (
+        if (selectedType === "organization") {
+          return (
+            <OrganizationsSelector
+              setForm={setSelectedItems}
+              form={selectedItems}
+            />
+          );
+        } else {
+          // Both 'user' and 'general' (step 3 of 4) use UsersSelector here
+          return (
+            <UsersSelector setForm={setSelectedItems} form={selectedItems} />
+          );
+        }
+      case 4:
+        // Only reachable if selectedType === 'general'
+        return (
           <OrganizationsSelector
             setForm={setSelectedItems}
             form={selectedItems}
           />
-        ) : (
-          <UsersSelector setForm={setSelectedItems} form={selectedItems} />
         );
       default:
         return null;

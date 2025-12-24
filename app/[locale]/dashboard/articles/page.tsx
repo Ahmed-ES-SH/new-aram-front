@@ -1,144 +1,180 @@
 "use client";
-import ArticleCard from "@/app/_components/_dashboard/_articles/ArticleCard";
+import React, { useState, useEffect } from "react";
+import { HiFilter, HiPlus } from "react-icons/hi";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import ArticleDashCard from "@/app/_components/_dashboard/_articles/ArticleDashCard";
+import ArticlesFilterSidebar from "@/app/_components/_dashboard/_articles/ArticlesFilterSidebar";
 import NoDataFounded from "@/app/_components/_dashboard/NoDataFounded";
-import SearchInput from "@/app/_components/_dashboard/SearchInput";
+import NoSearchResults from "@/app/_components/_dashboard/NoSearchResults";
 import LoadingSpin from "@/app/_components/LoadingSpin";
 import Pagination from "@/app/_components/PaginationComponent";
-import useSearchData from "@/app/_helpers/FetchDataBySearch";
 import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 import { ArticleType } from "@/app/types/_dashboard/GlobalTypes";
-import React, { useEffect, useState } from "react";
+import { useAppSelector } from "@/app/Store/hooks";
 
 export default function Articles() {
-  const [articles, setArticles] = useState<ArticleType[]>([]);
-  const [currentData, setCurrentData] = useState("DefaultData");
+  const { width } = useAppSelector((state) => state.variables);
 
-  // البيانات الافتراضية (جميع المقالات)
-  const { data, currentPage, setCurrentPage, lastPage, loading } = useFetchData(
-    "/articles",
-    true
-  );
+  // Filter States
+  const [query, setQuery] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [authorId, setAuthorId] = useState("");
+  const [status, setStatus] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
-  console.log(data);
+  // UI States
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
-  // بيانات البحث
-  const {
-    searchData,
-    searchCurrentPage,
-    searchLastPage,
-    loading: searchLoading,
-    setSearchCurrentPage,
-    handleSearch,
-    setQuery,
-  } = useSearchData(`/get-articles-by-search`);
+  // Debounce search
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 800);
+    return () => clearTimeout(handler);
+  }, [query]);
+
+  // Construct URL params
+  const getQueryParams = () => {
+    const params = new URLSearchParams();
+    if (debouncedQuery) params.append("search", debouncedQuery);
+    if (categoryId) params.append("category_id", categoryId);
+    if (authorId) params.append("author_id", authorId);
+    if (status) params.append("status", status);
+    if (fromDate) params.append("from_date", fromDate);
+    if (toDate) params.append("to_date", toDate);
+    return params.toString();
+  };
+
+  // Fetch Data
+  const { data, setData, loading, currentPage, lastPage, setCurrentPage } =
+    useFetchData<ArticleType[]>(
+      `/articles?${getQueryParams()}`,
+      true, // Pagination enabled
+      true // Use cache/revalidate
+    );
+
+  const resetFilters = () => {
+    setQuery("");
+    setCategoryId("");
+    setAuthorId("");
+    setStatus("");
+    setFromDate("");
+    setToDate("");
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= lastPage) {
+      setCurrentPage(newPage);
+    }
+  };
 
   useEffect(() => {
-    if (data || searchData) {
-      switch (currentData) {
-        case "DeafultData":
-          setArticles(data as any);
-          break;
-        case "searchData":
-          setArticles(searchData);
-          break;
-        default:
-          setArticles(data as any);
-      }
+    if (width >= 1024) {
+      setIsSidebarOpen(true);
     }
-  }, [currentData, data, searchData]);
-
-  // إعادة تعيين البحث والعودة إلى الوضع الافتراضي
-  const resetToDefaultView = () => {
-    setCurrentData("DefaultData");
-    setCurrentPage(1); // إعادة الصفحة إلى الأولى
-  };
-
-  const handlesearchwrapper = () => {
-    setCurrentData("searchData");
-    handleSearch();
-  };
-
-  const getPaginationData = () => {
-    switch (currentData) {
-      case "DefaultData":
-        return {
-          currentPage,
-          lastPage,
-          handlePageChange: (newPage: number) => {
-            if (newPage > 0 && newPage <= lastPage) {
-              setCurrentPage(newPage);
-            }
-          },
-        };
-      case "searchData":
-        return {
-          currentPage: searchCurrentPage,
-          lastPage: searchLastPage,
-          handlePageChange: (newPage: number) => {
-            if (newPage > 0 && newPage <= searchLastPage) {
-              setSearchCurrentPage(newPage);
-            }
-          },
-        };
-      default:
-        return {
-          currentPage,
-          lastPage,
-          handlePageChange: (newPage: number) => {
-            if (newPage > 0 && newPage <= lastPage) {
-              setCurrentPage(newPage);
-            }
-          },
-        };
-    }
-  };
-
-  // تفكيك القيم بعد التأكد من أن الدالة ترجع كائنًا دائمًا
-  const {
-    currentPage: activeCurrentPage,
-    lastPage: activeLastPage,
-    handlePageChange,
-  } = getPaginationData();
-
-  if (loading || searchLoading) return <LoadingSpin />;
+  }, [width]);
 
   return (
-    <>
-      {/* زر العودة إلى الوضع الافتراضي يظهر فقط عند البحث */}
-      {currentData != "DefaultData" && (
-        <div className="text-center my-4">
-          <span
-            onClick={resetToDefaultView}
-            className="my-6 underline underline-primary text-primary cursor-pointer"
-          >
-            عرض كل المقالات
-          </span>
-        </div>
-      )}
-      <SearchInput
-        handleSearch={handlesearchwrapper}
-        setSearchContent={setQuery}
-        placeHolder="ابحث عن المقال الذى تريدة عن طريق العنوان او كلمات مفتاحية فى محتوى المقال ...."
+    <div className="flex min-h-screen" style={{ direction: "rtl" }}>
+      {/* Sidebar - Desktop: Sticky, Mobile: Modal */}
+      <ArticlesFilterSidebar
+        query={query}
+        setQuery={setQuery}
+        categoryId={categoryId}
+        setCategoryId={setCategoryId}
+        authorId={authorId}
+        setAuthorId={setAuthorId}
+        status={status}
+        setStatus={setStatus}
+        fromDate={fromDate}
+        setFromDate={setFromDate}
+        toDate={toDate}
+        setToDate={setToDate}
+        resetFilters={resetFilters}
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
       />
-      {articles && articles.length > 0 ? (
-        <div className="w-full grid grid-cols-2 max-md:grid-cols-1 max-md:p-2 gap-x-6 gap-y-2 h-fit p-6 overflow-y-auto overflow-x-hidden justify-items-center">
-          {articles.map((article, index) => (
-            <ArticleCard
-              direct="/dashboard/articles"
-              Article={article}
-              key={index}
-            />
-          ))}
+
+      {/* Main Content */}
+      <div className="flex-1 w-full lg:w-[calc(100%-280px)] transition-all">
+        <div className="p-4 lg:p-8 space-y-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">
+                إدارة المقالات
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">
+                قم بإدارة وتنظيم المحتوى الخاص بك
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="lg:hidden p-2.5 bg-white border border-gray-200 rounded-xl text-gray-600 shadow-sm hover:shadow-md transition-all"
+              >
+                <HiFilter className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Results Info */}
+          {!loading && (
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <span>تم العثور على</span>
+              <span className="font-bold text-gray-800">
+                {data?.length || 0}
+              </span>
+              <span>مقال</span>
+            </div>
+          )}
+
+          {/* Content Grid */}
+          {loading ? (
+            <LoadingSpin />
+          ) : data && data.length > 0 ? (
+            <>
+              <motion.div
+                layout
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+              >
+                {data.map((article, index) => (
+                  <ArticleDashCard
+                    key={article.id || index}
+                    article={article}
+                    setArticels={setData as any}
+                  />
+                ))}
+              </motion.div>
+
+              <div className="mt-8">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={lastPage}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-12">
+              <NoSearchResults />
+              <div className="text-center mt-4">
+                <button
+                  onClick={resetFilters}
+                  className="text-blue-600 hover:underline text-sm"
+                >
+                  إعادة تعيين الفلاتر
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      ) : (
-        <NoDataFounded />
-      )}
-      {/* عرض Pagination بناءً على البحث أو الوضع الافتراضي */}
-      <Pagination
-        currentPage={activeCurrentPage}
-        totalPages={activeLastPage}
-        onPageChange={handlePageChange}
-      />
-    </>
+      </div>
+    </div>
   );
 }

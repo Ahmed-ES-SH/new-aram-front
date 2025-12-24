@@ -9,7 +9,9 @@ interface Props {
 }
 
 export default function SelectedOrganizations({ form }: Props) {
-  const selectedOrgs: miniOrg[] = form?.organizations || [];
+  const selectedOrgs: miniOrg[] = form?.organizations ? form.organizations : [];
+
+  console.log(selectedOrgs);
 
   return (
     <div className="w-full space-y-4">
@@ -32,7 +34,8 @@ export default function SelectedOrganizations({ form }: Props) {
               className="border border-green-500 bg-green-50 shadow-md rounded-lg p-4  flex flex-col items-center justify-center relative"
             >
               <Img
-                src={org.logo}
+                src={org.logo ?? "/logo.png"}
+                errorSrc="/logo.png"
                 alt={org.title}
                 className="w-16 h-16 object-contain mb-2 rounded-full"
               />

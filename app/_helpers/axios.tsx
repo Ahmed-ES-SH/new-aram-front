@@ -16,12 +16,17 @@ export const instance = axios.create({
 // إضافة التوكن قبل كل طلب تلقائيًا
 instance.interceptors.request.use(
   (config) => {
-    const tokenValue = cookie.get(`aram_token`);
+    const tokenValue = cookie.get("aram_token");
     const token = tokenValue ? decryptToken(tokenValue) : null;
-    config.headers["Accept-Language"] = locale || "en";
+
+    const locale = cookie.get("aram_locale") || "en";
+
+    config.headers["Accept-Language"] = locale;
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)

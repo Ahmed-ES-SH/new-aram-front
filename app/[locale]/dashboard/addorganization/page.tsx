@@ -1,198 +1,159 @@
 "use client";
-import DynamicForm from "@/app/_components/_dashboard/_dynamicComponents/DynamicForm";
-import { useAppSelector } from "@/app/Store/hooks";
-import React from "react";
+import { useRouter } from "next/navigation";
+import { useAddOrganizationForm } from "./_hooks/useAddOrganizationForm";
+import LoadingSpin from "@/app/_components/LoadingSpin";
 
-export default function AddOrganization() {
-  const { categories } = useAppSelector((state) => state.categories);
+// Reusing components from the Edit Organization feature
+import OrganizationSidebar from "../organizations/[organizationId]/_components/OrganizationSidebar";
+import ImagesSection from "../organizations/[organizationId]/_components/sections/ImagesSection";
+import BasicInfoSection from "../organizations/[organizationId]/_components/sections/BasicInfoSection";
+import LocationSection from "../organizations/[organizationId]/_components/sections/LocationSection";
+import SettingsSection from "../organizations/[organizationId]/_components/sections/SettingsSection";
+import CategoriesSection from "../organizations/[organizationId]/_components/sections/CategoriesSection";
+import ExtraDataSection from "../organizations/[organizationId]/_components/sections/ExtraDataSection";
+import MessagesSection from "../organizations/[organizationId]/_components/sections/MessagesSection";
 
-  const addOrganizationInputs = [
-    {
-      name: "logo",
-      type: "file",
-      fildType: "logo-image",
-      label: { ar: "شعار المركز", en: "" },
-    },
-    {
-      name: "image",
-      type: "file",
-      fildType: "full-image",
-      label: { ar: "صورة الغلاف", en: "" },
-    },
-    {
-      name: "status",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "حالة المركز", en: "" },
-      selectItems: [
-        { name: "عام", value: "published" },
-        { name: "ممنوع من الظهور", value: "not_published" },
-        { name: "تحت المراجعة", value: "under_review" },
-      ],
-    },
-    {
-      name: "email",
-      type: "text",
-      fildType: "short-text",
-      label: { ar: "البريد الإلكترونى للمركز", en: "" },
-      placeholder: "أدخل البريد الإلكترونى الخاص  بالمركز",
-      readOnly: true,
-    },
-    {
-      name: "password",
-      type: "password",
-      fildType: "fild-password",
-      label: { ar: "كلمة السر للمركز", en: "" },
-      placeholder: "أدخل كلمة السر الخاصه  بالمركز",
-    },
-    {
-      name: "phone_number",
-      type: "tel",
-      fildType: "phone-input",
-      label: { ar: "رقم الهاتف", en: "" },
-      placeholder: "أدخل رقم الهاتف الخاص  بالمركز",
-    },
-    {
-      name: "title",
-      type: "text",
-      fildType: "short-text",
-      label: { ar: "إسم المركز", en: "" },
-      placeholder: "أدخل إسم المركز",
-    },
-    {
-      name: "description",
-      type: "text",
-      fildType: "long-text",
-      label: { ar: "وصف المركز", en: "" },
-      placeholder: "أدخل وصف المركز",
-    },
-    {
-      name: "location",
-      type: "",
-      readOnly: true,
-      fildType: "location",
-      label: { ar: "عنوان المركز", en: "" },
-      placeholder: "أدخل عنوان المركز",
-    },
-    {
-      name: "accaptable_message",
-      type: "text",
-      fildType: "long-text",
-      label: { ar: "رسالة قبول الحجز", en: "" },
-      placeholder: "أدخل رسالة قبول الحجز",
-    },
-    {
-      name: "unaccaptable_message",
-      type: "text",
-      fildType: "long-text",
-      label: { ar: "رسالة رفض طلب الحجز", en: "" },
-      placeholder: "أدخل رسالة رفض طلب الحجز",
-    },
-    {
-      name: "url",
-      type: "text",
-      fildType: "short-text",
-      label: { ar: "الرابط الخاص بالمركز", en: "" },
-      placeholder: "أدخل الرابط الخاص بالمركز",
-    },
-    {
-      name: "open_at",
-      type: "text",
-      fildType: "time-input",
-      label: { ar: "وقت بداية العمل للمركز", en: "" },
-      placeholder: "أدخل وقت بداية العمل للمركز",
-    },
-    {
-      name: "close_at",
-      type: "text",
-      fildType: "time-input",
-      label: { ar: "وقت نهاية العمل للمركز", en: "" },
-      placeholder: "أدخل وقت نهاية العمل للمركز",
-    },
-    {
-      name: "confirmation_price",
-      type: "number",
-      fildType: "number-input",
-      label: { ar: "سعر تأكيد الحجز المحدد من قبل المركز", en: "" },
-      placeholder: "أدخل سعر تأكيد الحجز المحدد من قبل المركز",
-    },
+export default function AddOrganizationPage() {
+  const router = useRouter();
 
-    {
-      name: "active",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "حالة ظهور المركز فى الرئيسية", en: "" },
-      placeholder: "",
-      selectItems: [
-        { name: "مسموح", value: 1 },
-        { name: "ممنوع", value: 0 },
-      ],
-    },
-    {
-      name: "booking_status",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "هل الحجز متاح من قبل المركز", en: "" },
-      placeholder: "",
-      selectItems: [
-        { name: "متاح الحجز", value: 1 },
-        { name: "الحجز مغلق من المركز", value: 0 },
-      ],
-    },
-    {
-      name: "confirmation_status",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "هل يطلب المركز تأكيد للحجز", en: "" },
-      placeholder: "",
-      selectItems: [
-        { name: "نعم , تأكيد الحجز مفعل من قبل المركز", value: 1 },
-        { name: "لا , تأكيد الحجز غير مفعل من قبل المركز", value: 0 },
-      ],
-    },
-    {
-      name: "category_id",
-      type: "",
-      fildType: "select-type",
-      label: { ar: "القسم الرئيسى للمركز", en: "" },
-      placeholder: "",
-      selectItems: categories,
-    },
-    {
-      name: "sub_categories",
-      type: "",
-      fildType: "sub-category",
-      label: { ar: "الاقسام الفرعية للمركز", en: "" },
-      placeholder: "",
-    },
-    {
-      name: "", // المفتاح الأساسي
-      type: "",
-      fildType: "keywords", // النوع العام
-      displayKey: "title", // المفتاح المستخدم للعرض
-      label: { ar: "الكلمات المفتاحية", en: "" },
-      placeholder: "",
-    },
-    {
-      name: "benefits", // المفتاح الأساسي
-      type: "",
-      fildType: "array", // النوع العام
-      displayKey: "title", // المفتاح المستخدم للعرض
-      label: { ar: "المميزات", en: "" },
-      placeholder: "أدخل ميزة جديدة",
-    },
-  ];
+  const {
+    formData,
+    setFormData,
+    isLoading,
+    isSubmitting,
+    errors,
+    allCategories,
+    allSubCategories,
+    logoPreview,
+    coverPreview,
+    handleLogoChange,
+    handleCoverChange,
+    showMap,
+    setShowMap,
+    handleChange,
+    toggleCategory,
+    toggleSubCategory,
+    handleBenefitChange,
+    addBenefit,
+    removeBenefit,
+    onSubmit,
+    activeStep,
+    setActiveStep,
+  } = useAddOrganizationForm();
+
+  if (isLoading) return <LoadingSpin />;
 
   return (
-    <>
-      <DynamicForm
-        title="إنشاء مركز جديد"
-        submitValue="إنشاء"
-        inputs={addOrganizationInputs}
-        api="/add-organization"
-        direct="/dashboard/organizations"
-        successMessage="تم إنشاء مركز جديد بنجاح "
-      />
-    </>
+    <div className="p-4 md:p-8 w-[99%] lg:w-[90%] mx-auto" dir="rtl">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="lg:text-3xl text-lg font-bold text-gray-900">
+            إضافة مركز جديد
+          </h1>
+          <p className="text-gray-500 mt-2">
+            قم بملء البيانات التالية لإنشاء مركز جديد في النظام
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Sidebar Navigation */}
+        <div className="lg:col-span-3">
+          <OrganizationSidebar
+            activeStep={activeStep}
+            onStepChange={setActiveStep}
+            errors={errors}
+            isSubmitting={isSubmitting}
+          />
+        </div>
+
+        {/* Main Content Area */}
+        <div className="lg:col-span-9 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <form onSubmit={onSubmit}>
+            {activeStep === "images" && (
+              <ImagesSection
+                logoPreview={logoPreview}
+                coverPreview={coverPreview}
+                handleLogoChange={handleLogoChange}
+                handleCoverChange={handleCoverChange}
+              />
+            )}
+
+            {activeStep === "basic" && (
+              <BasicInfoSection
+                formData={formData}
+                errors={errors}
+                handleChange={handleChange}
+                showPassword={true}
+              />
+            )}
+
+            {activeStep === "location" && (
+              <LocationSection
+                formData={formData}
+                setFormData={setFormData}
+                showMap={showMap}
+                setShowMap={setShowMap}
+                errors={errors}
+              />
+            )}
+
+            {activeStep === "settings" && (
+              <SettingsSection
+                formData={formData}
+                handleChange={handleChange}
+                errors={errors}
+              />
+            )}
+
+            {activeStep === "categories" && (
+              <CategoriesSection
+                formData={formData}
+                allCategories={allCategories}
+                allSubCategories={allSubCategories}
+                toggleCategory={toggleCategory}
+                toggleSubCategory={toggleSubCategory}
+                errors={errors}
+              />
+            )}
+
+            {activeStep === "extra" && (
+              <ExtraDataSection
+                formData={formData}
+                setFormData={setFormData}
+                handleBenefitChange={handleBenefitChange}
+                addBenefit={addBenefit}
+                removeBenefit={removeBenefit}
+              />
+            )}
+
+            {activeStep === "messages" && (
+              <MessagesSection
+                formData={formData}
+                handleChange={handleChange}
+              />
+            )}
+
+            {/* Global Actions */}
+            <div className="mt-8 pt-6 border-t border-gray-100 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="px-6 py-3 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
+              >
+                إلغاء
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full md:w-auto px-12 py-3 bg-sky-600 text-white font-bold rounded-xl shadow-lg hover:bg-sky-700 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+              >
+                {isSubmitting ? "جاري الإنشاء..." : "إنشاء المركز"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }

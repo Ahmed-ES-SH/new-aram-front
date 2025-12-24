@@ -42,7 +42,7 @@ export default function CTAServiceSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-4xl lg:text-5xl font-bold text-white mb-4"
+            className="text-2xl lg:text-4xl xl:text-5xl font-bold text-white mb-4"
           >
             {t.ctaTitle}
           </motion.h2>

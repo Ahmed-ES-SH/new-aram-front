@@ -23,6 +23,7 @@ export const addUserinputs = [
     fildType: "short-text",
     label: { ar: "الإسم", en: "" },
     placeholder: "أدخل إسم الحساب الجديد",
+    validation: { required: true },
   },
   {
     name: "email",
@@ -30,6 +31,7 @@ export const addUserinputs = [
     fildType: "short-text",
     label: { ar: "البريد الإلكترونى", en: "" },
     placeholder: "أدخل البريد الإلكترونى للحساب الجديد",
+    validation: { required: true, email: true },
   },
   {
     name: "password",
@@ -37,6 +39,15 @@ export const addUserinputs = [
     fildType: "short-text",
     label: { ar: "كلمة السر", en: "" },
     placeholder: "أدخل  كلمة السر للحساب الجديد",
+    validation: { required: true, minLength: 6 },
+  },
+  {
+    name: "phone",
+    type: "text",
+    fildType: "phone-input",
+    label: { ar: "رقم الهاتف", en: "" },
+    placeholder: "أدخل رقم الهاتف",
+    validation: { required: true, minLength: 10 },
   },
   {
     name: "birth_date",
@@ -54,12 +65,24 @@ export const addUserinputs = [
     selectItems: countries,
   },
   {
+    name: "location",
+    type: "",
+    fildType: "location",
+    label: { ar: "الموقع الدقيق", en: "" },
+    placeholder: "حدد موقع المستخدم على الخريطة",
+    selectItems: countries,
+  },
+
+  {
     name: "gender",
     type: "",
     fildType: "select-type",
     label: { ar: "جنس المستخدم", en: "" },
     placeholder: "",
-    selectItems: [{ name: "male" }, { name: "female" }],
+    selectItems: [
+      { name: "ذكر", value: "male" },
+      { name: "أنثى", value: "female" },
+    ],
   },
   {
     name: "role",
@@ -67,7 +90,11 @@ export const addUserinputs = [
     fildType: "select-type",
     label: { ar: "نوع الحساب", en: "" },
     placeholder: "",
-    selectItems: [{ name: "admin" }, { name: "user" }],
+    selectItems: [
+      { name: "سوبر أدمن", value: "super_admin" },
+      { name: "أدمن", value: "admin" },
+      { name: "مستخدم", value: "user" },
+    ],
   },
 ];
 
@@ -84,6 +111,7 @@ export const Categoryinputs = [
     fildType: "short-text",
     label: { ar: "عنوان القسم بالعربية", en: "" },
     placeholder: "أدخل عنوان القسم بالعربية  ",
+    validation: { required: true },
   },
   {
     name: "title_en",
@@ -91,6 +119,7 @@ export const Categoryinputs = [
     fildType: "short-text",
     label: { ar: "عنوان القسم بالانجليزية", en: "" },
     placeholder: "أدخل عنوان القسم بالانجليزية  ",
+    validation: { required: true },
   },
 ];
 
@@ -111,11 +140,18 @@ export const UpdateUserinputs = [
   {
     name: "email",
     type: "email",
-    fildType: "short-text",
+    fildType: "email",
     label: { ar: "البريد الإلكترونى", en: "" },
     placeholder: "أدخل البريد الإلكترونى للحساب الجديد",
   },
-
+  {
+    name: "phone",
+    type: "text",
+    fildType: "phone-input",
+    label: { ar: "رقم الهاتف", en: "" },
+    placeholder: "أدخل رقم الهاتف",
+    validation: { required: true, minLength: 10 },
+  },
   {
     name: "birth_date",
     type: "date",
@@ -128,7 +164,15 @@ export const UpdateUserinputs = [
     type: "",
     fildType: "select-type",
     label: { ar: " بلد المستخدم", en: "" },
-    placeholder: "أدخل  كلمة السر للحساب الجديد",
+    placeholder: "حدد بلد المستخدم",
+    selectItems: countries,
+  },
+  {
+    name: "location",
+    type: "",
+    fildType: "location",
+    label: { ar: "الموقع الدقيق", en: "" },
+    placeholder: "حدد موقع المستخدم على الخريطة",
     selectItems: countries,
   },
   {
@@ -137,7 +181,10 @@ export const UpdateUserinputs = [
     fildType: "select-type",
     label: { ar: "الجنس", en: "" },
     placeholder: "",
-    selectItems: [{ name: "male" }, { name: "female" }],
+    selectItems: [
+      { name: "ذكر", value: "male" },
+      { name: "أنثى", value: "female" },
+    ],
   },
   {
     name: "role",
@@ -145,7 +192,11 @@ export const UpdateUserinputs = [
     fildType: "select-type",
     label: { ar: "نوع الحساب", en: "" },
     placeholder: "",
-    selectItems: [{ name: "admin" }, { name: "client" }],
+    selectItems: [
+      { name: "سوبر أدمن", value: "super_admin" },
+      { name: "أدمن", value: "admin" },
+      { name: "مستخدم", value: "user" },
+    ],
   },
 ];
 

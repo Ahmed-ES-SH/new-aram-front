@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface props {
   src: string;
@@ -43,8 +44,8 @@ export default function Img({
   };
 
   return (
-    <img
-      src={imageSrc}
+    <Image
+      src={imageSrc ? imageSrc : "/defaults/noImage.png"}
       alt={alt}
       className={className}
       width={width}

@@ -138,10 +138,10 @@ export default function ServiceFeaturesSection({ data }: FeaturesProps) {
             isRTL ? "text-right" : "text-left"
           } lg:text-center`}
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
+          <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-gray-800 mb-4">
             {content.title}
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="lg:text-lg text-base text-gray-600 max-w-2xl mx-auto">
             {content.subtitle}
           </p>
         </motion.div>

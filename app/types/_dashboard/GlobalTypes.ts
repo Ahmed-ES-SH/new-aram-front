@@ -48,15 +48,22 @@ export interface InputField {
   name: string;
   type: string;
   fildType: string;
+  value?: number | string;
   displayKey?: string;
   label: { ar: string; en: string };
   placeholder?: string;
   items?: item[];
   selectItems?: { [key: string]: string }[];
+  validation?: {
+    required?: boolean;
+    minLength?: number;
+    email?: boolean;
+    message?: { ar: string; en: string }; // Custom message per rule could be complex, keeping simple for now
+  };
 }
 
 export interface errorType {
-  [key: string]: { ar: string; en: string };
+  [key: string]: string;
 }
 
 export type LocaleType = "en" | "ar";
@@ -69,7 +76,7 @@ export interface ArticleType {
   content_ar: string;
   views: number;
   image: string;
-  status: boolean;
+  status: string;
   created_at: string;
   comments_count: number;
   interactions: [{ totalReactions: number }];

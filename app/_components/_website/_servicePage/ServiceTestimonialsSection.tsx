@@ -8,11 +8,13 @@ import { Pagination, A11y } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination"; // نحتاج فقط لنمط التنقيط
 import { FiChevronLeft, FiChevronRight, FiStar } from "react-icons/fi";
+import Img from "../_global/Img";
 
 interface Testimonial {
   text: string;
   name: string;
   rating: number;
+  avatar: string;
 }
 
 interface ServiceTestimonialsSectionProps {
@@ -90,13 +92,21 @@ export default function ServiceTestimonialsSection({
         {t.testimonialTitle}
       </h2>
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div className="relative max-w-7xl mx-auto px-2 lg:px-6">
         <Swiper
           // تحديد الوحدات المستخدمة
           modules={[Pagination, A11y]}
           direction="horizontal"
           spaceBetween={30}
           slidesPerView={2}
+          breakpoints={{
+            0: {
+              slidesPerView: 1,
+            },
+            768: {
+              slidesPerView: 2,
+            },
+          }}
           loop={true} // للتكرار اللانهائي
           // تحديث الحالة عند تغيير الشريحة
           onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
@@ -129,7 +139,12 @@ export default function ServiceTestimonialsSection({
                   }`}
                 >
                   <div className="w-12 h-12 rounded-full bg-linear-to-br from-primary to-primary-red flex items-center justify-center text-white font-bold">
-                    {testimonial.name.charAt(0)}
+                    <Img
+                      src={testimonial.avatar ?? "/defaults/male-noimage.jpg"}
+                      errorSrc="/defaults/male-noimage.jpg"
+                      alt={testimonial.name}
+                      className="w-full h-full object-cover rounded-full"
+                    />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
                     <p className="font-bold text-gray-800">

@@ -6,6 +6,8 @@ import { instance } from "@/app/_helpers/axios";
 import { useAppSelector } from "@/app/Store/hooks";
 import { formSchema, FormValues } from "../_components/schema";
 
+import { STEPS } from "../_components/stepsConfig";
+
 export const useOrganizationForm = () => {
   const params = useParams();
   const router = useRouter();
@@ -19,6 +21,9 @@ export const useOrganizationForm = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Navigation State
+  const [activeStep, setActiveStep] = useState(STEPS[0].id);
 
   // Form State
   const [formData, setFormData] = useState<FormValues>({
@@ -44,6 +49,7 @@ export const useOrganizationForm = () => {
     url: "",
     accaptable_message: "",
     unaccaptable_message: "",
+    email_verified: false,
   });
 
   // File states
@@ -54,6 +60,9 @@ export const useOrganizationForm = () => {
 
   // Map State
   const [showMap, setShowMap] = useState(false);
+
+  // State for email verification
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   // Fetch Data
   useEffect(() => {
@@ -67,6 +76,11 @@ export const useOrganizationForm = () => {
 
         const orgData = orgRes.data.data;
 
+        // Set email verified status
+        setIsEmailVerified(
+          !!orgData.email_verified_at || !!orgData.email_verified
+        );
+
         // Prepare initial form data
         const initialLocation =
           typeof orgData.location === "string"
@@ -78,9 +92,10 @@ export const useOrganizationForm = () => {
           title: orgData.title,
           description: orgData.description,
           email: orgData.email,
-          phone_number: orgData.phone_number,
+          phone_number: orgData.phone_number || "",
           status: orgData.status,
           active: orgData.active,
+          email_verified: orgData.email_verified,
           booking_status: orgData.booking_status,
           confirmation_status: orgData.confirmation_status,
           confirmation_price: Number(orgData.confirmation_price),
@@ -162,18 +177,19 @@ export const useOrganizationForm = () => {
 
   const toggleSubCategory = (id: number) => {
     setFormData((prev) => {
-      const exists = prev.sub_categories.includes(id);
+      const currentSubCats = prev.sub_categories || [];
+      const exists = currentSubCats.includes(id);
       return {
         ...prev,
         sub_categories: exists
-          ? prev.sub_categories.filter((c) => c !== id)
-          : [...prev.sub_categories, id],
+          ? currentSubCats.filter((c) => c !== id)
+          : [...currentSubCats, id],
       };
     });
   };
 
   const handleBenefitChange = (index: number, value: string) => {
-    const updatedBenefits = [...formData.benefits];
+    const updatedBenefits = [...(formData.benefits || [])];
     updatedBenefits[index] = { title: value };
     setFormData({ ...formData, benefits: updatedBenefits });
   };
@@ -181,14 +197,14 @@ export const useOrganizationForm = () => {
   const addBenefit = () => {
     setFormData({
       ...formData,
-      benefits: [...formData.benefits, { title: "" }],
+      benefits: [...(formData.benefits || []), { title: "" }],
     });
   };
 
   const removeBenefit = (index: number) => {
     setFormData({
       ...formData,
-      benefits: formData.benefits.filter((_, i) => i !== index),
+      benefits: (formData.benefits || []).filter((_, i) => i !== index),
     });
   };
 
@@ -197,10 +213,47 @@ export const useOrganizationForm = () => {
     setErrors({});
     setIsSubmitting(true);
 
-    try {
-      // Validate
-      const validatedData = formSchema.parse(formData);
+    // 1. Validate Form Data locally
+    const result = formSchema.safeParse(formData);
 
+    if (!result.success) {
+      // Handle Validation Errors
+      const fieldErrors: Record<string, string> = {};
+
+      result.error.issues.forEach((issue) => {
+        // Map path array to dotted string (e.g., ['location', 'address'] -> 'location.address')
+        const path = issue.path.join(".");
+        fieldErrors[path] = issue.message;
+      });
+
+      setErrors(fieldErrors);
+
+      // Auto-navigate to first error
+      const firstErrorPath = Object.keys(fieldErrors)[0];
+      if (firstErrorPath) {
+        // Find which step contains this field
+        const step = STEPS.find((s) =>
+          s.fields.some(
+            (field) =>
+              field === firstErrorPath || firstErrorPath.startsWith(field + ".")
+          )
+        );
+
+        if (step) {
+          setActiveStep(step.id);
+          toast.error(`يرجى مراجعة الأخطاء في: ${step.label}`);
+        } else {
+          toast.error("يرجى التأكد من صحة البيانات المدخلة");
+        }
+      }
+
+      setIsSubmitting(false);
+      return;
+    }
+
+    // 2. Submit Data if Valid
+    try {
+      const validatedData = result.data;
       const requestData = new FormData();
 
       // Append basic fields
@@ -215,7 +268,7 @@ export const useOrganizationForm = () => {
           return; // Handle separately
         }
 
-        // Fix for "The confirmation status field must be true or false" error
+        // Logic for confirmation_status boolean to 0/1 (if needed by backend)
         if (key === "confirmation_status") {
           requestData.append(key, value ? "1" : "0");
           return;
@@ -248,24 +301,18 @@ export const useOrganizationForm = () => {
       );
 
       if (response.status === 200 || response.status === 204) {
-        toast.success("Organization updated successfully");
+        toast.success("تم تحديث بيانات المركز بنجاح");
         router.refresh();
       }
     } catch (error: any) {
       console.error(error);
-      if ((error instanceof z.ZodError) as any) {
-        const fieldErrors: Record<string, string> = {};
-        error.errors.forEach((err) => {
-          if (err.path) {
-            fieldErrors[err.path[0]] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-        toast.error("Please check the form for errors");
-      } else {
-        toast.error(
-          error?.response?.data?.message || "Failed to update organization"
-        );
+      const apiMessage =
+        error?.response?.data?.message || "فشل تحديث بيانات المركز";
+      toast.error(apiMessage);
+
+      // If API returns field-specific errors (example structure)
+      if (error?.response?.data?.errors) {
+        setErrors(error.response.data.errors);
       }
     } finally {
       setIsSubmitting(false);
@@ -281,6 +328,7 @@ export const useOrganizationForm = () => {
     errors,
     allCategories,
     allSubCategories,
+    isEmailVerified, // Return this new state
 
     // Images
     logoPreview,
@@ -300,5 +348,9 @@ export const useOrganizationForm = () => {
     addBenefit,
     removeBenefit,
     onSubmit,
+
+    // Navigation
+    activeStep,
+    setActiveStep,
   };
 };

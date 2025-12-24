@@ -30,6 +30,17 @@ export default function Page({
       ],
     },
     {
+      name: "type",
+      type: "",
+      fildType: "select-type",
+      label: { ar: "نوع الكوبون", en: "" },
+      selectItems: [
+        { name: "الجميع", value: "general" },
+        { name: "مراكز", value: "organization" },
+        { name: "مستخدمين", value: "user" },
+      ],
+    },
+    {
       name: "code",
       type: "text",
       fildType: "coupon-code",
@@ -40,8 +51,8 @@ export default function Page({
       name: "title",
       type: "text",
       fildType: "short-text",
-      label: { ar: "إسم الكوبون", en: "" },
-      placeholder: "أدخل إسم الكوبون",
+      label: { ar: "عنوان الكوبون", en: "" },
+      placeholder: "أدخل عنوان الكوبون",
     },
     {
       name: "description",
