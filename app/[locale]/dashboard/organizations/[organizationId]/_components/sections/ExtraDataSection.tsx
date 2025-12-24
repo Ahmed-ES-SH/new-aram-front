@@ -59,31 +59,32 @@ export default function ExtraDataSection({
         </div>
 
         <div className="space-y-3">
-          {formData.benefits.length === 0 && (
+          {formData.benefits && formData.benefits.length === 0 && (
             <p className="text-sm text-gray-400 text-center py-4 bg-gray-50 rounded-xl border border-dashed border-gray-200">
               لا توجد مميزات مضافة
             </p>
           )}
-          {formData.benefits.map((benefit, index) => (
-            <div
-              key={index}
-              className="flex gap-3 group animate-in slide-in-from-top-2 duration-300"
-            >
-              <input
-                value={benefit.title}
-                onChange={(e) => handleBenefitChange(index, e.target.value)}
-                className="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-white focus:border-sky-400 focus:ring-2 focus:ring-sky-100 outline-none transition-all"
-                placeholder={`الميزة رقم ${index + 1}`}
-              />
-              <button
-                type="button"
-                onClick={() => removeBenefit(index)}
-                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+          {formData.benefits &&
+            formData.benefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="flex gap-3 group animate-in slide-in-from-top-2 duration-300"
               >
-                <FaTrash />
-              </button>
-            </div>
-          ))}
+                <input
+                  value={benefit.title}
+                  onChange={(e) => handleBenefitChange(index, e.target.value)}
+                  className="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-white focus:border-sky-400 focus:ring-2 focus:ring-sky-100 outline-none transition-all"
+                  placeholder={`الميزة رقم ${index + 1}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeBenefit(index)}
+                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
         </div>
       </div>
     </div>

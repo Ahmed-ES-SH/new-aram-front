@@ -16,7 +16,7 @@ export default function KeywordSelector({
   selectedKeywords,
   setSelectedKeywords,
 }: {
-  selectedKeywords: Keyword[];
+  selectedKeywords: Keyword[] | undefined;
   setSelectedKeywords: (keywords: Keyword[]) => void;
 }) {
   const { width } = useAppSelector((state) => state.variables);
@@ -41,6 +41,7 @@ export default function KeywordSelector({
   }, []);
 
   const handleSelect = (keyword: Keyword) => {
+    if (!selectedKeywords && !Array.isArray(selectedKeywords)) return;
     const isExist = selectedKeywords.find((k) => k.id === keyword.id);
 
     let updated: Keyword[];
@@ -106,19 +107,21 @@ export default function KeywordSelector({
       {/* Selected Keywords */}
       <div className="flex flex-wrap gap-2">
         <AnimatePresence>
-          {selectedKeywords.map((k) => (
-            <motion.div
-              key={k.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="flex items-center gap-2 bg-primary/80 text-white px-3 py-1 rounded-full cursor-pointer"
-              onClick={() => handleSelect(k)}
-            >
-              <span>{k.title}</span>
-              <FaTimes className="text-xs text-red-500" />
-            </motion.div>
-          ))}
+          {selectedKeywords &&
+            Array.isArray(selectedKeywords) &&
+            selectedKeywords.map((k) => (
+              <motion.div
+                key={k.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="flex items-center gap-2 bg-primary/80 text-white px-3 py-1 rounded-full cursor-pointer"
+                onClick={() => handleSelect(k)}
+              >
+                <span>{k.title}</span>
+                <FaTimes className="text-xs text-red-500" />
+              </motion.div>
+            ))}
         </AnimatePresence>
       </div>
 
@@ -128,19 +131,22 @@ export default function KeywordSelector({
           <>
             {[...filteredKeywords]
               .sort((a, b) => {
-                const aSelected = selectedKeywords.some(
-                  (sel) => sel.title === a.title
-                );
-                const bSelected = selectedKeywords.some(
-                  (sel) => sel.title === b.title
-                );
+                const aSelected =
+                  selectedKeywords &&
+                  Array.isArray(selectedKeywords) &&
+                  selectedKeywords.some((sel) => sel.title === a.title);
+                const bSelected =
+                  selectedKeywords &&
+                  Array.isArray(selectedKeywords) &&
+                  selectedKeywords.some((sel) => sel.title === b.title);
                 return aSelected === bSelected ? 0 : aSelected ? -1 : 1;
               })
               .slice(0, displayedKeys)
               .map((k) => {
-                const isSelected = selectedKeywords.some(
-                  (sel) => sel.title === k.title
-                );
+                const isSelected =
+                  selectedKeywords &&
+                  Array.isArray(selectedKeywords) &&
+                  selectedKeywords.some((sel) => sel.title === k.title);
 
                 return (
                   <motion.div

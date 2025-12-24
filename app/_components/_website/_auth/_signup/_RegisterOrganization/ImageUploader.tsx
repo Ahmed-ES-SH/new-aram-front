@@ -18,6 +18,7 @@ interface ImageUploaderProps {
   value: File | null;
   onChange: (file: File | null) => void;
   accept?: string;
+  error?: string;
 }
 
 export function ImageUploader({
@@ -26,6 +27,7 @@ export function ImageUploader({
   value,
   onChange,
   accept = "image/*",
+  error,
 }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -98,13 +100,15 @@ export function ImageUploader({
           relative cursor-pointer rounded-lg border-2 border-dashed
           transition-all duration-200 overflow-hidden
           ${
-            isDragging
+            error
+              ? "border-red-500 bg-red-50/10"
+              : isDragging
               ? "border-primary bg-primary/5 scale-[1.02]"
               : preview
               ? "border-border"
               : "border-input"
           }
-          ${!preview ? "hover:border-primary hover:bg-primary/5" : ""}
+          ${!preview && !error ? "hover:border-primary hover:bg-primary/5" : ""}
         `}
       >
         <AnimatePresence mode="wait">
@@ -162,7 +166,11 @@ export function ImageUploader({
                 {isDragging ? (
                   <FaCloudUploadAlt className="w-16 h-16 text-primary mb-4" />
                 ) : (
-                  <FaImage className="w-16 h-16 text-muted-foreground mb-4" />
+                  <FaImage
+                    className={`w-16 h-16 mb-4 ${
+                      error ? "text-red-400" : "text-muted-foreground"
+                    }`}
+                  />
                 )}
               </motion.div>
 
@@ -174,6 +182,7 @@ export function ImageUploader({
           )}
         </AnimatePresence>
       </motion.div>
+      {error && <span className="text-red-500 text-sm mt-1">{error}</span>}
     </div>
   );
 }

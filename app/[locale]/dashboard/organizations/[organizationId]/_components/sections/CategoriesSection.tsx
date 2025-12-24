@@ -83,7 +83,9 @@ export default function CategoriesSection({
         </label>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-96 overflow-y-auto p-1 custom-scrollbar">
           {allSubCategories?.map((sub: any) => {
-            const isActive = formData.sub_categories.includes(sub.id);
+            const isActive =
+              formData?.sub_categories &&
+              formData?.sub_categories.includes(sub.id);
             return (
               <div
                 key={sub.id}

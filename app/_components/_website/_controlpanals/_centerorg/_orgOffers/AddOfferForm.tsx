@@ -11,7 +11,6 @@ import { ImageUploader } from "../../../_auth/_signup/_RegisterOrganization/Imag
 import { useLocale, useTranslations } from "next-intl";
 import { CiText } from "react-icons/ci";
 import { LuFileText } from "react-icons/lu";
-import { getOfferSchema } from "../../../_auth/_signup/_RegisterOrganization/validation/offerSchema";
 import { toast } from "sonner";
 import { appendFormData } from "../../../_auth/_signup/_RegisterOrganization/helpers";
 import { instance } from "@/app/_helpers/axios";
@@ -22,6 +21,7 @@ import { category } from "@/app/types/_dashboard/GlobalTypes";
 import { useAppSelector } from "@/app/Store/hooks";
 import { useRouter } from "next/navigation";
 import SpinLoading from "../../../_global/SpinLoading";
+import { getOfferSchema } from "../../../_auth/_signup/_RegisterOrganization/validation/offerSchema";
 
 export default function AddOfferForm() {
   const { user } = useAppSelector((state) => state.user);
