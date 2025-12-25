@@ -92,7 +92,10 @@ export default function N8nChat() {
     document.body.appendChild(script);
 
     return () => {
-      // Cleanup logic if needed
+      const existingScript = document.getElementById("n8n-chat-script");
+      if (existingScript) {
+        existingScript.remove();
+      }
     };
   }, []);
 

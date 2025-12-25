@@ -1,6 +1,6 @@
-import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { NextIntlClientProvider } from "next-intl";
 import { Geist, Geist_Mono } from "next/font/google";
-import { getTranslations } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { getSharedMetadata } from "../_helpers/helpers";
 import { Toaster } from "sonner";
 import Navbar from "../_components/_website/_navbar/Navbar";
@@ -11,9 +11,8 @@ import Footer from "../_components/_website/_global/Footer";
 import FetchData from "../_helpers/FetchData";
 import FacebookPixelHead from "../_components/_layout/FacebookPixelHead";
 import TikTokPixelHead from "../_components/_layout/TikTokPixelHead";
-import ".././globals.css";
-import N8nChat from "../_components/_website/_N8nChat/N8nChat";
 import ChatBtns from "../_components/_website/_global/ChatBtns";
+import ".././globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -8,6 +8,7 @@ import Img from "../_global/Img";
 import { SiSnowflake } from "react-icons/si";
 import DynamicServiceForm from "../_DynamicServiceForm";
 import { Form, VideoFile } from "../../_dashboard/_serviceEditor/types";
+import { directionMap } from "@/app/constants/_website/global";
 
 export interface HeroData {
   id: number | string;
@@ -54,7 +55,7 @@ const VideoModal = ({
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
+          className="absolute top-4 end-4 z-10 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
         >
           <FiX size={24} />
         </button>
@@ -121,18 +122,21 @@ export default function HeroServiceSection({ data }: HeroProps) {
   const backgroundImage = data?.backgroundImage || "/service-wave.svg";
 
   return (
-    <div className={`min-h-screen relative overflow-hidden text-start`}>
+    <div
+      dir={directionMap[locale]}
+      className={`min-h-screen relative overflow-hidden text-start`}
+    >
       {/* الخلفية */}
       <Img
         src={backgroundImage}
-        className="w-full h-[40%] lg:rotate-180 absolute lg:top-0 bottom-0 left-0 z-10 object-cover"
+        className="w-full h-[40%] lg:rotate-180 absolute lg:top-0 bottom-0 start-0 z-10 object-cover"
         alt="wave background"
       />
       <div className="w-full min-h-screen absolute inset-0 z-10 bg-black opacity-5"></div>
 
       {/* المحتوى الرئيسي */}
       <div className="c-container relative z-20 pt-12 md:pt-20 lg:pt-24">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 xl:gap-16 w-full min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-6rem)]">
+        <div className="flex flex-col rtl:lg:flex-row-reverse ltr:lg:flex-row items-center justify-between gap-8 lg:gap-12 xl:gap-16 w-full min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-6rem)]">
           {/* المحتوى النصي */}
           <motion.div
             initial={{ opacity: 0, x: isRTL ? -50 : 50 }}
@@ -144,7 +148,7 @@ export default function HeroServiceSection({ data }: HeroProps) {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className={`inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-blue-50 to-purple-50 rounded-full mb-4 md:mb-6 border border-blue-100`}
+              className={`inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r rtl:bg-linear-to-l from-blue-50 to-purple-50 rounded-full mb-4 md:mb-6 border border-blue-100`}
             >
               <span className="text-xs md:text-sm font-medium text-blue-700">
                 ✨ {content.badge}
@@ -182,14 +186,12 @@ export default function HeroServiceSection({ data }: HeroProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className={`flex flex-col sm:flex-row gap-3 sm:gap-4 ${
-                isRTL ? "sm:justify-end" : "sm:justify-start"
-              }`}
+              className={`flex flex-col sm:flex-row gap-3 sm:gap-4`}
             >
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => data?.video && setShowVideo(true)}
-                className={`flex items-center justify-center gap-2 px-5 sm:px-6 py-3 hover:scale-105 hover:shadow-xl duration-300 bg-linear-to-r from-primary to-primary-red text-white rounded-full font-medium shadow-lg w-full sm:w-auto ${
+                className={`flex items-center justify-center gap-2 px-5 sm:px-6 py-3 hover:scale-105 hover:shadow-xl duration-300 bg-linear-to-r rtl:bg-linear-to-l from-primary to-primary-red text-white rounded-full font-medium shadow-lg w-full sm:w-auto ${
                   !data?.video ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={!data?.video}

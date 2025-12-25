@@ -12,6 +12,19 @@ interface OrderHeaderProps {
 export default function OrderHeader({ serviceOrder }: OrderHeaderProps) {
   const locale = useLocale();
 
+  const returnStatus = (status) => {
+    switch (status) {
+      case "completed":
+        return locale === "ar" ? "تم الانتهاء" : "Completed";
+      case "pending":
+        return locale === "ar" ? "قيد الانتهاء" : "In Progress";
+      case "in_progress":
+        return locale === "ar" ? "قيد الانتهاء" : "In Progress";
+      default:
+        return locale === "ar" ? "قيد الانتهاء" : "In Progress";
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row gap-6 items-start justify-between bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
       <div>
@@ -29,7 +42,7 @@ export default function OrderHeader({ serviceOrder }: OrderHeaderProps) {
                 : "bg-blue-100 text-blue-700"
             }`}
           >
-            {serviceOrder.status}
+            {returnStatus(serviceOrder.status)}
           </span>
         </div>
         <p className="text-gray-500 text-sm">
@@ -57,10 +70,10 @@ export default function OrderHeader({ serviceOrder }: OrderHeaderProps) {
           <FiMessageCircle size={18} />
           <span>{locale === "ar" ? "واتساب" : "WhatsApp"}</span>
         </a>
-        <button className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors font-medium">
+        {/* <button className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors font-medium">
           <FiMessageSquare size={18} />
           <span>{locale === "ar" ? "بدء محادثة" : "Start Conversation"}</span>
-        </button>
+        </button> */}
       </div>
     </div>
   );

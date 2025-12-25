@@ -31,7 +31,7 @@ export default function InvoiceDetailsCard({
             {locale === "ar" ? "المبلغ" : "Total"}
           </span>
           <span className="font-bold text-primary">
-            {serviceOrder.invoice?.total} {serviceOrder.invoice?.currency}
+            {serviceOrder.invoice?.total} {locale == "ar" ? "ر.ع" : "OMR"}
           </span>
         </div>
         <div className="flex justify-between text-sm items-center">
@@ -47,7 +47,13 @@ export default function InvoiceDetailsCard({
                       }
                    `}
           >
-            {serviceOrder.invoice?.status}
+            {serviceOrder.invoice?.status == "paid"
+              ? locale === "ar"
+                ? "مدفوع"
+                : "Paid"
+              : locale === "ar"
+              ? "غير مدفوع"
+              : "Not Paid"}
           </span>
         </div>
         <div className="flex justify-between text-sm">

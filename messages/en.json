@@ -1035,6 +1035,10 @@
     "chats": {
       "title": "Messages",
       "desc": "Stay connected and communicate with clients easily."
+    },
+    "familyCard": {
+      "title": "Family Members",
+      "desc": "Manage your family members."
     }
   },
 

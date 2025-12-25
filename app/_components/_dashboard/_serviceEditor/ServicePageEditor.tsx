@@ -51,21 +51,25 @@ export default function ServicePageEditor({ mode }: ServicePageEditorProps) {
         formSchema
       );
 
-      toast.success(
-        mode === "create" ? "تم إنشاء صفحة الخدمة" : "تم حفظ التغييرات"
-      );
-      setHasChanges(false);
-      setServiceData({
-        ...serviceData,
-        deleted_images: [],
-        testimonials_images: [],
-      });
+      if (res.status === 200 || res.status === 201) {
+        toast.success(
+          mode === "create" ? "تم إنشاء صفحة الخدمة" : "تم حفظ التغييرات"
+        );
+        setHasChanges(false);
+        setServiceData({
+          ...serviceData,
+          deleted_images: [],
+          testimonials_images: [],
+        });
 
-      if (mode === "create") {
-        router.push(`/dashboard/services/${res.data.data.id}`);
+        if (mode === "create") {
+          router.push(`/dashboard/services/${res.data.data.id}`);
+        }
       }
-    } catch {
-      toast.error("فشل حفظ البيانات");
+    } catch (error: any) {
+      const errorMessages =
+        error?.response?.data?.message ?? "فشل حفظ البيانات";
+      toast.error(errorMessages);
     }
   };
 

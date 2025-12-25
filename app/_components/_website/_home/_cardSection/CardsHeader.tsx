@@ -89,10 +89,13 @@ export default function CardsHeader({ containerRef, staticData }: props) {
               <div className="absolute inset-0 bg-linear-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
 
               <div className="relative z-10">
-                <div className="text-3xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                  <Icon className={` text-primary`} />
+                <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                  <Icon className={`size-6 md:size-8 text-primary`} />
                 </div>
-                <p style={{ color: feature.color }} className="font-semibold">
+                <p
+                  style={{ color: feature.color }}
+                  className="font-semibold text-[9px] md:text-xs lg:text-sm"
+                >
                   {feature.text[locale]}
                 </p>
               </div>

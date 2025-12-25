@@ -13,7 +13,6 @@ import { formatTitle } from "@/app/_helpers/helpers";
 import { BiSolidConversation, BiSolidOffer } from "react-icons/bi";
 import { FaCircleUser } from "react-icons/fa6";
 import { PiListChecksFill } from "react-icons/pi";
-import { IoIosListBox } from "react-icons/io";
 
 export function getLinks(user: any) {
   if (!user) return [];

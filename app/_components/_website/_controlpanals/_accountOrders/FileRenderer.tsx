@@ -4,6 +4,7 @@ import { ServiceTrackingFile } from "./serviceOrderTypes";
 import Image from "next/image";
 import { FiDownload, FiFile, FiEye, FiX } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
+import Img from "../../_global/Img";
 
 interface FileRendererProps {
   file: ServiceTrackingFile;
@@ -13,19 +14,14 @@ export default function FileRenderer({ file }: FileRendererProps) {
   const [showPreview, setShowPreview] = useState(false);
   const isImage = file.mime_type?.startsWith("image/");
 
-  // Assuming public_path disk maps to root or public URL structure
-  // Adjust base URL if needed based on actual backend serving logic
-  // For now using raw path, assuming it's a full URL or relative to public
-  // If "public_path" implies a specific prefix like /storage/, it might need adjustment
-  // But based on user JSON "uploads/...", it looks relative.
-  const fileUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ""}/${file.path}`;
+  const fileUrl = file.path;
 
   const downloadFile = (e: React.MouseEvent) => {
     e.stopPropagation();
     const link = document.createElement("a");
     link.href = fileUrl;
     link.download = file.original_name;
-    link.target = "_blank"; // Fallback if download doesn't trigger
+    link.target = "_blank";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -41,11 +37,11 @@ export default function FileRenderer({ file }: FileRendererProps) {
               className="relative w-full h-full cursor-pointer"
               onClick={() => setShowPreview(true)}
             >
-              <Image
-                src={fileUrl}
+              <Img
+                src={fileUrl ?? "/defaults/noImage.png"}
+                errorSrc="/defaults/noImage.png"
                 alt={file.original_name}
-                fill
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
           ) : (
@@ -94,7 +90,7 @@ export default function FileRenderer({ file }: FileRendererProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
             onClick={() => setShowPreview(false)}
           >
             <motion.div
@@ -110,12 +106,12 @@ export default function FileRenderer({ file }: FileRendererProps) {
               >
                 <FiX size={24} />
               </button>
-              <div className="relative w-full h-[80vh] rounded-lg overflow-hidden bg-black">
-                <Image
-                  src={fileUrl}
+              <div className="relative w-full h-[80vh] rounded-lg overflow-hidden">
+                <Img
+                  src={fileUrl ?? "/defaults/noImage.png"}
                   alt={file.original_name}
-                  fill
-                  className="object-contain"
+                  errorSrc="/defaults/noImage.png"
+                  className="object-contain w-full h-full"
                 />
               </div>
               <div className="mt-4 flex gap-4">

@@ -1,10 +1,13 @@
+"use client";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import React from "react";
+import Cookie from "cookie-universal";
 
 export default function LanguageBtns() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const cookie = Cookie();
 
   // ✅ تغيير اللغة
   const handleChangeLanguage = (locale: "en" | "ar") => {
@@ -13,9 +16,11 @@ export default function LanguageBtns() {
     const pathWithoutLocale = pathname.split("/").slice(2).join("/");
     const queryString = searchParams.toString();
 
+    cookie.set("aram_locale", locale);
     router.push(
       `/${locale}/${pathWithoutLocale}${queryString ? "?" + queryString : ""}`
     );
+    router.refresh();
   };
 
   return (

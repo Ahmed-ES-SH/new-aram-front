@@ -9,7 +9,7 @@ import { FaCcMastercard, FaRegCalendarAlt, FaWallet } from "react-icons/fa";
 import { PiListChecksFill } from "react-icons/pi";
 import { formatTitle } from "@/app/_helpers/helpers";
 import { BiSolidConversation, BiSolidOffer } from "react-icons/bi";
-import { MdLocalOffer } from "react-icons/md";
+import { MdLocalOffer, MdOutlineSettingsInputComponent } from "react-icons/md";
 import LocaleLink from "@/app/_components/_website/_global/LocaleLink";
 
 export default function CenterControlPanal() {
@@ -32,6 +32,16 @@ export default function CenterControlPanal() {
       icon: <FaCcMastercard className="w-10 h-10 text-green-600" />,
       title: t("cards.title"),
       desc: t("cards.desc"),
+    },
+    {
+      href: `/centercontrolpanel/myorders?account_name=${formatTitle(
+        user?.title
+      )}&acouunt_type=${user?.account_type}&userId=${user?.id}`,
+      icon: (
+        <MdOutlineSettingsInputComponent className="w-10 h-10 text-shadow-teal-700" />
+      ),
+      title: t("reservations.title"), // Note: using reservations title for orders as per current file, might want to check
+      desc: t("reservations.desc"),
     },
     {
       href: `/centercontrolpanel/orgreservations?account_name=${formatTitle(
@@ -102,22 +112,18 @@ export default function CenterControlPanal() {
         <div className="min-h-[50vh] flex items-center  justify-center">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((item, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white cursor-pointer hover:bg-primary/10 duration-300 shadow-sm rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-md transition-shadow"
-              >
-                <LocaleLink
-                  className="items-center flex flex-col"
-                  href={item.href}
+              <LocaleLink href={item.href} key={i}>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-white cursor-pointer hover:bg-primary/10 duration-300 shadow-sm rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-md transition-shadow h-full"
                 >
                   {item.icon}
                   <h2 className="text-lg font-semibold text-gray-800 mt-4">
                     {item.title}
                   </h2>
                   <p className="text-gray-500 text-sm mt-2">{item.desc}</p>
-                </LocaleLink>
-              </motion.div>
+                </motion.div>
+              </LocaleLink>
             ))}
           </div>
         </div>

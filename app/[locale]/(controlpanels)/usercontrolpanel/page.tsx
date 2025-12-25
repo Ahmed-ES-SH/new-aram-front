@@ -12,8 +12,12 @@ import {
 } from "react-icons/hi";
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/app/Store/hooks";
-import { IoIosListBox } from "react-icons/io";
-import { MdOutlineSettingsInputComponent } from "react-icons/md";
+import {
+  MdOutlineSettingsInputComponent,
+  MdFamilyRestroom,
+} from "react-icons/md";
+import { formatTitle } from "@/app/_helpers/helpers";
+import LocaleLink from "@/app/_components/_website/_global/LocaleLink";
 
 export default function DashboardPage() {
   const { user } = useAppSelector((state) => state.user);
@@ -24,12 +28,18 @@ export default function DashboardPage() {
       icon: <HiOutlineCreditCard className="w-10 h-10 text-green-600" />,
       title: t("cards.title"),
       desc: t("cards.desc"),
+      href: `/usercontrolpanel/mycards?account_name=${formatTitle(
+        user?.name
+      )}&acouunt_type=${user?.account_type}&userId=${user?.id}`,
     },
 
     {
       icon: <HiOutlineUser className="w-10 h-10 text-blue-600" />,
       title: t("profile.title"),
       desc: t("profile.desc"),
+      href: `/usercontrolpanel/myprofile?account_name=${formatTitle(
+        user?.name
+      )}&acouunt_type=${user?.account_type}&id=${user?.id}`,
     },
     {
       icon: (
@@ -37,31 +47,61 @@ export default function DashboardPage() {
       ),
       title: t("orders.title"),
       desc: t("orders.desc"),
+      href: `/usercontrolpanel/myorders?account_name=${formatTitle(
+        user?.name
+      )}&acouunt_type=${user?.account_type}&userId=${user?.id}`,
     },
     {
       icon: <HiOutlineTicket className="w-10 h-10 text-purple-600" />,
       title: t("coupons.title"),
       desc: t("coupons.desc"),
+      href: `/usercontrolpanel/ownedcoupones?account_type=${
+        user?.account_type
+      }&userId=${user?.id}&account_name=${formatTitle(
+        user?.name ?? user?.title
+      )}`,
     },
     {
       icon: <HiOutlineCalendar className="w-10 h-10 text-blue-500" />,
       title: t("bookings.title"),
       desc: t("bookings.desc"),
+      href: `/usercontrolpanel/listofreservations?account_name=${formatTitle(
+        user?.name
+      )}&acouunt_type=${user?.account_type}&userId=${user?.id}`,
     },
     {
       icon: <HiOutlineCurrencyDollar className="w-10 h-10 text-yellow-500" />,
       title: t("balance.title"),
       desc: t("balance.desc"),
+      href: `/usercontrolpanel/accountwallet?user_name=${formatTitle(
+        user?.name
+      )}&userId=${user?.id}&account_type=${user?.account_type}`,
     },
     {
       icon: <HiOutlineCash className="w-10 h-10 text-purple-500" />,
       title: t("payments.title"),
       desc: t("payments.desc"),
+      href: `/usercontrolpanel/accountwallet?user_name=${formatTitle(
+        user?.name
+      )}&userId=${user?.id}&account_type=${user?.account_type}`,
     },
     {
       icon: <HiOutlineChatAlt2 className="w-10 h-10 text-pink-500" />,
       title: t("chats.title"),
       desc: t("chats.desc"),
+      href: `/conversations?account_name=${formatTitle(
+        user?.name
+      )}&acouunt_type=${user?.account_type}&userId=${user?.id}`,
+    },
+    {
+      icon: <MdFamilyRestroom className="w-10 h-10 text-indigo-500" />,
+      title: t("familyCard.title") || "Family Members",
+      desc: t("familyCard.desc") || "Manage your family members",
+      href: `/usercontrolpanel/familymembers?account_type=${
+        user?.account_type
+      }&userId=${user?.id}&account_name=${formatTitle(
+        user?.name ?? user?.title
+      )}`,
     },
   ];
 
@@ -84,17 +124,18 @@ export default function DashboardPage() {
         <div className="min-h-[50vh] flex items-center  justify-center">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((item, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white cursor-pointer hover:bg-primary/10 duration-300 shadow-sm rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-md transition-shadow"
-              >
-                {item.icon}
-                <h2 className="text-lg font-semibold text-gray-800 mt-4">
-                  {item.title}
-                </h2>
-                <p className="text-gray-500 text-sm mt-2">{item.desc}</p>
-              </motion.div>
+              <LocaleLink href={item.href} key={i}>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-white cursor-pointer hover:bg-primary/10 duration-300 shadow-sm rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-md transition-shadow h-full"
+                >
+                  {item.icon}
+                  <h2 className="text-lg font-semibold text-gray-800 mt-4">
+                    {item.title}
+                  </h2>
+                  <p className="text-gray-500 text-sm mt-2">{item.desc}</p>
+                </motion.div>
+              </LocaleLink>
             ))}
           </div>
         </div>

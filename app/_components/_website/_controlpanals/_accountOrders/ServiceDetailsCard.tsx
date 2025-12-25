@@ -1,9 +1,10 @@
 "use client";
-import React from "react";
 import { ServiceOrder } from "./serviceOrderTypes";
 import { useLocale } from "next-intl";
-import Image from "next/image";
 import { FiBox } from "react-icons/fi";
+import Img from "../../_global/Img";
+import LocaleLink from "../../_global/LocaleLink";
+import { formatTitle } from "@/app/_helpers/helpers";
 
 interface ServiceDetailsCardProps {
   serviceOrder: ServiceOrder;
@@ -13,6 +14,9 @@ export default function ServiceDetailsCard({
   serviceOrder,
 }: ServiceDetailsCardProps) {
   const locale = useLocale();
+
+  const oneTime = locale === "ar" ? "خدمة مباشرة" : "Direct service";
+  const subscription = locale === "ar" ? "اشتراك" : "Subscription";
 
   return (
     <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
@@ -24,13 +28,11 @@ export default function ServiceDetailsCard({
         <div className="w-20 h-20 bg-gray-50 rounded-lg relative overflow-hidden shrink-0">
           {serviceOrder.service?.image ? (
             <div className="relative w-full h-full">
-              <Image
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL || ""}${
-                  serviceOrder.service.image
-                }`}
+              <Img
+                src={serviceOrder.service.image ?? "/defaults/noImage.png"}
+                errorSrc="/defaults/noImage.png"
                 alt="Service"
-                fill
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
           ) : (
@@ -41,14 +43,19 @@ export default function ServiceDetailsCard({
           )}
         </div>
         <div>
-          <h4 className="font-semibold text-gray-800 line-clamp-2">
+          <LocaleLink
+            href={`/services/${formatTitle(
+              serviceOrder.service?.slug
+            )}?serviceId=${serviceOrder.service?.id}`}
+            className="font-semibold hover:text-primary hover:underline duration-300 text-gray-800 line-clamp-2"
+          >
             {serviceOrder.service?.slug}
-          </h4>
-          <div className="text-sm text-gray-500 capitalize mt-1">
-            {serviceOrder.service?.type}
+          </LocaleLink>
+          <div className="text-sm text-gray-500 underline capitalize mt-1">
+            {serviceOrder.service?.type == "one_time" ? oneTime : subscription}
           </div>
           <div className="text-primary font-bold mt-1">
-            {serviceOrder.service?.price} {serviceOrder.invoice?.currency}
+            {serviceOrder.service?.price} {locale == "ar" ? "ر.ع" : "OMR"}
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ export default function SidbarButton() {
       {!userPanalSidebar && (
         <div
           onClick={() => dispatch(setUserPanalSidebar(!userPanalSidebar))}
-          className="w-12 h-12 opacity-80 hover:opacity-100 z-[999] fixed bottom-4 right-4 rounded-full flex items-center justify-center bg-primary text-white cursor-pointer hover:bg-orange-500 border border-primary/30"
+          className="w-12 h-12 opacity-80 hover:opacity-100 z-999 fixed bottom-4 left-4 rounded-full flex items-center justify-center bg-primary text-white cursor-pointer hover:bg-orange-500 border border-primary/30"
         >
           <TbLayoutSidebarLeftCollapseFilled className="size-6" />
         </div>

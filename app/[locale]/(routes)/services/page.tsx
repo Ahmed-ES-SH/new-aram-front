@@ -13,13 +13,21 @@ export async function generateMetadata() {
   };
 }
 
-export default async function ServicesPage() {
+export default async function ServicesPage({ params }: any) {
+  const { locale } = await params;
   // Fetch service pages from the new endpoint
   const servicesResponse = await FetchData(
     `/service-pages?is_active=true&sort_by=order&sort_order=asc`,
     true
   );
   const categories = await FetchData(`/all-public-categories`, false);
+
+  if (!servicesResponse)
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <p>No Data Found</p>
+      </div>
+    );
 
   const { data, pagination } = servicesResponse;
 

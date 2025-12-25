@@ -21,10 +21,17 @@ interface props {
 
 export default async function Navbar({ locale, user }: props) {
   const currencies = await FetchData(`/currencies`, false);
-  const notifications = await FetchData(
-    `/last-ten-notifications/${user?.id}/${user?.account_type}`,
-    false
-  );
+  let notifications: any = [];
+  try {
+    notifications = await FetchData(
+      `/last-ten-notifications/${user?.id}/${user?.account_type}`,
+      false
+    );
+  } catch (err) {
+    console.error("Failed to fetch notifications:", err);
+    // fallback empty array → يمنع retry loop
+    notifications = [];
+  }
 
   return (
     <NavDiv>

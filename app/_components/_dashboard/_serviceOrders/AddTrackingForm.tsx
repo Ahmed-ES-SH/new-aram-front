@@ -21,8 +21,6 @@ export default function AddTrackingForm({ order }: AddTrackingFormProps) {
   const [files, setFiles] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
 
-  console.log(order);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
