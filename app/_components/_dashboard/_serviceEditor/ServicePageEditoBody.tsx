@@ -1,6 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import SettingsSection from "./SettingsSection";
 import HeroSectionEditor from "./HeroSectionEditor";
 import ProblemSectionEditor from "./ProblemSectionEditor";
@@ -12,9 +12,8 @@ import FormSchemaEditor from "./FormSchemaEditor";
 import { activeSectionType, ServicePageData } from "./types";
 import GallerySectionEditor from "./GallerySectionEditor";
 import ContactMessagesSectionEditor from "./ContactMessagesSectionEditor";
-import { useAppSelector } from "@/app/Store/hooks";
-import { DEFAULT_FORM_SCHEMA, FormSchema } from "../../_dynamicForm";
 import useFetchData from "@/app/_helpers/FetchDataWithAxios";
+import LoadingSpin from "../../LoadingSpin";
 
 interface ServicePageEditoBodyProps {
   activeSection: activeSectionType;
@@ -35,7 +34,10 @@ export default function ServicePageEditoBody({
   formSchema,
   onFormSchemaChange,
 }: ServicePageEditoBodyProps) {
-  const { data: categories } = useFetchData("/service-categories", false);
+  const { data: categories, loading } = useFetchData(
+    "/all-service-categories",
+    false
+  );
 
   const updateFormSchema = (schema: ServicePageData["form"]) => {
     onFormSchemaChange(schema);
@@ -51,6 +53,8 @@ export default function ServicePageEditoBody({
     serServiceData((prev) => ({ ...prev, [field]: data }));
     setHasChanges(true);
   };
+
+  if (loading) return <LoadingSpin />;
 
   return (
     <AnimatePresence mode="wait">

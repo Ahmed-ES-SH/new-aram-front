@@ -6,10 +6,11 @@ import { ServicePageData } from "./types";
 import EditVideoPopup from "../_editherovideosection/EditVideoPopup";
 import { FaPen } from "react-icons/fa";
 import { formatTitle } from "@/app/_helpers/helpers";
+import { category } from "@/app/types/_dashboard/GlobalTypes";
 
 interface SettingsSectionProps {
   serviceData: ServicePageData;
-  categories: any[];
+  categories: category[];
   onChange: (value: any, field: string) => void;
   mode: "edit" | "create";
 }

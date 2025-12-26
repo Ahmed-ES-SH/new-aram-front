@@ -13,7 +13,7 @@ export const useOrganizationForm = () => {
   const organizationId = params.organizationId as string;
 
   // Redux & Local State
-  const { data: allCategories } = useFetchData(`/categories`, false);
+  const { data: allCategories } = useFetchData(`/all-public-categories`, false);
   const [allSubCategories, setAllSubCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,7 +68,7 @@ export const useOrganizationForm = () => {
         setIsLoading(true);
         const [orgRes, subCatRes] = await Promise.all([
           instance.get(`/organizations/${organizationId}`),
-          instance.get(`/sub-categories`),
+          instance.get(`/all-public-sub-categories`),
         ]);
 
         const orgData = orgRes.data.data;

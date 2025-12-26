@@ -10,14 +10,13 @@ import {
   FormValues,
 } from "../../organizations/[organizationId]/_components/schema";
 import { STEPS } from "../../organizations/[organizationId]/_components/stepsConfig";
+import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 
 export const useAddOrganizationForm = () => {
   const router = useRouter();
 
   // Redux & Local State
-  const { categories: allCategories } = useAppSelector(
-    (state) => state.categories
-  );
+  const { data: allCategories } = useFetchData(`/all-public-categories`, false);
   const [allSubCategories, setAllSubCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true); // fetching subcategories
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,7 +66,7 @@ export const useAddOrganizationForm = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const subCatRes = await instance.get(`/sub-categories`);
+        const subCatRes = await instance.get(`/all-public-sub-categories`);
         setAllSubCategories(subCatRes.data.data);
       } catch (error) {
         console.error("Error fetching data", error);

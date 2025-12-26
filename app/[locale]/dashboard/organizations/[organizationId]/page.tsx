@@ -41,8 +41,6 @@ export default function OrganizationPage() {
 
   const isEmailVerified = formData.email_verified ?? false;
 
-  console.log(formData);
-
   if (isLoading) return <LoadingSpin />;
 
   return (

@@ -76,6 +76,8 @@ export default function CategorySelect({
     return String(opt.id);
   };
 
+  console.log(options);
+
   const selected =
     value != null
       ? options.find((o) => String(o.id) === String(value)) || null

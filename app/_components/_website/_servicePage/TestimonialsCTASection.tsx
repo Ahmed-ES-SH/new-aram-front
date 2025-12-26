@@ -131,6 +131,8 @@ export default function TestimonialsCTASection({
     ctaButton2: cta?.ctaButton2 || defaults.ctaButton2,
   };
 
+  console.log(ctaData);
+
   // Combined object for child components
   const t = {
     stats: statsData,

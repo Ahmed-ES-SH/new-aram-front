@@ -198,18 +198,20 @@ export default function CenterDetails({
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
                     {organization.title}
                   </h1>
-                  <span
-                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-white text-sm font-medium w-fit"
-                    style={{
-                      backgroundColor: `${organization.category.bg_color}30`,
-                      color: organization.category.bg_color,
-                    }}
-                  >
-                    <FaUtensils className="w-4 h-4" />
-                    {locale == "en"
-                      ? organization.category.title_en
-                      : organization.category.title_ar}
-                  </span>
+                  {organization && organization.category && (
+                    <span
+                      className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-white text-sm font-medium w-fit"
+                      style={{
+                        backgroundColor: `${organization.category.bg_color}30`,
+                        color: organization.category.bg_color,
+                      }}
+                    >
+                      <FaUtensils className="w-4 h-4" />
+                      {locale == "en"
+                        ? organization.category.title_en
+                        : organization.category.title_ar}
+                    </span>
+                  )}
                 </div>
               </div>
 
