@@ -6,7 +6,18 @@ import { FiInbox } from "react-icons/fi";
 export default async function ServiceOrders() {
   const response = await FetchData(`/all-service-orders`, true);
 
-  if (!response) return <div>no Data Found</div>;
+  console.log(response);
+  if (!response)
+    return (
+      <div className="flex items-center justify-center min-h-screen w-full">
+        <div className="flex flex-col items-center gap-2">
+          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+            <FiInbox className="text-gray-400 size-32" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900">لا يوجد طلبات</h3>
+        </div>
+      </div>
+    );
 
   const { data: orders, pagination } = await response;
 
@@ -20,10 +31,10 @@ export default async function ServiceOrders() {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
             <FiInbox className="text-primary" />
-            Service Orders
+            الطلبات
           </h1>
           <div className="text-sm text-gray-500">
-            Total Orders: {orders?.length || 0}
+            إجمالي الطلبات: {orders?.length || 0}
           </div>
         </div>
 
@@ -38,10 +49,8 @@ export default async function ServiceOrders() {
             <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
               <FiInbox size={32} className="text-gray-400" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900">No Orders Found</h3>
-            <p className="text-gray-500 text-sm mt-1">
-              Try adjusting your filters
-            </p>
+            <h3 className="text-lg font-bold text-gray-900">لا يوجد طلبات</h3>
+            <p className="text-gray-500 text-sm mt-1">حاول تغيير الفلاتر</p>
           </div>
         )}
       </div>

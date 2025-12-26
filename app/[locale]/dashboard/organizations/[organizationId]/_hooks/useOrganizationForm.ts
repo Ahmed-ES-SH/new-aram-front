@@ -1,12 +1,11 @@
+"use client";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { z } from "zod";
 import { instance } from "@/app/_helpers/axios";
-import { useAppSelector } from "@/app/Store/hooks";
 import { formSchema, FormValues } from "../_components/schema";
-
 import { STEPS } from "../_components/stepsConfig";
+import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 
 export const useOrganizationForm = () => {
   const params = useParams();
@@ -14,9 +13,7 @@ export const useOrganizationForm = () => {
   const organizationId = params.organizationId as string;
 
   // Redux & Local State
-  const { categories: allCategories } = useAppSelector(
-    (state) => state.categories
-  );
+  const { data: allCategories } = useFetchData(`/categories`, false);
   const [allSubCategories, setAllSubCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,7 +68,7 @@ export const useOrganizationForm = () => {
         setIsLoading(true);
         const [orgRes, subCatRes] = await Promise.all([
           instance.get(`/organizations/${organizationId}`),
-          instance.get(`/all-public-sub-categories`),
+          instance.get(`/sub-categories`),
         ]);
 
         const orgData = orgRes.data.data;

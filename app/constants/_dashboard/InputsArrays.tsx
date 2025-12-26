@@ -102,7 +102,7 @@ export const Categoryinputs = [
   {
     name: "image",
     type: "file",
-    fildType: "normal-image",
+    fildType: "user-image",
     label: { ar: "صورة القسم", en: "" },
   },
   {
@@ -255,7 +255,7 @@ export const addCategoryinputs = [
   {
     name: "image",
     type: "file",
-    fildType: "normal-image",
+    fildType: "user-image",
     label: { ar: "صورة القسم", en: "" },
   },
   {

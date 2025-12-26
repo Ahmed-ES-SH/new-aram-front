@@ -71,11 +71,13 @@ export default function PublicServiceCard({
       {/* Card content */}
       <div className="p-5 flex-1 flex flex-col">
         {/* Category */}
-        <span className="text-xs text-teal-600 font-medium uppercase tracking-wide">
-          {locale === "ar"
-            ? service.category.title_ar
-            : service.category.title_en}
-        </span>
+        {service.category && (
+          <span className="text-xs text-teal-600 font-medium uppercase tracking-wide">
+            {locale === "ar"
+              ? service.category.title_ar
+              : service.category.title_en}
+          </span>
+        )}
 
         {/* Title */}
         <LocaleLink

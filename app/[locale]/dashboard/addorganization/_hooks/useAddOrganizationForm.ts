@@ -67,7 +67,7 @@ export const useAddOrganizationForm = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const subCatRes = await instance.get(`/all-public-sub-categories`);
+        const subCatRes = await instance.get(`/sub-categories`);
         setAllSubCategories(subCatRes.data.data);
       } catch (error) {
         console.error("Error fetching data", error);

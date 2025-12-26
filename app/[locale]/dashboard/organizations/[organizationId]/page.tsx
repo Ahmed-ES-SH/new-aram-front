@@ -111,7 +111,7 @@ export default function OrganizationPage() {
             {activeStep === "categories" && (
               <CategoriesSection
                 formData={formData}
-                allCategories={allCategories}
+                allCategories={allCategories as any}
                 allSubCategories={allSubCategories}
                 toggleCategory={toggleCategory}
                 toggleSubCategory={toggleSubCategory}

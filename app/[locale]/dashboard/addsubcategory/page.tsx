@@ -4,13 +4,13 @@ import FetchData from "@/app/_helpers/FetchData";
 export default async function page({ searchParams }: any) {
   const { parentId } = await searchParams;
 
-  const categories = await FetchData(`/all-public-categories`, false);
+  const categories = await FetchData(`/categories`, false);
 
   const addCategoryinputs = [
     {
       name: "image",
       type: "file",
-      fildType: "normal-image",
+      fildType: "user-image",
       label: { ar: "صورة القسم", en: "" },
     },
     {

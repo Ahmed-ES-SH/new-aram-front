@@ -42,7 +42,7 @@ export default async function Conversation({ searchParams, params }: any) {
       {/* conversations sidebar */}
       <ConversationsSidebar data={data} />
       {/* main conversation content */}
-      <ChatPage conversation={conversation} />
+      <ChatPage key={conversation.id} conversation={conversation} />
     </div>
   );
 }

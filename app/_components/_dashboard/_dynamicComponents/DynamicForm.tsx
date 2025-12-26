@@ -834,7 +834,7 @@ export default function DynamicForm({
             return (
               <div
                 key={index}
-                className="flex flex-col items-center justify-center my-6 group"
+                className="flex flex-col items-center justify-center my-6 group w-fit ml-auto"
               >
                 <div
                   onClick={() => openImageinput.current?.click()}

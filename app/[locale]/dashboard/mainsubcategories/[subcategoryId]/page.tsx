@@ -3,7 +3,7 @@ import FetchData from "@/app/_helpers/FetchData";
 
 export default async function page({ params }: any) {
   const { subcategoryId } = await params;
-  const categories = await FetchData(`/all-public-categories`, false);
+  const categories = await FetchData(`/categories`, false);
 
   const addCategoryinputs = [
     {

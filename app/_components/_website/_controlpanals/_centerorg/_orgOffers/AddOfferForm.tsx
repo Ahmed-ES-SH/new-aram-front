@@ -30,7 +30,7 @@ export default function AddOfferForm() {
   const router = useRouter();
 
   const { data, loading: catsLoading } = useFetchData<category[]>(
-    `/all-public-categories`,
+    `/categories`,
     false
   );
 

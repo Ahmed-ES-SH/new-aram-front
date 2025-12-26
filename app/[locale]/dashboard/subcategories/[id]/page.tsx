@@ -3,13 +3,13 @@ import FetchData from "@/app/_helpers/FetchData";
 
 export default async function SubCategoryPage({ params }: any) {
   const { id } = await params;
-  const categories = await FetchData(`/all-public-categories`, false);
+  const categories = await FetchData(`/categories`, false);
 
   const addCategoryinputs = [
     {
       name: "image",
       type: "file",
-      fildType: "normal-image",
+      fildType: "user-image",
       label: { ar: "صورة القسم", en: "" },
     },
     {

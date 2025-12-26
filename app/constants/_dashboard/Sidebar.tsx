@@ -37,6 +37,7 @@ import {
   MdOutlineAddToPhotos,
   MdOutlineDashboard,
   MdOutlineDesignServices,
+  MdOutlineLibraryAdd,
   MdOutlineSyncProblem,
 } from "react-icons/md";
 import { PiCards, PiCardsThreeLight, PiUsersThreeFill } from "react-icons/pi";
@@ -183,6 +184,16 @@ export const pages = [
         title: "طلبات الخدمات",
         icon: <MdOutlineSyncProblem className={iconStyle} />,
         to: "/dashboard/serviceorders",
+      },
+      {
+        title: "أقسام الخدمات",
+        icon: <IoLayers className={iconStyle} />,
+        to: "/dashboard/servicecategories",
+      },
+      {
+        title: "أضف قسم جديد",
+        icon: <MdOutlineLibraryAdd className={iconStyle} />,
+        to: "/dashboard/addservicecategory",
       },
     ],
   },

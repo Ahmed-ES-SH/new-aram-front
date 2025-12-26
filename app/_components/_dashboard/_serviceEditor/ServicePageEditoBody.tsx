@@ -14,6 +14,7 @@ import GallerySectionEditor from "./GallerySectionEditor";
 import ContactMessagesSectionEditor from "./ContactMessagesSectionEditor";
 import { useAppSelector } from "@/app/Store/hooks";
 import { DEFAULT_FORM_SCHEMA, FormSchema } from "../../_dynamicForm";
+import useFetchData from "@/app/_helpers/FetchDataWithAxios";
 
 interface ServicePageEditoBodyProps {
   activeSection: activeSectionType;
@@ -34,7 +35,7 @@ export default function ServicePageEditoBody({
   formSchema,
   onFormSchemaChange,
 }: ServicePageEditoBodyProps) {
-  const { categories } = useAppSelector((state) => state.categories);
+  const { data: categories } = useFetchData("/service-categories", false);
 
   const updateFormSchema = (schema: ServicePageData["form"]) => {
     onFormSchemaChange(schema);
@@ -63,7 +64,7 @@ export default function ServicePageEditoBody({
         {activeSection === "settings" && (
           <SettingsSection
             serviceData={serviceData}
-            categories={categories}
+            categories={categories as any}
             onChange={handleUpdateSettings}
             mode={mode}
           />

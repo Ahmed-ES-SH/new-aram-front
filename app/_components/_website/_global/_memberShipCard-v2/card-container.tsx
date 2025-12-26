@@ -45,7 +45,7 @@ export function CardContainer({
 
   return (
     <motion.div
-      className="relative w-full w-full aspect-[1.6/1] cursor-pointer"
+      className="relative w-full  lg:aspect-[1.6/1] cursor-pointer"
       style={{ perspective: 1000 }}
       onMouseMove={handleMouseMove}
       onMouseEnter={onHoverStart}

@@ -221,17 +221,19 @@ export default function ServiceDashCard({ service, setServices }: props) {
                 : service.description}
             </p>
 
-            <div
-              style={{
-                background: `${service.category.bg_color}20`,
-                color: `${service.category.bg_color}`,
-              }}
-              className="p-2 rounded-md flex items-center justify-center w-fit ml-auto"
-            >
-              <p className="text-sm text-gray-500">
-                {service.category.title_ar}
-              </p>
-            </div>
+            {service.category && (
+              <div
+                style={{
+                  background: `${service.category.bg_color}20`,
+                  color: `${service.category.bg_color}`,
+                }}
+                className="p-2 rounded-md flex items-center justify-center w-fit ml-auto"
+              >
+                <p className="text-sm text-gray-500">
+                  {service.category.title_ar}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Creator */}

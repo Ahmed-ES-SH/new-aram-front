@@ -25,7 +25,7 @@ export default function SubCategoryMultiSelect({
   mode,
 }: Props) {
   const { data: subCategories } = useFetchData<SubCategory[]>(
-    `/all-public-sub-categories`,
+    `/sub-categories`,
     false
   );
   // الحالة المحلية للأقسام المحددة

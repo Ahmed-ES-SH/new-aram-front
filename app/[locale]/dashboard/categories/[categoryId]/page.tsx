@@ -36,7 +36,7 @@ export default async function CategoryPage({ params }: any) {
         updateEndPoint={"/update-category"}
         id={categoryId}
         inputsData={addCategoryinputs}
-        direct={"/en/dashboard/categories"}
+        direct={"/ar/dashboard/categories"}
       />
     </>
   );

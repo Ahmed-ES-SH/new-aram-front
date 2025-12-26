@@ -20,7 +20,7 @@ export default async function ServicesPage({ params }: any) {
     `/service-pages?is_active=true&sort_by=order&sort_order=asc`,
     true
   );
-  const categories = await FetchData(`/all-public-categories`, false);
+  const categories = await FetchData(`/all-service-public-categories`, false);
 
   if (!servicesResponse)
     return (

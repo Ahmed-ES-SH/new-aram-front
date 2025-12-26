@@ -178,11 +178,13 @@ export default function ServicePageCard({
           </h3>
 
           {/* Category Badge */}
-          <div className="mb-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-linear-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-lg text-sm font-medium border border-blue-100">
-              {servicePage.category.title_ar}
-            </span>
-          </div>
+          {servicePage.category && (
+            <div className="mb-4">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-linear-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-lg text-sm font-medium border border-blue-100">
+                {servicePage.category.title_ar}
+              </span>
+            </div>
+          )}
 
           {/* Price Section */}
           <div className="flex items-center gap-3 mb-4">

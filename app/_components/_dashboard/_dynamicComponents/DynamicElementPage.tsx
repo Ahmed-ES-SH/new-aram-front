@@ -753,7 +753,7 @@ export default function DynamicElementPage({
               return (
                 <div
                   key={index}
-                  className="flex flex-col items-center justify-center my-6 group"
+                  className="flex flex-col items-center justify-center my-6 group w-fit ml-auto"
                 >
                   <div
                     onClick={() => openImageinput.current?.click()}
@@ -1026,7 +1026,7 @@ export default function DynamicElementPage({
             if (input.fildType == "icon-fild") {
               const Icon = getIconComponent(form[input.name]);
               return (
-                <div key={index} className="w-full group">
+                <div key={index} className="w-fit ml-auto group">
                   <label
                     htmlFor={input.name}
                     className="block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-primary transition-colors duration-200"
