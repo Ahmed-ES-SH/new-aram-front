@@ -84,8 +84,15 @@ export default function FreeCardPopup({
       }
     } catch (error: any) {
       console.log(error);
-      const message = error?.response?.data?.message ?? "حدث خطأ";
-      toast.error(message);
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message;
+
+      if (status === 403) {
+        // Authorization error - coupon not assigned to user
+        toast.error(message || "هذا الكوبون غير مخصص لك");
+      } else {
+        toast.error(message ?? "حدث خطأ");
+      }
     } finally {
       setLoading(false);
     }

@@ -54,6 +54,7 @@ export default async function CenterOwnedCoupones({ searchParams }: any) {
               <CouponCard
                 key={`CouponCard.id+${coupon.title}`}
                 coupon={coupon}
+                accountType={type}
               />
             ))}
           </div>

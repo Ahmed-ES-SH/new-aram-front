@@ -55,13 +55,15 @@ export interface AdminService {
   category_id: number;
   created_at: string;
   updated_at: string;
+  image: string;
   gallery_images: GalleryImage[];
 }
 
 export interface AdminInvoice {
   id: number;
+  invoice_number: string;
   number: string;
-  total: string;
+  total_invoice: string;
   before_discount: string | null;
   discount: string | null;
   ref_code: string | null;

@@ -9,9 +9,7 @@ import {
   FiSettings,
   FiCheck,
   FiX,
-  FiEye,
   FiEyeOff,
-  FiList,
 } from "react-icons/fi";
 
 import { AVAILABLE_FORM_FIELDS } from "@/app/_components/_dynamicForm/types";
@@ -255,27 +253,6 @@ export default function FormSchemaEditor({
                     className="overflow-hidden"
                   >
                     <div className="mt-4 pt-4 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Key (Internal Name) */}
-                      <div className="col-span-2">
-                        <label className="block text-xs font-medium text-gray-600 mb-1">
-                          مفتاح الحقل (للبرمجة - بالانجليزية)
-                        </label>
-                        <input
-                          type="text"
-                          value={field.name}
-                          onChange={(e) =>
-                            updateField(field.id, {
-                              name: e.target.value.replace(
-                                /[^a-zA-Z0-9_]/g,
-                                ""
-                              ),
-                            })
-                          }
-                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono text-gray-600 bg-gray-50"
-                          dir="ltr"
-                        />
-                      </div>
-
                       {/* Label AR */}
                       <div>
                         <label className="block text-xs font-medium text-gray-600 mb-1">

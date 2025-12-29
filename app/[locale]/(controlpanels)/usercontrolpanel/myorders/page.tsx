@@ -5,7 +5,6 @@ import NoOrders from "@/app/_components/_website/_controlpanals/NoOrders";
 export default async function MyOrdersPage({ params }: any) {
   const { locale } = await params;
   const response = await FetchData(`/user-service-orders`, true);
-
   if (!response) return <NoOrders />;
 
   const { data, pagination } = await response;

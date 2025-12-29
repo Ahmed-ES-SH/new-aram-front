@@ -251,7 +251,7 @@ export const useDynamicServiceForm = ({
   );
 
   // 5. Submit
-  const handleSubmit = async (e: React.FormEvent, summary) => {
+  const handleSubmit = async (e: React.FormEvent, summary, files?: File[]) => {
     e.preventDefault();
     if (!schema) return;
 
@@ -280,6 +280,11 @@ export const useDynamicServiceForm = ({
       formData.append("data_type", "service");
       formData.append("invoice_type", "service");
       formData.append("payment_method", "thawani");
+      if (summary && Array.isArray(summary) && summary.length > 0) {
+        summary.forEach((item) => {
+          if (item.file) formData.append("files[]", item.file);
+        });
+      }
       if (user) formData.append("account_type", user.account_type);
       if (user) formData.append("user_id", user.id.toString());
       if (service.price)

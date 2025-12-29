@@ -129,14 +129,25 @@ export default function PricingSidebar({
 
               {/* Coupon Button */}
               <motion.button
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={onCouponClick}
-                className="w-full py-4 px-6 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 bg-linear-to-r from-primary via-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300"
+                whileHover={!isInCart ? { scale: 1.02, y: -2 } : {}}
+                whileTap={!isInCart ? { scale: 0.98 } : {}}
+                onClick={isInCart ? undefined : onCouponClick}
+                disabled={isInCart}
+                className={`w-full py-4 px-6 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 ${
+                  isInCart
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-linear-to-r from-primary via-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40"
+                }`}
               >
                 <BiSolidOffer className="text-2xl" />
                 <span>
-                  {locale === "en" ? "Have a Coupon?" : "لديك كوبون ؟"}
+                  {isInCart
+                    ? locale === "en"
+                      ? "Card is in Cart"
+                      : "البطاقة في السلة"
+                    : locale === "en"
+                    ? "Have a Coupon?"
+                    : "لديك كوبون ؟"}
                 </span>
               </motion.button>
             </div>

@@ -4,6 +4,7 @@ import { ServiceTrackingFile } from "./types";
 import Image from "next/image";
 import { FiDownload, FiFile, FiEye, FiX } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
+import Img from "../../_website/_global/Img";
 
 interface FileRendererProps {
   file: ServiceTrackingFile;
@@ -14,7 +15,7 @@ export default function FileRenderer({ file }: FileRendererProps) {
   const isImage = file.mime_type?.startsWith("image/");
 
   // Construct URL - abstract this logic if consistent across app
-  const fileUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ""}/${file.path}`;
+  const fileUrl = file.path;
 
   const downloadFile = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -92,7 +93,7 @@ export default function FileRenderer({ file }: FileRendererProps) {
       <AnimatePresence>
         {showPreview && isImage && (
           <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-999999 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
             onClick={() => setShowPreview(false)}
           >
             <motion.div
@@ -110,8 +111,9 @@ export default function FileRenderer({ file }: FileRendererProps) {
               </button>
 
               <div className="relative w-full h-[80vh] bg-transparent rounded-lg overflow-hidden flex items-center justify-center">
-                <img // using img for full control over object-contain behavior in modal often easier than Next Image filling parent
-                  src={fileUrl}
+                <Img // using img for full control over object-contain behavior in modal often easier than Next Image filling parent
+                  src={fileUrl ?? "/defaults/noImage.png"}
+                  errorSrc="/defaults/noImage.png"
                   alt={file.original_name}
                   className="max-w-full max-h-full object-contain shadow-2xl"
                 />
@@ -122,7 +124,7 @@ export default function FileRenderer({ file }: FileRendererProps) {
                   onClick={downloadFile}
                   className="flex items-center gap-2 bg-white text-gray-900 px-6 py-2.5 rounded-full hover:bg-gray-100 transition-colors font-medium shadow-lg"
                 >
-                  <FiDownload /> Download Original
+                  <FiDownload /> تحميل الصورة
                 </button>
               </div>
             </motion.div>

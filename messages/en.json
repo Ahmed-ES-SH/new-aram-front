@@ -287,6 +287,25 @@
     "submit": "Confirm"
   },
 
+  "distributeCoupon": {
+    "title": "Distribute Coupon",
+    "searchPlaceholder": "Search by name, email, or phone...",
+    "noUsers": "No users found",
+    "noName": "No name",
+    "noContact": "No contact info",
+    "selectUserFirst": "Please select a user first",
+    "success": "Coupon distributed successfully",
+    "forbidden": "You are not authorized to distribute this coupon",
+    "validationError": "Validation error in the input data",
+    "error": "An error occurred while distributing the coupon",
+    "cancel": "Cancel",
+    "distribute": "Distribute",
+    "currentUsage": "Current Coupon Usage",
+    "enterUsage": "Enter usage count...",
+    "noUsersFound": "No matching users found",
+    "startSearch": "Please search to show users"
+  },
+
   "about": {
     "title": "About Our Platform",
     "subtitle": "Connecting businesses and customers seamlessly",
@@ -1154,7 +1173,8 @@
     "from": "From",
     "to": "To",
     "usage": "Usage",
-    "unlimited": "Unlimited"
+    "unlimited": "Unlimited",
+    "distribute": "Distribute Coupon"
   },
   "couponPopup": {
     "discount": "Discount",

@@ -8,6 +8,7 @@ interface CategoryType {
   bg_color: string;
   image: string;
   sub_categories_count?: number;
+  organizations_count?: number;
 }
 
 export default function CategoriesDashboardPage() {
@@ -18,6 +19,7 @@ export default function CategoriesDashboardPage() {
     "العوان (AR)",
     "لون الخلفية",
     "عدد الأقسام الفرعية",
+    "عدد المراكز المرتبطة",
     "ايقونة القسم",
     "تاريخ الانشاء",
   ];
@@ -28,6 +30,7 @@ export default function CategoriesDashboardPage() {
     { key: "title_ar", cellType: "text" },
     { key: "bg_color", cellType: "color" },
     { key: "sub_categories_count", cellType: "text" },
+    { key: "organizations_count", cellType: "text" },
     { key: "icon_name", cellType: "icon" },
     {
       key: "created_at",

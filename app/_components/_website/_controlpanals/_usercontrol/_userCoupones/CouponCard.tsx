@@ -7,8 +7,10 @@ import { useState } from "react";
 import CouponPopup from "./CouponPopup";
 import { BsEye } from "react-icons/bs";
 import { CiCreditCard1 } from "react-icons/ci";
+import { FiSend } from "react-icons/fi";
 import { truncateContent } from "@/app/_helpers/helpers";
 import Img from "../../../_global/Img";
+import DistributeCouponModal from "./DistributeCouponModal";
 
 interface CouponProps {
   coupon: {
@@ -26,12 +28,16 @@ interface CouponProps {
     usage_limit: number | null;
     usage_count: number;
   };
+  accountType?: string;
 }
 
-export default function CouponCard({ coupon }: CouponProps) {
+export default function CouponCard({ coupon, accountType }: CouponProps) {
   const t = useTranslations("couponCard");
   const [copied, setCopied] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showDistributeModal, setShowDistributeModal] = useState(false);
+
+  const isOrganization = accountType === "organization";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(coupon.code);
@@ -158,11 +164,34 @@ export default function CouponCard({ coupon }: CouponProps) {
         <div className="mt-4 bg-blue-50 border border-dashed border-blue-400 text-blue-800 text-center py-2 rounded-lg font-semibold text-sm tracking-wide">
           {coupon.code}
         </div>
+
+        {/* Distribute Button - Only for organizations */}
+        {isOrganization && coupon.status === "active" && (
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowDistributeModal(true)}
+            className="mt-3 w-full flex items-center justify-center gap-2 bg-linear-to-r from-primary to-orange-500 text-white py-2.5 rounded-lg font-medium hover:from-orange-500 hover:to-primary transition-all duration-300"
+          >
+            <FiSend className="w-4 h-4" />
+            {t("distribute") || "توزيع الكوبون"}
+          </motion.button>
+        )}
       </div>
 
       {/* Hover Popup */}
       {showPopup && (
         <CouponPopup onClose={() => setShowPopup(false)} coupon={coupon} />
+      )}
+
+      {/* Distribute Modal */}
+      {showDistributeModal && (
+        <DistributeCouponModal
+          isOpen={showDistributeModal}
+          onClose={() => setShowDistributeModal(false)}
+          couponId={coupon.id}
+          couponTitle={coupon.title}
+        />
       )}
     </motion.div>
   );

@@ -5,12 +5,12 @@ export interface ServiceOrder {
   status: "pending" | "paid" | "cancelled" | string;
   invoice_id: number;
   service_page_id: number;
-
   metadata: ProvisionalMetadata;
-
+  subscription_status: "active" | "expired";
+  subscription_start_time: string;
+  subscription_end_time: string;
   created_at: string;
   updated_at: string;
-
   service: Service;
   invoice: Invoice;
 }

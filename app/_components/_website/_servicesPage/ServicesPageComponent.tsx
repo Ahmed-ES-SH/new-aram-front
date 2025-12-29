@@ -2,15 +2,15 @@
 
 import { useState, useEffect, useRef } from "react";
 import { directionMap } from "@/app/constants/_website/global";
+import { useLocale } from "next-intl";
+import { Service } from "./service";
+import { category } from "@/app/types/_dashboard/GlobalTypes";
+import { instance } from "@/app/_helpers/axios";
 import HeroSection from "@/app/_components/_website/_servicesPage/hero-section";
 import SearchBar from "@/app/_components/_website/_servicesPage/search-bar";
 import CategoryFilter from "@/app/_components/_website/_servicesPage/category-filter";
 import ServicesList from "@/app/_components/_website/_servicesPage/services-list";
 import WhyChooseUs from "@/app/_components/_website/_servicesPage/why-choose-us";
-import { useLocale } from "next-intl";
-import { Service } from "./service";
-import { category } from "@/app/types/_dashboard/GlobalTypes";
-import { instance } from "@/app/_helpers/axios";
 
 interface props {
   servicesData: Service[];
@@ -122,7 +122,7 @@ export default function ServicesPageComponent({
 
       {/* Category filter */}
       <CategoryFilter
-        categories={categories}
+        categories={categories ?? []}
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
         locale={locale}

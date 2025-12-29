@@ -58,6 +58,7 @@ export const StepSummary = ({
           label: field.label,
           value: displayValue,
           type: field.type,
+          file: value instanceof File ? value : null,
         };
       })
       .filter((item) => item !== null);

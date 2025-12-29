@@ -5,6 +5,7 @@ import { addCategoryinputs } from "@/app/constants/_dashboard/InputsArrays";
 import FetchData from "@/app/_helpers/FetchData";
 import { CiCirclePlus } from "react-icons/ci";
 import LocaleLink from "@/app/_components/_website/_global/LocaleLink";
+import OrganizationsPopup from "@/app/_components/_dashboard/OrganizationsPopup";
 
 export default async function CategoryPage({ params }: any) {
   const { categoryId } = await params;
@@ -30,6 +31,7 @@ export default async function CategoryPage({ params }: any) {
           أضف قسم فرعى
           <CiCirclePlus className="size-6" />
         </LocaleLink>
+        <OrganizationsPopup organizations={category?.organizations ?? []} />
       </div>
       <DynamicElementPage
         api={"/category"}

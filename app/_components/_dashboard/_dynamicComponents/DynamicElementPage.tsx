@@ -267,7 +267,7 @@ export default function DynamicElementPage({
   const handleChangeIcon = (iconName: string) => {
     setSelectedIcon(iconName);
     setUpdatedData({ ...updatedData, icon_name: iconName });
-    setForm({ ...updatedData, icon_name: iconName });
+    setForm((prevForm: any) => ({ ...prevForm, icon_name: iconName }));
     setShowIconPicker(false);
   };
 
