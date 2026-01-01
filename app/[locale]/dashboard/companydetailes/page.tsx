@@ -96,8 +96,8 @@ export default function CompanyDetails() {
 
       const updatedSections = sections.map((section) => ({
         ...section,
-        contentEn: data[`${section.id}_contnet_en`] || "",
-        contentAr: data[`${section.id}_contnet_ar`] || "",
+        contentEn: data[`${section.id}_content_en`] || "",
+        contentAr: data[`${section.id}_content_ar`] || "",
         titleAr: data[`${section.id}_title_ar`] || "",
         titleEn: data[`${section.id}_title_en`] || "",
         image: data[`${section.id}_image`] || null,

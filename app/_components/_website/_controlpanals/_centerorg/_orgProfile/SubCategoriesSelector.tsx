@@ -1,13 +1,12 @@
-"use client";
 import { getIconComponent } from "@/app/_helpers/helpers";
-import { category } from "@/app/types/_dashboard/GlobalTypes";
+import { subCategory } from "@/app/types/_dashboard/GlobalTypes";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 
 interface props {
-  selectedSubCategories: category[];
-  setSelectedSubCategories: Dispatch<SetStateAction<category[]>>;
-  allSubCategories: category[];
+  selectedSubCategories: subCategory[];
+  setSelectedSubCategories: Dispatch<SetStateAction<subCategory[]>>;
+  allSubCategories: subCategory[];
   t: any;
 }
 

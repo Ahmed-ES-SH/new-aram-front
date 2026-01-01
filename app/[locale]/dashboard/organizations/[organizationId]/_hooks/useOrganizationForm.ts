@@ -13,7 +13,10 @@ export const useOrganizationForm = () => {
   const organizationId = params.organizationId as string;
 
   // Redux & Local State
-  const { data: allCategories } = useFetchData(`/all-public-categories`, false);
+  const { data: allCategories } = useFetchData(
+    `/categories-with-subcategories`,
+    false
+  );
   const [allSubCategories, setAllSubCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,17 +69,14 @@ export const useOrganizationForm = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const [orgRes, subCatRes] = await Promise.all([
+        const [orgRes] = await Promise.all([
           instance.get(`/organizations/${organizationId}`),
-          instance.get(`/all-public-sub-categories`),
         ]);
 
         const orgData = orgRes.data.data;
 
         // Set email verified status
-        setIsEmailVerified(
-          !!orgData.email_verified_at || !!orgData.email_verified
-        );
+        setIsEmailVerified(orgData.email_verified == "1" ? true : false);
 
         // Prepare initial form data
         const initialLocation =
@@ -115,8 +115,6 @@ export const useOrganizationForm = () => {
         // Set images
         setLogoPreview(orgData.logo);
         setCoverPreview(orgData.image);
-
-        setAllSubCategories(subCatRes.data.data);
       } catch (error) {
         console.error("Error fetching data", error);
         toast.error("Failed to load organization data");

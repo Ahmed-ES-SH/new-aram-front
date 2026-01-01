@@ -9,6 +9,7 @@ import {
   FaSnapchat,
   FaEnvelope,
 } from "react-icons/fa";
+import { TbBrandOffice } from "react-icons/tb";
 
 export const addUserinputs = [
   {
@@ -211,6 +212,12 @@ export const socialContactInfoInputs = [
     name: "gmail_account",
     icon: <FaEnvelope className="text-red-500 text-xl" />,
     placeholder: "Gmail Account",
+    type: "email",
+  },
+  {
+    name: "official_account",
+    icon: <TbBrandOffice className="text-red-500 text-xl" />,
+    placeholder: "Official Account",
     type: "email",
   },
   {

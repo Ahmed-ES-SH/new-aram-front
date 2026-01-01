@@ -1,58 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { socialContactInfoInputs } from "@/app/constants/_dashboard/InputsArrays";
 import { motion } from "framer-motion";
+import { VscLoading } from "react-icons/vsc";
 import { instance } from "@/app/_helpers/axios";
 import LoadingSpin from "@/app/_components/LoadingSpin";
 import SuccessAlart from "@/app/_components/_popups/SuccessAlart";
-import { socialContactInfoInputs } from "@/app/constants/_dashboard/InputsArrays";
 import useFetchData from "@/app/_helpers/FetchDataWithAxios";
-import { VscLoading } from "react-icons/vsc";
-import { toast } from "sonner";
-
-interface dataType {
-  id: number;
-  facebook_account: string | null;
-  instgram_account: string | null;
-  snapchat_account: string | null;
-  tiktok_account: string | null;
-  x_account: string | null; // Twitter (X)
-  youtube_account: string | null;
-  gmail_account: string | null;
-  whatsapp_number: string | null;
-  created_at: string; // ISO date string
-  updated_at: string; // ISO date string
-}
 
 export default function EditSocialContactInfo() {
-  const { loading, data } = useFetchData<dataType>(
-    "/social-contact-info",
-    false
-  );
+  const { loading, data } = useFetchData<any>("/social-contact-info", false);
 
   const [accounts, setAccounts] = useState({});
-  const [updateloading, setUpdateloading] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setAccounts({ ...data, [name]: value });
+    setAccounts((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // ✅ تحقق إذا تم تعديل القيم فعلاً
-    const hasChanged = Object.keys(accounts).some(
-      (key) => (accounts as any)[key] !== (data as any)[key]
-    );
-
-    if (!hasChanged) {
-      toast.error("يجب تعديل حقل واحد على الأقل قبل الحفظ.");
-      return;
-    }
-
-    setUpdateloading(true);
     try {
+      setUpdateLoading(true);
       const response = await instance.post(
         "/update-social-contact-info",
         accounts
@@ -61,24 +32,9 @@ export default function EditSocialContactInfo() {
         setShowSuccessPopup(true);
       }
     } catch (error: any) {
-      console.log(error);
-      if (error?.response?.data?.message) {
-        toast.error(error?.response?.data?.message);
-      }
-      const errors = error?.response?.data?.errors;
-
-      // ✅ أول مفتاح
-      const firstKey = Object.keys(errors)[0];
-
-      // ✅ أول قيمة (هتكون Array غالبًا)
-      const firstValue = errors[firstKey];
-
-      // ✅ أول رسالة عربية
-      const firstMessageAr = firstValue[0]["ar"];
-
-      toast.error(firstMessageAr);
+      console.error("Error updating social media info:", error);
     } finally {
-      setUpdateloading(false);
+      setUpdateLoading(false);
     }
   };
 
@@ -89,6 +45,13 @@ export default function EditSocialContactInfo() {
   }, [data]);
 
   if (loading) return <LoadingSpin />;
+
+  const handleToggleChange = (key: string) => {
+    setAccounts((prev: any) => ({
+      ...prev,
+      [key]: prev[key] === 1 ? 0 : 1,
+    }));
+  };
 
   return (
     <div
@@ -109,29 +72,62 @@ export default function EditSocialContactInfo() {
           </p>
         </motion.div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {socialContactInfoInputs.map((input, index) => (
-            <div key={index} className="flex items-center gap-3">
-              {input.icon}
-              <input
-                type={input.type}
-                name={input.name}
-                value={accounts[input.name as keyof typeof data] || ""}
-                onChange={handleInputChange}
-                placeholder={input.placeholder}
-                className="input-style"
-              />
-            </div>
-          ))}
+          {socialContactInfoInputs.map((input, index) => {
+            const stateKey = input.name.replace("_account", "_state");
+
+            const hasState =
+              stateKey !== input.name &&
+              accounts &&
+              Object.prototype.hasOwnProperty.call(accounts, stateKey);
+
+            return (
+              <div key={index} className="flex items-center gap-3">
+                {input.icon}
+                <div className="flex-1">
+                  <input
+                    type={input.type}
+                    name={input.name}
+                    value={accounts[input.name as keyof typeof data] || ""}
+                    onChange={handleInputChange}
+                    placeholder={input.placeholder}
+                    className="input-style w-full"
+                  />
+                </div>
+                {/* Toggle Switch */}
+                {hasState && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleChange(stateKey)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+                        accounts[stateKey as keyof typeof accounts] === 1
+                          ? "bg-green-500"
+                          : "bg-gray-200"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          accounts[stateKey as keyof typeof accounts] === 1
+                            ? "translate-x-6"
+                            : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
 
           <div className="text-center mt-6">
             <motion.button
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white font-bold w-fit mx-auto flex items-center justify-center rounded-lg hover:bg-blue-700 transition duration-300"
+              className="px-6 py-2 bg-blue-600 flex items-center justify-center mx-auto text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {updateloading ? (
-                <VscLoading className="animate-spin" />
+              {updateLoading ? (
+                <VscLoading className="animate-spin size-6" />
               ) : (
                 "حفظ التغييرات"
               )}

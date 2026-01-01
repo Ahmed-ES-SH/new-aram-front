@@ -23,23 +23,17 @@ export default function CTASection({
 }: Props) {
   const locale = useLocale();
 
-  const isBookable = Boolean(
-    organization.open_at &&
-      organization.close_at &&
-      organization.status === "published" &&
-      (organization.booking_status === 1 ||
-        organization.booking_status === true)
-  );
+  const isBookable = organization.booking_status == 1;
 
   return (
-    <div className="md:w-fit w-full ml-auto">
+    <div className="w-full ml-auto">
       {/* Main CTA Buttons */}
-      <div className="flex flex-col md:flex-row gap-3">
+      <div className="flex max-sm:flex-col flex-row lg:flex-col 2xl:flex-row gap-3">
         {/* Contact Button - Primary */}
         <motion.button
           disabled={loadingConversation}
           onClick={handleStartConversation}
-          className={`flex-1 whitespace-nowrap bg-sky-500 text-white rounded-xl py-4 px-6 font-semibold flex items-center justify-center gap-3 transition-all ${
+          className={`flex-1 lg:w-full whitespace-nowrap bg-sky-500 text-white rounded-xl py-4 px-6 font-semibold flex items-center justify-center gap-3 transition-all ${
             loadingConversation
               ? "opacity-60 cursor-not-allowed"
               : "hover:bg-sky-600 hover:shadow-lg active:scale-95"

@@ -93,6 +93,13 @@ export default function AddOffer() {
         en: "",
       },
       placeholder: "",
+      validation: {
+        required: true,
+        message: {
+          ar: "يرجى اختيار المركز",
+          en: "Please select an organization",
+        },
+      },
     },
     {
       name: "start_date",
@@ -122,7 +129,7 @@ export default function AddOffer() {
         title="إنشاء عرض جديدة"
         submitValue="إنشاء"
         inputs={addOfferInputs}
-        api="/dashboard/add-offer"
+        api="/add-offer"
         direct="/dashboard/offers"
         successMessage="تم إنشاء عرض جديد بنجاح "
       />

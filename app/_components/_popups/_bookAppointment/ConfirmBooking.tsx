@@ -4,6 +4,7 @@ import { FaCheck, FaMoneyBillWave, FaUserClock } from "react-icons/fa";
 import { VscLoading } from "react-icons/vsc";
 import { useTranslations } from "next-intl";
 import { OrganizationWorkTimeResponse } from "./types";
+import { useAppSelector } from "@/app/Store/hooks";
 
 interface ConfirmBookingProps {
   selectedDate: string;
@@ -30,6 +31,7 @@ export default function ConfirmBooking({
   tNamespace,
 }: ConfirmBookingProps) {
   const t = useTranslations(tNamespace);
+  const { activeCurrency } = useAppSelector((state) => state.currency);
 
   return (
     <motion.div
@@ -44,9 +46,9 @@ export default function ConfirmBooking({
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
         </div>
       ) : organizationWorkTime ? (
-        <div className="space-y-6">
+        <div className="space-y-6 flex flex-col lg:h-[400px]">
           {/* Booking Summary */}
-          <div className="bg-gray-50 h-[250px] rounded-lg p-6 space-y-4">
+          <div className="bg-gray-50 h-3/4 rounded-lg p-6 space-y-4">
             <h3 className="text-lg font-medium text-gray-800 flex items-center gap-2">
               <FaCheck className="text-green-500" />
               {t("bookingSummary")}
@@ -67,7 +69,11 @@ export default function ConfirmBooking({
                 <div>
                   <p className="text-sm text-gray-600">{t("price")}</p>
                   <p className="font-bold text-gray-800">
-                    {organizationWorkTime.confirmation_price} OMR
+                    {(
+                      Number(organizationWorkTime.confirmation_price) *
+                      Number(activeCurrency?.exchange_rate)
+                    ).toFixed(2)}{" "}
+                    {activeCurrency?.symbol}
                   </p>
                 </div>
               )}

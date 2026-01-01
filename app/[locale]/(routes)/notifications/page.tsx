@@ -14,14 +14,14 @@ export async function generateMetadata() {
 }
 
 export default async function Notifications({ searchParams }: any) {
-  const userId = searchParams.userId;
-  const accountType = searchParams.account_type;
-  const page = searchParams.page ?? 1;
+  const { userId, account_type, page } = await searchParams;
 
-  const { data, pagination } = await FetchData(
-    `/notifications/${userId}/${accountType}?page=${page}`,
+  const response = await FetchData(
+    `/notifications/${userId}/${account_type}?page=${page}`,
     true
   );
+
+  const { data, pagination } = await response;
 
   return <NotificationsPage notifications={data} pagination={pagination} />;
 }

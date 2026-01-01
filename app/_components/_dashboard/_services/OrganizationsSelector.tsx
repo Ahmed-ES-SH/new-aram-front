@@ -161,46 +161,49 @@ export default function OrganizationsSelector({ form, setForm }: Props) {
       {!loading && (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {organizations.map((org) => {
-              const isSelected =
-                form &&
-                form.organizations &&
-                form.organizations?.some((o) => o.id === org.id);
+            {organizations &&
+              Array.isArray(organizations) &&
+              organizations.length > 0 &&
+              organizations.map((org) => {
+                const isSelected =
+                  form &&
+                  form.organizations &&
+                  form.organizations?.some((o) => o.id === org.id);
 
-              return (
-                <div
-                  key={org.id}
-                  onClick={() => toggleOrganization(org)}
-                  className={`cursor-pointer border rounded-lg p-4 flex flex-col items-center justify-center transition relative
+                return (
+                  <div
+                    key={org.id}
+                    onClick={() => toggleOrganization(org)}
+                    className={`cursor-pointer border rounded-lg p-4 h-fit flex flex-col items-center justify-center transition relative
                 ${
                   isSelected
                     ? "border-green-500 bg-green-50 shadow-md"
                     : "border-gray-200 hover:border-blue-300"
                 }
               `}
-                >
-                  {isSelected && (
-                    <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
-                      <LuCheck size={14} />
-                    </div>
-                  )}
-
-                  <Img
-                    src={org.logo ?? "/logo.png"}
-                    errorSrc="/logo.png"
-                    alt={org.title}
-                    className="w-16 h-16 object-contain mb-2 rounded-full"
-                  />
-                  <p
-                    className={`text-sm font-medium text-center ${
-                      isSelected ? "text-green-600" : "text-gray-700"
-                    }`}
                   >
-                    {org.title}
-                  </p>
-                </div>
-              );
-            })}
+                    {isSelected && (
+                      <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
+                        <LuCheck size={14} />
+                      </div>
+                    )}
+
+                    <Img
+                      src={org.logo ?? "/logo.png"}
+                      errorSrc="/logo.png"
+                      alt={org.title}
+                      className="w-16 h-16 object-contain mb-2 rounded-full"
+                    />
+                    <p
+                      className={`text-sm font-medium text-center ${
+                        isSelected ? "text-green-600" : "text-gray-700"
+                      }`}
+                    >
+                      {org.title}
+                    </p>
+                  </div>
+                );
+              })}
           </div>
           <Pagination
             currentPage={currentPage}

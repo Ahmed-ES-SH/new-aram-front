@@ -17,10 +17,7 @@ export async function generateMetadata() {
 
 export default async function RegisterOrganizationPage({ params }: any) {
   const { locale } = await params;
-  const categories = await FetchData(
-    `/categories-with-subcategories?state=1`,
-    false
-  );
+  const categories = await FetchData(`/categories-with-subcategories`, false);
 
   const user = await FetchData(`/current-user`, false);
 

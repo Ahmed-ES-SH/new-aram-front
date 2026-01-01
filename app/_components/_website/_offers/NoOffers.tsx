@@ -33,11 +33,12 @@ export default function NoOffers() {
         {/* Text */}
         <div>
           <h3 className="text-xl font-semibold text-gray-800">
-            No Offers Available
+            {locale === "ar" ? "لا توجد عروض متاحة" : "No Offers Available"}
           </h3>
           <p className="mt-2 text-sm text-gray-500 max-w-sm">
-            It looks like there are no offers at the moment. Please check back
-            later or refresh the page.
+            {locale === "ar"
+              ? "يبدو أنه لا توجد عروض في الوقت الحالي. يرجى التحقق لاحقًا أو تحديث الصفحة."
+              : "It looks like there are no offers at the moment. Please check back later or refresh the page."}
           </p>
         </div>
 
@@ -49,7 +50,7 @@ export default function NoOffers() {
           onClick={() => handleRefresh()}
         >
           <FiRefreshCw className="text-lg" />
-          Refresh
+          {locale === "ar" ? "تحديث" : "Refresh"}
         </motion.button>
       </motion.div>
     </div>

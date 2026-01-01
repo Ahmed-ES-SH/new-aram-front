@@ -16,10 +16,14 @@ export async function generateMetadata() {
 
 export default async function AboutPage() {
   const data = await FetchData(`/details`, false);
+  const video = await FetchData(`/get-video?video_id=about_video`, false);
+
   return (
     <div className="overflow-hidden mt-14">
-      <VideoSection mainVideo={data.main_video} />
-      <AboutMainSections data={data} />
+      <VideoSection
+        mainVideo={video ? video?.video_url : "/videos/background.mp4"}
+      />
+      <AboutMainSections data={data ?? {}} />
     </div>
   );
 }

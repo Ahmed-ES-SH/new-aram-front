@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import LocaleLink from "../../_global/LocaleLink";
+import { directionMap } from "@/app/constants/_website/global";
 
 type CardProps = {
   icon: React.ReactNode;
@@ -33,11 +34,13 @@ const Card: React.FC<CardProps> = ({ icon, title, description }) => {
 
 export default function AccountSelection() {
   const t = useTranslations("accountSelection");
-  const router = useRouter();
   const locale = useLocale();
 
   return (
-    <div className="flex items-center justify-center min-h-screen max-lg:mt-20">
+    <div
+      dir={directionMap[locale]}
+      className="flex items-center justify-center min-h-screen max-lg:mt-20"
+    >
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}

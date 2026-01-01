@@ -21,7 +21,10 @@ export const generateZodSchema = (inputs: InputField[]) => {
       // Form state seems to be string mostly. Let's keep it loose for now or check current usage.
       // Assuming values are stored as strings in the form state for text inputs.
       schema = z.string();
-    } else if (input.fildType === "select-type") {
+    } else if (
+      input.fildType === "select-type" ||
+      input.fildType === "select-org"
+    ) {
       schema = z.union([z.string(), z.number()]);
     }
 

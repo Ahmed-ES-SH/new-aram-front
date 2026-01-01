@@ -19,7 +19,7 @@ export default function OffersSidebar({ offers }: props) {
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="flex-1 h-[86vh] sticky top-28 left-0 flex flex-col items-center justify-center border border-gray-200 bg-white rounded-2xl shadow-md max-xl:hidden"
+        className="flex-1 h-[86vh] sticky top-28 left-0 flex flex-col items-center justify-center"
       >
         <motion.div
           initial={{ rotate: -10, opacity: 0 }}
@@ -39,7 +39,7 @@ export default function OffersSidebar({ offers }: props) {
   }
 
   return (
-    <div className="h-screen overflow-y-auto sticky top-28 left-0 p-2 border border-gray-300 rounded-lg hidden-scrollbar shadow-md flex-1 max-xl:hidden">
+    <div className="h-screen overflow-y-auto sticky top-28 left-0  hidden-scrollbar  flex-1">
       <div className="w-full grid lg:grid-cols-1 grid-cols-2 gap-3 items-center ">
         {offers &&
           offers.length > 0 &&

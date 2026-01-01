@@ -16,9 +16,11 @@ export const useAddOrganizationForm = () => {
   const router = useRouter();
 
   // Redux & Local State
-  const { data: allCategories } = useFetchData(`/all-public-categories`, false);
+  const { data: allCategories, loading: isLoading } = useFetchData(
+    `/categories-with-subcategories`,
+    false
+  );
   const [allSubCategories, setAllSubCategories] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // fetching subcategories
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -60,24 +62,6 @@ export const useAddOrganizationForm = () => {
 
   // Map State
   const [showMap, setShowMap] = useState(false);
-
-  // Fetch Subcategories only
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const subCatRes = await instance.get(`/all-public-sub-categories`);
-        setAllSubCategories(subCatRes.data.data);
-      } catch (error) {
-        console.error("Error fetching data", error);
-        toast.error("Failed to load setup data");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   // Handle generic inputs
   const handleChange = (

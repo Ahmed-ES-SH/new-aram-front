@@ -4,16 +4,11 @@ import React from "react";
 
 export default async function OrgProfilePage() {
   const center = await FetchData(`/current-user`, false);
-  const categories = await FetchData(`/all-public-categories`, false);
-  const subCategories = await FetchData(`/all-public-sub-categories`, false);
+  const categories = await FetchData(`/categories-with-subcategories`, false);
 
   return (
     <div className="w-full hidden-scrollbar">
-      <OrganizationProfile
-        organization={center}
-        categories={categories}
-        subCategories={subCategories}
-      />
+      <OrganizationProfile organization={center} categories={categories} />
     </div>
   );
 }

@@ -10,14 +10,12 @@ interface props {
   formData: Partial<Organization>;
   setFormData: Dispatch<SetStateAction<Partial<Organization>>>;
   allCategories: category[];
-  allSubCategories: category[];
 }
 
 export default function OrganizationSpecializations({
   formData,
   setFormData,
   allCategories,
-  allSubCategories,
 }: props) {
   const t = useTranslations("categoriesSelector");
 
@@ -45,6 +43,11 @@ export default function OrganizationSpecializations({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategories, selectedSubCategories]);
 
+  // Derive available subcategories based on selected categories
+  const filteredSubCategories = allCategories
+    .filter((cat) => selectedCategories.some((sc: any) => sc.id === cat.id))
+    .flatMap((cat) => cat.sub_categories || []);
+
   return (
     <div className="space-y-6 p-6 mt-4 bg-white rounded-lg border border-gray-200">
       <div>
@@ -58,12 +61,14 @@ export default function OrganizationSpecializations({
         />
 
         {/* SubCategories Section */}
-        <SubCategoriesSelector
-          selectedSubCategories={selectedSubCategories}
-          setSelectedSubCategories={setSelectedSubCategories}
-          allSubCategories={allSubCategories}
-          t={t}
-        />
+        {filteredSubCategories.length > 0 && (
+          <SubCategoriesSelector
+            selectedSubCategories={selectedSubCategories}
+            setSelectedSubCategories={setSelectedSubCategories}
+            allSubCategories={filteredSubCategories}
+            t={t}
+          />
+        )}
 
         {/* Summary */}
         <div

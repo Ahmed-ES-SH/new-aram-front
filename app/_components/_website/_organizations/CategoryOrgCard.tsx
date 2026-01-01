@@ -44,10 +44,21 @@ export default function CategoryOrgCard({ category, onClick }: Props) {
       {/* Count Badge */}
       <div className="flex items-center gap-1.5 text-xs font-medium text-gray-500 bg-gray-50 px-3 py-1 rounded-full group-hover:bg-primary/5 group-hover:text-primary transition-colors duration-300">
         <FaBuilding className="text-xs" />
-        <span>
-          {t("organizations_count", {
-            count: category.organizations_count,
-          })}
+        <span className="flex items-center gap-1">
+          <p className="text-xs font-medium">
+            {category.parent_id
+              ? locale === "en"
+                ? "Organizations"
+                : "المراكز"
+              : locale === "en"
+              ? "Sub Categories"
+              : "الاقسام الفرعية"}
+          </p>
+          <p className="text-xs font-medium">
+            {category.parent_id
+              ? category.organizations_count
+              : category.sub_categories_count}
+          </p>
         </span>
       </div>
     </motion.div>

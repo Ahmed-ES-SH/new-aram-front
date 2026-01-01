@@ -4,6 +4,7 @@ import {
   BiSolidCoupon,
   BiStats,
 } from "react-icons/bi";
+import { RxLetterCaseUppercase } from "react-icons/rx";
 import { FaBloggerB, FaQuestion } from "react-icons/fa";
 import { LiaUserMdSolid } from "react-icons/lia";
 import {
@@ -47,7 +48,12 @@ import {
   RiNewsLine,
 } from "react-icons/ri";
 import { SiHeroku } from "react-icons/si";
-import { TbAffiliateFilled, TbDiscount, TbListDetails } from "react-icons/tb";
+import {
+  TbAffiliateFilled,
+  TbDiscount,
+  TbListDetails,
+  TbMailSpark,
+} from "react-icons/tb";
 import { CiCreditCard1 } from "react-icons/ci";
 import { LuSend } from "react-icons/lu";
 import { BsInfoSquareFill } from "react-icons/bs";
@@ -365,9 +371,9 @@ export const pages = [
     to: "/dashboard/FAQ",
   },
   {
-    title: "قسم النشرة البريدية",
-    icon: <RiNewsLine className={iconStyle} />,
-    to: "/dashboard/newsletter",
+    title: "النشرات البريدية",
+    icon: <TbMailSpark className={iconStyle} />,
+    to: "/dashboard/newsletters",
   },
   {
     title: "روابط نهاية الموقع",

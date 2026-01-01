@@ -121,14 +121,14 @@ export default function DynamicForm({
 
     let newValue = value;
 
-    // Special case: phone or number inputs => allow only digits
-    if (
-      name.toLowerCase().includes("phone") ||
-      type === "tel" ||
-      type === "number"
-    ) {
-      // allow digits, +, -, (), and spaces
+    // 📞 Phone input: digits only
+    if (name.toLowerCase().includes("phone") || type === "tel") {
       newValue = value.replace(/[^0-9+\-()\s]/g, "");
+    }
+
+    // 🔢 Number input: allow decimals
+    else if (type === "number") {
+      newValue = value.replace(/[^0-9.]/g, "");
     }
 
     setForm((prevForm) => ({
@@ -136,6 +136,8 @@ export default function DynamicForm({
       [name]: newValue,
     }));
   };
+
+  console.log(errors);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
@@ -511,7 +513,7 @@ export default function DynamicForm({
                 >
                   {input.label["ar"]}
                 </label>
-                <div className="bg-gray-50/30 rounded-xl border border-gray-200 p-1 hover:bg-gray-50 transition-colors duration-200">
+                <div className="rounded-xl border border-gray-200 p-1 hover:bg-gray-50 transition-colors duration-200">
                   <OrganizationsSelector form={form} setForm={setForm} />
                 </div>
                 {errors[input.name] && (
@@ -596,6 +598,7 @@ export default function DynamicForm({
                 <input
                   name={input.name || ""}
                   type="number"
+                  step="any"
                   value={form[input.name] || ""}
                   onChange={handleChange}
                   placeholder={input.placeholder || ""}

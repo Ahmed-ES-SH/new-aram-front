@@ -55,8 +55,8 @@ export default function AboutMainSections({ data }: Props) {
         ...section,
         titleEn: data[`${section.id}_title_en`] || "",
         titleAr: data[`${section.id}_title_ar`] || "",
-        contentEn: data[`${section.id}_contnet_en`] || "",
-        contentAr: data[`${section.id}_contnet_ar`] || "",
+        contentEn: data[`${section.id}_content_en`] || "",
+        contentAr: data[`${section.id}_content_ar`] || "",
         image: data[section.imageKey] || "/about/about.webp",
       }));
       setSections(updatedSections);
@@ -86,7 +86,7 @@ export default function AboutMainSections({ data }: Props) {
             >
               {/* Image Side */}
               <div className="w-full lg:w-1/2 relative group">
-                <div className="relative h-[400px] lg:h-[500px] w-full rounded-2xl  shadow-2xl transform transition-transform duration-500 group-hover:scale-[1.02]">
+                <div className="relative h-full md:h-[400px] xl:h-[500px] w-full rounded-2xl  shadow-2xl transform transition-transform duration-500 group-hover:scale-[1.02]">
                   <Img
                     src={section.image}
                     alt={isRTL ? section.titleAr : section.titleEn}

@@ -129,6 +129,7 @@ export default function SelectTimePopup({
       if (user) formdata.append("account_type", user.account_type);
       if (user) formdata.append("user_id", user.id.toString());
       formdata.append("is_paid", "1");
+      formdata.append("data_type", "book");
       formdata.append("total_invoice", bookingSummary.price?.toString() || "");
       formdata.append("bookDetailes", JSON.stringify(bookingSummary));
       formdata.append("invoice_type", "book");
@@ -158,6 +159,7 @@ export default function SelectTimePopup({
       formData.append("start_time", bookingSummary.formatDate);
       formData.append("user_notes", bookingSummary.notes);
       formData.append("is_paid", "1");
+      formData.append("data_type", "book");
       const res = await instance.post(
         `/organizations/${organizationId}/appointments`,
         formData

@@ -9,11 +9,13 @@ interface LocaleLinkProps {
   children: ReactNode;
   className?: string;
   href: string;
+  target?: string;
 }
 
 export default function LocaleLink({
   children,
   className,
+  target,
   href,
 }: LocaleLinkProps) {
   const { locale } = useSelector((state: RootState) => state.variables);
@@ -43,6 +45,7 @@ export default function LocaleLink({
   return (
     <Link
       href={getFormattedHref()}
+      target={target}
       className={`${className} block outline-none`}
       onClick={handleClick}
     >

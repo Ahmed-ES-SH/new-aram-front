@@ -196,7 +196,7 @@ export default function CenterAppointmentTable({
                             <ConversationBtn secondParty={user as any} />
                           </div>
                           <p className="text-xs text-slate-500">
-                            {appointment.organization.email}
+                            {appointment.user.email}
                           </p>
                         </div>
                       </div>

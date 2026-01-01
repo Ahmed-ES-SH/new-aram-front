@@ -65,6 +65,32 @@ export default function MapComponentWithRoute({
 }: Props) {
   const locale = useLocale();
 
+  // Handle missing organization location
+  if (
+    !orgLocation?.coordinates ||
+    !orgLocation?.coordinates?.lat ||
+    !orgLocation?.coordinates?.lng
+  ) {
+    // If both are missing
+    if (!userLocation) {
+      return (
+        <div className="lg:h-[600px] h-[60vh] w-full rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500 border border-gray-200">
+          {locale === "ar"
+            ? "لا توجد إحداثيات للموقع لعرضها"
+            : "No location coordinates to display"}
+        </div>
+      );
+    }
+    // If only org is missing but user exists (unlikely use case for this component but good to handle)
+    return (
+      <div className="lg:h-[600px] h-[60vh] w-full rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500 border border-gray-200">
+        {locale === "ar"
+          ? "موقع المركز غير متوفر"
+          : "Center location not available"}
+      </div>
+    );
+  }
+
   const orderLatLng: LatLng = orgLocation.coordinates;
   const userLatLng: LatLng | null = userLocation ?? null;
 
@@ -73,7 +99,7 @@ export default function MapComponentWithRoute({
       center={{ lat: orderLatLng.lat, lng: orderLatLng.lng }}
       zoom={12}
       scrollWheelZoom
-      className="lg:h-[600px] h-[60vh] w-full outline-none rounded-2xl z-0"
+      className="lg:h-[600px] h-[60vh] w-full outline-none rounded-2xl z-0 shadow-sm"
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -89,7 +115,9 @@ export default function MapComponentWithRoute({
         icon={customIconOrder}
       >
         <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
-          {locale === "ar" ? orgLocation.address : "Center Location"}
+          {locale === "ar"
+            ? orgLocation.address || "موقع المركز"
+            : orgLocation.address || "Center Location"}
         </Tooltip>
       </Marker>
 

@@ -35,7 +35,7 @@ export default async function OrganizationsPage({ searchParams }: any) {
     } = await searchParams;
 
     // Instead of direct redirect()
-    if (subCategoriesLength == 0 && organizationsCount > 0) {
+    if (Number(subCategoriesLength) == 0) {
       return (
         <RedirectClient
           targetUrl={`/organizations?categories=${main_categoryId}&main_category=${main_category}&main_categoryId=${main_categoryId}&subCategoriesLength=${subCategoriesLength}&organizationsCount=${organizationsCount}&step=3`}

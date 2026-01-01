@@ -54,13 +54,13 @@ export default function CardsSlider({ cards }: CardsSliderProps) {
                 slidesPerView: 1,
               },
               480: {
-                slidesPerView: 1.5,
-              },
-              1024: {
                 slidesPerView: 2,
               },
-              1300: {
+              1024: {
                 slidesPerView: 3,
+              },
+              1300: {
+                slidesPerView: 4,
               },
             }}
             navigation={{

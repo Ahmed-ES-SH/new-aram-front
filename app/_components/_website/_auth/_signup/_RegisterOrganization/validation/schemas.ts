@@ -42,10 +42,7 @@ export const offerSchema = z
       .string({ message: "required" })
       .min(8, "min_8")
       .max(2000, "max_2000"),
-    image: z
-      .custom<File>((v) => v instanceof File, { message: "required" })
-      .optional()
-      .nullable(),
+    image: z.custom<File>((v) => v instanceof File, { message: "required" }),
     discount_type: z.enum(["percentage", "fixed"] as const, {
       message: "invalid_option",
     }),

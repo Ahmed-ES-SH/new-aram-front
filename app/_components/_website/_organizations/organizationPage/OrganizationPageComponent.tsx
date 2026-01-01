@@ -1,4 +1,5 @@
 "use client";
+
 import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -6,8 +7,11 @@ import {
   FaStar,
   FaCalendarAlt,
   FaCheckCircle,
-  FaUtensils,
   FaTag,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaEnvelope,
+  FaGlobe,
 } from "react-icons/fa";
 import {
   LocationType,
@@ -16,7 +20,6 @@ import {
 import { directionMap } from "@/app/constants/_website/global";
 import Img from "../../_global/Img";
 import dynamic from "next/dynamic";
-import ContactInfo from "./ContactInfo";
 import RatingSection from "./RatingSection";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/app/Store/hooks";
@@ -27,10 +30,9 @@ import { formatTitle } from "@/app/_helpers/helpers";
 import CheckCurrentUserPopup from "../../_global/CheckCurrentUserPopup";
 import SelectTimePopup from "@/app/_components/_popups/_bookAppointment/SelectTimePopup";
 import { Offer } from "@/app/_components/_dashboard/_offers/types";
-import OffersSidebar from "./offersSidebar/OffersSidebar";
 import CTASection from "./CTASection";
 import { GiPriceTag } from "react-icons/gi";
-import OffersSlider from "./offersSidebar/OffersSlider";
+import OffersSidebar from "./offersSidebar/OffersSidebar";
 
 const MapComponentWithRoute = dynamic(
   () => import("@/app/_components/_maps/MapComponentWithRoute"),
@@ -42,16 +44,16 @@ interface CenterDetailsProps {
   offers: Offer[];
 }
 
-export const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 },
+  transition: { duration: 0.5 },
 };
 
-const staggerContainer = {
+const stagger = {
   animate: {
     transition: {
-      staggerChildren: 0.12,
+      staggerChildren: 0.1,
     },
   },
 };
@@ -60,70 +62,63 @@ export default function CenterDetails({
   organization,
   offers,
 }: CenterDetailsProps) {
+  const { activeCurrency } = useAppSelector((state) => state.currency);
   const { user } = useAppSelector((state) => state.user);
-
   const router = useRouter();
-
   const t = useTranslations("organization");
   const locale = useLocale();
-
-  const formatTime = (time: string, locale: string) => {
-    if (!time) return "";
-
-    // split "HH:mm:ss"
-    const [hours, minutes] = time.split(":").map(Number);
-
-    const date = new Date();
-    date.setHours(hours, minutes);
-
-    return new Intl.DateTimeFormat(locale, {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true, // استخدم false لو حابب عرض 24 ساعة
-    }).format(date);
-  };
-
-  const errorStartConversation =
-    locale == "en"
-      ? "You can't start a conversation with yourself!"
-      : "لا تستطيع بدء محادثة مع نفسك !";
 
   const [loadingConversation, setLoadingConversation] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [checkCurrentUser, setCheckCurrentUser] = useState(false);
   const [location, setLocation] = useState<LocationType | null>(null);
 
+  useEffect(() => {
+    if (user?.location) {
+      setLocation(user.location);
+    }
+  }, [user]);
+
+  const formatTime = (time: string, locale: string) => {
+    if (!time) return "";
+    const [hours, minutes] = time.split(":").map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes);
+    return new Intl.DateTimeFormat(locale, {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date);
+  };
+
   const handleStartConversation = async () => {
     if (!user) {
       setCheckCurrentUser(true);
       return;
     }
-
     if (
       user?.id == organization?.id &&
       user?.account_type === organization.account_type
     ) {
-      toast.error(errorStartConversation);
+      toast.error(
+        locale == "en"
+          ? "You can't start a conversation with yourself!"
+          : "لا تستطيع بدء محادثة مع نفسك !"
+      );
       return;
     }
 
     setLoadingConversation(true);
     try {
-      const participant_one_id = user?.id;
-      const participant_one_type = user?.account_type;
-      const participant_two_id = organization?.id;
-      const participant_two_type = "organization";
       const data = {
-        participant_one_id,
-        participant_one_type,
-        participant_two_id,
-        participant_two_type,
+        participant_one_id: user?.id,
+        participant_one_type: user?.account_type,
+        participant_two_id: organization?.id,
+        participant_two_type: "organization",
       };
       const response = await instance.post(`/start-conversation`, data);
       if (response.status == 201) {
         const conversation = response.data.data;
-
-        // تغيير المسار
         router.push(
           `/${locale}/conversations/${formatTitle(
             `conversationwith ${organization.title}`
@@ -147,178 +142,272 @@ export default function CenterDetails({
     setShowPopup(true);
   };
 
-  useEffect(() => {
-    if (user?.location) {
-      setLocation(user.location);
-    }
-  }, [user]);
-
   return (
     <div
       dir={directionMap[locale]}
-      className="min-h-screen mt-24 mb-8 bg-background"
+      className="min-h-screen mt-20 bg-gray-50/50 pb-16"
     >
-      <div className="xl:w-[90%] w-[98%] mx-auto pt-4">
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 lg:gap-3">
-          {/* Left Section - Main Content */}
-          <motion.div
-            className="xl:col-span-3 xl:border xl:border-gray-300 xl:rounded-t-2xl xl:shadow-md p-2 relative"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-          >
-            {/* Hero */}
+      {/* 1. Hero Section */}
+      <div className="relative h-[300px] lg:h-[420px] w-full overflow-hidden">
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-10" />
+        <Img
+          src={organization.image ?? "/defaults/noImage.png"}
+          errorSrc="/defaults/noImage.png"
+          alt={organization.title}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute bottom-4 left-0 w-full z-20 px-4 pb-8 c-container">
+          <div className="flex flex-col md:flex-row items-end gap-6">
             <motion.div
-              className="h-64 sm:h-80 absolute top-0 left-0 w-full rounded-t-2xl overflow-hidden mb-8 lg:mb-10"
-              variants={fadeInUp}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl bg-white p-1 shadow-2xl shrink-0"
             >
               <Img
-                src={organization.image ?? "/defaults/noImage.png"}
-                errorSrc="/defaults/noImage.png"
-                alt={organization.title}
-                className="object-cover w-full h-full"
+                src={organization.logo ?? "/logo.png"}
+                errorSrc="/logo.png"
+                alt={`${organization.title} logo`}
+                className="w-full h-full object-cover rounded-xl"
               />
-              <div className="absolute inset-0 bg-black/30" />
             </motion.div>
-            <div className="sm:h-80 h-64 w-full"></div>
-
-            {/* logo + Title + Category + Stats */}
-            <motion.div
-              className="pb-6 lg:pb-8 border-b border-gray-200 space-y-4"
-              variants={fadeInUp}
-            >
-              <div className="flex items-center max-md:flex-col max-md:items-start gap-2">
-                <Img
-                  src={organization.logo ?? "/logo.png"}
-                  errorSrc="/logo.png"
-                  alt={`${organization.title} logo`}
-                  className="w-20 rounded-full lg:w-16 lg:h-16 object-cover p-1 lg:p-2"
-                />
-                <div className="flex items-center gap-3">
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
-                    {organization.title}
-                  </h1>
-                  {organization && organization.category && (
-                    <span
-                      className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-white text-sm font-medium w-fit"
-                      style={{
-                        backgroundColor: `${organization.category.bg_color}30`,
-                        color: organization.category.bg_color,
-                      }}
-                    >
-                      <FaUtensils className="w-4 h-4" />
-                      {locale == "en"
-                        ? organization.category.title_en
-                        : organization.category.title_ar}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-4 lg:gap-6 text-muted-foreground text-sm">
-                <div className="flex items-center bg-primary/20 px-3 py-1 rounded-full text-primary gap-1">
-                  <FaStar className="w-4 h-4 text-primary" />
-                  <span className="font-medium">{organization.rating}</span>
-                </div>
-                {organization.confirmation_status && (
-                  <div className="flex items-center gap-1">
-                    <GiPriceTag className="text-green-400" />
-                    <span>${organization.confirmation_price}</span>
-                  </div>
+            <div className="flex-1 text-white pb-2">
+              <motion.h1
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="text-3xl lg:text-5xl font-bold mb-2 shadow-black/10 drop-shadow-md"
+              >
+                {organization.title}
+              </motion.h1>
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="flex flex-wrap items-center gap-4 text-sm font-medium text-white/90"
+              >
+                {organization.category && (
+                  <span className="bg-primary/90 text-white px-3 py-1 rounded-full backdrop-blur-md shadow-sm">
+                    {locale === "en"
+                      ? organization.category.title_en
+                      : organization.category.title_ar}
+                  </span>
                 )}
                 <div className="flex items-center gap-1">
-                  <FaCalendarAlt className="w-4 h-4" />
+                  <FaStar className="text-yellow-400" />
+                  <span>{organization.rating}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <FaCalendarAlt />
                   <span>
                     {organization.number_of_reservations} {t("reservations")}
                   </span>
                 </div>
-              </div>
-              <CTASection
-                loadingConversation={loadingConversation}
-                organization={organization}
-                handleStartConversation={handleStartConversation}
-                handleBook={handleBook}
-              />
-            </motion.div>
+                {organization &&
+                  organization.confirmation_price &&
+                  activeCurrency && (
+                    <div className="flex items-center gap-1 text-green-400">
+                      <GiPriceTag />
+                      <div className="flex items-center gap-1">
+                        <span>{activeCurrency?.symbol}</span>
+                        <span>
+                          {(
+                            Number(organization.confirmation_price) *
+                            Number(activeCurrency.exchange_rate)
+                          ).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            {/* Description */}
+      <div className="container mx-auto px-4 -mt-8 relative z-30">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Main Content */}
+          <motion.div
+            variants={stagger}
+            initial="initial"
+            animate="animate"
+            className="lg:col-span-8 space-y-8"
+          >
+            {/* About Section */}
             <motion.div
-              className="py-6 lg:py-8 border-b border-gray-200 space-y-3"
               variants={fadeInUp}
+              className="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100"
             >
-              <h2 className="text-xl font-semibold">{t("description")}</h2>
-              <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <span className="w-1.5 h-8 bg-primary rounded-full block" />
+                {locale === "en" ? "Description" : "الوصف"}
+              </h2>
+              <p className="text-gray-600 leading-relaxed text-lg">
                 {organization.description}
               </p>
-            </motion.div>
 
-            {/* Contact Info */}
-            <ContactInfo organization={organization} t={t} />
+              {/* Benefits Grid */}
+              {organization.benefits && organization.benefits.length > 0 && (
+                <div className="mt-8 pt-8 border-t border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-800 mb-4">
+                    {t("benefits")}
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {organization.benefits.map((benefit) => (
+                      <div
+                        key={benefit.id}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                          <FaCheckCircle />
+                        </div>
+                        <span className="text-gray-700 font-medium text-sm">
+                          {benefit.title}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-            {/* location on map  */}
-            <MapComponentWithRoute
-              orgLocation={organization.location}
-              userLocation={location?.coordinates ?? null}
-            />
-
-            {/* Working Hours */}
-            <motion.div
-              className="py-6 lg:py-8 border-b border-gray-200 space-y-3"
-              variants={fadeInUp}
-            >
-              <h2 className="text-xl font-semibold">{t("workingHours")}</h2>
-              <div className="flex items-center gap-3 text-muted-foreground">
-                <FaClock className="w-5 h-5 text-primary" />
-                <span className="text-sm lg:text-base">
-                  {t("openAt")} {formatTime(organization.open_at, locale)} –{" "}
-                  {t("closeAt")} {formatTime(organization.close_at, locale)}
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Benefits */}
-            {organization.benefits && organization.benefits.length > 0 && (
-              <motion.div
-                className="py-6 lg:py-8 border-b border-gray-200 space-y-4"
-                variants={fadeInUp}
-              >
-                <h2 className="text-xl font-semibold">{t("benefits")}</h2>
-                <ul className="space-y-3">
-                  {organization.benefits.map((benefit) => (
-                    <li key={benefit.id} className="flex items-start gap-3">
-                      <FaCheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground text-sm lg:text-base">
-                        {benefit.title}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            )}
-
-            {/* rating section */}
-            <RatingSection />
-
-            {/* Keywords */}
-            {organization.keywords && organization.keywords.length > 0 && (
-              <motion.div className="py-6 lg:py-8" variants={fadeInUp}>
-                <h2 className="text-xl font-semibold">{t("keywords")}</h2>
-                <div className="flex flex-wrap gap-2 mt-3">
+              {/* Keywords */}
+              {organization.keywords && organization.keywords.length > 0 && (
+                <div className="mt-6 flex flex-wrap gap-2">
                   {organization.keywords.map((keyword) => (
                     <span
                       key={keyword.id}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-xs lg:text-sm"
+                      className="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium flex items-center gap-1"
                     >
-                      <FaTag className="w-3 h-3" />
+                      <FaTag className="text-gray-400" />
                       {keyword.title}
                     </span>
                   ))}
                 </div>
+              )}
+            </motion.div>
+
+            {/* Map Section */}
+            <motion.div
+              variants={fadeInUp}
+              className="bg-white rounded-3xl p-2 shadow-sm border border-gray-100 overflow-hidden"
+            >
+              <div className="p-4 pb-2">
+                <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                  <FaMapMarkerAlt className="text-primary" />
+                  {locale === "en" ? "Location" : "الموقع"}
+                </h2>
+              </div>
+              <div className="rounded-2xl overflow-hidden h-[400px] relative z-0">
+                <MapComponentWithRoute
+                  orgLocation={organization.location}
+                  userLocation={location?.coordinates ?? null}
+                />
+              </div>
+            </motion.div>
+
+            {/* Ratings (Preserved) */}
+            <motion.div variants={fadeInUp}>
+              <RatingSection />
+            </motion.div>
+          </motion.div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-4  space-y-6  ">
+            {/* CTA Card (Sticky Mobile Navigation usually handles this, but good to have here too) */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white z-999999 rounded-3xl p-6 shadow-lg border-t-4 border-primary"
+            >
+              <div className="space-y-4">
+                <CTASection
+                  loadingConversation={loadingConversation}
+                  organization={organization}
+                  handleStartConversation={handleStartConversation}
+                  handleBook={handleBook}
+                />
+              </div>
+
+              {/* Working Hours */}
+              <div className="mt-8 pt-6 border-t border-gray-100">
+                <h4 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <FaClock className="text-primary" /> {t("workingHours")}
+                </h4>
+                <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center text-sm font-medium">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-gray-500">{t("openAt")}</span>
+                    <span className="text-gray-900 text-lg">
+                      {formatTime(organization.open_at, locale)}
+                    </span>
+                  </div>
+                  <div className="w-px h-8 bg-gray-200" />
+                  <div className="flex flex-col gap-1 text-left" dir="ltr">
+                    <span className="text-gray-500 text-right">
+                      {t("closeAt")}
+                    </span>
+                    <span className="text-gray-900 text-lg">
+                      {formatTime(organization.close_at, locale)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Info Compact */}
+              <div className="mt-8 pt-6 border-t border-gray-100 space-y-4">
+                <h4 className="font-semibold text-gray-800 mb-2">
+                  {t("contactInfo")}
+                </h4>
+                {organization?.location?.address && (
+                  <div className="flex items-start gap-3 text-sm text-gray-600">
+                    <FaMapMarkerAlt className="text-primary mt-1 shrink-0" />
+                    <span>{organization.location.address}</span>
+                  </div>
+                )}
+                {organization?.phone_number && (
+                  <div className="flex items-center gap-3 text-sm text-gray-600">
+                    <FaPhone className="text-primary shrink-0" />
+                    <span dir="ltr">{organization.phone_number}</span>
+                  </div>
+                )}
+                {organization?.email && (
+                  <div className="flex items-center gap-3 text-sm text-gray-600">
+                    <FaEnvelope className="text-primary shrink-0" />
+                    <span>{organization.email}</span>
+                  </div>
+                )}
+                {organization?.url && (
+                  <a
+                    href={organization.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-3 text-sm text-blue-600 hover:underline"
+                  >
+                    <FaGlobe className="shrink-0" />
+                    <span>{t("website")}</span>
+                  </a>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Sidebar Offers */}
+            {offers && offers.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <div className="bg-primary text-white p-4 rounded-t-3xl mt-8">
+                  <h3 className="font-bold text-lg flex items-center gap-2">
+                    <GiPriceTag /> {locale == "ar" ? "العروض" : "Offers"}
+                  </h3>
+                </div>
+                <div className="bg-white rounded-b-3xl p-4 shadow-sm border border-gray-100 border-t-0 space-y-4">
+                  <OffersSidebar offers={offers} />
+                </div>
               </motion.div>
             )}
-          </motion.div>
-          <OffersSlider offers={offers} />
-          <OffersSidebar offers={offers} />
+          </div>
         </div>
       </div>
 

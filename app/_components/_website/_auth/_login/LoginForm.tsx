@@ -15,6 +15,7 @@ import { instance, main_api } from "@/app/_helpers/axios";
 import Cookie from "cookie-universal";
 import { useAppDispatch } from "@/app/Store/hooks";
 import {
+  setNotifications,
   setUnreadCount,
   setUnreadNotificationsCount,
   setUser,
@@ -80,10 +81,12 @@ export function LoginForm() {
         const token = encryptToken(response.data.token);
         cookie.set("aram_token", token);
         const user = response.data.account;
+        const notifications = response.data.notifications;
         const unreadCountMessages = response.data.unread_count;
         const unreadNotificationsCount =
           response.data.unread_notifications_count;
         dispatch(setUser(user));
+        dispatch(setNotifications(notifications));
         dispatch(setUnreadCount(unreadCountMessages));
         dispatch(setUnreadNotificationsCount(unreadNotificationsCount));
         setTimeout(() => {

@@ -1,6 +1,5 @@
-"use client";
 import { getIconComponent } from "@/app/_helpers/helpers";
-import { category } from "@/app/types/_dashboard/GlobalTypes";
+import { category, subCategory } from "@/app/types/_dashboard/GlobalTypes";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { FaPlus, FaTrash } from "react-icons/fa";
@@ -8,8 +7,8 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 interface props {
   selectedCategories: category[];
   setSelectedCategories: Dispatch<SetStateAction<category[]>>;
-  setSelectedSubCategories: Dispatch<SetStateAction<category[]>>;
-  selectedSubCategories: category[];
+  setSelectedSubCategories: Dispatch<SetStateAction<subCategory[]>>;
+  selectedSubCategories: subCategory[];
   allCategories: category[];
   t: any;
 }

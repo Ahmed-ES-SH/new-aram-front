@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { instance } from "../_helpers/axios";
 import { Organization } from "../_components/_dashboard/_organizations/types/organization";
+import { NotificationType } from "../_components/_website/_notifications/NotificationBell";
 
 type Gender = "male" | "female";
 type AccountType = "user" | "admin";
@@ -36,6 +37,7 @@ export interface UserType extends Organization {
 interface UserState {
   user: UserType | null;
   userState: boolean;
+  notifications: NotificationType[];
   unreadMessagesCount: number;
   unreadNotificationsCount: number;
   loading: boolean;
@@ -47,6 +49,7 @@ interface UserState {
 const initialState: UserState = {
   user: null,
   userState: false,
+  notifications: [],
   loading: true,
   error: null,
   unreadMessagesCount: 0,
@@ -88,6 +91,10 @@ const userSlice = createSlice({
 
     setUser(state, action) {
       state.user = action.payload;
+    },
+
+    setNotifications(state, action) {
+      state.notifications = action.payload;
     },
 
     setUserState(state, action) {
@@ -140,6 +147,7 @@ const userSlice = createSlice({
 
 export const {
   setUser,
+  setNotifications,
   setUserState,
   clearUser,
   reduceUnreadCount,

@@ -17,7 +17,8 @@ interface props {
 }
 
 export default function AuthBtns({ notifications, user }: props) {
-  const { user: currentUser } = useAppSelector((state) => state.user);
+  const { user: currentUser, notifications: currentNotifications } =
+    useAppSelector((state) => state.user);
 
   const locale = useLocale();
   const t = useTranslations("authButtons");
@@ -50,7 +51,13 @@ export default function AuthBtns({ notifications, user }: props) {
     <>
       {currentUser && token ? (
         <UserButton
-          notifications={notifications ?? []}
+          notifications={
+            Array.isArray(currentNotifications)
+              ? currentNotifications.length > 0
+                ? currentNotifications
+                : notifications
+              : notifications
+          }
           user={currentUser}
           logout={logout}
         />

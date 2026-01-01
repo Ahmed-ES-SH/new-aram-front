@@ -48,8 +48,11 @@ export interface Activity {
 }
 
 export interface Task {
-  id: string;
+  id: number;
   title: string;
-  completed: boolean;
+  description?: string;
+  is_completed: boolean;
   priority: "high" | "medium" | "low";
+  created_at?: string;
+  updated_at?: string;
 }

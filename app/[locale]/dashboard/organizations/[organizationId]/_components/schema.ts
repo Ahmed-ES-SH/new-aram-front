@@ -40,7 +40,7 @@ export const formSchema = z.object({
   sub_categories: z.array(z.number()).optional(),
   keywords: z.array(z.object({ id: z.number(), title: z.string() })).optional(),
   benefits: z.array(benefitSchema).optional(),
-  email_verified: z.boolean().optional(),
+  email_verified: z.any().optional(),
 });
 
 export type FormValues = z.infer<typeof formSchema>;

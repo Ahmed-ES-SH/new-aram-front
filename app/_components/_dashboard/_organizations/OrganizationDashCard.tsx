@@ -266,9 +266,9 @@ export default function OrganizationDashCard({
         {/* Action buttons */}
         <div className="flex items-center justify-end gap-2 pt-4 border-t border-gray-100">
           <LocaleLink
-            href={`/organizations/${formatTitle(
-              organization.title
-            )}?organizationId=${organization.id}`}
+            href={`/organizations/${formatTitle(organization.title)}?orgId=${
+              organization.id
+            }`}
             className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
           >
             <FaEye className="text-sm" />

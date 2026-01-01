@@ -128,7 +128,7 @@ export function AccountStep({
                 placeholder={t("fields.email.placeholder")}
                 // required
                 className={`
-                  w-full pl-12 pr-4 py-3 rounded-lg border border-input
+                  w-full text-left ltr:placeholder:text-left rtl:placeholder:text-right pl-12 pr-4 py-3 rounded-lg border border-input
                   bg-background text-foreground
                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                   transition-all duration-200
@@ -182,7 +182,7 @@ export function AccountStep({
                 // required
                 // minLength={8}
                 className={`
-                  w-full pl-12 pr-4 py-3 rounded-lg border border-input
+                  w-full text-left ltr:placeholder:text-left rtl:placeholder:text-right pl-12 pr-4 py-3 rounded-lg border border-input
                   bg-background text-foreground
                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                   transition-all duration-200

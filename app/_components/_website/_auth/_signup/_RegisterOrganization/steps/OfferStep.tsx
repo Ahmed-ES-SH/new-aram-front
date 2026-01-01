@@ -161,7 +161,11 @@ export default function OfferStep({
         label={t("fields.offer.image.label")}
         hint={t("fields.offer.image.hint")}
         value={offer.image}
-        onChange={(file) => onUpdate({ image: file })}
+        onChange={(file) => {
+          onUpdate({ image: file });
+          clearError("image");
+        }}
+        error={errors.image}
       />
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -352,6 +356,7 @@ export default function OfferStep({
             <div className="text-sm text-gray-500 flex flex-wrap items-center gap-1">
               {t_2("terms_text")}
               <LocaleLink
+                target="_blank"
                 href="/termsconditionsorganizations"
                 className="text-gray-700 whitespace-nowrap underline hover:text-blue-600"
               >
@@ -359,6 +364,7 @@ export default function OfferStep({
               </LocaleLink>{" "}
               {t_2("and")}
               <LocaleLink
+                target="_blank"
                 href="/privacypolicyorganizations"
                 className="text-gray-700 whitespace-nowrap underline hover:text-blue-600"
               >
@@ -366,6 +372,8 @@ export default function OfferStep({
               </LocaleLink>
               <a
                 download
+                target="_blank"
+                rel="noopener noreferrer"
                 href={cooperationPdf ?? "/defaults/اختبار-اتفاقية-التعاون.pdf"}
                 className="text-gray-700 whitespace-nowrap underline hover:text-blue-600"
               >

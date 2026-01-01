@@ -19,7 +19,6 @@ export default function OrganizationPage() {
     isSubmitting,
     errors,
     allCategories,
-    allSubCategories,
     logoPreview,
     coverPreview,
     handleLogoChange,
@@ -110,7 +109,6 @@ export default function OrganizationPage() {
               <CategoriesSection
                 formData={formData}
                 allCategories={allCategories as any}
-                allSubCategories={allSubCategories}
                 toggleCategory={toggleCategory}
                 toggleSubCategory={toggleSubCategory}
                 errors={errors}

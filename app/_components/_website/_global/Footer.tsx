@@ -6,6 +6,7 @@ import { instance } from "@/app/_helpers/axios";
 import Img from "./Img";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
+import { directionMap } from "@/app/constants/_website/global";
 
 export default function Footer() {
   const locale = useLocale();
@@ -94,7 +95,7 @@ export default function Footer() {
   if (pathName.includes("/dashboard")) return;
 
   return (
-    <footer className="bg-gray-100">
+    <footer dir={directionMap[locale]} className="bg-gray-100">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="lg:flex lg:items-start lg:gap-8">
           <div className="text-teal-600 max-md:w-fit max-md:mx-auto">

@@ -5,6 +5,7 @@ export interface subCategory {
   image: string;
   bg_color: string;
   icon_name: string;
+  parent_id: number;
 }
 
 export interface category {

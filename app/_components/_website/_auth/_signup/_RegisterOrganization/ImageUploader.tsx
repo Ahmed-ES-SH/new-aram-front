@@ -11,6 +11,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import Img from "../../../_global/Img";
+import { MdErrorOutline } from "react-icons/md";
 
 interface ImageUploaderProps {
   label: string;
@@ -182,7 +183,20 @@ export function ImageUploader({
           )}
         </AnimatePresence>
       </motion.div>
-      {error && <span className="text-red-500 text-sm mt-1">{error}</span>}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            className="flex items-center gap-1 text-red-500 text-sm mt-2"
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.3 }}
+          >
+            <MdErrorOutline className="size-4" />
+            <span>{error}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

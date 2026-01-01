@@ -3,25 +3,23 @@
 import { useState, ChangeEvent, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import ProfileHeader from "./ProfileHeader";
-import BookingSettings from "./BookingSettings";
-import OrganizationInfo from "./OrganizationInfo";
 import { instance } from "@/app/_helpers/axios";
 import { Organization } from "@/app/_components/_dashboard/_organizations/types/organization";
 import { category } from "@/app/types/_dashboard/GlobalTypes";
-import OrganizationSecializations from "./OrganizationSecializations";
 import { toast } from "sonner";
+import ProfileHeader from "./ProfileHeader";
+import BookingSettings from "./BookingSettings";
+import OrganizationInfo from "./OrganizationInfo";
+import OrganizationSecializations from "./OrganizationSecializations";
 
 interface OrganizationProfileProps {
   organization: Organization;
   categories: category[];
-  subCategories: category[];
 }
 
 export default function OrganizationProfile({
   organization,
   categories,
-  subCategories,
 }: OrganizationProfileProps) {
   const t = useTranslations("organizationProfile");
 
@@ -57,6 +55,7 @@ export default function OrganizationProfile({
         "verification_code",
         "email_verified",
         "active",
+        "password",
         "is_signed",
         "number_of_reservations",
         "category_id",
@@ -88,6 +87,16 @@ export default function OrganizationProfile({
           return;
         }
 
+        if (
+          key == "password" &&
+          formData.password &&
+          formData?.password?.length > 0 &&
+          value
+        ) {
+          updatedData.append(key, value?.toString());
+          return;
+        }
+
         // Handle benefits array
         if (key === "benefits") {
           updatedData.append(key, JSON.stringify(value));
@@ -114,6 +123,7 @@ export default function OrganizationProfile({
 
       if (response.status === 200) {
         toast.success("تم تحديث البيانات الخاصة بالمركز بنجاح .");
+        setFormData({ ...formData, password: "" });
       }
     } catch (error: any) {
       console.error("Error submitting form:", error);
@@ -129,6 +139,7 @@ export default function OrganizationProfile({
   // Handle cancel
   const handleCancel = () => {
     setFormData(organization);
+    toast.info("تم إلغاء التعديلات .");
   };
 
   const handleBenfitChange = (items) => {
@@ -194,7 +205,6 @@ export default function OrganizationProfile({
               <OrganizationSecializations
                 formData={formData}
                 setFormData={setFormData}
-                allSubCategories={subCategories}
                 allCategories={categories}
               />
             )}
@@ -203,7 +213,7 @@ export default function OrganizationProfile({
 
         {/* Footer with Actions */}
         <div className="border-t border-gray-200  px-6 py-4 flex justify-between items-center">
-          <div className="flex gap-3">
+          <div className="flex w-fit rtl:mr-auto ltr:ml-auto rtl:flex-row-reverse gap-3">
             <motion.button
               onClick={handleCancel}
               className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-100 transition-colors"
